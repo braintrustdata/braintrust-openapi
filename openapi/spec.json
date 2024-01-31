@@ -1,0 +1,5494 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Braintrust Data API",
+    "description": "API specification for the backend data server. The API is hosted globally at https://api.braintrustdata.com or in your own environment. The v1 API is currently in preview mode and unstable until March 1, 2024. We may make backwards incompatible changes before then, as we learn from our users.",
+    "license": {
+      "name": "Apache 2.0",
+      "identifier": "Apache-2.0"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.braintrustdata.com"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API key or JWT",
+        "description": "Most Braintrust endpoints are authenticated by providing your API key as a header `Authorization: Bearer [api_key]` to your HTTP request. You can create an API key in the Braintrust [organization settings page](https://www.braintrustdata.com/app/settings?subroute=api-keys)."
+      }
+    },
+    "schemas": {
+      "ExperimentId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Experiment id"
+      },
+      "DatasetId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Dataset id"
+      },
+      "ProjectId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Project id"
+      },
+      "ExperimentName": {
+        "type": "string",
+        "description": "Name of the experiment to search for"
+      },
+      "DatasetName": {
+        "type": "string",
+        "description": "Name of the dataset to search for"
+      },
+      "ProjectName": {
+        "type": "string",
+        "description": "Name of the project to search for"
+      },
+      "OrgName": {
+        "type": "string",
+        "description": "Filter search results to within a particular organization"
+      },
+      "AppLimitParam": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Limit the number of objects to return"
+      },
+      "FetchLimitParam": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Fetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+      },
+      "StartingAfter": {
+        "type": "string",
+        "format": "uuid",
+        "description": "A cursor for pagination. For example, if the final item in the last page you fetched had an id of `foo`, pass `starting_after=foo` to fetch the next page. Note: you may only pass one of `starting_after` and `ending_before`"
+      },
+      "EndingBefore": {
+        "type": "string",
+        "format": "uuid",
+        "description": "A cursor for pagination. For example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`"
+      },
+      "MaxXactId": {
+        "type": "integer",
+        "format": "int64",
+        "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_xact_id` as the maximum of the `_xact_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+      },
+      "MaxRootSpanId": {
+        "type": "string",
+        "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_root_span_id` as the maximum of the `root_span_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+      },
+      "Version": {
+        "type": "integer",
+        "format": "int64",
+        "description": "You may specify a version id to retrieve a snapshot of the events from a past time. The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project"
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique id for the organization that the project belongs under"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the project"
+          },
+          "created": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Date of project creation"
+          },
+          "deleted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Date of project deletion, or null if the project is still active"
+          },
+          "user_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Identifies the user who created the project"
+          }
+        },
+        "required": [
+          "id",
+          "org_id",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "CreateProject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the project"
+          },
+          "org_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the project belongs in."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "PatchProject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the project"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InsertEventsResponse": {
+        "type": "object",
+        "properties": {
+          "row_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The ids of all rows that were inserted, aligning one-to-one with the rows provided as input"
+          }
+        },
+        "required": [
+          "row_ids"
+        ],
+        "additionalProperties": false
+      },
+      "InsertProjectLogsEventReplace": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "description": "The arguments that uniquely define a user input(an arbitrary, JSON serializable object)."
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object), that allows you to determine whether the result is correct or not. For example, in an app that generates SQL queries, the `output` should be the _result_ of the SQL query generated by the model, not the query itself, because there may be multiple valid queries that answer a single question."
+          },
+          "expected": {
+            "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models."
+          },
+          "scores": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "description": "A dictionary of numeric values (between 0 and 1) to log. The scores should give you a variety of signals that help you determine how accurate the outputs are compared to what you expect and diagnose failures. For example, a summarization app might have one score that tells you how accurate the summary is, and another that measures the word similarity between the generated and grouth truth summary. The word similarity score could help you determine whether the summarization was covering similar concepts or not. You can use these scores to help you sort, filter, and compare logs."
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "metrics": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "start": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the project logs event started"
+              },
+              "end": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the project logs event finished"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Metrics are numerical measurements tracking the execution of the code that produced the project logs event. Use \"start\" and \"end\" to track the time span over which the project logs event was produced"
+          },
+          "context": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "caller_functionname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The function in code which created the project logs event"
+              },
+              "caller_filename": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the file in code where the project logs event was created"
+              },
+              "caller_lineno": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Line of code where the project logs event was created"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Context is additional information about the code that produced the project logs event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the project logs event"
+          },
+          "span_attributes": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the span, for display purposes only"
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "llm",
+                  "score",
+                  "function",
+                  "eval",
+                  "task",
+                  "tool"
+                ],
+                "description": "Type of the span, for display purposes only"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Human-identifying attributes of the span, such as name, type, etc."
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A unique identifier for the project logs event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "_object_delete": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Pass `_object_delete=true` to mark the project logs event deleted. Deleted events will not show up in subsequent fetches for this project logs"
+          },
+          "_is_merge": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "enum": [
+                  false
+                ]
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "enum": [
+                  null
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
+          },
+          "_parent_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrustdata.com/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InsertProjectLogsEventMerge": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "description": "The arguments that uniquely define a user input(an arbitrary, JSON serializable object)."
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object), that allows you to determine whether the result is correct or not. For example, in an app that generates SQL queries, the `output` should be the _result_ of the SQL query generated by the model, not the query itself, because there may be multiple valid queries that answer a single question."
+          },
+          "expected": {
+            "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models."
+          },
+          "scores": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "description": "A dictionary of numeric values (between 0 and 1) to log. The scores should give you a variety of signals that help you determine how accurate the outputs are compared to what you expect and diagnose failures. For example, a summarization app might have one score that tells you how accurate the summary is, and another that measures the word similarity between the generated and grouth truth summary. The word similarity score could help you determine whether the summarization was covering similar concepts or not. You can use these scores to help you sort, filter, and compare logs."
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "metrics": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "start": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the project logs event started"
+              },
+              "end": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the project logs event finished"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Metrics are numerical measurements tracking the execution of the code that produced the project logs event. Use \"start\" and \"end\" to track the time span over which the project logs event was produced"
+          },
+          "context": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "caller_functionname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The function in code which created the project logs event"
+              },
+              "caller_filename": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the file in code where the project logs event was created"
+              },
+              "caller_lineno": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Line of code where the project logs event was created"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Context is additional information about the code that produced the project logs event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the project logs event"
+          },
+          "span_attributes": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the span, for display purposes only"
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "llm",
+                  "score",
+                  "function",
+                  "eval",
+                  "task",
+                  "tool"
+                ],
+                "description": "Type of the span, for display purposes only"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Human-identifying attributes of the span, such as name, type, etc."
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A unique identifier for the project logs event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "_object_delete": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Pass `_object_delete=true` to mark the project logs event deleted. Deleted events will not show up in subsequent fetches for this project logs"
+          },
+          "_is_merge": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
+          },
+          "_merge_paths": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The `_merge_paths` field allows controlling the depth of the merge. It can only be specified alongside `_is_merge=true`. `_merge_paths` is a list of paths, where each path is a list of field names. The deep merge will not descend below any of the specified merge paths.\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": {\"b\": 10}, \"c\": {\"d\": 20}}, \"output\": {\"a\": 20}}`. If we merge a new row as `{\"_is_merge\": true, \"_merge_paths\": [[\"input\", \"a\"], [\"output\"]], \"input\": {\"a\": {\"q\": 30}, \"c\": {\"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`, the new row will be `{\"id\": \"foo\": \"input\": {\"a\": {\"q\": 30}, \"c\": {\"d\": 20, \"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`."
+          }
+        },
+        "required": [
+          "_is_merge"
+        ],
+        "additionalProperties": false
+      },
+      "InsertProjectLogsEventRequest": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/InsertProjectLogsEventReplace"
+                },
+                {
+                  "$ref": "#/components/schemas/InsertProjectLogsEventMerge"
+                }
+              ]
+            },
+            "description": "A list of project logs events to insert"
+          }
+        },
+        "required": [
+          "events"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectLogsEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the project logs event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "_xact_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the project logs (see the `version` parameter)"
+          },
+          "created": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The timestamp the project logs event was created"
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique id for the organization that the project belongs under"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project"
+          },
+          "log_id": {
+            "type": "string",
+            "enum": [
+              "g"
+            ],
+            "description": "A literal 'g' which identifies the log as a project log"
+          },
+          "input": {
+            "description": "The arguments that uniquely define a user input(an arbitrary, JSON serializable object)."
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object), that allows you to determine whether the result is correct or not. For example, in an app that generates SQL queries, the `output` should be the _result_ of the SQL query generated by the model, not the query itself, because there may be multiple valid queries that answer a single question."
+          },
+          "expected": {
+            "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models."
+          },
+          "scores": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "description": "A dictionary of numeric values (between 0 and 1) to log. The scores should give you a variety of signals that help you determine how accurate the outputs are compared to what you expect and diagnose failures. For example, a summarization app might have one score that tells you how accurate the summary is, and another that measures the word similarity between the generated and grouth truth summary. The word similarity score could help you determine whether the summarization was covering similar concepts or not. You can use these scores to help you sort, filter, and compare logs."
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "metrics": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "start": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the project logs event started"
+              },
+              "end": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the project logs event finished"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Metrics are numerical measurements tracking the execution of the code that produced the project logs event. Use \"start\" and \"end\" to track the time span over which the project logs event was produced"
+          },
+          "context": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "caller_functionname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The function in code which created the project logs event"
+              },
+              "caller_filename": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the file in code where the project logs event was created"
+              },
+              "caller_lineno": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Line of code where the project logs event was created"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Context is additional information about the code that produced the project logs event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the project logs event"
+          },
+          "span_id": {
+            "type": "string",
+            "description": "A unique identifier used to link different project logs events together as part of a full trace. See the [tracing guide](https://www.braintrustdata.com/docs/guides/tracing) for full details on tracing"
+          },
+          "span_parents": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of the parent `span_ids` of this project logs event. This should be empty for the root span of a trace, and should most often contain just one parent element for subspans"
+          },
+          "root_span_id": {
+            "type": "string",
+            "description": "The `span_id` of the root of the trace this project logs event belongs to"
+          },
+          "span_attributes": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the span, for display purposes only"
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "llm",
+                  "score",
+                  "function",
+                  "eval",
+                  "task",
+                  "tool"
+                ],
+                "description": "Type of the span, for display purposes only"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Human-identifying attributes of the span, such as name, type, etc."
+          }
+        },
+        "required": [
+          "id",
+          "_xact_id",
+          "org_id",
+          "project_id",
+          "log_id",
+          "span_id",
+          "root_span_id"
+        ],
+        "additionalProperties": false
+      },
+      "FetchProjectLogsEventsResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectLogsEvent"
+            },
+            "description": "A list of fetched events"
+          }
+        },
+        "required": [
+          "events"
+        ],
+        "additionalProperties": false
+      },
+      "PathLookupFilter": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "path_lookup"
+            ],
+            "description": "Denotes the type of filter as a path-lookup filter"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of fields describing the path to the value to be checked against. For instance, if you wish to filter on the value of `c` in `{\"input\": {\"a\": {\"b\": {\"c\": \"hello\"}}}}`, pass `path=[\"input\", \"a\", \"b\", \"c\"]`"
+          },
+          "value": {
+            "description": "The value to compare equality-wise against the event value at the specified `path`. The value must be a \"primitive\", that is, any JSON-serializable object except for objects and arrays. For instance, if you wish to filter on the value of \"input.a.b.c\" in the object `{\"input\": {\"a\": {\"b\": {\"c\": \"hello\"}}}}`, pass `value=\"hello\"`"
+          }
+        },
+        "required": [
+          "type",
+          "path"
+        ],
+        "description": "A path-lookup filter describes an equality comparison against a specific sub-field in the event row. For instance, if you wish to filter on the value of `c` in `{\"input\": {\"a\": {\"b\": {\"c\": \"hello\"}}}}`, pass `path=[\"input\", \"a\", \"b\", \"c\"]` and `value=\"hello\"`"
+      },
+      "FetchEventsFilters": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "$ref": "#/components/schemas/PathLookupFilter"
+        },
+        "description": "A list of filters on the events to fetch. Currently, only path-lookup type filters are supported, but we may add more in the future"
+      },
+      "FetchEventsRequest": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Fetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+          },
+          "max_xact_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_xact_id` as the maximum of the `_xact_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+          },
+          "max_root_span_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_root_span_id` as the maximum of the `root_span_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+          },
+          "filters": {
+            "$ref": "#/components/schemas/FetchEventsFilters"
+          },
+          "version": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "You may specify a version id to retrieve a snapshot of the events from a past time. The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
+          }
+        },
+        "additionalProperties": false
+      },
+      "FeedbackProjectLogsEventRequest": {
+        "type": "object",
+        "properties": {
+          "feedback": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The id of the project logs event to log feedback for. This is the row `id` returned by `POST /v1/project_logs/{project_id}/insert`"
+                },
+                "scores": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "description": "A dictionary of numeric values (between 0 and 1) to log. These scores will be merged into the existing scores for the project logs event"
+                },
+                "expected": {
+                  "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not"
+                },
+                "comment": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "An optional comment string to log about the project logs event"
+                },
+                "metadata": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": {},
+                  "description": "A dictionary with additional data about the feedback. If you have a `user_id`, you can log it here and access it in the Braintrust UI."
+                },
+                "source": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "app",
+                    "api",
+                    "external"
+                  ],
+                  "description": "The source of the feedback. Must be one of \"external\" (default), \"app\", or \"api\""
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": "A list of project logs feedback items"
+          }
+        },
+        "required": [
+          "feedback"
+        ],
+        "additionalProperties": false
+      },
+      "RepoInfo": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "commit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "SHA of most recent commit"
+          },
+          "branch": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the branch the most recent commit belongs to"
+          },
+          "tag": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the tag on the most recent commit"
+          },
+          "dirty": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Whether or not the repo had uncommitted changes when snapshotted"
+          },
+          "author_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the author of the most recent commit"
+          },
+          "author_email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Email of the author of the most recent commit"
+          },
+          "commit_message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Most recent commit message"
+          },
+          "commit_time": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Time of the most recent commit"
+          },
+          "git_diff": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "If the repo was dirty when run, this includes the diff between the current state of the repo and the most recent commit."
+          }
+        },
+        "description": "Metadata about the state of the repo when the experiment was created"
+      },
+      "Experiment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the experiment"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the experiment belongs under"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the experiment. Within a project, experiment names are unique"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Textual description of the experiment"
+          },
+          "created": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Date of experiment creation"
+          },
+          "repo_info": {
+            "$ref": "#/components/schemas/RepoInfo"
+          },
+          "commit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Commit, taken directly from `repo_info.commit`"
+          },
+          "base_exp_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Id of default base experiment to compare against when viewing this experiment"
+          },
+          "deleted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Date of experiment deletion, or null if the experiment is still active"
+          },
+          "dataset_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Identifier of the linked dataset, or null if the experiment is not linked to a dataset"
+          },
+          "dataset_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Version number of the linked dataset the experiment was run against. This can be used to reproduce the experiment after the dataset has been modified."
+          },
+          "public": {
+            "type": "boolean",
+            "description": "Whether or not the experiment is public. Public experiments can be viewed by anybody inside or outside the organization"
+          },
+          "user_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Identifies the user who created the experiment"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "User-controlled metadata about the experiment"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "name",
+          "public"
+        ],
+        "additionalProperties": false
+      },
+      "CreateExperiment": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the experiment belongs under"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the experiment. Within a project, experiment names are unique"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Textual description of the experiment"
+          },
+          "repo_info": {
+            "$ref": "#/components/schemas/RepoInfo"
+          },
+          "base_exp_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Id of default base experiment to compare against when viewing this experiment"
+          },
+          "dataset_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Identifier of the linked dataset, or null if the experiment is not linked to a dataset"
+          },
+          "dataset_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Version number of the linked dataset the experiment was run against. This can be used to reproduce the experiment after the dataset has been modified."
+          },
+          "public": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Whether or not the experiment is public. Public experiments can be viewed by anybody inside or outside the organization"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "User-controlled metadata about the experiment"
+          }
+        },
+        "required": [
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "PatchExperiment": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the experiment. Within a project, experiment names are unique"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Textual description of the experiment"
+          },
+          "repo_info": {
+            "$ref": "#/components/schemas/RepoInfo"
+          },
+          "base_exp_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Id of default base experiment to compare against when viewing this experiment"
+          },
+          "dataset_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Identifier of the linked dataset, or null if the experiment is not linked to a dataset"
+          },
+          "dataset_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Version number of the linked dataset the experiment was run against. This can be used to reproduce the experiment after the dataset has been modified."
+          },
+          "public": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Whether or not the experiment is public. Public experiments can be viewed by anybody inside or outside the organization"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "User-controlled metadata about the experiment"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InsertExperimentEventReplace": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "description": "The arguments that uniquely define a test case (an arbitrary, JSON serializable object). Later on, Braintrust will use the `input` to know whether two test cases are the same between experiments, so they should not contain experiment-specific state. A simple rule of thumb is that if you run the same experiment twice, the `input` should be identical"
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object), that allows you to determine whether the result is correct or not. For example, in an app that generates SQL queries, the `output` should be the _result_ of the SQL query generated by the model, not the query itself, because there may be multiple valid queries that answer a single question"
+          },
+          "expected": {
+            "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate your experiments while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models"
+          },
+          "scores": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "description": "A dictionary of numeric values (between 0 and 1) to log. The scores should give you a variety of signals that help you determine how accurate the outputs are compared to what you expect and diagnose failures. For example, a summarization app might have one score that tells you how accurate the summary is, and another that measures the word similarity between the generated and grouth truth summary. The word similarity score could help you determine whether the summarization was covering similar concepts or not. You can use these scores to help you sort, filter, and compare experiments"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "metrics": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "start": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the experiment event started"
+              },
+              "end": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the experiment event finished"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Metrics are numerical measurements tracking the execution of the code that produced the experiment event. Use \"start\" and \"end\" to track the time span over which the experiment event was produced"
+          },
+          "context": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "caller_functionname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The function in code which created the experiment event"
+              },
+              "caller_filename": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the file in code where the experiment event was created"
+              },
+              "caller_lineno": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Line of code where the experiment event was created"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Context is additional information about the code that produced the experiment event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the experiment event"
+          },
+          "span_attributes": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the span, for display purposes only"
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "llm",
+                  "score",
+                  "function",
+                  "eval",
+                  "task",
+                  "tool"
+                ],
+                "description": "Type of the span, for display purposes only"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Human-identifying attributes of the span, such as name, type, etc."
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A unique identifier for the experiment event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "dataset_record_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "If the experiment is associated to a dataset, this is the event-level dataset id this experiment event is tied to"
+          },
+          "_object_delete": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Pass `_object_delete=true` to mark the experiment event deleted. Deleted events will not show up in subsequent fetches for this experiment"
+          },
+          "_is_merge": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "enum": [
+                  false
+                ]
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "enum": [
+                  null
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
+          },
+          "_parent_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrustdata.com/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InsertExperimentEventMerge": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "description": "The arguments that uniquely define a test case (an arbitrary, JSON serializable object). Later on, Braintrust will use the `input` to know whether two test cases are the same between experiments, so they should not contain experiment-specific state. A simple rule of thumb is that if you run the same experiment twice, the `input` should be identical"
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object), that allows you to determine whether the result is correct or not. For example, in an app that generates SQL queries, the `output` should be the _result_ of the SQL query generated by the model, not the query itself, because there may be multiple valid queries that answer a single question"
+          },
+          "expected": {
+            "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate your experiments while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models"
+          },
+          "scores": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "description": "A dictionary of numeric values (between 0 and 1) to log. The scores should give you a variety of signals that help you determine how accurate the outputs are compared to what you expect and diagnose failures. For example, a summarization app might have one score that tells you how accurate the summary is, and another that measures the word similarity between the generated and grouth truth summary. The word similarity score could help you determine whether the summarization was covering similar concepts or not. You can use these scores to help you sort, filter, and compare experiments"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "metrics": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "start": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the experiment event started"
+              },
+              "end": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the experiment event finished"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Metrics are numerical measurements tracking the execution of the code that produced the experiment event. Use \"start\" and \"end\" to track the time span over which the experiment event was produced"
+          },
+          "context": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "caller_functionname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The function in code which created the experiment event"
+              },
+              "caller_filename": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the file in code where the experiment event was created"
+              },
+              "caller_lineno": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Line of code where the experiment event was created"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Context is additional information about the code that produced the experiment event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the experiment event"
+          },
+          "span_attributes": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the span, for display purposes only"
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "llm",
+                  "score",
+                  "function",
+                  "eval",
+                  "task",
+                  "tool"
+                ],
+                "description": "Type of the span, for display purposes only"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Human-identifying attributes of the span, such as name, type, etc."
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A unique identifier for the experiment event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "dataset_record_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "If the experiment is associated to a dataset, this is the event-level dataset id this experiment event is tied to"
+          },
+          "_object_delete": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Pass `_object_delete=true` to mark the experiment event deleted. Deleted events will not show up in subsequent fetches for this experiment"
+          },
+          "_is_merge": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
+          },
+          "_merge_paths": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The `_merge_paths` field allows controlling the depth of the merge. It can only be specified alongside `_is_merge=true`. `_merge_paths` is a list of paths, where each path is a list of field names. The deep merge will not descend below any of the specified merge paths.\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": {\"b\": 10}, \"c\": {\"d\": 20}}, \"output\": {\"a\": 20}}`. If we merge a new row as `{\"_is_merge\": true, \"_merge_paths\": [[\"input\", \"a\"], [\"output\"]], \"input\": {\"a\": {\"q\": 30}, \"c\": {\"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`, the new row will be `{\"id\": \"foo\": \"input\": {\"a\": {\"q\": 30}, \"c\": {\"d\": 20, \"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`."
+          }
+        },
+        "required": [
+          "_is_merge"
+        ],
+        "additionalProperties": false
+      },
+      "InsertExperimentEventRequest": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/InsertExperimentEventReplace"
+                },
+                {
+                  "$ref": "#/components/schemas/InsertExperimentEventMerge"
+                }
+              ]
+            },
+            "description": "A list of experiment events to insert"
+          }
+        },
+        "required": [
+          "events"
+        ],
+        "additionalProperties": false
+      },
+      "ExperimentEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the experiment event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "dataset_record_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "If the experiment is associated to a dataset, this is the event-level dataset id this experiment event is tied to"
+          },
+          "_xact_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the experiment (see the `version` parameter)"
+          },
+          "created": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The timestamp the experiment event was created"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the experiment belongs under"
+          },
+          "experiment_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the experiment"
+          },
+          "input": {
+            "description": "The arguments that uniquely define a test case (an arbitrary, JSON serializable object). Later on, Braintrust will use the `input` to know whether two test cases are the same between experiments, so they should not contain experiment-specific state. A simple rule of thumb is that if you run the same experiment twice, the `input` should be identical"
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object), that allows you to determine whether the result is correct or not. For example, in an app that generates SQL queries, the `output` should be the _result_ of the SQL query generated by the model, not the query itself, because there may be multiple valid queries that answer a single question"
+          },
+          "expected": {
+            "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate your experiments while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models"
+          },
+          "scores": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "description": "A dictionary of numeric values (between 0 and 1) to log. The scores should give you a variety of signals that help you determine how accurate the outputs are compared to what you expect and diagnose failures. For example, a summarization app might have one score that tells you how accurate the summary is, and another that measures the word similarity between the generated and grouth truth summary. The word similarity score could help you determine whether the summarization was covering similar concepts or not. You can use these scores to help you sort, filter, and compare experiments"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "metrics": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "start": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the experiment event started"
+              },
+              "end": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "description": "A unix timestamp recording when the section of code which produced the experiment event finished"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Metrics are numerical measurements tracking the execution of the code that produced the experiment event. Use \"start\" and \"end\" to track the time span over which the experiment event was produced"
+          },
+          "context": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "caller_functionname": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The function in code which created the experiment event"
+              },
+              "caller_filename": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the file in code where the experiment event was created"
+              },
+              "caller_lineno": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "Line of code where the experiment event was created"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Context is additional information about the code that produced the experiment event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the experiment event"
+          },
+          "span_id": {
+            "type": "string",
+            "description": "A unique identifier used to link different experiment events together as part of a full trace. See the [tracing guide](https://www.braintrustdata.com/docs/guides/tracing) for full details on tracing"
+          },
+          "span_parents": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of the parent `span_ids` of this experiment event. This should be empty for the root span of a trace, and should most often contain just one parent element for subspans"
+          },
+          "root_span_id": {
+            "type": "string",
+            "description": "The `span_id` of the root of the trace this experiment event belongs to"
+          },
+          "span_attributes": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Name of the span, for display purposes only"
+              },
+              "type": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "llm",
+                  "score",
+                  "function",
+                  "eval",
+                  "task",
+                  "tool"
+                ],
+                "description": "Type of the span, for display purposes only"
+              }
+            },
+            "additionalProperties": {},
+            "description": "Human-identifying attributes of the span, such as name, type, etc."
+          }
+        },
+        "required": [
+          "id",
+          "_xact_id",
+          "project_id",
+          "experiment_id",
+          "span_id",
+          "root_span_id"
+        ],
+        "additionalProperties": false
+      },
+      "FetchExperimentEventsResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExperimentEvent"
+            },
+            "description": "A list of fetched events"
+          }
+        },
+        "required": [
+          "events"
+        ],
+        "additionalProperties": false
+      },
+      "FeedbackExperimentEventRequest": {
+        "type": "object",
+        "properties": {
+          "feedback": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The id of the experiment event to log feedback for. This is the row `id` returned by `POST /v1/experiment/{experiment_id}/insert`"
+                },
+                "scores": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "description": "A dictionary of numeric values (between 0 and 1) to log. These scores will be merged into the existing scores for the experiment event"
+                },
+                "expected": {
+                  "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not"
+                },
+                "comment": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "An optional comment string to log about the experiment event"
+                },
+                "metadata": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": {},
+                  "description": "A dictionary with additional data about the feedback. If you have a `user_id`, you can log it here and access it in the Braintrust UI."
+                },
+                "source": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "app",
+                    "api",
+                    "external"
+                  ],
+                  "description": "The source of the feedback. Must be one of \"external\" (default), \"app\", or \"api\""
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": "A list of experiment feedback items"
+          }
+        },
+        "required": [
+          "feedback"
+        ],
+        "additionalProperties": false
+      },
+      "Dataset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the dataset"
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Unique identifier for the project that the dataset belongs under"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the dataset. Within a project, dataset names are unique"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Textual description of the dataset"
+          },
+          "created": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Date of dataset creation"
+          },
+          "deleted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Date of dataset deletion, or null if the dataset is still active"
+          },
+          "user_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Identifies the user who created the dataset"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "CreateDataset": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Unique identifier for the project that the dataset belongs under"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the dataset. Within a project, dataset names are unique"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Textual description of the dataset"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "PatchDataset": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the dataset. Within a project, dataset names are unique"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Textual description of the dataset"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "InsertDatasetEventReplace": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "description": "The argument that uniquely define an input case (an arbitrary, JSON serializable object)"
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object)"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A unique identifier for the dataset event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "_object_delete": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Pass `_object_delete=true` to mark the dataset event deleted. Deleted events will not show up in subsequent fetches for this dataset"
+          },
+          "_is_merge": {
+            "anyOf": [
+              {
+                "type": "boolean",
+                "enum": [
+                  false
+                ]
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "enum": [
+                  null
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
+          },
+          "_parent_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrustdata.com/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InsertDatasetEventMerge": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "description": "The argument that uniquely define an input case (an arbitrary, JSON serializable object)"
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object)"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A unique identifier for the dataset event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "_object_delete": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Pass `_object_delete=true` to mark the dataset event deleted. Deleted events will not show up in subsequent fetches for this dataset"
+          },
+          "_is_merge": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
+          },
+          "_merge_paths": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The `_merge_paths` field allows controlling the depth of the merge. It can only be specified alongside `_is_merge=true`. `_merge_paths` is a list of paths, where each path is a list of field names. The deep merge will not descend below any of the specified merge paths.\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": {\"b\": 10}, \"c\": {\"d\": 20}}, \"output\": {\"a\": 20}}`. If we merge a new row as `{\"_is_merge\": true, \"_merge_paths\": [[\"input\", \"a\"], [\"output\"]], \"input\": {\"a\": {\"q\": 30}, \"c\": {\"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`, the new row will be `{\"id\": \"foo\": \"input\": {\"a\": {\"q\": 30}, \"c\": {\"d\": 20, \"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`."
+          }
+        },
+        "required": [
+          "_is_merge"
+        ],
+        "additionalProperties": false
+      },
+      "InsertDatasetEventRequest": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/InsertDatasetEventReplace"
+                },
+                {
+                  "$ref": "#/components/schemas/InsertDatasetEventMerge"
+                }
+              ]
+            },
+            "description": "A list of dataset events to insert"
+          }
+        },
+        "required": [
+          "events"
+        ],
+        "additionalProperties": false
+      },
+      "DatasetEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the dataset event. If you don't provide one, BrainTrust will generate one for you"
+          },
+          "_xact_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the dataset (see the `version` parameter)"
+          },
+          "created": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The timestamp the dataset event was created"
+          },
+          "project_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Unique identifier for the project that the dataset belongs under"
+          },
+          "dataset_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the dataset"
+          },
+          "input": {
+            "description": "The argument that uniquely define an input case (an arbitrary, JSON serializable object)"
+          },
+          "output": {
+            "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object)"
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {},
+            "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "root_span_id": {
+            "type": "string",
+            "description": "The `span_id` of the root of the trace this dataset event belongs to"
+          }
+        },
+        "required": [
+          "id",
+          "_xact_id",
+          "dataset_id",
+          "root_span_id"
+        ],
+        "additionalProperties": false
+      },
+      "FetchDatasetEventsResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetEvent"
+            },
+            "description": "A list of fetched events"
+          }
+        },
+        "required": [
+          "events"
+        ],
+        "additionalProperties": false
+      },
+      "FeedbackDatasetEventRequest": {
+        "type": "object",
+        "properties": {
+          "feedback": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The id of the dataset event to log feedback for. This is the row `id` returned by `POST /v1/dataset/{dataset_id}/insert`"
+                },
+                "comment": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "An optional comment string to log about the dataset event"
+                },
+                "metadata": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": {},
+                  "description": "A dictionary with additional data about the feedback. If you have a `user_id`, you can log it here and access it in the Braintrust UI."
+                },
+                "source": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "app",
+                    "api",
+                    "external"
+                  ],
+                  "description": "The source of the feedback. Must be one of \"external\" (default), \"app\", or \"api\""
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": "A list of dataset feedback items"
+          }
+        },
+        "required": [
+          "feedback"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "parameters": {
+      "ExperimentId": {
+        "schema": {
+          "$ref": "#/components/schemas/ExperimentId"
+        },
+        "required": true,
+        "name": "experiment_id",
+        "in": "path"
+      },
+      "DatasetId": {
+        "schema": {
+          "$ref": "#/components/schemas/DatasetId"
+        },
+        "required": true,
+        "name": "dataset_id",
+        "in": "path"
+      },
+      "ProjectId": {
+        "schema": {
+          "$ref": "#/components/schemas/ProjectId"
+        },
+        "required": true,
+        "name": "project_id",
+        "in": "path"
+      },
+      "ExperimentName": {
+        "schema": {
+          "$ref": "#/components/schemas/ExperimentName"
+        },
+        "required": false,
+        "name": "experiment_name",
+        "in": "query"
+      },
+      "DatasetName": {
+        "schema": {
+          "$ref": "#/components/schemas/DatasetName"
+        },
+        "required": false,
+        "name": "dataset_name",
+        "in": "query"
+      },
+      "ProjectName": {
+        "schema": {
+          "$ref": "#/components/schemas/ProjectName"
+        },
+        "required": false,
+        "name": "project_name",
+        "in": "query"
+      },
+      "OrgName": {
+        "schema": {
+          "$ref": "#/components/schemas/OrgName"
+        },
+        "required": false,
+        "name": "org_name",
+        "in": "query"
+      },
+      "AppLimitParam": {
+        "schema": {
+          "$ref": "#/components/schemas/AppLimitParam"
+        },
+        "required": false,
+        "name": "limit",
+        "in": "query"
+      },
+      "FetchLimitParam": {
+        "schema": {
+          "$ref": "#/components/schemas/FetchLimitParam"
+        },
+        "required": false,
+        "name": "limit",
+        "in": "query"
+      },
+      "StartingAfter": {
+        "schema": {
+          "$ref": "#/components/schemas/StartingAfter"
+        },
+        "required": false,
+        "name": "starting_after",
+        "in": "query"
+      },
+      "EndingBefore": {
+        "schema": {
+          "$ref": "#/components/schemas/EndingBefore"
+        },
+        "required": false,
+        "name": "ending_before",
+        "in": "query"
+      },
+      "MaxXactId": {
+        "schema": {
+          "$ref": "#/components/schemas/MaxXactId"
+        },
+        "required": false,
+        "name": "max_xact_id",
+        "in": "query"
+      },
+      "MaxRootSpanId": {
+        "schema": {
+          "$ref": "#/components/schemas/MaxRootSpanId"
+        },
+        "required": false,
+        "name": "max_root_span_id",
+        "in": "query"
+      },
+      "Version": {
+        "schema": {
+          "$ref": "#/components/schemas/Version"
+        },
+        "required": false,
+        "name": "version",
+        "in": "query"
+      }
+    }
+  },
+  "paths": {
+    "/v1/project": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "postProject",
+        "description": "Create a new project. If there is an existing project with the same name as the one specified in the request, will return the existing project unmodified",
+        "summary": "Create project",
+        "requestBody": {
+          "description": "Any desired information about the new project object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new project object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "putProject",
+        "description": "Create or replace a new project. If there is an existing project with the same name as the one specified in the request, will replace the existing project with the provided fields",
+        "summary": "Create or replace project",
+        "requestBody": {
+          "description": "Any desired information about the new project object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new project object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getProject",
+        "tags": [
+          "Projects"
+        ],
+        "description": "List out all projects. The projects are sorted by creation date, with the most recently-created projects coming first",
+        "summary": "List projects",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/StartingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/EndingBefore"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of project objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Project"
+                      },
+                      "description": "A list of project objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsProject",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/project`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/project/{project_id}": {
+      "get": {
+        "operationId": "getProjectId",
+        "tags": [
+          "Projects"
+        ],
+        "description": "Get a project object by its id",
+        "summary": "Get project",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the project object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchProjectId",
+        "tags": [
+          "Projects"
+        ],
+        "description": "Partially update a project object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /project/{id}` and then replace it with `PUT /project`.",
+        "summary": "Partially update project",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchProject"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the experiment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteProjectId",
+        "tags": [
+          "Projects"
+        ],
+        "description": "Delete a project object by its id",
+        "summary": "Delete project",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted project object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsProjectId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/project/{project_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/project_logs/{project_id}/insert": {
+      "post": {
+        "operationId": "postProjectLogsIdInsert",
+        "tags": [
+          "Projects"
+        ],
+        "description": "Insert a set of events into the project logs",
+        "summary": "Insert project logs events",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "requestBody": {
+          "description": "An array of project logs events to insert",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InsertProjectLogsEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the inserted row ids",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsertEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsProjectLogsIdInsert",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/project_logs/{project_id}/insert`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/project_logs/{project_id}/fetch": {
+      "post": {
+        "operationId": "postProjectLogsIdFetch",
+        "tags": [
+          "Projects"
+        ],
+        "description": "Fetch the events in a project logs. Equivalent to the GET form of the same path, but with the parameters in the request body rather than in the URL query",
+        "summary": "Fetch project logs (POST form)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "requestBody": {
+          "description": "Filters for the fetch query",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FetchEventsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the fetched rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchProjectLogsEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getProjectLogsIdFetch",
+        "tags": [
+          "Projects"
+        ],
+        "description": "Fetch the events in a project logs. Equivalent to the POST form of the same path, but with the parameters in the URL query rather than in the request body",
+        "summary": "Fetch project logs (GET form)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          },
+          {
+            "$ref": "#/components/parameters/FetchLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/MaxXactId"
+          },
+          {
+            "$ref": "#/components/parameters/MaxRootSpanId"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the fetched rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchProjectLogsEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsProjectLogsIdFetch",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/project_logs/{project_id}/fetch`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/project_logs/{project_id}/feedback": {
+      "post": {
+        "operationId": "postProjectLogsIdFeedback",
+        "tags": [
+          "Projects"
+        ],
+        "description": "Log feedback for a set of project logs events",
+        "summary": "Feedback for project logs events",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "requestBody": {
+          "description": "An array of feedback objects",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackProjectLogsEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No return value"
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiment": {
+      "post": {
+        "tags": [
+          "Experiments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "postExperiment",
+        "description": "Create a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will create a new experiment from `name`, suffixed with a unique identifier",
+        "summary": "Create experiment",
+        "requestBody": {
+          "description": "Any desired information about the new experiment object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExperiment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new experiment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Experiments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "putExperiment",
+        "description": "Create or replace a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will replace the existing experiment with the provided fields",
+        "summary": "Create or replace experiment",
+        "requestBody": {
+          "description": "Any desired information about the new experiment object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExperiment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new experiment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getExperiment",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "List out all experiments. The experiments are sorted by creation date, with the most recently-created experiments coming first",
+        "summary": "List experiments",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/StartingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/EndingBefore"
+          },
+          {
+            "$ref": "#/components/parameters/ExperimentName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of experiment objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Experiment"
+                      },
+                      "description": "A list of experiment objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsExperiment",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/experiment`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiment/{experiment_id}": {
+      "get": {
+        "operationId": "getExperimentId",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "Get an experiment object by its id",
+        "summary": "Get experiment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the experiment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchExperimentId",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "Partially update an experiment object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /experiment/{id}` and then replace it with `PUT /experiment`.",
+        "summary": "Partially update experiment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchExperiment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the experiment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteExperimentId",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "Delete an experiment object by its id",
+        "summary": "Delete experiment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted experiment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsExperimentId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/experiment/{experiment_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiment/{experiment_id}/insert": {
+      "post": {
+        "operationId": "postExperimentIdInsert",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "Insert a set of events into the experiment",
+        "summary": "Insert experiment events",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "requestBody": {
+          "description": "An array of experiment events to insert",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InsertExperimentEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the inserted row ids",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsertEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsExperimentIdInsert",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/experiment/{experiment_id}/insert`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiment/{experiment_id}/fetch": {
+      "post": {
+        "operationId": "postExperimentIdFetch",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "Fetch the events in an experiment. Equivalent to the GET form of the same path, but with the parameters in the request body rather than in the URL query",
+        "summary": "Fetch experiment (POST form)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "requestBody": {
+          "description": "Filters for the fetch query",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FetchEventsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the fetched rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchExperimentEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getExperimentIdFetch",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "Fetch the events in an experiment. Equivalent to the POST form of the same path, but with the parameters in the URL query rather than in the request body",
+        "summary": "Fetch experiment (GET form)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          },
+          {
+            "$ref": "#/components/parameters/FetchLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/MaxXactId"
+          },
+          {
+            "$ref": "#/components/parameters/MaxRootSpanId"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the fetched rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchExperimentEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsExperimentIdFetch",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/experiment/{experiment_id}/fetch`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiment/{experiment_id}/feedback": {
+      "post": {
+        "operationId": "postExperimentIdFeedback",
+        "tags": [
+          "Experiments"
+        ],
+        "description": "Log feedback for a set of experiment events",
+        "summary": "Feedback for experiment events",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ExperimentId"
+          }
+        ],
+        "requestBody": {
+          "description": "An array of feedback objects",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackExperimentEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No return value"
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dataset": {
+      "post": {
+        "tags": [
+          "Datasets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "postDataset",
+        "description": "Create a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will return the existing dataset unmodified",
+        "summary": "Create dataset",
+        "requestBody": {
+          "description": "Any desired information about the new dataset object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDataset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new dataset object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Datasets"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "putDataset",
+        "description": "Create or replace a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will replace the existing dataset with the provided fields",
+        "summary": "Create or replace dataset",
+        "requestBody": {
+          "description": "Any desired information about the new dataset object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDataset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new dataset object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getDataset",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "List out all datasets. The datasets are sorted by creation date, with the most recently-created datasets coming first",
+        "summary": "List datasets",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/StartingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/EndingBefore"
+          },
+          {
+            "$ref": "#/components/parameters/DatasetName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of dataset objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dataset"
+                      },
+                      "description": "A list of dataset objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsDataset",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/dataset`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dataset/{dataset_id}": {
+      "get": {
+        "operationId": "getDatasetId",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Get a dataset object by its id",
+        "summary": "Get dataset",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the dataset object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchDatasetId",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Partially update a dataset object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /dataset/{id}` and then replace it with `PUT /dataset`.",
+        "summary": "Partially update dataset",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchDataset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the experiment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteDatasetId",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Delete a dataset object by its id",
+        "summary": "Delete dataset",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted dataset object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsDatasetId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/dataset/{dataset_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dataset/{dataset_id}/insert": {
+      "post": {
+        "operationId": "postDatasetIdInsert",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Insert a set of events into the dataset",
+        "summary": "Insert dataset events",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "requestBody": {
+          "description": "An array of dataset events to insert",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InsertDatasetEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the inserted row ids",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsertEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsDatasetIdInsert",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/dataset/{dataset_id}/insert`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dataset/{dataset_id}/fetch": {
+      "post": {
+        "operationId": "postDatasetIdFetch",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Fetch the events in a dataset. Equivalent to the GET form of the same path, but with the parameters in the request body rather than in the URL query",
+        "summary": "Fetch dataset (POST form)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "requestBody": {
+          "description": "Filters for the fetch query",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FetchEventsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the fetched rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchDatasetEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getDatasetIdFetch",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Fetch the events in a dataset. Equivalent to the POST form of the same path, but with the parameters in the URL query rather than in the request body",
+        "summary": "Fetch dataset (GET form)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          },
+          {
+            "$ref": "#/components/parameters/FetchLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/MaxXactId"
+          },
+          {
+            "$ref": "#/components/parameters/MaxRootSpanId"
+          },
+          {
+            "$ref": "#/components/parameters/Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the fetched rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchDatasetEventsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsDatasetIdFetch",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/dataset/{dataset_id}/fetch`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dataset/{dataset_id}/feedback": {
+      "post": {
+        "operationId": "postDatasetIdFeedback",
+        "tags": [
+          "Datasets"
+        ],
+        "description": "Log feedback for a set of dataset events",
+        "summary": "Feedback for dataset events",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/DatasetId"
+          }
+        ],
+        "requestBody": {
+          "description": "An array of feedback objects",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackDatasetEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No return value"
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1": {
+      "get": {
+        "operationId": "getIndex",
+        "tags": [
+          "Other"
+        ],
+        "description": "Default endpoint. Simply replies with 'Hello, World!'. Authorization is not required",
+        "summary": "Hello world endpoint",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Hello world string",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsIndex",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}
