@@ -63,31 +63,31 @@
       "FetchLimitParam": {
         "type": "integer",
         "minimum": 0,
-        "description": "Fetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+        "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
       },
       "StartingAfter": {
         "type": "string",
         "format": "uuid",
-        "description": "A cursor for pagination. For example, if the final item in the last page you fetched had an id of `foo`, pass `starting_after=foo` to fetch the next page. Note: you may only pass one of `starting_after` and `ending_before`"
+        "description": "Pagination cursor id.\n\nFor example, if the final item in the last page you fetched had an id of `foo`, pass `starting_after=foo` to fetch the next page. Note: you may only pass one of `starting_after` and `ending_before`"
       },
       "EndingBefore": {
         "type": "string",
         "format": "uuid",
-        "description": "A cursor for pagination. For example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`"
+        "description": "Pagination cursor id.\n\nFor example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`"
       },
       "MaxXactId": {
         "type": "integer",
         "format": "int64",
-        "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_xact_id` as the maximum of the `_xact_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+        "description": "Pagination cursor transaction ID, combined with `max_root_span_id`\n\nGiven a previous fetch with a list of rows, you can determine `max_xact_id` as the maximum of the `_xact_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
       },
       "MaxRootSpanId": {
         "type": "string",
-        "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_root_span_id` as the maximum of the `root_span_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+        "description": "Pagination cursor transaction root span ID, combined with `max_xact_id`\n\nGiven a previous fetch with a list of rows, you can determine `max_root_span_id` as the maximum of the `root_span_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
       },
       "Version": {
         "type": "integer",
         "format": "int64",
-        "description": "You may specify a version id to retrieve a snapshot of the events from a past time. The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
+        "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
       },
       "Project": {
         "type": "object",
@@ -324,25 +324,12 @@
             "description": "Pass `_object_delete=true` to mark the project logs event deleted. Deleted events will not show up in subsequent fetches for this project logs"
           },
           "_is_merge": {
-            "anyOf": [
-              {
-                "type": "boolean",
-                "enum": [
-                  false
-                ]
-              },
-              {
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "enum": [
-                  null
-                ]
-              },
-              {
-                "type": "null"
-              }
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "enum": [
+              false
             ],
             "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
           },
@@ -789,7 +776,7 @@
               "null"
             ],
             "minimum": 0,
-            "description": "Fetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+            "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
           },
           "max_xact_id": {
             "type": [
@@ -797,14 +784,14 @@
               "null"
             ],
             "format": "int64",
-            "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_xact_id` as the maximum of the `_xact_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+            "description": "Pagination cursor transaction ID, combined with `max_root_span_id`\n\nGiven a previous fetch with a list of rows, you can determine `max_xact_id` as the maximum of the `_xact_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
           },
           "max_root_span_id": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Together, `max_xact_id` and `max_root_span_id` form a cursor for paginating event fetches. Given a previous fetch with a list of rows, you can determine `max_root_span_id` as the maximum of the `root_span_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
+            "description": "Pagination cursor transaction root span ID, combined with `max_xact_id`\n\nGiven a previous fetch with a list of rows, you can determine `max_root_span_id` as the maximum of the `root_span_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries."
           },
           "filters": {
             "$ref": "#/components/schemas/FetchEventsFilters"
@@ -815,7 +802,7 @@
               "null"
             ],
             "format": "int64",
-            "description": "You may specify a version id to retrieve a snapshot of the events from a past time. The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
+            "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
           }
         },
         "additionalProperties": false
@@ -1339,25 +1326,12 @@
             "description": "Pass `_object_delete=true` to mark the experiment event deleted. Deleted events will not show up in subsequent fetches for this experiment"
           },
           "_is_merge": {
-            "anyOf": [
-              {
-                "type": "boolean",
-                "enum": [
-                  false
-                ]
-              },
-              {
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "enum": [
-                  null
-                ]
-              },
-              {
-                "type": "null"
-              }
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "enum": [
+              false
             ],
             "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
           },
@@ -1973,25 +1947,12 @@
             "description": "Pass `_object_delete=true` to mark the dataset event deleted. Deleted events will not show up in subsequent fetches for this dataset"
           },
           "_is_merge": {
-            "anyOf": [
-              {
-                "type": "boolean",
-                "enum": [
-                  false
-                ]
-              },
-              {
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "enum": [
-                  null
-                ]
-              },
-              {
-                "type": "null"
-              }
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "enum": [
+              false
             ],
             "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
           },
@@ -2132,6 +2093,10 @@
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
           },
+          "span_id": {
+            "type": "string",
+            "description": "A unique identifier used to link different dataset events together as part of a full trace. See the [tracing guide](https://www.braintrustdata.com/docs/guides/tracing) for full details on tracing"
+          },
           "root_span_id": {
             "type": "string",
             "description": "The `span_id` of the root of the trace this dataset event belongs to"
@@ -2141,6 +2106,7 @@
           "id",
           "_xact_id",
           "dataset_id",
+          "span_id",
           "root_span_id"
         ],
         "additionalProperties": false
@@ -2221,6 +2187,7 @@
           "$ref": "#/components/schemas/ExperimentId"
         },
         "required": true,
+        "description": "Experiment id",
         "name": "experiment_id",
         "in": "path"
       },
@@ -2229,6 +2196,7 @@
           "$ref": "#/components/schemas/DatasetId"
         },
         "required": true,
+        "description": "Dataset id",
         "name": "dataset_id",
         "in": "path"
       },
@@ -2237,6 +2205,7 @@
           "$ref": "#/components/schemas/ProjectId"
         },
         "required": true,
+        "description": "Project id",
         "name": "project_id",
         "in": "path"
       },
@@ -2245,6 +2214,7 @@
           "$ref": "#/components/schemas/ExperimentName"
         },
         "required": false,
+        "description": "Name of the experiment to search for",
         "name": "experiment_name",
         "in": "query"
       },
@@ -2253,6 +2223,7 @@
           "$ref": "#/components/schemas/DatasetName"
         },
         "required": false,
+        "description": "Name of the dataset to search for",
         "name": "dataset_name",
         "in": "query"
       },
@@ -2261,6 +2232,7 @@
           "$ref": "#/components/schemas/ProjectName"
         },
         "required": false,
+        "description": "Name of the project to search for",
         "name": "project_name",
         "in": "query"
       },
@@ -2269,6 +2241,7 @@
           "$ref": "#/components/schemas/OrgName"
         },
         "required": false,
+        "description": "Filter search results to within a particular organization",
         "name": "org_name",
         "in": "query"
       },
@@ -2277,6 +2250,7 @@
           "$ref": "#/components/schemas/AppLimitParam"
         },
         "required": false,
+        "description": "Limit the number of objects to return",
         "name": "limit",
         "in": "query"
       },
@@ -2285,6 +2259,7 @@
           "$ref": "#/components/schemas/FetchLimitParam"
         },
         "required": false,
+        "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.",
         "name": "limit",
         "in": "query"
       },
@@ -2293,6 +2268,7 @@
           "$ref": "#/components/schemas/StartingAfter"
         },
         "required": false,
+        "description": "Pagination cursor id.\n\nFor example, if the final item in the last page you fetched had an id of `foo`, pass `starting_after=foo` to fetch the next page. Note: you may only pass one of `starting_after` and `ending_before`",
         "name": "starting_after",
         "in": "query"
       },
@@ -2301,6 +2277,7 @@
           "$ref": "#/components/schemas/EndingBefore"
         },
         "required": false,
+        "description": "Pagination cursor id.\n\nFor example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`",
         "name": "ending_before",
         "in": "query"
       },
@@ -2309,6 +2286,7 @@
           "$ref": "#/components/schemas/MaxXactId"
         },
         "required": false,
+        "description": "Pagination cursor transaction ID, combined with `max_root_span_id`\n\nGiven a previous fetch with a list of rows, you can determine `max_xact_id` as the maximum of the `_xact_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries.",
         "name": "max_xact_id",
         "in": "query"
       },
@@ -2317,6 +2295,7 @@
           "$ref": "#/components/schemas/MaxRootSpanId"
         },
         "required": false,
+        "description": "Pagination cursor transaction root span ID, combined with `max_xact_id`\n\nGiven a previous fetch with a list of rows, you can determine `max_root_span_id` as the maximum of the `root_span_id` field over all rows. See the documentation for `limit` for an overview of paginating fetch queries.",
         "name": "max_root_span_id",
         "in": "query"
       },
@@ -2325,6 +2304,7 @@
           "$ref": "#/components/schemas/Version"
         },
         "required": false,
+        "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.",
         "name": "version",
         "in": "query"
       }
