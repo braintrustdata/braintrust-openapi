@@ -100,6 +100,21 @@ components:
 
 
         The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.
+    SummarizeScores:
+      type: boolean
+      description: Whether to summarize the scores and metrics. If false (or omitted),
+        only the metadata will be returned.
+    ComparisonExperimentId:
+      type: string
+      format: uuid
+      description: The experiment to compare against, if summarizing scores and
+        metrics. If omitted, will fall back to the `base_exp_id` stored in the
+        experiment metadata, and then to the most recent experiment run in the
+        same project. Must pass `summarize_scores=true` for this id to be used
+    SummarizeData:
+      type: boolean
+      description: Whether to summarize the data. If false (or omitted), only the
+        metadata will be returned.
     Project:
       type: object
       properties:
@@ -501,15 +516,18 @@ components:
       required:
         - _is_merge
       additionalProperties: false
+    InsertProjectLogsEvent:
+      anyOf:
+        - $ref: "#/components/schemas/InsertProjectLogsEventReplace"
+        - $ref: "#/components/schemas/InsertProjectLogsEventMerge"
+      description: A project logs event
     InsertProjectLogsEventRequest:
       type: object
       properties:
         events:
           type: array
           items:
-            anyOf:
-              - $ref: "#/components/schemas/InsertProjectLogsEventReplace"
-              - $ref: "#/components/schemas/InsertProjectLogsEventMerge"
+            $ref: "#/components/schemas/InsertProjectLogsEvent"
           description: A list of project logs events to insert
       required:
         - events
@@ -792,62 +810,62 @@ components:
 
             The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.
       additionalProperties: false
+    FeedbackProjectLogsItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the project logs event to log feedback for. This is the
+            row `id` returned by `POST /v1/project_logs/{project_id}/insert`
+        scores:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type:
+              - number
+              - "null"
+            minimum: 0
+            maximum: 1
+          description: A dictionary of numeric values (between 0 and 1) to log. These
+            scores will be merged into the existing scores for the project logs
+            event
+        expected:
+          description: The ground truth value (an arbitrary, JSON serializable object)
+            that you'd compare to `output` to determine if your `output` value
+            is correct or not
+        comment:
+          type:
+            - string
+            - "null"
+          description: An optional comment string to log about the project logs event
+        metadata:
+          type:
+            - object
+            - "null"
+          additionalProperties: {}
+          description: A dictionary with additional data about the feedback. If you have a
+            `user_id`, you can log it here and access it in the Braintrust UI.
+        source:
+          type:
+            - string
+            - "null"
+          enum:
+            - app
+            - api
+            - external
+          description: The source of the feedback. Must be one of "external" (default),
+            "app", or "api"
+      required:
+        - id
+      additionalProperties: false
     FeedbackProjectLogsEventRequest:
       type: object
       properties:
         feedback:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: The id of the project logs event to log feedback for. This is the
-                  row `id` returned by `POST
-                  /v1/project_logs/{project_id}/insert`
-              scores:
-                type:
-                  - object
-                  - "null"
-                additionalProperties:
-                  type:
-                    - number
-                    - "null"
-                  minimum: 0
-                  maximum: 1
-                description: A dictionary of numeric values (between 0 and 1) to log. These
-                  scores will be merged into the existing scores for the project
-                  logs event
-              expected:
-                description: The ground truth value (an arbitrary, JSON serializable object)
-                  that you'd compare to `output` to determine if your `output`
-                  value is correct or not
-              comment:
-                type:
-                  - string
-                  - "null"
-                description: An optional comment string to log about the project logs event
-              metadata:
-                type:
-                  - object
-                  - "null"
-                additionalProperties: {}
-                description: A dictionary with additional data about the feedback. If you have a
-                  `user_id`, you can log it here and access it in the Braintrust
-                  UI.
-              source:
-                type:
-                  - string
-                  - "null"
-                enum:
-                  - app
-                  - api
-                  - external
-                description: The source of the feedback. Must be one of "external" (default),
-                  "app", or "api"
-            required:
-              - id
-            additionalProperties: false
+            $ref: "#/components/schemas/FeedbackProjectLogsItem"
           description: A list of project logs feedback items
       required:
         - feedback
@@ -1439,15 +1457,18 @@ components:
       required:
         - _is_merge
       additionalProperties: false
+    InsertExperimentEvent:
+      anyOf:
+        - $ref: "#/components/schemas/InsertExperimentEventReplace"
+        - $ref: "#/components/schemas/InsertExperimentEventMerge"
+      description: An experiment event
     InsertExperimentEventRequest:
       type: object
       properties:
         events:
           type: array
           items:
-            anyOf:
-              - $ref: "#/components/schemas/InsertExperimentEventReplace"
-              - $ref: "#/components/schemas/InsertExperimentEventMerge"
+            $ref: "#/components/schemas/InsertExperimentEvent"
           description: A list of experiment events to insert
       required:
         - events
@@ -1647,65 +1668,171 @@ components:
       required:
         - events
       additionalProperties: false
+    FeedbackExperimentItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the experiment event to log feedback for. This is the row
+            `id` returned by `POST /v1/experiment/{experiment_id}/insert`
+        scores:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type:
+              - number
+              - "null"
+            minimum: 0
+            maximum: 1
+          description: A dictionary of numeric values (between 0 and 1) to log. These
+            scores will be merged into the existing scores for the experiment
+            event
+        expected:
+          description: The ground truth value (an arbitrary, JSON serializable object)
+            that you'd compare to `output` to determine if your `output` value
+            is correct or not
+        comment:
+          type:
+            - string
+            - "null"
+          description: An optional comment string to log about the experiment event
+        metadata:
+          type:
+            - object
+            - "null"
+          additionalProperties: {}
+          description: A dictionary with additional data about the feedback. If you have a
+            `user_id`, you can log it here and access it in the Braintrust UI.
+        source:
+          type:
+            - string
+            - "null"
+          enum:
+            - app
+            - api
+            - external
+          description: The source of the feedback. Must be one of "external" (default),
+            "app", or "api"
+      required:
+        - id
+      additionalProperties: false
     FeedbackExperimentEventRequest:
       type: object
       properties:
         feedback:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: The id of the experiment event to log feedback for. This is the row
-                  `id` returned by `POST /v1/experiment/{experiment_id}/insert`
-              scores:
-                type:
-                  - object
-                  - "null"
-                additionalProperties:
-                  type:
-                    - number
-                    - "null"
-                  minimum: 0
-                  maximum: 1
-                description: A dictionary of numeric values (between 0 and 1) to log. These
-                  scores will be merged into the existing scores for the
-                  experiment event
-              expected:
-                description: The ground truth value (an arbitrary, JSON serializable object)
-                  that you'd compare to `output` to determine if your `output`
-                  value is correct or not
-              comment:
-                type:
-                  - string
-                  - "null"
-                description: An optional comment string to log about the experiment event
-              metadata:
-                type:
-                  - object
-                  - "null"
-                additionalProperties: {}
-                description: A dictionary with additional data about the feedback. If you have a
-                  `user_id`, you can log it here and access it in the Braintrust
-                  UI.
-              source:
-                type:
-                  - string
-                  - "null"
-                enum:
-                  - app
-                  - api
-                  - external
-                description: The source of the feedback. Must be one of "external" (default),
-                  "app", or "api"
-            required:
-              - id
-            additionalProperties: false
+            $ref: "#/components/schemas/FeedbackExperimentItem"
           description: A list of experiment feedback items
       required:
         - feedback
       additionalProperties: false
+    ScoreSummary:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the score
+        score:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Average score across all examples
+        diff:
+          type: number
+          minimum: -1
+          maximum: 1
+          description: Difference in score between the current and comparison experiment
+        improvements:
+          type: integer
+          minimum: 0
+          description: Number of improvements in the score
+        regressions:
+          type: integer
+          minimum: 0
+          description: Number of regressions in the score
+      required:
+        - name
+        - score
+        - diff
+        - improvements
+        - regressions
+      description: Summary of a score's performance
+    MetricSummary:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the metric
+        metric:
+          type: number
+          description: Average metric across all examples
+        unit:
+          type: string
+          description: Unit label for the metric
+        diff:
+          type: number
+          description: Difference in metric between the current and comparison experiment
+        improvements:
+          type: integer
+          minimum: 0
+          description: Number of improvements in the metric
+        regressions:
+          type: integer
+          minimum: 0
+          description: Number of regressions in the metric
+      required:
+        - name
+        - metric
+        - unit
+        - diff
+        - improvements
+        - regressions
+      description: Summary of a metric's performance
+    SummarizeExperimentResponse:
+      type: object
+      properties:
+        project_name:
+          type: string
+          description: Name of the project that the experiment belongs to
+        experiment_name:
+          type: string
+          description: Name of the experiment
+        project_url:
+          type: string
+          format: uri
+          description: URL to the project's page in the Braintrust app
+        experiment_url:
+          type: string
+          format: uri
+          description: URL to the experiment's page in the Braintrust app
+        comparison_experiment_name:
+          type:
+            - string
+            - "null"
+          description: The experiment which scores are baselined against
+        scores:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/ScoreSummary"
+          description: Summary of the experiment's scores
+        metrics:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/MetricSummary"
+          description: Summary of the experiment's metrics
+      required:
+        - project_name
+        - experiment_name
+        - project_url
+        - experiment_url
+      additionalProperties: false
+      description: Summary of an experiment
     Dataset:
       type: object
       properties:
@@ -1908,15 +2035,18 @@ components:
       required:
         - _is_merge
       additionalProperties: false
+    InsertDatasetEvent:
+      anyOf:
+        - $ref: "#/components/schemas/InsertDatasetEventReplace"
+        - $ref: "#/components/schemas/InsertDatasetEventMerge"
+      description: A dataset event
     InsertDatasetEventRequest:
       type: object
       properties:
         events:
           type: array
           items:
-            anyOf:
-              - $ref: "#/components/schemas/InsertDatasetEventReplace"
-              - $ref: "#/components/schemas/InsertDatasetEventMerge"
+            $ref: "#/components/schemas/InsertDatasetEvent"
           description: A list of dataset events to insert
       required:
         - events
@@ -1995,47 +2125,187 @@ components:
       required:
         - events
       additionalProperties: false
+    FeedbackDatasetItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the dataset event to log feedback for. This is the row
+            `id` returned by `POST /v1/dataset/{dataset_id}/insert`
+        comment:
+          type:
+            - string
+            - "null"
+          description: An optional comment string to log about the dataset event
+        metadata:
+          type:
+            - object
+            - "null"
+          additionalProperties: {}
+          description: A dictionary with additional data about the feedback. If you have a
+            `user_id`, you can log it here and access it in the Braintrust UI.
+        source:
+          type:
+            - string
+            - "null"
+          enum:
+            - app
+            - api
+            - external
+          description: The source of the feedback. Must be one of "external" (default),
+            "app", or "api"
+      required:
+        - id
+      additionalProperties: false
     FeedbackDatasetEventRequest:
       type: object
       properties:
         feedback:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: The id of the dataset event to log feedback for. This is the row
-                  `id` returned by `POST /v1/dataset/{dataset_id}/insert`
-              comment:
-                type:
-                  - string
-                  - "null"
-                description: An optional comment string to log about the dataset event
-              metadata:
-                type:
-                  - object
-                  - "null"
-                additionalProperties: {}
-                description: A dictionary with additional data about the feedback. If you have a
-                  `user_id`, you can log it here and access it in the Braintrust
-                  UI.
-              source:
-                type:
-                  - string
-                  - "null"
-                enum:
-                  - app
-                  - api
-                  - external
-                description: The source of the feedback. Must be one of "external" (default),
-                  "app", or "api"
-            required:
-              - id
-            additionalProperties: false
+            $ref: "#/components/schemas/FeedbackDatasetItem"
           description: A list of dataset feedback items
       required:
         - feedback
+      additionalProperties: false
+    DataSummary:
+      type:
+        - object
+        - "null"
+      properties:
+        total_records:
+          type: integer
+          minimum: 0
+          description: Total number of records in the dataset
+      required:
+        - total_records
+      description: Summary of a dataset's data
+    SummarizeDatasetResponse:
+      type: object
+      properties:
+        project_name:
+          type: string
+          description: Name of the project that the dataset belongs to
+        dataset_name:
+          type: string
+          description: Name of the dataset
+        project_url:
+          type: string
+          format: uri
+          description: URL to the project's page in the Braintrust app
+        dataset_url:
+          type: string
+          format: uri
+          description: URL to the dataset's page in the Braintrust app
+        data_summary:
+          $ref: "#/components/schemas/DataSummary"
+      required:
+        - project_name
+        - dataset_name
+        - project_url
+        - dataset_url
+      additionalProperties: false
+      description: Summary of a dataset
+    CrossObjectInsertResponse:
+      type: object
+      properties:
+        experiment:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/InsertEventsResponse"
+          description: A mapping from experiment id to row ids for inserted `events`
+        dataset:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/InsertEventsResponse"
+          description: A mapping from dataset id to row ids for inserted `events`
+        project_logs:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            $ref: "#/components/schemas/InsertEventsResponse"
+          description: A mapping from project id to row ids for inserted `events`
+      additionalProperties: false
+    CrossObjectInsertRequest:
+      type: object
+      properties:
+        experiment:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: object
+            properties:
+              events:
+                type:
+                  - array
+                  - "null"
+                items:
+                  $ref: "#/components/schemas/InsertExperimentEvent"
+                description: A list of experiment events to insert
+              feedback:
+                type:
+                  - array
+                  - "null"
+                items:
+                  $ref: "#/components/schemas/FeedbackExperimentItem"
+                description: A list of experiment feedback items
+            additionalProperties: false
+          description: A mapping from experiment id to a set of log events and feedback
+            items to insert
+        dataset:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: object
+            properties:
+              events:
+                type:
+                  - array
+                  - "null"
+                items:
+                  $ref: "#/components/schemas/InsertDatasetEvent"
+                description: A list of dataset events to insert
+              feedback:
+                type:
+                  - array
+                  - "null"
+                items:
+                  $ref: "#/components/schemas/FeedbackDatasetItem"
+                description: A list of dataset feedback items
+            additionalProperties: false
+          description: A mapping from dataset id to a set of log events and feedback items
+            to insert
+        project_logs:
+          type:
+            - object
+            - "null"
+          additionalProperties:
+            type: object
+            properties:
+              events:
+                type:
+                  - array
+                  - "null"
+                items:
+                  $ref: "#/components/schemas/InsertProjectLogsEvent"
+                description: A list of project logs events to insert
+              feedback:
+                type:
+                  - array
+                  - "null"
+                items:
+                  $ref: "#/components/schemas/FeedbackProjectLogsItem"
+                description: A list of project logs feedback items
+            additionalProperties: false
+          description: A mapping from project id to a set of log events and feedback items
+            to insert
       additionalProperties: false
   parameters:
     ExperimentId:
@@ -2162,6 +2432,32 @@ components:
 
         The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.
       name: version
+      in: query
+    SummarizeScores:
+      schema:
+        $ref: "#/components/schemas/SummarizeScores"
+      required: false
+      description: Whether to summarize the scores and metrics. If false (or omitted),
+        only the metadata will be returned.
+      name: summarize_scores
+      in: query
+    ComparisonExperimentId:
+      schema:
+        $ref: "#/components/schemas/ComparisonExperimentId"
+      required: false
+      description: The experiment to compare against, if summarizing scores and
+        metrics. If omitted, will fall back to the `base_exp_id` stored in the
+        experiment metadata, and then to the most recent experiment run in the
+        same project. Must pass `summarize_scores=true` for this id to be used
+      name: comparison_experiment_id
+      in: query
+    SummarizeData:
+      schema:
+        $ref: "#/components/schemas/SummarizeData"
+      required: false
+      description: Whether to summarize the data. If false (or omitted), only the
+        metadata will be returned.
+      name: summarize_data
       in: query
 paths:
   /v1/project:
@@ -3427,6 +3723,87 @@ paths:
             text/plain:
               schema:
                 type: string
+  /v1/experiment/{experiment_id}/summarize:
+    get:
+      operationId: getExperimentIdSummarize
+      tags:
+        - Experiments
+      description: Summarize experiment
+      summary: Summarize experiment
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/SummarizeScores"
+        - $ref: "#/components/parameters/ComparisonExperimentId"
+      responses:
+        "200":
+          description: experiment summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SummarizeExperimentResponse"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+    options:
+      operationId: optionsExperimentIdSummarize
+      description: Enable CORS
+      summary: Enable CORS (`/v1/experiment/{experiment_id}/summarize`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/ExperimentId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
   /v1/dataset:
     post:
       tags:
@@ -4059,6 +4436,86 @@ paths:
             text/plain:
               schema:
                 type: string
+  /v1/dataset/{dataset_id}/summarize:
+    get:
+      operationId: getDatasetIdSummarize
+      tags:
+        - Datasets
+      description: Summarize dataset
+      summary: Summarize dataset
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/SummarizeData"
+      responses:
+        "200":
+          description: dataset summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SummarizeDatasetResponse"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+    options:
+      operationId: optionsDatasetIdSummarize
+      description: Enable CORS
+      summary: Enable CORS (`/v1/dataset/{dataset_id}/summarize`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/DatasetId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
   /v1:
     get:
       operationId: getIndex
@@ -4092,6 +4549,88 @@ paths:
       operationId: optionsIndex
       description: Enable CORS
       summary: Enable CORS (`/v1`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+  /v1/insert:
+    post:
+      operationId: postCrossObjectInsert
+      tags:
+        - CrossObject
+      description: Insert events and feedback across object types
+      summary: Cross-object insert
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: A mapping from event object type -> object id -> events to insert
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrossObjectInsertRequest"
+      responses:
+        "200":
+          description: Returns the inserted row ids for the events on each individual object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CrossObjectInsertResponse"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+    options:
+      operationId: optionsCrossObjectInsert
+      description: Enable CORS
+      summary: Enable CORS (`/v1/insert`)
       security: []
       tags:
         - CORS
