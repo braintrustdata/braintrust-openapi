@@ -2085,7 +2085,7 @@
           "input": {
             "description": "The argument that uniquely define an input case (an arbitrary, JSON serializable object)"
           },
-          "output": {
+          "expected": {
             "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object)"
           },
           "metadata": {
@@ -2136,7 +2136,7 @@
           "input": {
             "description": "The argument that uniquely define an input case (an arbitrary, JSON serializable object)"
           },
-          "output": {
+          "expected": {
             "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object)"
           },
           "metadata": {
@@ -2250,7 +2250,7 @@
           "input": {
             "description": "The argument that uniquely define an input case (an arbitrary, JSON serializable object)"
           },
-          "output": {
+          "expected": {
             "description": "The output of your application, including post-processing (an arbitrary, JSON serializable object)"
           },
           "metadata": {
