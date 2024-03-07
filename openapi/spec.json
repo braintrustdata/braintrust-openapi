@@ -76,8 +76,7 @@
         "description": "Pagination cursor id.\n\nFor example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`"
       },
       "MaxXactId": {
-        "type": "integer",
-        "format": "int64",
+        "type": "string",
         "description": "Together, `max_xact_id` and `max_root_span_id` form a pagination cursor\n\nSince a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries."
       },
       "MaxRootSpanId": {
@@ -85,8 +84,7 @@
         "description": "Together, `max_xact_id` and `max_root_span_id` form a pagination cursor\n\nSince a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries."
       },
       "Version": {
-        "type": "integer",
-        "format": "int64",
+        "type": "string",
         "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
       },
       "SummarizeScores": {
@@ -234,6 +232,16 @@
             ],
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
           },
           "metrics": {
             "type": [
@@ -390,6 +398,16 @@
             ],
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
           },
           "metrics": {
             "type": [
@@ -553,8 +571,7 @@
             "description": "A unique identifier for the project logs event. If you don't provide one, BrainTrust will generate one for you"
           },
           "_xact_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the project logs (see the `version` parameter)"
           },
           "created": {
@@ -613,6 +630,16 @@
             ],
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
           },
           "metrics": {
             "type": [
@@ -797,10 +824,9 @@
           },
           "max_xact_id": {
             "type": [
-              "integer",
+              "string",
               "null"
             ],
-            "format": "int64",
             "description": "Together, `max_xact_id` and `max_root_span_id` form a pagination cursor\n\nSince a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries."
           },
           "max_root_span_id": {
@@ -815,10 +841,9 @@
           },
           "version": {
             "type": [
-              "integer",
+              "string",
               "null"
             ],
-            "format": "int64",
             "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
           }
         },
@@ -1237,6 +1262,16 @@
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
           },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
+          },
           "metrics": {
             "type": [
               "object",
@@ -1399,6 +1434,16 @@
             ],
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
           },
           "metrics": {
             "type": [
@@ -1576,8 +1621,7 @@
             "description": "If the experiment is associated to a dataset, this is the event-level dataset id this experiment event is tied to"
           },
           "_xact_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the experiment (see the `version` parameter)"
           },
           "created": {
@@ -1629,6 +1673,16 @@
             ],
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
           },
           "metrics": {
             "type": [
@@ -2096,6 +2150,16 @@
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
           },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
+          },
           "id": {
             "type": [
               "string",
@@ -2146,6 +2210,16 @@
             ],
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
           },
           "id": {
             "type": [
@@ -2222,8 +2296,7 @@
             "description": "A unique identifier for the dataset event. If you don't provide one, BrainTrust will generate one for you"
           },
           "_xact_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the dataset (see the `version` parameter)"
           },
           "created": {
@@ -2260,6 +2333,16 @@
             ],
             "additionalProperties": {},
             "description": "A dictionary with additional data about the test example, model outputs, or just about anything else that's relevant, that you can use to help find and analyze examples later. For example, you could log the `prompt`, example's `id`, or anything else that would be useful to slice/dice later. The values in `metadata` can be any JSON-serializable type, but its keys must be strings"
+          },
+          "tags": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags to log"
           },
           "span_id": {
             "type": "string",
