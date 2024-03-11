@@ -78,8 +78,7 @@ components:
 
         For example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`
     MaxXactId:
-      type: integer
-      format: int64
+      type: string
       description: >-
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
@@ -93,8 +92,7 @@ components:
 
         Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
     Version:
-      type: integer
-      format: int64
+      type: string
       description: >-
         Retrieve a snapshot of events from a past time
 
@@ -240,6 +238,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         metrics:
           type:
             - object
@@ -402,6 +407,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         metrics:
           type:
             - object
@@ -540,8 +552,7 @@ components:
           description: A unique identifier for the project logs event. If you don't
             provide one, BrainTrust will generate one for you
         _xact_id:
-          type: integer
-          format: int64
+          type: string
           description: The transaction id of an event is unique to the network operation
             that processed the event insertion. Transaction ids are
             monotonically increasing over time and can be used to retrieve a
@@ -613,6 +624,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         metrics:
           type:
             - object
@@ -779,9 +797,8 @@ components:
             The `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.
         max_xact_id:
           type:
-            - integer
+            - string
             - "null"
-          format: int64
           description: >-
             Together, `max_xact_id` and `max_root_span_id` form a pagination
             cursor
@@ -802,9 +819,8 @@ components:
           $ref: "#/components/schemas/FetchEventsFilters"
         version:
           type:
-            - integer
+            - string
             - "null"
-          format: int64
           description: >-
             Retrieve a snapshot of events from a past time
 
@@ -1165,6 +1181,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         metrics:
           type:
             - object
@@ -1338,6 +1361,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         metrics:
           type:
             - object
@@ -1488,8 +1518,7 @@ components:
           description: If the experiment is associated to a dataset, this is the
             event-level dataset id this experiment event is tied to
         _xact_id:
-          type: integer
-          format: int64
+          type: string
           description: The transaction id of an event is unique to the network operation
             that processed the event insertion. Transaction ids are
             monotonically increasing over time and can be used to retrieve a
@@ -1561,6 +1590,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         metrics:
           type:
             - object
@@ -1931,6 +1967,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         id:
           type:
             - string
@@ -1992,6 +2035,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         id:
           type:
             - string
@@ -2060,8 +2110,7 @@ components:
           description: A unique identifier for the dataset event. If you don't provide
             one, BrainTrust will generate one for you
         _xact_id:
-          type: integer
-          format: int64
+          type: string
           description: The transaction id of an event is unique to the network operation
             that processed the event insertion. Transaction ids are
             monotonically increasing over time and can be used to retrieve a
@@ -2099,6 +2148,13 @@ components:
             log the `prompt`, example's `id`, or anything else that would be
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
+        tags:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: A list of tags to log
         span_id:
           type: string
           description: A unique identifier used to link different dataset events together
