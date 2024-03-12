@@ -6724,6 +6724,9 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "$ref": "#/components/parameters/Version"
+          },
+          {
             "$ref": "#/components/parameters/OrgName"
           }
         ],

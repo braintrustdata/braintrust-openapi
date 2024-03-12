@@ -5029,6 +5029,7 @@ paths:
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/PromptName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/Version"
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
