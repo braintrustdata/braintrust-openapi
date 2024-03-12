@@ -2720,94 +2720,6 @@
         ],
         "additionalProperties": false
       },
-      "PromptEvent": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "A unique identifier for the prompt event. If you don't provide one, BrainTrust will generate one for you"
-          },
-          "_xact_id": {
-            "type": "string",
-            "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-          },
-          "created": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time",
-            "description": "The timestamp the prompt event was created"
-          },
-          "org_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique id for the organization that the project belongs under"
-          },
-          "project_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the project"
-          },
-          "log_id": {
-            "type": "string",
-            "enum": [
-              "p"
-            ],
-            "description": "A literal 'p' which identifies the log as a prompt entry"
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the prompt"
-          },
-          "slug": {
-            "type": "string",
-            "description": "The slug of the prompt"
-          },
-          "description": {
-            "type": "string",
-            "description": "The description of the prompt"
-          },
-          "prompt_data": {},
-          "tags": {
-            "type": [
-              "array",
-              "null"
-            ],
-            "items": {
-              "type": "string"
-            },
-            "description": "A list of tags to log"
-          }
-        },
-        "required": [
-          "id",
-          "_xact_id",
-          "org_id",
-          "project_id",
-          "log_id",
-          "name",
-          "slug",
-          "description"
-        ],
-        "additionalProperties": false
-      },
-      "FetchPromptEventsResponse": {
-        "type": "object",
-        "properties": {
-          "events": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PromptEvent"
-            },
-            "description": "A list of fetched events"
-          }
-        },
-        "required": [
-          "events"
-        ],
-        "additionalProperties": false
-      },
       "FeedbackPromptItem": {
         "type": "object",
         "properties": {
@@ -7506,228 +7418,6 @@
         }
       }
     },
-    "/v1/prompt/{prompt_id}/fetch": {
-      "post": {
-        "operationId": "postPromptIdFetch",
-        "tags": [
-          "Prompts"
-        ],
-        "description": "Fetch the events in a prompt. Equivalent to the GET form of the same path, but with the parameters in the request body rather than in the URL query",
-        "summary": "Fetch prompt (POST form)",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/PromptId"
-          }
-        ],
-        "requestBody": {
-          "description": "Filters for the fetch query",
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FetchEventsRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Returns the fetched rows",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FetchPromptEventsResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The request was unacceptable, often due to missing a required parameter",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No valid API key provided",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "The API key doesn’t have permissions to perform the request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on Braintrust's end. (These are rare.)",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "operationId": "getPromptIdFetch",
-        "tags": [
-          "Prompts"
-        ],
-        "description": "Fetch the events in a prompt. Equivalent to the POST form of the same path, but with the parameters in the URL query rather than in the request body",
-        "summary": "Fetch prompt (GET form)",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/PromptId"
-          },
-          {
-            "$ref": "#/components/parameters/FetchLimitParam"
-          },
-          {
-            "$ref": "#/components/parameters/MaxXactId"
-          },
-          {
-            "$ref": "#/components/parameters/MaxRootSpanId"
-          },
-          {
-            "$ref": "#/components/parameters/Version"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the fetched rows",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FetchPromptEventsResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The request was unacceptable, often due to missing a required parameter",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No valid API key provided",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "The API key doesn’t have permissions to perform the request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on Braintrust's end. (These are rare.)",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "options": {
-        "operationId": "optionsPromptIdFetch",
-        "description": "Enable CORS",
-        "summary": "Enable CORS (`/v1/prompt/{prompt_id}/fetch`)",
-        "security": [],
-        "tags": [
-          "CORS"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/PromptId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Response for CORS method",
-            "headers": {
-              "Access-Control-Allow-Credentials": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Access-Control-Allow-Headers": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Access-Control-Allow-Methods": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Access-Control-Allow-Origin": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Access-Control-Max-Age": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {}
-          },
-          "400": {
-            "description": "The request was unacceptable, often due to missing a required parameter",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v1/prompt/{prompt_id}/feedback": {
       "post": {
         "operationId": "postPromptIdFeedback",
@@ -7793,6 +7483,65 @@
           },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/prompt/{prompt_id}/fetch": {
+      "options": {
+        "operationId": "optionsPromptIdFetch",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/prompt/{prompt_id}/fetch`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PromptId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
             "content": {
               "text/plain": {
                 "schema": {
