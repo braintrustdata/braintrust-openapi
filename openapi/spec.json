@@ -7842,10 +7842,13 @@
           },
           {
             "schema": {
-              "type": "string",
+              "type": [
+                "string",
+                "null"
+              ],
               "description": "Retrieve prompt with a specific slug"
             },
-            "required": true,
+            "required": false,
             "description": "Retrieve prompt with a specific slug",
             "name": "slug",
             "in": "query"
