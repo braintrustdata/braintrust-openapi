@@ -2373,7 +2373,9 @@ components:
                     - messages
                 - type: "null"
             options:
-              type: object
+              type:
+                - object
+                - "null"
               properties:
                 model:
                   type: string
@@ -2476,8 +2478,6 @@ components:
                   type: string
                 prompt_version:
                   type: string
-          required:
-            - options
         tags:
           type:
             - array
@@ -2589,7 +2589,9 @@ components:
                     - messages
                 - type: "null"
             options:
-              type: object
+              type:
+                - object
+                - "null"
               properties:
                 model:
                   type: string
@@ -2692,548 +2694,12 @@ components:
                   type: string
                 prompt_version:
                   type: string
-          required:
-            - options
         tags:
           type:
             - array
             - "null"
           items:
             type: string
-      additionalProperties: false
-    InsertPromptEventReplace:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the prompt
-        slug:
-          type: string
-          description: The slug of the prompt
-        description:
-          type: string
-          description: The description of the prompt
-        prompt_data:
-          type: object
-          properties:
-            prompt:
-              anyOf:
-                - type: object
-                  properties:
-                    type:
-                      type: string
-                      enum:
-                        - completion
-                    content:
-                      type: string
-                      default: ""
-                  required:
-                    - type
-                - type: object
-                  properties:
-                    type:
-                      type: string
-                      enum:
-                        - chat
-                    messages:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          content:
-                            type: string
-                            default: ""
-                          role:
-                            type: string
-                            enum:
-                              - system
-                              - user
-                              - assistant
-                              - function
-                              - tool
-                              - model
-                          name:
-                            type: string
-                          function_call:
-                            anyOf:
-                              - type: string
-                              - type: object
-                                properties:
-                                  name:
-                                    type: string
-                                  arguments:
-                                    type: string
-                                required:
-                                  - name
-                                  - arguments
-                          tool_calls:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                function:
-                                  type: object
-                                  properties:
-                                    arguments:
-                                      type: string
-                                    name:
-                                      type: string
-                                  required:
-                                    - arguments
-                                    - name
-                                type:
-                                  type: string
-                                  enum:
-                                    - function
-                              required:
-                                - id
-                                - function
-                                - type
-                        required:
-                          - role
-                    tools:
-                      type: string
-                  required:
-                    - type
-                    - messages
-                - type: "null"
-            options:
-              type: object
-              properties:
-                model:
-                  type: string
-                params:
-                  allOf:
-                    - type: object
-                      properties:
-                        use_cache:
-                          type: boolean
-                    - anyOf:
-                        - type: object
-                          properties:
-                            temperature:
-                              type: number
-                            top_p:
-                              type: number
-                            max_tokens:
-                              type: number
-                            frequency_penalty:
-                              type: number
-                            presence_penalty:
-                              type: number
-                            response_format:
-                              anyOf:
-                                - type:
-                                    - object
-                                    - "null"
-                                  enum:
-                                    - null
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      enum:
-                                        - json_object
-                                  required:
-                                    - type
-                                - type: "null"
-                            tool_choice:
-                              anyOf:
-                                - type: string
-                                  enum:
-                                    - auto
-                                - type: string
-                                  enum:
-                                    - none
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      enum:
-                                        - function
-                                    function:
-                                      type: object
-                                      properties:
-                                        name:
-                                          type: string
-                                      required:
-                                        - name
-                                  required:
-                                    - type
-                                    - function
-                          required:
-                            - temperature
-                        - type: object
-                          properties:
-                            max_tokens_to_sample:
-                              type: number
-                            temperature:
-                              type: number
-                            top_p:
-                              type: number
-                            top_k:
-                              type: number
-                          required:
-                            - max_tokens_to_sample
-                            - temperature
-                        - type: object
-                          properties:
-                            temperature:
-                              type: number
-                            maxOutputTokens:
-                              type: number
-                            topP:
-                              type: number
-                            topK:
-                              type: number
-                          required:
-                            - temperature
-                        - type: object
-                          properties: {}
-                position:
-                  type: string
-            origin:
-              type:
-                - object
-                - "null"
-              properties:
-                prompt_id:
-                  type: string
-                prompt_version:
-                  type: string
-          required:
-            - options
-          description: The prompt and its parameters
-        tags:
-          type:
-            - array
-            - "null"
-          items:
-            type: string
-          description: A list of tags to log
-        id:
-          type:
-            - string
-            - "null"
-          description: A unique identifier for the prompt event. If you don't provide one,
-            BrainTrust will generate one for you
-        _object_delete:
-          type:
-            - boolean
-            - "null"
-          description: Pass `_object_delete=true` to mark the prompt event deleted.
-            Deleted events will not show up in subsequent fetches for this
-            prompt
-        _is_merge:
-          type:
-            - boolean
-            - "null"
-          enum:
-            - false
-          description: >-
-            The `_is_merge` field controls how the row is merged with any
-            existing row with the same id in the DB. By default (or when set to
-            `false`), the existing row is completely replaced by the new row.
-            When set to `true`, the new row is deep-merged into the existing row
-
-
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
-        _parent_id:
-          type:
-            - string
-            - "null"
-          description: >-
-            Use the `_parent_id` field to create this row as a subspan of an
-            existing row. It cannot be specified alongside `_is_merge=true`.
-            Tracking hierarchical relationships are important for tracing (see
-            the [guide](https://www.braintrustdata.com/docs/guides/tracing) for
-            full details).
-
-
-            For example, say we have logged a row `{"id": "abc", "input": "foo", "output": "bar", "expected": "boo", "scores": {"correctness": 0.33}}`. We can create a sub-span of the parent row by logging `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span row `"abc"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `"llm_call"` row) by clicking on the "abc" row.
-      required:
-        - name
-        - slug
-        - description
-        - prompt_data
-      additionalProperties: false
-    InsertPromptEventMerge:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the prompt
-        slug:
-          type: string
-          description: The slug of the prompt
-        description:
-          type: string
-          description: The description of the prompt
-        prompt_data:
-          type: object
-          properties:
-            prompt:
-              anyOf:
-                - type: object
-                  properties:
-                    type:
-                      type: string
-                      enum:
-                        - completion
-                    content:
-                      type: string
-                      default: ""
-                  required:
-                    - type
-                - type: object
-                  properties:
-                    type:
-                      type: string
-                      enum:
-                        - chat
-                    messages:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          content:
-                            type: string
-                            default: ""
-                          role:
-                            type: string
-                            enum:
-                              - system
-                              - user
-                              - assistant
-                              - function
-                              - tool
-                              - model
-                          name:
-                            type: string
-                          function_call:
-                            anyOf:
-                              - type: string
-                              - type: object
-                                properties:
-                                  name:
-                                    type: string
-                                  arguments:
-                                    type: string
-                                required:
-                                  - name
-                                  - arguments
-                          tool_calls:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                id:
-                                  type: string
-                                function:
-                                  type: object
-                                  properties:
-                                    arguments:
-                                      type: string
-                                    name:
-                                      type: string
-                                  required:
-                                    - arguments
-                                    - name
-                                type:
-                                  type: string
-                                  enum:
-                                    - function
-                              required:
-                                - id
-                                - function
-                                - type
-                        required:
-                          - role
-                    tools:
-                      type: string
-                  required:
-                    - type
-                    - messages
-                - type: "null"
-            options:
-              type: object
-              properties:
-                model:
-                  type: string
-                params:
-                  allOf:
-                    - type: object
-                      properties:
-                        use_cache:
-                          type: boolean
-                    - anyOf:
-                        - type: object
-                          properties:
-                            temperature:
-                              type: number
-                            top_p:
-                              type: number
-                            max_tokens:
-                              type: number
-                            frequency_penalty:
-                              type: number
-                            presence_penalty:
-                              type: number
-                            response_format:
-                              anyOf:
-                                - type:
-                                    - object
-                                    - "null"
-                                  enum:
-                                    - null
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      enum:
-                                        - json_object
-                                  required:
-                                    - type
-                                - type: "null"
-                            tool_choice:
-                              anyOf:
-                                - type: string
-                                  enum:
-                                    - auto
-                                - type: string
-                                  enum:
-                                    - none
-                                - type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                      enum:
-                                        - function
-                                    function:
-                                      type: object
-                                      properties:
-                                        name:
-                                          type: string
-                                      required:
-                                        - name
-                                  required:
-                                    - type
-                                    - function
-                          required:
-                            - temperature
-                        - type: object
-                          properties:
-                            max_tokens_to_sample:
-                              type: number
-                            temperature:
-                              type: number
-                            top_p:
-                              type: number
-                            top_k:
-                              type: number
-                          required:
-                            - max_tokens_to_sample
-                            - temperature
-                        - type: object
-                          properties:
-                            temperature:
-                              type: number
-                            maxOutputTokens:
-                              type: number
-                            topP:
-                              type: number
-                            topK:
-                              type: number
-                          required:
-                            - temperature
-                        - type: object
-                          properties: {}
-                position:
-                  type: string
-            origin:
-              type:
-                - object
-                - "null"
-              properties:
-                prompt_id:
-                  type: string
-                prompt_version:
-                  type: string
-          required:
-            - options
-          description: The prompt and its parameters
-        tags:
-          type:
-            - array
-            - "null"
-          items:
-            type: string
-          description: A list of tags to log
-        id:
-          type:
-            - string
-            - "null"
-          description: A unique identifier for the prompt event. If you don't provide one,
-            BrainTrust will generate one for you
-        _object_delete:
-          type:
-            - boolean
-            - "null"
-          description: Pass `_object_delete=true` to mark the prompt event deleted.
-            Deleted events will not show up in subsequent fetches for this
-            prompt
-        _is_merge:
-          type: boolean
-          enum:
-            - true
-          description: >-
-            The `_is_merge` field controls how the row is merged with any
-            existing row with the same id in the DB. By default (or when set to
-            `false`), the existing row is completely replaced by the new row.
-            When set to `true`, the new row is deep-merged into the existing row
-
-
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
-        _merge_paths:
-          type:
-            - array
-            - "null"
-          items:
-            type: array
-            items:
-              type: string
-          description: >-
-            The `_merge_paths` field allows controlling the depth of the merge.
-            It can only be specified alongside `_is_merge=true`. `_merge_paths`
-            is a list of paths, where each path is a list of field names. The
-            deep merge will not descend below any of the specified merge paths.
-
-
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If we merge a new row as `{"_is_merge": true, "_merge_paths": [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e": 30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30}, "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`.
-      required:
-        - name
-        - slug
-        - description
-        - prompt_data
-        - _is_merge
-      additionalProperties: false
-    InsertPromptEvent:
-      anyOf:
-        - $ref: "#/components/schemas/InsertPromptEventReplace"
-        - $ref: "#/components/schemas/InsertPromptEventMerge"
-      description: A prompt event
-    InsertPromptEventRequest:
-      type: object
-      properties:
-        events:
-          type: array
-          items:
-            $ref: "#/components/schemas/InsertPromptEvent"
-          description: A list of prompt events to insert
-      required:
-        - events
       additionalProperties: false
     FeedbackPromptItem:
       type: object
@@ -3392,13 +2858,6 @@ components:
           additionalProperties:
             type: object
             properties:
-              events:
-                type:
-                  - array
-                  - "null"
-                items:
-                  $ref: "#/components/schemas/InsertPromptEvent"
-                description: A list of prompt events to insert
               feedback:
                 type:
                   - array
@@ -5762,7 +5221,9 @@ paths:
                               - messages
                           - type: "null"
                       options:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         properties:
                           model:
                             type: string
@@ -5865,8 +5326,6 @@ paths:
                             type: string
                           prompt_version:
                             type: string
-                    required:
-                      - options
                   tags:
                     type:
                       - array
@@ -6031,7 +5490,9 @@ paths:
                               - messages
                           - type: "null"
                       options:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         properties:
                           model:
                             type: string
@@ -6134,8 +5595,6 @@ paths:
                             type: string
                           prompt_version:
                             type: string
-                    required:
-                      - options
                   tags:
                     type:
                       - array
@@ -6312,7 +5771,9 @@ paths:
                                     - messages
                                 - type: "null"
                             options:
-                              type: object
+                              type:
+                                - object
+                                - "null"
                               properties:
                                 model:
                                   type: string
@@ -6415,8 +5876,6 @@ paths:
                                   type: string
                                 prompt_version:
                                   type: string
-                          required:
-                            - options
                         tags:
                           type:
                             - array
@@ -6613,7 +6072,9 @@ paths:
                               - messages
                           - type: "null"
                       options:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         properties:
                           model:
                             type: string
@@ -6716,8 +6177,6 @@ paths:
                             type: string
                           prompt_version:
                             type: string
-                    required:
-                      - options
                   tags:
                     type:
                       - array
@@ -6886,7 +6345,9 @@ paths:
                               - messages
                           - type: "null"
                       options:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         properties:
                           model:
                             type: string
@@ -6989,8 +6450,6 @@ paths:
                             type: string
                           prompt_version:
                             type: string
-                    required:
-                      - options
                   tags:
                     type:
                       - array
@@ -7148,7 +6607,9 @@ paths:
                               - messages
                           - type: "null"
                       options:
-                        type: object
+                        type:
+                          - object
+                          - "null"
                         properties:
                           model:
                             type: string
@@ -7251,8 +6712,6 @@ paths:
                             type: string
                           prompt_version:
                             type: string
-                    required:
-                      - options
                   tags:
                     type:
                       - array
@@ -7293,92 +6752,6 @@ paths:
       operationId: optionsPromptId
       description: Enable CORS
       summary: Enable CORS (`/v1/prompt/{prompt_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/PromptId"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-  /v1/prompt/{prompt_id}/insert:
-    post:
-      operationId: postPromptIdInsert
-      tags:
-        - Prompts
-      description: Insert a set of events into the prompt
-      summary: Insert prompt events
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: "#/components/parameters/PromptId"
-      requestBody:
-        description: An array of prompt events to insert
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/InsertPromptEventRequest"
-      responses:
-        "200":
-          description: Returns the inserted row ids
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InsertEventsResponse"
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-        "401":
-          description: No valid API key provided
-          content:
-            text/plain:
-              schema:
-                type: string
-        "403":
-          description: The API key doesn’t have permissions to perform the request
-          content:
-            text/plain:
-              schema:
-                type: string
-        "500":
-          description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-    options:
-      operationId: optionsPromptIdInsert
-      description: Enable CORS
-      summary: Enable CORS (`/v1/prompt/{prompt_id}/insert`)
       security: []
       tags:
         - CORS
@@ -7453,6 +6826,43 @@ paths:
                 type: string
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+  /v1/prompt/{prompt_id}/insert:
+    options:
+      operationId: optionsPromptIdInsert
+      description: Enable CORS
+      summary: Enable CORS (`/v1/prompt/{prompt_id}/insert`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/PromptId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
           content:
             text/plain:
               schema:
