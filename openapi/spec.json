@@ -6724,6 +6724,16 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "schema": {
+              "type": "string",
+              "description": "Retrieve prompt with a specific slug"
+            },
+            "required": true,
+            "description": "Retrieve prompt with a specific slug",
+            "name": "slug",
+            "in": "query"
+          },
+          {
             "$ref": "#/components/parameters/Version"
           },
           {

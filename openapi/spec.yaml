@@ -5029,6 +5029,13 @@ paths:
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/PromptName"
         - $ref: "#/components/parameters/ProjectName"
+        - schema:
+            type: string
+            description: Retrieve prompt with a specific slug
+          required: true
+          description: Retrieve prompt with a specific slug
+          name: slug
+          in: query
         - $ref: "#/components/parameters/Version"
         - $ref: "#/components/parameters/OrgName"
       responses:
