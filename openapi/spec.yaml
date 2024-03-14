@@ -2442,7 +2442,7 @@ components:
                             - temperature
                         - type: object
                           properties:
-                            max_tokens_to_sample:
+                            max_tokens:
                               type: number
                             temperature:
                               type: number
@@ -2450,8 +2450,11 @@ components:
                               type: number
                             top_k:
                               type: number
+                            max_tokens_to_sample:
+                              type: number
+                              description: This is a legacy parameter that should not be used.
                           required:
-                            - max_tokens_to_sample
+                            - max_tokens
                             - temperature
                         - type: object
                           properties:
@@ -2658,7 +2661,7 @@ components:
                             - temperature
                         - type: object
                           properties:
-                            max_tokens_to_sample:
+                            max_tokens:
                               type: number
                             temperature:
                               type: number
@@ -2666,8 +2669,11 @@ components:
                               type: number
                             top_k:
                               type: number
+                            max_tokens_to_sample:
+                              type: number
+                              description: This is a legacy parameter that should not be used.
                           required:
-                            - max_tokens_to_sample
+                            - max_tokens
                             - temperature
                         - type: object
                           properties:
@@ -5290,7 +5296,7 @@ paths:
                                       - temperature
                                   - type: object
                                     properties:
-                                      max_tokens_to_sample:
+                                      max_tokens:
                                         type: number
                                       temperature:
                                         type: number
@@ -5298,8 +5304,11 @@ paths:
                                         type: number
                                       top_k:
                                         type: number
+                                      max_tokens_to_sample:
+                                        type: number
+                                        description: This is a legacy parameter that should not be used.
                                     required:
-                                      - max_tokens_to_sample
+                                      - max_tokens
                                       - temperature
                                   - type: object
                                     properties:
@@ -5559,7 +5568,7 @@ paths:
                                       - temperature
                                   - type: object
                                     properties:
-                                      max_tokens_to_sample:
+                                      max_tokens:
                                         type: number
                                       temperature:
                                         type: number
@@ -5567,8 +5576,11 @@ paths:
                                         type: number
                                       top_k:
                                         type: number
+                                      max_tokens_to_sample:
+                                        type: number
+                                        description: This is a legacy parameter that should not be used.
                                     required:
-                                      - max_tokens_to_sample
+                                      - max_tokens
                                       - temperature
                                   - type: object
                                     properties:
@@ -5647,9 +5659,7 @@ paths:
         - $ref: "#/components/parameters/PromptName"
         - $ref: "#/components/parameters/ProjectName"
         - schema:
-            type:
-              - string
-              - "null"
+            type: string
             description: Retrieve prompt with a specific slug
           required: false
           description: Retrieve prompt with a specific slug
@@ -5842,7 +5852,7 @@ paths:
                                             - temperature
                                         - type: object
                                           properties:
-                                            max_tokens_to_sample:
+                                            max_tokens:
                                               type: number
                                             temperature:
                                               type: number
@@ -5850,8 +5860,11 @@ paths:
                                               type: number
                                             top_k:
                                               type: number
+                                            max_tokens_to_sample:
+                                              type: number
+                                              description: This is a legacy parameter that should not be used.
                                           required:
-                                            - max_tokens_to_sample
+                                            - max_tokens
                                             - temperature
                                         - type: object
                                           properties:
@@ -6143,7 +6156,7 @@ paths:
                                       - temperature
                                   - type: object
                                     properties:
-                                      max_tokens_to_sample:
+                                      max_tokens:
                                         type: number
                                       temperature:
                                         type: number
@@ -6151,8 +6164,11 @@ paths:
                                         type: number
                                       top_k:
                                         type: number
+                                      max_tokens_to_sample:
+                                        type: number
+                                        description: This is a legacy parameter that should not be used.
                                     required:
-                                      - max_tokens_to_sample
+                                      - max_tokens
                                       - temperature
                                   - type: object
                                     properties:
@@ -6416,7 +6432,7 @@ paths:
                                       - temperature
                                   - type: object
                                     properties:
-                                      max_tokens_to_sample:
+                                      max_tokens:
                                         type: number
                                       temperature:
                                         type: number
@@ -6424,8 +6440,11 @@ paths:
                                         type: number
                                       top_k:
                                         type: number
+                                      max_tokens_to_sample:
+                                        type: number
+                                        description: This is a legacy parameter that should not be used.
                                     required:
-                                      - max_tokens_to_sample
+                                      - max_tokens
                                       - temperature
                                   - type: object
                                     properties:
@@ -6678,7 +6697,7 @@ paths:
                                       - temperature
                                   - type: object
                                     properties:
-                                      max_tokens_to_sample:
+                                      max_tokens:
                                         type: number
                                       temperature:
                                         type: number
@@ -6686,8 +6705,11 @@ paths:
                                         type: number
                                       top_k:
                                         type: number
+                                      max_tokens_to_sample:
+                                        type: number
+                                        description: This is a legacy parameter that should not be used.
                                     required:
-                                      - max_tokens_to_sample
+                                      - max_tokens
                                       - temperature
                                   - type: object
                                     properties:

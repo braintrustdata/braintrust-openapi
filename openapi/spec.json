@@ -2769,7 +2769,7 @@
                           {
                             "type": "object",
                             "properties": {
-                              "max_tokens_to_sample": {
+                              "max_tokens": {
                                 "type": "number"
                               },
                               "temperature": {
@@ -2780,10 +2780,14 @@
                               },
                               "top_k": {
                                 "type": "number"
+                              },
+                              "max_tokens_to_sample": {
+                                "type": "number",
+                                "description": "This is a legacy parameter that should not be used."
                               }
                             },
                             "required": [
-                              "max_tokens_to_sample",
+                              "max_tokens",
                               "temperature"
                             ]
                           },
@@ -3124,7 +3128,7 @@
                           {
                             "type": "object",
                             "properties": {
-                              "max_tokens_to_sample": {
+                              "max_tokens": {
                                 "type": "number"
                               },
                               "temperature": {
@@ -3135,10 +3139,14 @@
                               },
                               "top_k": {
                                 "type": "number"
+                              },
+                              "max_tokens_to_sample": {
+                                "type": "number",
+                                "description": "This is a legacy parameter that should not be used."
                               }
                             },
                             "required": [
-                              "max_tokens_to_sample",
+                              "max_tokens",
                               "temperature"
                             ]
                           },
@@ -7247,7 +7255,7 @@
                                     {
                                       "type": "object",
                                       "properties": {
-                                        "max_tokens_to_sample": {
+                                        "max_tokens": {
                                           "type": "number"
                                         },
                                         "temperature": {
@@ -7258,10 +7266,14 @@
                                         },
                                         "top_k": {
                                           "type": "number"
+                                        },
+                                        "max_tokens_to_sample": {
+                                          "type": "number",
+                                          "description": "This is a legacy parameter that should not be used."
                                         }
                                       },
                                       "required": [
-                                        "max_tokens_to_sample",
+                                        "max_tokens",
                                         "temperature"
                                       ]
                                     },
@@ -7683,7 +7695,7 @@
                                     {
                                       "type": "object",
                                       "properties": {
-                                        "max_tokens_to_sample": {
+                                        "max_tokens": {
                                           "type": "number"
                                         },
                                         "temperature": {
@@ -7694,10 +7706,14 @@
                                         },
                                         "top_k": {
                                           "type": "number"
+                                        },
+                                        "max_tokens_to_sample": {
+                                          "type": "number",
+                                          "description": "This is a legacy parameter that should not be used."
                                         }
                                       },
                                       "required": [
-                                        "max_tokens_to_sample",
+                                        "max_tokens",
                                         "temperature"
                                       ]
                                     },
@@ -7842,10 +7858,7 @@
           },
           {
             "schema": {
-              "type": [
-                "string",
-                "null"
-              ],
+              "type": "string",
               "description": "Retrieve prompt with a specific slug"
             },
             "required": false,
@@ -8149,7 +8162,7 @@
                                           {
                                             "type": "object",
                                             "properties": {
-                                              "max_tokens_to_sample": {
+                                              "max_tokens": {
                                                 "type": "number"
                                               },
                                               "temperature": {
@@ -8160,10 +8173,14 @@
                                               },
                                               "top_k": {
                                                 "type": "number"
+                                              },
+                                              "max_tokens_to_sample": {
+                                                "type": "number",
+                                                "description": "This is a legacy parameter that should not be used."
                                               }
                                             },
                                             "required": [
-                                              "max_tokens_to_sample",
+                                              "max_tokens",
                                               "temperature"
                                             ]
                                           },
@@ -8641,7 +8658,7 @@
                                     {
                                       "type": "object",
                                       "properties": {
-                                        "max_tokens_to_sample": {
+                                        "max_tokens": {
                                           "type": "number"
                                         },
                                         "temperature": {
@@ -8652,10 +8669,14 @@
                                         },
                                         "top_k": {
                                           "type": "number"
+                                        },
+                                        "max_tokens_to_sample": {
+                                          "type": "number",
+                                          "description": "This is a legacy parameter that should not be used."
                                         }
                                       },
                                       "required": [
-                                        "max_tokens_to_sample",
+                                        "max_tokens",
                                         "temperature"
                                       ]
                                     },
@@ -9082,7 +9103,7 @@
                                     {
                                       "type": "object",
                                       "properties": {
-                                        "max_tokens_to_sample": {
+                                        "max_tokens": {
                                           "type": "number"
                                         },
                                         "temperature": {
@@ -9093,10 +9114,14 @@
                                         },
                                         "top_k": {
                                           "type": "number"
+                                        },
+                                        "max_tokens_to_sample": {
+                                          "type": "number",
+                                          "description": "This is a legacy parameter that should not be used."
                                         }
                                       },
                                       "required": [
-                                        "max_tokens_to_sample",
+                                        "max_tokens",
                                         "temperature"
                                       ]
                                     },
@@ -9512,7 +9537,7 @@
                                     {
                                       "type": "object",
                                       "properties": {
-                                        "max_tokens_to_sample": {
+                                        "max_tokens": {
                                           "type": "number"
                                         },
                                         "temperature": {
@@ -9523,10 +9548,14 @@
                                         },
                                         "top_k": {
                                           "type": "number"
+                                        },
+                                        "max_tokens_to_sample": {
+                                          "type": "number",
+                                          "description": "This is a legacy parameter that should not be used."
                                         }
                                       },
                                       "required": [
-                                        "max_tokens_to_sample",
+                                        "max_tokens",
                                         "temperature"
                                       ]
                                     },
