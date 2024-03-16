@@ -2300,61 +2300,154 @@ components:
                 messages:
                   type: array
                   items:
-                    type: object
-                    properties:
-                      content:
-                        type: string
-                        default: ""
-                      role:
-                        type: string
-                        enum:
-                          - system
-                          - user
-                          - assistant
-                          - function
-                          - tool
-                          - model
-                      name:
-                        type: string
-                      function_call:
-                        anyOf:
-                          - type: string
-                          - type: object
+                    anyOf:
+                      - type: object
+                        properties:
+                          content:
+                            type: string
+                          role:
+                            type: string
+                            enum:
+                              - system
+                          name:
+                            type: string
+                        required:
+                          - content
+                          - role
+                      - type: object
+                        properties:
+                          content:
+                            anyOf:
+                              - type: string
+                              - type: array
+                                items:
+                                  anyOf:
+                                    - type: object
+                                      properties:
+                                        text:
+                                          type: string
+                                        type:
+                                          type: string
+                                          enum:
+                                            - text
+                                      required:
+                                        - text
+                                        - type
+                                    - type: object
+                                      properties:
+                                        image_url:
+                                          type: object
+                                          properties:
+                                            url:
+                                              type: string
+                                            detail:
+                                              anyOf:
+                                                - type: string
+                                                  enum:
+                                                    - auto
+                                                - type: string
+                                                  enum:
+                                                    - low
+                                                - type: string
+                                                  enum:
+                                                    - high
+                                          required:
+                                            - url
+                                        type:
+                                          type: string
+                                          enum:
+                                            - image_url
+                                      required:
+                                        - image_url
+                                        - type
+                          role:
+                            type: string
+                            enum:
+                              - user
+                          name:
+                            type: string
+                        required:
+                          - content
+                          - role
+                      - type: object
+                        properties:
+                          role:
+                            type: string
+                            enum:
+                              - assistant
+                          content:
+                            type:
+                              - string
+                              - "null"
+                          function_call:
+                            type: object
                             properties:
-                              name:
-                                type: string
                               arguments:
                                 type: string
+                              name:
+                                type: string
                             required:
-                              - name
                               - arguments
-                      tool_calls:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                            function:
+                              - name
+                          name:
+                            type: string
+                          tool_calls:
+                            type: array
+                            items:
                               type: object
                               properties:
-                                arguments:
+                                id:
                                   type: string
-                                name:
+                                function:
+                                  type: object
+                                  properties:
+                                    arguments:
+                                      type: string
+                                    name:
+                                      type: string
+                                  required:
+                                    - arguments
+                                    - name
+                                type:
                                   type: string
+                                  enum:
+                                    - function
                               required:
-                                - arguments
-                                - name
-                            type:
-                              type: string
-                              enum:
+                                - id
                                 - function
-                          required:
-                            - id
-                            - function
-                            - type
-                    required:
-                      - role
+                                - type
+                        required:
+                          - role
+                      - type: object
+                        properties:
+                          content:
+                            type: string
+                          role:
+                            type: string
+                            enum:
+                              - tool
+                          tool_call_id:
+                            type: string
+                        required:
+                          - content
+                          - role
+                          - tool_call_id
+                      - type: object
+                        properties:
+                          content:
+                            type:
+                              - string
+                              - "null"
+                          name:
+                            type: string
+                          role:
+                            type: string
+                            enum:
+                              - function
+                        required:
+                          - content
+                          - name
+                          - role
                 tools:
                   type: string
               required:
@@ -2474,6 +2567,12 @@ components:
     CreatePrompt:
       type: object
       properties:
+        _xact_id:
+          type: string
+          description: The transaction id of an event is unique to the network operation
+            that processed the event insertion. Transaction ids are
+            monotonically increasing over time and can be used to retrieve a
+            versioned snapshot of the prompt (see the `version` parameter)
         project_id:
           type: string
           format: uuid
@@ -2499,6 +2598,7 @@ components:
             type: string
           description: A list of tags for the prompt
       required:
+        - _xact_id
         - project_id
         - name
         - slug
@@ -4960,6 +5060,13 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the prompt
+                  _xact_id:
+                    type: string
+                    description: The transaction id of an event is unique to the network operation
+                      that processed the event insertion. Transaction ids are
+                      monotonically increasing over time and can be used to
+                      retrieve a versioned snapshot of the prompt (see the
+                      `version` parameter)
                   project_id:
                     type: string
                     format: uuid
@@ -4986,6 +5093,7 @@ paths:
                     description: A list of tags for the prompt
                 required:
                   - id
+                  - _xact_id
                   - project_id
                   - name
                   - slug
@@ -5043,6 +5151,13 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the prompt
+                  _xact_id:
+                    type: string
+                    description: The transaction id of an event is unique to the network operation
+                      that processed the event insertion. Transaction ids are
+                      monotonically increasing over time and can be used to
+                      retrieve a versioned snapshot of the prompt (see the
+                      `version` parameter)
                   project_id:
                     type: string
                     format: uuid
@@ -5069,6 +5184,7 @@ paths:
                     description: A list of tags for the prompt
                 required:
                   - id
+                  - _xact_id
                   - project_id
                   - name
                   - slug
@@ -5132,6 +5248,13 @@ paths:
                           type: string
                           format: uuid
                           description: Unique identifier for the prompt
+                        _xact_id:
+                          type: string
+                          description: The transaction id of an event is unique to the network operation
+                            that processed the event insertion. Transaction ids
+                            are monotonically increasing over time and can be
+                            used to retrieve a versioned snapshot of the prompt
+                            (see the `version` parameter)
                         project_id:
                           type: string
                           format: uuid
@@ -5158,6 +5281,7 @@ paths:
                           description: A list of tags for the prompt
                       required:
                         - id
+                        - _xact_id
                         - project_id
                         - name
                         - slug
@@ -5247,6 +5371,13 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the prompt
+                  _xact_id:
+                    type: string
+                    description: The transaction id of an event is unique to the network operation
+                      that processed the event insertion. Transaction ids are
+                      monotonically increasing over time and can be used to
+                      retrieve a versioned snapshot of the prompt (see the
+                      `version` parameter)
                   project_id:
                     type: string
                     format: uuid
@@ -5273,6 +5404,7 @@ paths:
                     description: A list of tags for the prompt
                 required:
                   - id
+                  - _xact_id
                   - project_id
                   - name
                   - slug
@@ -5334,6 +5466,13 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the prompt
+                  _xact_id:
+                    type: string
+                    description: The transaction id of an event is unique to the network operation
+                      that processed the event insertion. Transaction ids are
+                      monotonically increasing over time and can be used to
+                      retrieve a versioned snapshot of the prompt (see the
+                      `version` parameter)
                   project_id:
                     type: string
                     format: uuid
@@ -5360,6 +5499,7 @@ paths:
                     description: A list of tags for the prompt
                 required:
                   - id
+                  - _xact_id
                   - project_id
                   - name
                   - slug
@@ -5410,6 +5550,13 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the prompt
+                  _xact_id:
+                    type: string
+                    description: The transaction id of an event is unique to the network operation
+                      that processed the event insertion. Transaction ids are
+                      monotonically increasing over time and can be used to
+                      retrieve a versioned snapshot of the prompt (see the
+                      `version` parameter)
                   project_id:
                     type: string
                     format: uuid
@@ -5436,6 +5583,7 @@ paths:
                     description: A list of tags for the prompt
                 required:
                   - id
+                  - _xact_id
                   - project_id
                   - name
                   - slug
