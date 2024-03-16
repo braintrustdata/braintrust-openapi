@@ -2989,10 +2989,6 @@
       "CreatePrompt": {
         "type": "object",
         "properties": {
-          "_xact_id": {
-            "type": "string",
-            "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-          },
           "project_id": {
             "type": "string",
             "format": "uuid",
@@ -3028,7 +3024,6 @@
           }
         },
         "required": [
-          "_xact_id",
           "project_id",
           "name",
           "slug"
