@@ -2305,6 +2305,7 @@ components:
                         properties:
                           content:
                             type: string
+                            default: ""
                           role:
                             type: string
                             enum:
@@ -2312,13 +2313,13 @@ components:
                           name:
                             type: string
                         required:
-                          - content
                           - role
                       - type: object
                         properties:
                           content:
                             anyOf:
                               - type: string
+                                default: ""
                               - type: array
                                 items:
                                   anyOf:
@@ -2326,12 +2327,12 @@ components:
                                       properties:
                                         text:
                                           type: string
+                                          default: ""
                                         type:
                                           type: string
                                           enum:
                                             - text
                                       required:
-                                        - text
                                         - type
                                     - type: object
                                       properties:
@@ -2367,7 +2368,6 @@ components:
                           name:
                             type: string
                         required:
-                          - content
                           - role
                       - type: object
                         properties:
@@ -2422,6 +2422,7 @@ components:
                         properties:
                           content:
                             type: string
+                            default: ""
                           role:
                             type: string
                             enum:
@@ -2429,15 +2430,13 @@ components:
                           tool_call_id:
                             type: string
                         required:
-                          - content
                           - role
                           - tool_call_id
                       - type: object
                         properties:
                           content:
-                            type:
-                              - string
-                              - "null"
+                            type: string
+                            default: ""
                           name:
                             type: string
                           role:
@@ -2445,7 +2444,6 @@ components:
                             enum:
                               - function
                         required:
-                          - content
                           - name
                           - role
                 tools:

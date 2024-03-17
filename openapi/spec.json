@@ -2541,7 +2541,8 @@
                           "type": "object",
                           "properties": {
                             "content": {
-                              "type": "string"
+                              "type": "string",
+                              "default": ""
                             },
                             "role": {
                               "type": "string",
@@ -2554,7 +2555,6 @@
                             }
                           },
                           "required": [
-                            "content",
                             "role"
                           ]
                         },
@@ -2564,7 +2564,8 @@
                             "content": {
                               "anyOf": [
                                 {
-                                  "type": "string"
+                                  "type": "string",
+                                  "default": ""
                                 },
                                 {
                                   "type": "array",
@@ -2574,7 +2575,8 @@
                                         "type": "object",
                                         "properties": {
                                           "text": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "default": ""
                                           },
                                           "type": {
                                             "type": "string",
@@ -2584,7 +2586,6 @@
                                           }
                                         },
                                         "required": [
-                                          "text",
                                           "type"
                                         ]
                                       },
@@ -2652,7 +2653,6 @@
                             }
                           },
                           "required": [
-                            "content",
                             "role"
                           ]
                         },
@@ -2735,7 +2735,8 @@
                           "type": "object",
                           "properties": {
                             "content": {
-                              "type": "string"
+                              "type": "string",
+                              "default": ""
                             },
                             "role": {
                               "type": "string",
@@ -2748,7 +2749,6 @@
                             }
                           },
                           "required": [
-                            "content",
                             "role",
                             "tool_call_id"
                           ]
@@ -2757,10 +2757,8 @@
                           "type": "object",
                           "properties": {
                             "content": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
+                              "type": "string",
+                              "default": ""
                             },
                             "name": {
                               "type": "string"
@@ -2773,7 +2771,6 @@
                             }
                           },
                           "required": [
-                            "content",
                             "name",
                             "role"
                           ]
