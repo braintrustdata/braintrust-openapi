@@ -957,9 +957,22 @@ components:
           format: uuid
           description: Unique identifier for the experiment
         project_id:
-          type: string
+          type:
+            - string
+            - "null"
           format: uuid
           description: Unique identifier for the project that the experiment belongs under
+        project_name:
+          type:
+            - string
+            - "null"
+          description: Name of the project
+        org_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+          description: Unique id for the organization that the project belongs under
         name:
           type: string
           description: Name of the experiment. Within a project, experiment names are unique
@@ -976,6 +989,13 @@ components:
           description: Date of experiment creation
         repo_info:
           $ref: "#/components/schemas/RepoInfo"
+        ancestor_commits:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: Ancestor commit history, used to find the base experiment
         commit:
           type:
             - string
@@ -1027,7 +1047,6 @@ components:
           description: User-controlled metadata about the experiment
       required:
         - id
-        - project_id
         - name
         - public
       additionalProperties: false
@@ -1035,9 +1054,29 @@ components:
       type: object
       properties:
         project_id:
-          type: string
+          type:
+            - string
+            - "null"
           format: uuid
           description: Unique identifier for the project that the experiment belongs under
+        project_name:
+          type:
+            - string
+            - "null"
+          description: Name of the project
+        org_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+          description: Unique id for the organization that the project belongs under
+        ancestor_commits:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: Ancestor commit history, used to find the base experiment
         name:
           type:
             - string
@@ -1083,12 +1122,28 @@ components:
             - "null"
           additionalProperties: {}
           description: User-controlled metadata about the experiment
-      required:
-        - project_id
       additionalProperties: false
     PatchExperiment:
       type: object
       properties:
+        project_name:
+          type:
+            - string
+            - "null"
+          description: Name of the project
+        org_id:
+          type:
+            - string
+            - "null"
+          format: uuid
+          description: Unique id for the organization that the project belongs under
+        ancestor_commits:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: Ancestor commit history, used to find the base experiment
         name:
           type:
             - string
@@ -1540,7 +1595,9 @@ components:
           format: date-time
           description: The timestamp the experiment event was created
         project_id:
-          type: string
+          type:
+            - string
+            - "null"
           format: uuid
           description: Unique identifier for the project that the experiment belongs under
         experiment_id:
@@ -1699,7 +1756,6 @@ components:
       required:
         - id
         - _xact_id
-        - project_id
         - experiment_id
         - span_id
         - root_span_id
@@ -3609,7 +3665,7 @@ paths:
       summary: Create experiment
       requestBody:
         description: Any desired information about the new experiment object
-        required: true
+        required: false
         content:
           application/json:
             schema:
@@ -3658,7 +3714,7 @@ paths:
       summary: Create or replace experiment
       requestBody:
         description: Any desired information about the new experiment object
-        required: true
+        required: false
         content:
           application/json:
             schema:
