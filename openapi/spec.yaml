@@ -776,6 +776,7 @@ components:
       required:
         - type
         - path
+      additionalProperties: false
       description: 'A path-lookup filter describes an equality comparison against a
         specific sub-field in the event row. For instance, if you wish to filter
         on the value of `c` in `{"input": {"a": {"b": {"c": "hello"}}}}`, pass
@@ -948,6 +949,7 @@ components:
             - "null"
           description: If the repo was dirty when run, this includes the diff between the
             current state of the repo and the most recent commit.
+      additionalProperties: false
       description: Metadata about the state of the repo when the experiment was created
     Experiment:
       type: object
@@ -1805,6 +1807,7 @@ components:
         - diff
         - improvements
         - regressions
+      additionalProperties: false
       description: Summary of a score's performance
     MetricSummary:
       type: object
@@ -1836,6 +1839,7 @@ components:
         - diff
         - improvements
         - regressions
+      additionalProperties: false
       description: Summary of a metric's performance
     SummarizeExperimentResponse:
       type: object
@@ -2246,6 +2250,7 @@ components:
           description: Total number of records in the dataset
       required:
         - total_records
+      additionalProperties: false
       description: Summary of a dataset's data
     SummarizeDatasetResponse:
       type: object
@@ -2291,6 +2296,7 @@ components:
               required:
                 - type
                 - content
+              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -2314,6 +2320,7 @@ components:
                             type: string
                         required:
                           - role
+                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2334,6 +2341,7 @@ components:
                                             - text
                                       required:
                                         - type
+                                      additionalProperties: false
                                     - type: object
                                       properties:
                                         image_url:
@@ -2354,6 +2362,7 @@ components:
                                                     - high
                                           required:
                                             - url
+                                          additionalProperties: false
                                         type:
                                           type: string
                                           enum:
@@ -2361,6 +2370,7 @@ components:
                                       required:
                                         - image_url
                                         - type
+                                      additionalProperties: false
                           role:
                             type: string
                             enum:
@@ -2369,6 +2379,7 @@ components:
                             type: string
                         required:
                           - role
+                        additionalProperties: false
                       - type: object
                         properties:
                           role:
@@ -2389,6 +2400,7 @@ components:
                             required:
                               - arguments
                               - name
+                            additionalProperties: false
                           name:
                             type: string
                           tool_calls:
@@ -2408,6 +2420,7 @@ components:
                                   required:
                                     - arguments
                                     - name
+                                  additionalProperties: false
                                 type:
                                   type: string
                                   enum:
@@ -2416,8 +2429,10 @@ components:
                                 - id
                                 - function
                                 - type
+                              additionalProperties: false
                         required:
                           - role
+                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2432,6 +2447,7 @@ components:
                         required:
                           - role
                           - tool_call_id
+                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2446,11 +2462,13 @@ components:
                         required:
                           - name
                           - role
+                        additionalProperties: false
                 tools:
                   type: string
               required:
                 - type
                 - messages
+              additionalProperties: false
             - type: "null"
         options:
           type:
@@ -2460,98 +2478,109 @@ components:
             model:
               type: string
             params:
-              allOf:
+              anyOf:
                 - type: object
                   properties:
                     use_cache:
                       type: boolean
-                - anyOf:
-                    - type: object
-                      properties:
-                        temperature:
-                          type: number
-                        top_p:
-                          type: number
-                        max_tokens:
-                          type: number
-                        frequency_penalty:
-                          type: number
-                        presence_penalty:
-                          type: number
-                        response_format:
-                          anyOf:
-                            - type:
-                                - object
-                                - "null"
+                    temperature:
+                      type: number
+                    top_p:
+                      type: number
+                    max_tokens:
+                      type: number
+                    frequency_penalty:
+                      type: number
+                    presence_penalty:
+                      type: number
+                    response_format:
+                      anyOf:
+                        - type:
+                            - object
+                            - "null"
+                          enum:
+                            - null
+                        - type: object
+                          properties:
+                            type:
+                              type: string
                               enum:
-                                - null
-                            - type: object
-                              properties:
-                                type:
-                                  type: string
-                                  enum:
-                                    - json_object
-                              required:
-                                - type
-                            - type: "null"
-                        tool_choice:
-                          anyOf:
-                            - type: string
+                                - json_object
+                          required:
+                            - type
+                          additionalProperties: false
+                        - type: "null"
+                    tool_choice:
+                      anyOf:
+                        - type: string
+                          enum:
+                            - auto
+                        - type: string
+                          enum:
+                            - none
+                        - type: object
+                          properties:
+                            type:
+                              type: string
                               enum:
-                                - auto
-                            - type: string
-                              enum:
-                                - none
-                            - type: object
-                              properties:
-                                type:
-                                  type: string
-                                  enum:
-                                    - function
-                                function:
-                                  type: object
-                                  properties:
-                                    name:
-                                      type: string
-                                  required:
-                                    - name
-                              required:
-                                - type
                                 - function
-                      required:
-                        - temperature
-                    - type: object
-                      properties:
-                        max_tokens:
-                          type: number
-                        temperature:
-                          type: number
-                        top_p:
-                          type: number
-                        top_k:
-                          type: number
-                        max_tokens_to_sample:
-                          type: number
-                          description: This is a legacy parameter that should not be used.
-                      required:
-                        - max_tokens
-                        - temperature
-                    - type: object
-                      properties:
-                        temperature:
-                          type: number
-                        maxOutputTokens:
-                          type: number
-                        topP:
-                          type: number
-                        topK:
-                          type: number
-                      required:
-                        - temperature
-                    - type: object
-                      properties: {}
+                            function:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                              required:
+                                - name
+                              additionalProperties: false
+                          required:
+                            - type
+                            - function
+                          additionalProperties: false
+                  required:
+                    - temperature
+                  additionalProperties: false
+                - type: object
+                  properties:
+                    use_cache:
+                      type: boolean
+                    max_tokens:
+                      type: number
+                    temperature:
+                      type: number
+                    top_p:
+                      type: number
+                    top_k:
+                      type: number
+                    max_tokens_to_sample:
+                      type: number
+                      description: This is a legacy parameter that should not be used.
+                  required:
+                    - max_tokens
+                    - temperature
+                  additionalProperties: false
+                - type: object
+                  properties:
+                    use_cache:
+                      type: boolean
+                    temperature:
+                      type: number
+                    maxOutputTokens:
+                      type: number
+                    topP:
+                      type: number
+                    topK:
+                      type: number
+                  required:
+                    - temperature
+                  additionalProperties: false
+                - type: object
+                  properties:
+                    use_cache:
+                      type: boolean
+                  additionalProperties: false
             position:
               type: string
+          additionalProperties: false
         origin:
           type:
             - object
@@ -2561,6 +2590,8 @@ components:
               type: string
             prompt_version:
               type: string
+          additionalProperties: false
+      additionalProperties: false
       description: The prompt, model, and its parameters
     CreatePrompt:
       type: object
@@ -2684,13 +2715,6 @@ components:
           additionalProperties:
             $ref: "#/components/schemas/InsertEventsResponse"
           description: A mapping from project id to row ids for inserted `events`
-        prompt:
-          type:
-            - object
-            - "null"
-          additionalProperties:
-            $ref: "#/components/schemas/InsertEventsResponse"
-          description: A mapping from prompt id to row ids for inserted `events`
       additionalProperties: false
     CrossObjectInsertRequest:
       type: object
@@ -2766,23 +2790,6 @@ components:
                 description: A list of project logs feedback items
             additionalProperties: false
           description: A mapping from project id to a set of log events and feedback items
-            to insert
-        prompt:
-          type:
-            - object
-            - "null"
-          additionalProperties:
-            type: object
-            properties:
-              feedback:
-                type:
-                  - array
-                  - "null"
-                items:
-                  $ref: "#/components/schemas/FeedbackPromptItem"
-                description: A list of prompt feedback items
-            additionalProperties: false
-          description: A mapping from prompt id to a set of log events and feedback items
             to insert
       additionalProperties: false
   parameters:
@@ -5062,6 +5069,15 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the project that the prompt belongs under
+                  log_id:
+                    type: string
+                    enum:
+                      - p
+                    description: A literal 'p' which identifies the object as a project prompt
+                  org_id:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the organization
                   name:
                     type: string
                     description: Name of the prompt
@@ -5073,6 +5089,12 @@ paths:
                       - string
                       - "null"
                     description: Textual description of the prompt
+                  created:
+                    type:
+                      - string
+                      - "null"
+                    format: date-time
+                    description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
@@ -5082,12 +5104,21 @@ paths:
                     items:
                       type: string
                     description: A list of tags for the prompt
+                  metadata:
+                    type:
+                      - object
+                      - "null"
+                    additionalProperties: {}
+                    description: User-controlled metadata about the prompt
                 required:
                   - id
                   - _xact_id
                   - project_id
+                  - log_id
+                  - org_id
                   - name
                   - slug
+                additionalProperties: false
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -5153,6 +5184,15 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the project that the prompt belongs under
+                  log_id:
+                    type: string
+                    enum:
+                      - p
+                    description: A literal 'p' which identifies the object as a project prompt
+                  org_id:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the organization
                   name:
                     type: string
                     description: Name of the prompt
@@ -5164,6 +5204,12 @@ paths:
                       - string
                       - "null"
                     description: Textual description of the prompt
+                  created:
+                    type:
+                      - string
+                      - "null"
+                    format: date-time
+                    description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
@@ -5173,12 +5219,21 @@ paths:
                     items:
                       type: string
                     description: A list of tags for the prompt
+                  metadata:
+                    type:
+                      - object
+                      - "null"
+                    additionalProperties: {}
+                    description: User-controlled metadata about the prompt
                 required:
                   - id
                   - _xact_id
                   - project_id
+                  - log_id
+                  - org_id
                   - name
                   - slug
+                additionalProperties: false
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -5250,6 +5305,15 @@ paths:
                           type: string
                           format: uuid
                           description: Unique identifier for the project that the prompt belongs under
+                        log_id:
+                          type: string
+                          enum:
+                            - p
+                          description: A literal 'p' which identifies the object as a project prompt
+                        org_id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier for the organization
                         name:
                           type: string
                           description: Name of the prompt
@@ -5261,6 +5325,12 @@ paths:
                             - string
                             - "null"
                           description: Textual description of the prompt
+                        created:
+                          type:
+                            - string
+                            - "null"
+                          format: date-time
+                          description: Date of prompt creation
                         prompt_data:
                           $ref: "#/components/schemas/PromptData"
                         tags:
@@ -5270,12 +5340,21 @@ paths:
                           items:
                             type: string
                           description: A list of tags for the prompt
+                        metadata:
+                          type:
+                            - object
+                            - "null"
+                          additionalProperties: {}
+                          description: User-controlled metadata about the prompt
                       required:
                         - id
                         - _xact_id
                         - project_id
+                        - log_id
+                        - org_id
                         - name
                         - slug
+                      additionalProperties: false
                     description: A list of prompt objects
                 required:
                   - objects
@@ -5373,6 +5452,15 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the project that the prompt belongs under
+                  log_id:
+                    type: string
+                    enum:
+                      - p
+                    description: A literal 'p' which identifies the object as a project prompt
+                  org_id:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the organization
                   name:
                     type: string
                     description: Name of the prompt
@@ -5384,6 +5472,12 @@ paths:
                       - string
                       - "null"
                     description: Textual description of the prompt
+                  created:
+                    type:
+                      - string
+                      - "null"
+                    format: date-time
+                    description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
@@ -5393,12 +5487,21 @@ paths:
                     items:
                       type: string
                     description: A list of tags for the prompt
+                  metadata:
+                    type:
+                      - object
+                      - "null"
+                    additionalProperties: {}
+                    description: User-controlled metadata about the prompt
                 required:
                   - id
                   - _xact_id
                   - project_id
+                  - log_id
+                  - org_id
                   - name
                   - slug
+                additionalProperties: false
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -5468,6 +5571,15 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the project that the prompt belongs under
+                  log_id:
+                    type: string
+                    enum:
+                      - p
+                    description: A literal 'p' which identifies the object as a project prompt
+                  org_id:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the organization
                   name:
                     type: string
                     description: Name of the prompt
@@ -5479,6 +5591,12 @@ paths:
                       - string
                       - "null"
                     description: Textual description of the prompt
+                  created:
+                    type:
+                      - string
+                      - "null"
+                    format: date-time
+                    description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
@@ -5488,12 +5606,21 @@ paths:
                     items:
                       type: string
                     description: A list of tags for the prompt
+                  metadata:
+                    type:
+                      - object
+                      - "null"
+                    additionalProperties: {}
+                    description: User-controlled metadata about the prompt
                 required:
                   - id
                   - _xact_id
                   - project_id
+                  - log_id
+                  - org_id
                   - name
                   - slug
+                additionalProperties: false
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -5552,6 +5679,15 @@ paths:
                     type: string
                     format: uuid
                     description: Unique identifier for the project that the prompt belongs under
+                  log_id:
+                    type: string
+                    enum:
+                      - p
+                    description: A literal 'p' which identifies the object as a project prompt
+                  org_id:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the organization
                   name:
                     type: string
                     description: Name of the prompt
@@ -5563,6 +5699,12 @@ paths:
                       - string
                       - "null"
                     description: Textual description of the prompt
+                  created:
+                    type:
+                      - string
+                      - "null"
+                    format: date-time
+                    description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
@@ -5572,12 +5714,21 @@ paths:
                     items:
                       type: string
                     description: A list of tags for the prompt
+                  metadata:
+                    type:
+                      - object
+                      - "null"
+                    additionalProperties: {}
+                    description: User-controlled metadata about the prompt
                 required:
                   - id
                   - _xact_id
                   - project_id
+                  - log_id
+                  - org_id
                   - name
                   - slug
+                additionalProperties: false
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
