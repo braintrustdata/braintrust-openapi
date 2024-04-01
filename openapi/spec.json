@@ -2918,9 +2918,6 @@
                         ]
                       }
                     },
-                    "required": [
-                      "temperature"
-                    ],
                     "additionalProperties": false
                   },
                   {
