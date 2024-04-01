@@ -2999,6 +2999,9 @@
               "prompt_id": {
                 "type": "string"
               },
+              "project_id": {
+                "type": "string"
+              },
               "prompt_version": {
                 "type": "string"
               }
