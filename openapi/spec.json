@@ -2557,7 +2557,10 @@
                               ]
                             },
                             "name": {
-                              "type": "string"
+                              "type": [
+                                "string",
+                                "null"
+                              ]
                             }
                           },
                           "required": [
@@ -2625,6 +2628,9 @@
                                                     "enum": [
                                                       "high"
                                                     ]
+                                                  },
+                                                  {
+                                                    "type": "null"
                                                   }
                                                 ]
                                               }
@@ -2659,7 +2665,10 @@
                               ]
                             },
                             "name": {
-                              "type": "string"
+                              "type": [
+                                "string",
+                                "null"
+                              ]
                             }
                           },
                           "required": [
@@ -2683,7 +2692,10 @@
                               ]
                             },
                             "function_call": {
-                              "type": "object",
+                              "type": [
+                                "object",
+                                "null"
+                              ],
                               "properties": {
                                 "arguments": {
                                   "type": "string"
@@ -2699,10 +2711,16 @@
                               "additionalProperties": false
                             },
                             "name": {
-                              "type": "string"
+                              "type": [
+                                "string",
+                                "null"
+                              ]
                             },
                             "tool_calls": {
-                              "type": "array",
+                              "type": [
+                                "array",
+                                "null"
+                              ],
                               "items": {
                                 "type": "object",
                                 "properties": {

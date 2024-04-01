@@ -2317,7 +2317,9 @@ components:
                             enum:
                               - system
                           name:
-                            type: string
+                            type:
+                              - string
+                              - "null"
                         required:
                           - role
                         additionalProperties: false
@@ -2360,6 +2362,7 @@ components:
                                                 - type: string
                                                   enum:
                                                     - high
+                                                - type: "null"
                                           required:
                                             - url
                                           additionalProperties: false
@@ -2376,7 +2379,9 @@ components:
                             enum:
                               - user
                           name:
-                            type: string
+                            type:
+                              - string
+                              - "null"
                         required:
                           - role
                         additionalProperties: false
@@ -2391,7 +2396,9 @@ components:
                               - string
                               - "null"
                           function_call:
-                            type: object
+                            type:
+                              - object
+                              - "null"
                             properties:
                               arguments:
                                 type: string
@@ -2402,9 +2409,13 @@ components:
                               - name
                             additionalProperties: false
                           name:
-                            type: string
+                            type:
+                              - string
+                              - "null"
                           tool_calls:
-                            type: array
+                            type:
+                              - array
+                              - "null"
                             items:
                               type: object
                               properties:
