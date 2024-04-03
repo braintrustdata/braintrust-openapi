@@ -2565,8 +2565,7 @@
                           },
                           "required": [
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2597,8 +2596,7 @@
                                         },
                                         "required": [
                                           "type"
-                                        ],
-                                        "additionalProperties": false
+                                        ]
                                       },
                                       {
                                         "type": "object",
@@ -2637,8 +2635,7 @@
                                             },
                                             "required": [
                                               "url"
-                                            ],
-                                            "additionalProperties": false
+                                            ]
                                           },
                                           "type": {
                                             "type": "string",
@@ -2650,8 +2647,7 @@
                                         "required": [
                                           "image_url",
                                           "type"
-                                        ],
-                                        "additionalProperties": false
+                                        ]
                                       }
                                     ]
                                   }
@@ -2673,8 +2669,7 @@
                           },
                           "required": [
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2707,8 +2702,7 @@
                               "required": [
                                 "arguments",
                                 "name"
-                              ],
-                              "additionalProperties": false
+                              ]
                             },
                             "name": {
                               "type": [
@@ -2740,8 +2734,7 @@
                                     "required": [
                                       "arguments",
                                       "name"
-                                    ],
-                                    "additionalProperties": false
+                                    ]
                                   },
                                   "type": {
                                     "type": "string",
@@ -2754,15 +2747,13 @@
                                   "id",
                                   "function",
                                   "type"
-                                ],
-                                "additionalProperties": false
+                                ]
                               }
                             }
                           },
                           "required": [
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2784,8 +2775,7 @@
                           "required": [
                             "role",
                             "tool_call_id"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2807,8 +2797,7 @@
                           "required": [
                             "name",
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         }
                       ]
                     }
@@ -2883,8 +2872,7 @@
                             },
                             "required": [
                               "type"
-                            ],
-                            "additionalProperties": false
+                            ]
                           },
                           {
                             "type": "null"
@@ -2923,20 +2911,17 @@
                                 },
                                 "required": [
                                   "name"
-                                ],
-                                "additionalProperties": false
+                                ]
                               }
                             },
                             "required": [
                               "type",
                               "function"
-                            ],
-                            "additionalProperties": false
+                            ]
                           }
                         ]
                       }
-                    },
-                    "additionalProperties": false
+                    }
                   },
                   {
                     "type": "object",
@@ -2964,8 +2949,7 @@
                     "required": [
                       "max_tokens",
                       "temperature"
-                    ],
-                    "additionalProperties": false
+                    ]
                   },
                   {
                     "type": "object",
@@ -2988,8 +2972,7 @@
                     },
                     "required": [
                       "temperature"
-                    ],
-                    "additionalProperties": false
+                    ]
                   },
                   {
                     "type": "object",
@@ -2997,16 +2980,14 @@
                       "use_cache": {
                         "type": "boolean"
                       }
-                    },
-                    "additionalProperties": false
+                    }
                   }
                 ]
               },
               "position": {
                 "type": "string"
               }
-            },
-            "additionalProperties": false
+            }
           },
           "origin": {
             "type": [

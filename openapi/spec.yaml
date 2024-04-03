@@ -2322,7 +2322,6 @@ components:
                               - "null"
                         required:
                           - role
-                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2343,7 +2342,6 @@ components:
                                             - text
                                       required:
                                         - type
-                                      additionalProperties: false
                                     - type: object
                                       properties:
                                         image_url:
@@ -2365,7 +2363,6 @@ components:
                                                 - type: "null"
                                           required:
                                             - url
-                                          additionalProperties: false
                                         type:
                                           type: string
                                           enum:
@@ -2373,7 +2370,6 @@ components:
                                       required:
                                         - image_url
                                         - type
-                                      additionalProperties: false
                           role:
                             type: string
                             enum:
@@ -2384,7 +2380,6 @@ components:
                               - "null"
                         required:
                           - role
-                        additionalProperties: false
                       - type: object
                         properties:
                           role:
@@ -2407,7 +2402,6 @@ components:
                             required:
                               - arguments
                               - name
-                            additionalProperties: false
                           name:
                             type:
                               - string
@@ -2431,7 +2425,6 @@ components:
                                   required:
                                     - arguments
                                     - name
-                                  additionalProperties: false
                                 type:
                                   type: string
                                   enum:
@@ -2440,10 +2433,8 @@ components:
                                 - id
                                 - function
                                 - type
-                              additionalProperties: false
                         required:
                           - role
-                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2458,7 +2449,6 @@ components:
                         required:
                           - role
                           - tool_call_id
-                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2473,7 +2463,6 @@ components:
                         required:
                           - name
                           - role
-                        additionalProperties: false
                 tools:
                   type: string
               required:
@@ -2519,7 +2508,6 @@ components:
                                 - json_object
                           required:
                             - type
-                          additionalProperties: false
                         - type: "null"
                     tool_choice:
                       anyOf:
@@ -2542,12 +2530,9 @@ components:
                                   type: string
                               required:
                                 - name
-                              additionalProperties: false
                           required:
                             - type
                             - function
-                          additionalProperties: false
-                  additionalProperties: false
                 - type: object
                   properties:
                     use_cache:
@@ -2566,7 +2551,6 @@ components:
                   required:
                     - max_tokens
                     - temperature
-                  additionalProperties: false
                 - type: object
                   properties:
                     use_cache:
@@ -2581,15 +2565,12 @@ components:
                       type: number
                   required:
                     - temperature
-                  additionalProperties: false
                 - type: object
                   properties:
                     use_cache:
                       type: boolean
-                  additionalProperties: false
             position:
               type: string
-          additionalProperties: false
         origin:
           type:
             - object
