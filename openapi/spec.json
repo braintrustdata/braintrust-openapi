@@ -2562,8 +2562,7 @@
                           },
                           "required": [
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2594,8 +2593,7 @@
                                         },
                                         "required": [
                                           "type"
-                                        ],
-                                        "additionalProperties": false
+                                        ]
                                       },
                                       {
                                         "type": "object",
@@ -2631,8 +2629,7 @@
                                             },
                                             "required": [
                                               "url"
-                                            ],
-                                            "additionalProperties": false
+                                            ]
                                           },
                                           "type": {
                                             "type": "string",
@@ -2644,8 +2641,7 @@
                                         "required": [
                                           "image_url",
                                           "type"
-                                        ],
-                                        "additionalProperties": false
+                                        ]
                                       }
                                     ]
                                   }
@@ -2664,8 +2660,7 @@
                           },
                           "required": [
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2695,8 +2690,7 @@
                               "required": [
                                 "arguments",
                                 "name"
-                              ],
-                              "additionalProperties": false
+                              ]
                             },
                             "name": {
                               "type": "string"
@@ -2722,8 +2716,7 @@
                                     "required": [
                                       "arguments",
                                       "name"
-                                    ],
-                                    "additionalProperties": false
+                                    ]
                                   },
                                   "type": {
                                     "type": "string",
@@ -2736,15 +2729,13 @@
                                   "id",
                                   "function",
                                   "type"
-                                ],
-                                "additionalProperties": false
+                                ]
                               }
                             }
                           },
                           "required": [
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2766,8 +2757,7 @@
                           "required": [
                             "role",
                             "tool_call_id"
-                          ],
-                          "additionalProperties": false
+                          ]
                         },
                         {
                           "type": "object",
@@ -2789,8 +2779,7 @@
                           "required": [
                             "name",
                             "role"
-                          ],
-                          "additionalProperties": false
+                          ]
                         }
                       ]
                     }

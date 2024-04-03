@@ -2320,7 +2320,6 @@ components:
                             type: string
                         required:
                           - role
-                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2341,7 +2340,6 @@ components:
                                             - text
                                       required:
                                         - type
-                                      additionalProperties: false
                                     - type: object
                                       properties:
                                         image_url:
@@ -2362,7 +2360,6 @@ components:
                                                     - high
                                           required:
                                             - url
-                                          additionalProperties: false
                                         type:
                                           type: string
                                           enum:
@@ -2370,7 +2367,6 @@ components:
                                       required:
                                         - image_url
                                         - type
-                                      additionalProperties: false
                           role:
                             type: string
                             enum:
@@ -2379,7 +2375,6 @@ components:
                             type: string
                         required:
                           - role
-                        additionalProperties: false
                       - type: object
                         properties:
                           role:
@@ -2400,7 +2395,6 @@ components:
                             required:
                               - arguments
                               - name
-                            additionalProperties: false
                           name:
                             type: string
                           tool_calls:
@@ -2420,7 +2414,6 @@ components:
                                   required:
                                     - arguments
                                     - name
-                                  additionalProperties: false
                                 type:
                                   type: string
                                   enum:
@@ -2429,10 +2422,8 @@ components:
                                 - id
                                 - function
                                 - type
-                              additionalProperties: false
                         required:
                           - role
-                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2447,7 +2438,6 @@ components:
                         required:
                           - role
                           - tool_call_id
-                        additionalProperties: false
                       - type: object
                         properties:
                           content:
@@ -2462,7 +2452,6 @@ components:
                         required:
                           - name
                           - role
-                        additionalProperties: false
                 tools:
                   type: string
               required:
