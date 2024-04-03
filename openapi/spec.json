@@ -2865,8 +2865,7 @@
                             },
                             "required": [
                               "type"
-                            ],
-                            "additionalProperties": false
+                            ]
                           },
                           {
                             "type": "null"
@@ -2905,20 +2904,17 @@
                                 },
                                 "required": [
                                   "name"
-                                ],
-                                "additionalProperties": false
+                                ]
                               }
                             },
                             "required": [
                               "type",
                               "function"
-                            ],
-                            "additionalProperties": false
+                            ]
                           }
                         ]
                       }
-                    },
-                    "additionalProperties": false
+                    }
                   },
                   {
                     "type": "object",
@@ -2946,8 +2942,7 @@
                     "required": [
                       "max_tokens",
                       "temperature"
-                    ],
-                    "additionalProperties": false
+                    ]
                   },
                   {
                     "type": "object",
@@ -2970,8 +2965,7 @@
                     },
                     "required": [
                       "temperature"
-                    ],
-                    "additionalProperties": false
+                    ]
                   },
                   {
                     "type": "object",
@@ -2979,16 +2973,14 @@
                       "use_cache": {
                         "type": "boolean"
                       }
-                    },
-                    "additionalProperties": false
+                    }
                   }
                 ]
               },
               "position": {
                 "type": "string"
               }
-            },
-            "additionalProperties": false
+            }
           },
           "origin": {
             "type": [

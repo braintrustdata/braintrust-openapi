@@ -2508,7 +2508,6 @@ components:
                                 - json_object
                           required:
                             - type
-                          additionalProperties: false
                         - type: "null"
                     tool_choice:
                       anyOf:
@@ -2531,12 +2530,9 @@ components:
                                   type: string
                               required:
                                 - name
-                              additionalProperties: false
                           required:
                             - type
                             - function
-                          additionalProperties: false
-                  additionalProperties: false
                 - type: object
                   properties:
                     use_cache:
@@ -2555,7 +2551,6 @@ components:
                   required:
                     - max_tokens
                     - temperature
-                  additionalProperties: false
                 - type: object
                   properties:
                     use_cache:
@@ -2570,15 +2565,12 @@ components:
                       type: number
                   required:
                     - temperature
-                  additionalProperties: false
                 - type: object
                   properties:
                     use_cache:
                       type: boolean
-                  additionalProperties: false
             position:
               type: string
-          additionalProperties: false
         origin:
           type:
             - object
