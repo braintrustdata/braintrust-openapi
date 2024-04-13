@@ -49,10 +49,10 @@
         "format": "uuid",
         "description": "Role id"
       },
-      "TeamId": {
+      "GroupId": {
         "type": "string",
         "format": "uuid",
-        "description": "Team id"
+        "description": "Group id"
       },
       "AclId": {
         "type": "string",
@@ -84,9 +84,9 @@
         "type": "string",
         "description": "Name of the role to search for"
       },
-      "TeamName": {
+      "GroupName": {
         "type": "string",
-        "description": "Name of the team to search for"
+        "description": "Name of the group to search for"
       },
       "OrgName": {
         "type": "string",
@@ -164,7 +164,7 @@
           "prompt_session",
           "project_score",
           "project_tag",
-          "team",
+          "group",
           "role"
         ],
         "description": "The object type that the ACL applies to"
@@ -3238,7 +3238,7 @@
             "format": "date-time",
             "description": "Date of role deletion, or null if the role is still active"
           },
-          "member_privileges": {
+          "member_permissions": {
             "type": [
               "array",
               "null"
@@ -3255,9 +3255,9 @@
                 "update_acls",
                 "delete_acls"
               ],
-              "description": "Each privilege permits a certain type of operation on an object in the system\n\nPrivileges can be assigned to to objects on an individual basis, or grouped into roles"
+              "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
             },
-            "description": "Privileges which belong to this role"
+            "description": "Permissions which belong to this role"
           },
           "member_roles": {
             "type": [
@@ -3268,7 +3268,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of the roles this role inherits from\n\nAn inheriting role has all the privileges contained in its member roles, as well as all of their inherited privileges"
+            "description": "Ids of the roles this role inherits from\n\nAn inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions"
           }
         },
         "required": [
@@ -3276,7 +3276,7 @@
           "name"
         ],
         "additionalProperties": false,
-        "description": "A role is a collection of privileges which can be granted as part of an ACL\n\nRoles can consist of individual privileges, as well as a set of roles they inherit from"
+        "description": "A role is a collection of permissions which can be granted as part of an ACL\n\nRoles can consist of individual permissions, as well as a set of roles they inherit from"
       },
       "CreateRole": {
         "type": "object",
@@ -3292,7 +3292,7 @@
             ],
             "description": "Textual description of the role"
           },
-          "member_privileges": {
+          "member_permissions": {
             "type": [
               "array",
               "null"
@@ -3309,9 +3309,9 @@
                 "update_acls",
                 "delete_acls"
               ],
-              "description": "Each privilege permits a certain type of operation on an object in the system\n\nPrivileges can be assigned to to objects on an individual basis, or grouped into roles"
+              "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
             },
-            "description": "Privileges which belong to this role"
+            "description": "Permissions which belong to this role"
           },
           "member_roles": {
             "type": [
@@ -3322,7 +3322,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of the roles this role inherits from\n\nAn inheriting role has all the privileges contained in its member roles, as well as all of their inherited privileges"
+            "description": "Ids of the roles this role inherits from\n\nAn inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions"
           },
           "org_name": {
             "type": [
@@ -3347,7 +3347,7 @@
             ],
             "description": "Textual description of the role"
           },
-          "member_privileges": {
+          "member_permissions": {
             "type": [
               "array",
               "null"
@@ -3364,9 +3364,9 @@
                 "update_acls",
                 "delete_acls"
               ],
-              "description": "Each privilege permits a certain type of operation on an object in the system\n\nPrivileges can be assigned to to objects on an individual basis, or grouped into roles"
+              "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
             },
-            "description": "Privileges which belong to this role"
+            "description": "Permissions which belong to this role"
           },
           "member_roles": {
             "type": [
@@ -3377,7 +3377,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of the roles this role inherits from\n\nAn inheriting role has all the privileges contained in its member roles, as well as all of their inherited privileges"
+            "description": "Ids of the roles this role inherits from\n\nAn inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions"
           },
           "name": {
             "type": [
@@ -3389,18 +3389,18 @@
         },
         "additionalProperties": false
       },
-      "Team": {
+      "Group": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
             "format": "uuid",
-            "description": "Unique identifier for the team"
+            "description": "Unique identifier for the group"
           },
           "org_id": {
             "type": "string",
             "format": "uuid",
-            "description": "Unique id for the organization that the team belongs under\n\nIt is forbidden to change the org after creating a team"
+            "description": "Unique id for the organization that the group belongs under\n\nIt is forbidden to change the org after creating a group"
           },
           "user_id": {
             "type": [
@@ -3408,7 +3408,7 @@
               "null"
             ],
             "format": "uuid",
-            "description": "Identifies the user who created the team"
+            "description": "Identifies the user who created the group"
           },
           "created": {
             "type": [
@@ -3416,18 +3416,18 @@
               "null"
             ],
             "format": "date-time",
-            "description": "Date of team creation"
+            "description": "Date of group creation"
           },
           "name": {
             "type": "string",
-            "description": "Name of the team"
+            "description": "Name of the group"
           },
           "description": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Textual description of the team"
+            "description": "Textual description of the group"
           },
           "deleted_at": {
             "type": [
@@ -3435,7 +3435,7 @@
               "null"
             ],
             "format": "date-time",
-            "description": "Date of team deletion, or null if the team is still active"
+            "description": "Date of group deletion, or null if the group is still active"
           },
           "member_users": {
             "type": [
@@ -3446,9 +3446,9 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of users which belong to this team"
+            "description": "Ids of users which belong to this group"
           },
-          "member_teams": {
+          "member_groups": {
             "type": [
               "array",
               "null"
@@ -3457,7 +3457,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of the teams this team inherits from\n\nAn inheriting team has all the users contained in its member teams, as well as all of their inherited users"
+            "description": "Ids of the groups this group inherits from\n\nAn inheriting group has all the users contained in its member groups, as well as all of their inherited users"
           }
         },
         "required": [
@@ -3466,21 +3466,21 @@
           "name"
         ],
         "additionalProperties": false,
-        "description": "A team is a collection of users which can be assigned an ACL\n\nTeams can consist of individual users, as well as a set of teams they inherit from"
+        "description": "A group is a collection of users which can be assigned an ACL\n\nGroups can consist of individual users, as well as a set of groups they inherit from"
       },
-      "CreateTeam": {
+      "CreateGroup": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "Name of the team"
+            "description": "Name of the group"
           },
           "description": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Textual description of the team"
+            "description": "Textual description of the group"
           },
           "member_users": {
             "type": [
@@ -3491,9 +3491,9 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of users which belong to this team"
+            "description": "Ids of users which belong to this group"
           },
-          "member_teams": {
+          "member_groups": {
             "type": [
               "array",
               "null"
@@ -3502,14 +3502,14 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of the teams this team inherits from\n\nAn inheriting team has all the users contained in its member teams, as well as all of their inherited users"
+            "description": "Ids of the groups this group inherits from\n\nAn inheriting group has all the users contained in its member groups, as well as all of their inherited users"
           },
           "org_name": {
             "type": [
               "string",
               "null"
             ],
-            "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the team belongs in."
+            "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the group belongs in."
           }
         },
         "required": [
@@ -3517,7 +3517,7 @@
         ],
         "additionalProperties": false
       },
-      "PatchTeam": {
+      "PatchGroup": {
         "type": "object",
         "properties": {
           "description": {
@@ -3525,7 +3525,7 @@
               "string",
               "null"
             ],
-            "description": "Textual description of the team"
+            "description": "Textual description of the group"
           },
           "member_users": {
             "type": [
@@ -3536,9 +3536,9 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of users which belong to this team"
+            "description": "Ids of users which belong to this group"
           },
-          "member_teams": {
+          "member_groups": {
             "type": [
               "array",
               "null"
@@ -3547,19 +3547,19 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Ids of the teams this team inherits from\n\nAn inheriting team has all the users contained in its member teams, as well as all of their inherited users"
+            "description": "Ids of the groups this group inherits from\n\nAn inheriting group has all the users contained in its member groups, as well as all of their inherited users"
           },
           "name": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Name of the team"
+            "description": "Name of the group"
           }
         },
         "additionalProperties": false
       },
-      "UserPrivilegeAcl": {
+      "UserPermissionAcl": {
         "type": "object",
         "properties": {
           "id": {
@@ -3578,7 +3578,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -3601,7 +3601,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -3633,7 +3633,7 @@
             "format": "uuid",
             "description": "Id of the user the ACL applies to"
           },
-          "privilege": {
+          "permission": {
             "type": "string",
             "enum": [
               "create",
@@ -3645,7 +3645,7 @@
               "update_acls",
               "delete_acls"
             ],
-            "description": "Privilege the ACL grants"
+            "description": "Permission the ACL grants"
           }
         },
         "required": [
@@ -3654,7 +3654,7 @@
           "object_id",
           "_object_org_id",
           "user_id",
-          "privilege"
+          "permission"
         ],
         "additionalProperties": false
       },
@@ -3677,7 +3677,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -3700,7 +3700,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -3748,7 +3748,7 @@
         ],
         "additionalProperties": false
       },
-      "TeamPrivilegeAcl": {
+      "GroupPermissionAcl": {
         "type": "object",
         "properties": {
           "id": {
@@ -3767,7 +3767,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -3790,7 +3790,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -3817,12 +3817,12 @@
             "format": "date-time",
             "description": "Date of acl creation"
           },
-          "team_id": {
+          "group_id": {
             "type": "string",
             "format": "uuid",
-            "description": "Id of the team the ACL applies to"
+            "description": "Id of the group the ACL applies to"
           },
-          "privilege": {
+          "permission": {
             "type": "string",
             "enum": [
               "create",
@@ -3834,7 +3834,7 @@
               "update_acls",
               "delete_acls"
             ],
-            "description": "Privilege the ACL grants"
+            "description": "Permission the ACL grants"
           }
         },
         "required": [
@@ -3842,12 +3842,12 @@
           "object_type",
           "object_id",
           "_object_org_id",
-          "team_id",
-          "privilege"
+          "group_id",
+          "permission"
         ],
         "additionalProperties": false
       },
-      "TeamRoleAcl": {
+      "GroupRoleAcl": {
         "type": "object",
         "properties": {
           "id": {
@@ -3866,7 +3866,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -3889,7 +3889,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -3916,10 +3916,10 @@
             "format": "date-time",
             "description": "Date of acl creation"
           },
-          "team_id": {
+          "group_id": {
             "type": "string",
             "format": "uuid",
-            "description": "Id of the team the ACL applies to"
+            "description": "Id of the group the ACL applies to"
           },
           "role_id": {
             "type": "string",
@@ -3932,7 +3932,7 @@
           "object_type",
           "object_id",
           "_object_org_id",
-          "team_id",
+          "group_id",
           "role_id"
         ],
         "additionalProperties": false
@@ -3940,21 +3940,21 @@
       "Acl": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/UserPrivilegeAcl"
+            "$ref": "#/components/schemas/UserPermissionAcl"
           },
           {
             "$ref": "#/components/schemas/UserRoleAcl"
           },
           {
-            "$ref": "#/components/schemas/TeamPrivilegeAcl"
+            "$ref": "#/components/schemas/GroupPermissionAcl"
           },
           {
-            "$ref": "#/components/schemas/TeamRoleAcl"
+            "$ref": "#/components/schemas/GroupRoleAcl"
           }
         ],
-        "description": "An ACL grants a certain privilege or role to a certain user or team on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read privileges on a project, they will also have read privileges on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL."
+        "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL."
       },
-      "CreateUserPrivilegeAcl": {
+      "CreateUserPermissionAcl": {
         "type": "object",
         "properties": {
           "object_type": {
@@ -3968,7 +3968,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -3991,7 +3991,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -4010,7 +4010,7 @@
             "format": "uuid",
             "description": "Id of the user the ACL applies to"
           },
-          "privilege": {
+          "permission": {
             "type": "string",
             "enum": [
               "create",
@@ -4022,14 +4022,14 @@
               "update_acls",
               "delete_acls"
             ],
-            "description": "Privilege the ACL grants"
+            "description": "Permission the ACL grants"
           }
         },
         "required": [
           "object_type",
           "object_id",
           "user_id",
-          "privilege"
+          "permission"
         ],
         "additionalProperties": false
       },
@@ -4047,7 +4047,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -4070,7 +4070,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -4103,7 +4103,7 @@
         ],
         "additionalProperties": false
       },
-      "CreateTeamPrivilegeAcl": {
+      "CreateGroupPermissionAcl": {
         "type": "object",
         "properties": {
           "object_type": {
@@ -4117,7 +4117,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -4140,7 +4140,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -4154,12 +4154,12 @@
             ],
             "description": "Optionally restricts the permission grant to just the specified object type"
           },
-          "team_id": {
+          "group_id": {
             "type": "string",
             "format": "uuid",
-            "description": "Id of the team the ACL applies to"
+            "description": "Id of the group the ACL applies to"
           },
-          "privilege": {
+          "permission": {
             "type": "string",
             "enum": [
               "create",
@@ -4171,18 +4171,18 @@
               "update_acls",
               "delete_acls"
             ],
-            "description": "Privilege the ACL grants"
+            "description": "Permission the ACL grants"
           }
         },
         "required": [
           "object_type",
           "object_id",
-          "team_id",
-          "privilege"
+          "group_id",
+          "permission"
         ],
         "additionalProperties": false
       },
-      "CreateTeamRoleAcl": {
+      "CreateGroupRoleAcl": {
         "type": "object",
         "properties": {
           "object_type": {
@@ -4196,7 +4196,7 @@
               "prompt_session",
               "project_score",
               "project_tag",
-              "team",
+              "group",
               "role"
             ],
             "description": "The object type that the ACL applies to"
@@ -4219,7 +4219,7 @@
                   "prompt_session",
                   "project_score",
                   "project_tag",
-                  "team",
+                  "group",
                   "role"
                 ],
                 "description": "The object type that the ACL applies to"
@@ -4233,10 +4233,10 @@
             ],
             "description": "Optionally restricts the permission grant to just the specified object type"
           },
-          "team_id": {
+          "group_id": {
             "type": "string",
             "format": "uuid",
-            "description": "Id of the team the ACL applies to"
+            "description": "Id of the group the ACL applies to"
           },
           "role_id": {
             "type": "string",
@@ -4247,7 +4247,7 @@
         "required": [
           "object_type",
           "object_id",
-          "team_id",
+          "group_id",
           "role_id"
         ],
         "additionalProperties": false
@@ -4255,16 +4255,16 @@
       "CreateAcl": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/CreateUserPrivilegeAcl"
+            "$ref": "#/components/schemas/CreateUserPermissionAcl"
           },
           {
             "$ref": "#/components/schemas/CreateUserRoleAcl"
           },
           {
-            "$ref": "#/components/schemas/CreateTeamPrivilegeAcl"
+            "$ref": "#/components/schemas/CreateGroupPermissionAcl"
           },
           {
-            "$ref": "#/components/schemas/CreateTeamRoleAcl"
+            "$ref": "#/components/schemas/CreateGroupRoleAcl"
           }
         ]
       },
@@ -4506,13 +4506,13 @@
         "name": "role_id",
         "in": "path"
       },
-      "TeamId": {
+      "GroupId": {
         "schema": {
-          "$ref": "#/components/schemas/TeamId"
+          "$ref": "#/components/schemas/GroupId"
         },
         "required": true,
-        "description": "Team id",
-        "name": "team_id",
+        "description": "Group id",
+        "name": "group_id",
         "in": "path"
       },
       "AclId": {
@@ -4578,13 +4578,13 @@
         "name": "role_name",
         "in": "query"
       },
-      "TeamName": {
+      "GroupName": {
         "schema": {
-          "$ref": "#/components/schemas/TeamName"
+          "$ref": "#/components/schemas/GroupName"
         },
         "required": false,
-        "description": "Name of the team to search for",
-        "name": "team_name",
+        "description": "Name of the group to search for",
+        "name": "group_name",
         "in": "query"
       },
       "OrgName": {
@@ -4758,7 +4758,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "postProject",
         "description": "Create a new project. If there is an existing project with the same name as the one specified in the request, will return the existing project unmodified",
@@ -4834,7 +4835,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "putProject",
         "description": "Create or replace a new project. If there is an existing project with the same name as the one specified in the request, will replace the existing project with the provided fields",
@@ -4913,7 +4915,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5062,7 +5065,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5132,7 +5136,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5213,7 +5218,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5342,7 +5348,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5482,7 +5489,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5563,7 +5571,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5704,7 +5713,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -5834,7 +5844,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "postExperiment",
         "description": "Create a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will create a new experiment from `name`, suffixed with a unique identifier",
@@ -5910,7 +5921,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "putExperiment",
         "description": "Create or replace a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will replace the existing experiment with the provided fields",
@@ -5989,7 +6001,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -6141,7 +6154,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -6211,7 +6225,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -6292,7 +6307,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -6421,7 +6437,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -6561,7 +6578,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -6642,7 +6660,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -6783,7 +6802,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7048,7 +7068,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "postDataset",
         "description": "Create a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will return the existing dataset unmodified",
@@ -7124,7 +7145,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "putDataset",
         "description": "Create or replace a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will replace the existing dataset with the provided fields",
@@ -7203,7 +7225,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7355,7 +7378,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7425,7 +7449,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7506,7 +7531,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7635,7 +7661,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7775,7 +7802,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7856,7 +7884,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -7997,7 +8026,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -8259,7 +8289,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "postPrompt",
         "description": "Create a new prompt. If there is an existing prompt in the project with the same slug as the one specified in the request, will return the existing prompt unmodified",
@@ -8417,7 +8448,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "putPrompt",
         "description": "Create or replace a new prompt. If there is an existing prompt in the project with the same slug as the one specified in the request, will replace the existing prompt with the provided fields",
@@ -8578,7 +8610,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -8818,7 +8851,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -8970,7 +9004,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -9133,7 +9168,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -9344,7 +9380,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -9474,7 +9511,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "postRole",
         "description": "Create a new role. If there is an existing role with the same name as the one specified in the request, will return the existing role unmodified",
@@ -9550,7 +9588,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "putRole",
         "description": "Create or replace a new role. If there is an existing role with the same name as the one specified in the request, will replace the existing role with the provided fields",
@@ -9629,7 +9668,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -9778,7 +9818,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -9848,7 +9889,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -9929,7 +9971,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -10047,37 +10090,38 @@
         }
       }
     },
-    "/v1/team": {
+    "/v1/group": {
       "post": {
         "tags": [
-          "Teams"
+          "Groups"
         ],
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
-        "operationId": "postTeam",
-        "description": "Create a new team. If there is an existing team with the same name as the one specified in the request, will return the existing team unmodified",
-        "summary": "Create team",
+        "operationId": "postGroup",
+        "description": "Create a new group. If there is an existing group with the same name as the one specified in the request, will return the existing group unmodified",
+        "summary": "Create group",
         "requestBody": {
-          "description": "Any desired information about the new team object",
+          "description": "Any desired information about the new group object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTeam"
+                "$ref": "#/components/schemas/CreateGroup"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Returns the new team object",
+            "description": "Returns the new group object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Team"
+                  "$ref": "#/components/schemas/Group"
                 }
               }
             }
@@ -10126,34 +10170,35 @@
       },
       "put": {
         "tags": [
-          "Teams"
+          "Groups"
         ],
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
-        "operationId": "putTeam",
-        "description": "Create or replace a new team. If there is an existing team with the same name as the one specified in the request, will replace the existing team with the provided fields",
-        "summary": "Create or replace team",
+        "operationId": "putGroup",
+        "description": "Create or replace a new group. If there is an existing group with the same name as the one specified in the request, will replace the existing group with the provided fields",
+        "summary": "Create or replace group",
         "requestBody": {
-          "description": "Any desired information about the new team object",
+          "description": "Any desired information about the new group object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTeam"
+                "$ref": "#/components/schemas/CreateGroup"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Returns the new team object",
+            "description": "Returns the new group object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Team"
+                  "$ref": "#/components/schemas/Group"
                 }
               }
             }
@@ -10201,16 +10246,17 @@
         }
       },
       "get": {
-        "operationId": "getTeam",
+        "operationId": "getGroup",
         "tags": [
-          "Teams"
+          "Groups"
         ],
-        "description": "List out all teams. The teams are sorted by creation date, with the most recently-created teams coming first",
-        "summary": "List teams",
+        "description": "List out all groups. The groups are sorted by creation date, with the most recently-created groups coming first",
+        "summary": "List groups",
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -10223,7 +10269,7 @@
             "$ref": "#/components/parameters/EndingBefore"
           },
           {
-            "$ref": "#/components/parameters/TeamName"
+            "$ref": "#/components/parameters/GroupName"
           },
           {
             "$ref": "#/components/parameters/OrgName"
@@ -10231,7 +10277,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns a list of team objects",
+            "description": "Returns a list of group objects",
             "content": {
               "application/json": {
                 "schema": {
@@ -10240,9 +10286,9 @@
                     "objects": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Team"
+                        "$ref": "#/components/schemas/Group"
                       },
-                      "description": "A list of team objects"
+                      "description": "A list of group objects"
                     }
                   },
                   "required": [
@@ -10296,9 +10342,9 @@
         }
       },
       "options": {
-        "operationId": "optionsTeam",
+        "operationId": "optionsGroup",
         "description": "Enable CORS",
-        "summary": "Enable CORS (`/v1/team`)",
+        "summary": "Enable CORS (`/v1/group`)",
         "security": [],
         "tags": [
           "CORS"
@@ -10348,31 +10394,32 @@
         }
       }
     },
-    "/v1/team/{team_id}": {
+    "/v1/group/{group_id}": {
       "get": {
-        "operationId": "getTeamId",
+        "operationId": "getGroupId",
         "tags": [
-          "Teams"
+          "Groups"
         ],
-        "description": "Get a team object by its id",
-        "summary": "Get team",
+        "description": "Get a group object by its id",
+        "summary": "Get group",
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/TeamId"
+            "$ref": "#/components/parameters/GroupId"
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns the team object",
+            "description": "Returns the group object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Team"
+                  "$ref": "#/components/schemas/Group"
                 }
               }
             }
@@ -10420,20 +10467,21 @@
         }
       },
       "patch": {
-        "operationId": "patchTeamId",
+        "operationId": "patchGroupId",
         "tags": [
-          "Teams"
+          "Groups"
         ],
-        "description": "Partially update a team object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /team/{id}` and then replace it with `PUT /team`.",
-        "summary": "Partially update team",
+        "description": "Partially update a group object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /group/{id}` and then replace it with `PUT /group`.",
+        "summary": "Partially update group",
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/TeamId"
+            "$ref": "#/components/parameters/GroupId"
           }
         ],
         "requestBody": {
@@ -10442,18 +10490,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PatchTeam"
+                "$ref": "#/components/schemas/PatchGroup"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Returns the team object",
+            "description": "Returns the group object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Team"
+                  "$ref": "#/components/schemas/Group"
                 }
               }
             }
@@ -10501,29 +10549,30 @@
         }
       },
       "delete": {
-        "operationId": "deleteTeamId",
+        "operationId": "deleteGroupId",
         "tags": [
-          "Teams"
+          "Groups"
         ],
-        "description": "Delete a team object by its id",
-        "summary": "Delete team",
+        "description": "Delete a group object by its id",
+        "summary": "Delete group",
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/TeamId"
+            "$ref": "#/components/parameters/GroupId"
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns the deleted team object",
+            "description": "Returns the deleted group object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Team"
+                  "$ref": "#/components/schemas/Group"
                 }
               }
             }
@@ -10571,16 +10620,16 @@
         }
       },
       "options": {
-        "operationId": "optionsTeamId",
+        "operationId": "optionsGroupId",
         "description": "Enable CORS",
-        "summary": "Enable CORS (`/v1/team/{team_id}`)",
+        "summary": "Enable CORS (`/v1/group/{group_id}`)",
         "security": [],
         "tags": [
           "CORS"
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/TeamId"
+            "$ref": "#/components/parameters/GroupId"
           }
         ],
         "responses": {
@@ -10636,7 +10685,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "postAcl",
         "description": "Create a new acl. If there is an existing acl with the same contents as the one specified in the request, will return the existing acl unmodified",
@@ -10712,7 +10762,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "operationId": "putAcl",
         "description": "Create or replace a new acl. If there is an existing acl with the same contents as the one specified in the request, will replace the existing acl with the provided fields",
@@ -10791,7 +10842,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -10940,7 +10992,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -11010,7 +11063,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -11139,7 +11193,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
@@ -11294,7 +11349,8 @@
         "security": [
           {
             "bearerAuth": []
-          }
+          },
+          {}
         ],
         "parameters": [
           {
