@@ -75,6 +75,11 @@ components:
     OrgName:
       type: string
       description: Filter search results to within a particular organization
+    Ids:
+      type: string
+      format: uuid
+      description: Filter search results to a particular set of object IDs. To specify
+        a list of IDs, include the query param multiple times
     AppLimitParam:
       type: integer
       minimum: 0
@@ -1134,6 +1139,14 @@ components:
             - "null"
           additionalProperties: {}
           description: User-controlled metadata about the experiment
+        ensure_new:
+          type:
+            - boolean
+            - "null"
+          description: Normally, creating an experiment with the same name as an existing
+            experiment will return the existing one un-modified. But if
+            `ensure_new` is true, registration will generate a new experiment
+            with a unique name in case of a conflict.
       required:
         - project_id
       additionalProperties: false
@@ -2571,6 +2584,29 @@ components:
                           required:
                             - type
                             - function
+                    function_call:
+                      anyOf:
+                        - type: string
+                          enum:
+                            - auto
+                        - type: string
+                          enum:
+                            - none
+                        - type: object
+                          properties:
+                            name:
+                              type: string
+                          required:
+                            - name
+                          additionalProperties: false
+                    n:
+                      type: number
+                    stop:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                    - function_call
                 - type: object
                   properties:
                     use_cache:
@@ -2583,6 +2619,10 @@ components:
                       type: number
                     top_k:
                       type: number
+                    stop_sequences:
+                      type: array
+                      items:
+                        type: string
                     max_tokens_to_sample:
                       type: number
                       description: This is a legacy parameter that should not be used.
@@ -3851,6 +3891,14 @@ components:
       description: Filter search results to within a particular organization
       name: org_name
       in: query
+    Ids:
+      schema:
+        $ref: "#/components/schemas/Ids"
+      required: false
+      description: Filter search results to a particular set of object IDs. To specify
+        a list of IDs, include the query param multiple times
+      name: ids
+      in: query
     AppLimitParam:
       schema:
         $ref: "#/components/schemas/AppLimitParam"
@@ -4060,10 +4108,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putProject
-      description: Create or replace a new project. If there is an existing project
-        with the same name as the one specified in the request, will replace the
-        existing project with the provided fields
-      summary: Create or replace project
+      description: "NOTE: This operation is deprecated and will be removed in a future
+        revision of the API. Create or replace a new project. If there is an
+        existing project with the same name as the one specified in the request,
+        will return the existing project unmodified, will replace the existing
+        project with the provided fields"
+      summary: DEPRECATED. Create or replace project
       requestBody:
         description: Any desired information about the new project object
         required: true
@@ -4119,6 +4169,7 @@ paths:
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of project objects
@@ -4245,8 +4296,7 @@ paths:
       description: Partially update a project object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
-        null. As a workaround, you may retrieve the full object with `GET
-        /project/{id}` and then replace it with `PUT /project`.
+        null.
       summary: Partially update project
       security:
         - bearerAuth: []
@@ -4689,7 +4739,7 @@ paths:
       operationId: postExperiment
       description: Create a new experiment. If there is an existing experiment in the
         project with the same name as the one specified in the request, will
-        create a new experiment from `name`, suffixed with a unique identifier
+        return the existing experiment unmodified
       summary: Create experiment
       requestBody:
         description: Any desired information about the new experiment object
@@ -4737,10 +4787,13 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putExperiment
-      description: Create or replace a new experiment. If there is an existing
-        experiment in the project with the same name as the one specified in the
-        request, will replace the existing experiment with the provided fields
-      summary: Create or replace experiment
+      description: "NOTE: This operation is deprecated and will be removed in a future
+        revision of the API. Create or replace a new experiment. If there is an
+        existing experiment in the project with the same name as the one
+        specified in the request, will return the existing experiment
+        unmodified, will replace the existing experiment with the provided
+        fields"
+      summary: DEPRECATED. Create or replace experiment
       requestBody:
         description: Any desired information about the new experiment object
         required: true
@@ -4797,6 +4850,7 @@ paths:
         - $ref: "#/components/parameters/ExperimentName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of experiment objects
@@ -4923,8 +4977,7 @@ paths:
       description: Partially update an experiment object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
-        null. As a workaround, you may retrieve the full object with `GET
-        /experiment/{id}` and then replace it with `PUT /experiment`.
+        null.
       summary: Partially update experiment
       security:
         - bearerAuth: []
@@ -5496,10 +5549,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putDataset
-      description: Create or replace a new dataset. If there is an existing dataset in
-        the project with the same name as the one specified in the request, will
-        replace the existing dataset with the provided fields
-      summary: Create or replace dataset
+      description: "NOTE: This operation is deprecated and will be removed in a future
+        revision of the API. Create or replace a new dataset. If there is an
+        existing dataset in the project with the same name as the one specified
+        in the request, will return the existing dataset unmodified, will
+        replace the existing dataset with the provided fields"
+      summary: DEPRECATED. Create or replace dataset
       requestBody:
         description: Any desired information about the new dataset object
         required: true
@@ -5556,6 +5611,7 @@ paths:
         - $ref: "#/components/parameters/DatasetName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of dataset objects
@@ -5682,8 +5738,7 @@ paths:
       description: Partially update a dataset object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
-        null. As a workaround, you may retrieve the full object with `GET
-        /dataset/{id}` and then replace it with `PUT /dataset`.
+        null.
       summary: Partially update dataset
       security:
         - bearerAuth: []
@@ -6320,10 +6375,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putPrompt
-      description: Create or replace a new prompt. If there is an existing prompt in
-        the project with the same slug as the one specified in the request, will
-        replace the existing prompt with the provided fields
-      summary: Create or replace prompt
+      description: "NOTE: This operation is deprecated and will be removed in a future
+        revision of the API. Create or replace a new prompt. If there is an
+        existing prompt in the project with the same slug as the one specified
+        in the request, will return the existing prompt unmodified, will replace
+        the existing prompt with the provided fields"
+      summary: DEPRECATED. Create or replace prompt
       requestBody:
         description: Any desired information about the new prompt object
         required: true
@@ -6448,6 +6505,7 @@ paths:
         - $ref: "#/components/parameters/Slug"
         - $ref: "#/components/parameters/Version"
         - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of prompt objects
@@ -6706,8 +6764,7 @@ paths:
       description: Partially update a prompt object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
-        null. As a workaround, you may retrieve the full object with `GET
-        /prompt/{id}` and then replace it with `PUT /prompt`.
+        null.
       summary: Partially update prompt
       security:
         - bearerAuth: []
@@ -7105,10 +7162,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putRole
-      description: Create or replace a new role. If there is an existing role with the
-        same name as the one specified in the request, will replace the existing
-        role with the provided fields
-      summary: Create or replace role
+      description: "NOTE: This operation is deprecated and will be removed in a future
+        revision of the API. Create or replace a new role. If there is an
+        existing role with the same name as the one specified in the request,
+        will return the existing role unmodified, will replace the existing role
+        with the provided fields"
+      summary: DEPRECATED. Create or replace role
       requestBody:
         description: Any desired information about the new role object
         required: true
@@ -7164,6 +7223,7 @@ paths:
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/RoleName"
         - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of role objects
@@ -7290,8 +7350,7 @@ paths:
       description: Partially update a role object. Specify the fields to update in the
         payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
-        null. As a workaround, you may retrieve the full object with `GET
-        /role/{id}` and then replace it with `PUT /role`.
+        null.
       summary: Partially update role
       security:
         - bearerAuth: []
@@ -7474,10 +7533,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putGroup
-      description: Create or replace a new group. If there is an existing group with
-        the same name as the one specified in the request, will replace the
-        existing group with the provided fields
-      summary: Create or replace group
+      description: "NOTE: This operation is deprecated and will be removed in a future
+        revision of the API. Create or replace a new group. If there is an
+        existing group with the same name as the one specified in the request,
+        will return the existing group unmodified, will replace the existing
+        group with the provided fields"
+      summary: DEPRECATED. Create or replace group
       requestBody:
         description: Any desired information about the new group object
         required: true
@@ -7533,6 +7594,7 @@ paths:
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/GroupName"
         - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of group objects
@@ -7659,8 +7721,7 @@ paths:
       description: Partially update a group object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
-        null. As a workaround, you may retrieve the full object with `GET
-        /group/{id}` and then replace it with `PUT /group`.
+        null.
       summary: Partially update group
       security:
         - bearerAuth: []
@@ -7843,10 +7904,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putAcl
-      description: Create or replace a new acl. If there is an existing acl with the
-        same contents as the one specified in the request, will replace the
-        existing acl with the provided fields
-      summary: Create or replace acl
+      description: "NOTE: This operation is deprecated and will be removed in a future
+        revision of the API. Create or replace a new acl. If there is an
+        existing acl with the same contents as the one specified in the request,
+        will return the existing acl unmodified, will replace the existing acl
+        with the provided fields"
+      summary: DEPRECATED. Create or replace acl
       requestBody:
         description: Any desired information about the new acl object
         required: true
@@ -8119,6 +8182,7 @@ paths:
         - $ref: "#/components/parameters/UserFamilyName"
         - $ref: "#/components/parameters/UserEmail"
         - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of user objects

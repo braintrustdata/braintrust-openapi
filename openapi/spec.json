@@ -92,6 +92,11 @@
         "type": "string",
         "description": "Filter search results to within a particular organization"
       },
+      "Ids": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Filter search results to a particular set of object IDs. To specify a list of IDs, include the query param multiple times"
+      },
       "AppLimitParam": {
         "type": "integer",
         "minimum": 0,
@@ -1235,6 +1240,13 @@
             ],
             "additionalProperties": {},
             "description": "User-controlled metadata about the experiment"
+          },
+          "ensure_new": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Normally, creating an experiment with the same name as an existing experiment will return the existing one un-modified. But if `ensure_new` is true, registration will generate a new experiment with a unique name in case of a conflict."
           }
         },
         "required": [
@@ -2963,8 +2975,48 @@
                             ]
                           }
                         ]
+                      },
+                      "function_call": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "auto"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "none"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "name"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "n": {
+                        "type": "number"
+                      },
+                      "stop": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       }
-                    }
+                    },
+                    "required": [
+                      "function_call"
+                    ]
                   },
                   {
                     "type": "object",
@@ -2983,6 +3035,12 @@
                       },
                       "top_k": {
                         "type": "number"
+                      },
+                      "stop_sequences": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       },
                       "max_tokens_to_sample": {
                         "type": "number",
@@ -4596,6 +4654,15 @@
         "name": "org_name",
         "in": "query"
       },
+      "Ids": {
+        "schema": {
+          "$ref": "#/components/schemas/Ids"
+        },
+        "required": false,
+        "description": "Filter search results to a particular set of object IDs. To specify a list of IDs, include the query param multiple times",
+        "name": "ids",
+        "in": "query"
+      },
       "AppLimitParam": {
         "schema": {
           "$ref": "#/components/schemas/AppLimitParam"
@@ -4839,8 +4906,8 @@
           {}
         ],
         "operationId": "putProject",
-        "description": "Create or replace a new project. If there is an existing project with the same name as the one specified in the request, will replace the existing project with the provided fields",
-        "summary": "Create or replace project",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new project. If there is an existing project with the same name as the one specified in the request, will return the existing project unmodified, will replace the existing project with the provided fields",
+        "summary": "DEPRECATED. Create or replace project",
         "requestBody": {
           "description": "Any desired information about the new project object",
           "required": true,
@@ -4933,6 +5000,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
           }
         ],
         "responses": {
@@ -5131,7 +5201,7 @@
         "tags": [
           "Projects"
         ],
-        "description": "Partially update a project object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /project/{id}` and then replace it with `PUT /project`.",
+        "description": "Partially update a project object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update project",
         "security": [
           {
@@ -5848,7 +5918,7 @@
           {}
         ],
         "operationId": "postExperiment",
-        "description": "Create a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will create a new experiment from `name`, suffixed with a unique identifier",
+        "description": "Create a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will return the existing experiment unmodified",
         "summary": "Create experiment",
         "requestBody": {
           "description": "Any desired information about the new experiment object",
@@ -5925,8 +5995,8 @@
           {}
         ],
         "operationId": "putExperiment",
-        "description": "Create or replace a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will replace the existing experiment with the provided fields",
-        "summary": "Create or replace experiment",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will return the existing experiment unmodified, will replace the existing experiment with the provided fields",
+        "summary": "DEPRECATED. Create or replace experiment",
         "requestBody": {
           "description": "Any desired information about the new experiment object",
           "required": true,
@@ -6022,6 +6092,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
           }
         ],
         "responses": {
@@ -6220,7 +6293,7 @@
         "tags": [
           "Experiments"
         ],
-        "description": "Partially update an experiment object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /experiment/{id}` and then replace it with `PUT /experiment`.",
+        "description": "Partially update an experiment object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update experiment",
         "security": [
           {
@@ -7149,8 +7222,8 @@
           {}
         ],
         "operationId": "putDataset",
-        "description": "Create or replace a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will replace the existing dataset with the provided fields",
-        "summary": "Create or replace dataset",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will return the existing dataset unmodified, will replace the existing dataset with the provided fields",
+        "summary": "DEPRECATED. Create or replace dataset",
         "requestBody": {
           "description": "Any desired information about the new dataset object",
           "required": true,
@@ -7246,6 +7319,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
           }
         ],
         "responses": {
@@ -7444,7 +7520,7 @@
         "tags": [
           "Datasets"
         ],
-        "description": "Partially update a dataset object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /dataset/{id}` and then replace it with `PUT /dataset`.",
+        "description": "Partially update a dataset object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update dataset",
         "security": [
           {
@@ -8452,8 +8528,8 @@
           {}
         ],
         "operationId": "putPrompt",
-        "description": "Create or replace a new prompt. If there is an existing prompt in the project with the same slug as the one specified in the request, will replace the existing prompt with the provided fields",
-        "summary": "Create or replace prompt",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new prompt. If there is an existing prompt in the project with the same slug as the one specified in the request, will return the existing prompt unmodified, will replace the existing prompt with the provided fields",
+        "summary": "DEPRECATED. Create or replace prompt",
         "requestBody": {
           "description": "Any desired information about the new prompt object",
           "required": true,
@@ -8637,6 +8713,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
           }
         ],
         "responses": {
@@ -8999,7 +9078,7 @@
         "tags": [
           "Prompts"
         ],
-        "description": "Partially update a prompt object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /prompt/{id}` and then replace it with `PUT /prompt`.",
+        "description": "Partially update a prompt object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update prompt",
         "security": [
           {
@@ -9592,8 +9671,8 @@
           {}
         ],
         "operationId": "putRole",
-        "description": "Create or replace a new role. If there is an existing role with the same name as the one specified in the request, will replace the existing role with the provided fields",
-        "summary": "Create or replace role",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new role. If there is an existing role with the same name as the one specified in the request, will return the existing role unmodified, will replace the existing role with the provided fields",
+        "summary": "DEPRECATED. Create or replace role",
         "requestBody": {
           "description": "Any desired information about the new role object",
           "required": true,
@@ -9686,6 +9765,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
           }
         ],
         "responses": {
@@ -9884,7 +9966,7 @@
         "tags": [
           "Roles"
         ],
-        "description": "Partially update a role object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /role/{id}` and then replace it with `PUT /role`.",
+        "description": "Partially update a role object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update role",
         "security": [
           {
@@ -10179,8 +10261,8 @@
           {}
         ],
         "operationId": "putGroup",
-        "description": "Create or replace a new group. If there is an existing group with the same name as the one specified in the request, will replace the existing group with the provided fields",
-        "summary": "Create or replace group",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new group. If there is an existing group with the same name as the one specified in the request, will return the existing group unmodified, will replace the existing group with the provided fields",
+        "summary": "DEPRECATED. Create or replace group",
         "requestBody": {
           "description": "Any desired information about the new group object",
           "required": true,
@@ -10273,6 +10355,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
           }
         ],
         "responses": {
@@ -10471,7 +10556,7 @@
         "tags": [
           "Groups"
         ],
-        "description": "Partially update a group object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null. As a workaround, you may retrieve the full object with `GET /group/{id}` and then replace it with `PUT /group`.",
+        "description": "Partially update a group object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update group",
         "security": [
           {
@@ -10766,8 +10851,8 @@
           {}
         ],
         "operationId": "putAcl",
-        "description": "Create or replace a new acl. If there is an existing acl with the same contents as the one specified in the request, will replace the existing acl with the provided fields",
-        "summary": "Create or replace acl",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new acl. If there is an existing acl with the same contents as the one specified in the request, will return the existing acl unmodified, will replace the existing acl with the provided fields",
+        "summary": "DEPRECATED. Create or replace acl",
         "requestBody": {
           "description": "Any desired information about the new acl object",
           "required": true,
@@ -11217,6 +11302,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
           }
         ],
         "responses": {
