@@ -658,9 +658,7 @@ components:
             monotonically increasing over time and can be used to retrieve a
             versioned snapshot of the project logs (see the `version` parameter)
         created:
-          type:
-            - string
-            - "null"
+          type: string
           format: date-time
           description: The timestamp the project logs event was created
         org_id:
@@ -841,6 +839,7 @@ components:
       required:
         - id
         - _xact_id
+        - created
         - org_id
         - project_id
         - log_id
@@ -1688,9 +1687,7 @@ components:
             monotonically increasing over time and can be used to retrieve a
             versioned snapshot of the experiment (see the `version` parameter)
         created:
-          type:
-            - string
-            - "null"
+          type: string
           format: date-time
           description: The timestamp the experiment event was created
         project_id:
@@ -1871,6 +1868,7 @@ components:
       required:
         - id
         - _xact_id
+        - created
         - project_id
         - experiment_id
         - span_id
@@ -2300,9 +2298,7 @@ components:
             monotonically increasing over time and can be used to retrieve a
             versioned snapshot of the dataset (see the `version` parameter)
         created:
-          type:
-            - string
-            - "null"
+          type: string
           format: date-time
           description: The timestamp the dataset event was created
         project_id:
@@ -2351,6 +2347,7 @@ components:
       required:
         - id
         - _xact_id
+        - created
         - dataset_id
         - span_id
         - root_span_id

@@ -696,10 +696,7 @@
             "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the project logs (see the `version` parameter)"
           },
           "created": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": "string",
             "format": "date-time",
             "description": "The timestamp the project logs event was created"
           },
@@ -892,6 +889,7 @@
         "required": [
           "id",
           "_xact_id",
+          "created",
           "org_id",
           "project_id",
           "log_id",
@@ -1818,10 +1816,7 @@
             "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the experiment (see the `version` parameter)"
           },
           "created": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": "string",
             "format": "date-time",
             "description": "The timestamp the experiment event was created"
           },
@@ -2007,6 +2002,7 @@
         "required": [
           "id",
           "_xact_id",
+          "created",
           "project_id",
           "experiment_id",
           "span_id",
@@ -2516,10 +2512,7 @@
             "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the dataset (see the `version` parameter)"
           },
           "created": {
-            "type": [
-              "string",
-              "null"
-            ],
+            "type": "string",
             "format": "date-time",
             "description": "The timestamp the dataset event was created"
           },
@@ -2572,6 +2565,7 @@
         "required": [
           "id",
           "_xact_id",
+          "created",
           "dataset_id",
           "span_id",
           "root_span_id"
