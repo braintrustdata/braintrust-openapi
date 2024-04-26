@@ -3025,34 +3025,22 @@
                         "type": "number"
                       },
                       "response_format": {
-                        "anyOf": [
-                          {
-                            "type": [
-                              "object",
-                              "null"
-                            ],
+                        "type": [
+                          "object",
+                          "null"
+                        ],
+                        "properties": {
+                          "type": {
+                            "type": "string",
                             "enum": [
-                              null
+                              "json_object"
                             ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "json_object"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "type"
-                            ]
-                          },
-                          {
-                            "type": "null"
                           }
-                        ]
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "additionalProperties": false
                       },
                       "tool_choice": {
                         "anyOf": [
@@ -3133,10 +3121,7 @@
                           "type": "string"
                         }
                       }
-                    },
-                    "required": [
-                      "function_call"
-                    ]
+                    }
                   },
                   {
                     "type": "object",

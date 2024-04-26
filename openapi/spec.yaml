@@ -2650,21 +2650,17 @@ components:
                     presence_penalty:
                       type: number
                     response_format:
-                      anyOf:
-                        - type:
-                            - object
-                            - "null"
+                      type:
+                        - object
+                        - "null"
+                      properties:
+                        type:
+                          type: string
                           enum:
-                            - null
-                        - type: object
-                          properties:
-                            type:
-                              type: string
-                              enum:
-                                - json_object
-                          required:
-                            - type
-                        - type: "null"
+                            - json_object
+                      required:
+                        - type
+                      additionalProperties: false
                     tool_choice:
                       anyOf:
                         - type: string
@@ -2710,8 +2706,6 @@ components:
                       type: array
                       items:
                         type: string
-                  required:
-                    - function_call
                 - type: object
                   properties:
                     use_cache:
