@@ -2423,7 +2423,13 @@ components:
                 - messages
               additionalProperties: false
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
         options:
@@ -2999,7 +3005,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
@@ -3078,7 +3090,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
@@ -3149,7 +3167,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
@@ -3228,7 +3252,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
@@ -3310,7 +3340,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
@@ -3374,7 +3410,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
@@ -3430,7 +3472,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
@@ -3494,7 +3542,13 @@ components:
                 - role
               description: The object type that the ACL applies to
             - type: object
-              properties: {}
+              properties:
+                __reserved_only_allow_null:
+                  type: object
+                  description: This is just a placeholder nullable object. Only pass null, not the
+                    object itself
+              required:
+                - __reserved_only_allow_null
               nullable: true
               additionalProperties: false
           description: Optionally restricts the permission grant to just the specified

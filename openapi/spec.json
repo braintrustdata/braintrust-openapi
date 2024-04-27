@@ -2585,7 +2585,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3290,7 +3298,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3387,7 +3403,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3475,7 +3499,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3572,7 +3604,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3672,7 +3712,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3751,7 +3799,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3821,7 +3877,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -3900,7 +3964,15 @@
               },
               {
                 "type": "object",
-                "properties": {},
+                "properties": {
+                  "__reserved_only_allow_null": {
+                    "type": "object",
+                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
+                  }
+                },
+                "required": [
+                  "__reserved_only_allow_null"
+                ],
                 "nullable": true,
                 "additionalProperties": false
               }
