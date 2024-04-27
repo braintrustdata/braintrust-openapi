@@ -1,14 +1,13 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   version: 1.0.0
   title: Braintrust Data API
   description: API specification for the backend data server. The API is hosted
     globally at https://api.braintrustdata.com or in your own environment. The
-    v1 API is currently in preview mode and unstable until March 1, 2024. We may
+    v1 API is currently in preview mode and unstable until June 1, 2024. We may
     make backwards incompatible changes before then, as we learn from our users.
   license:
     name: Apache 2.0
-    identifier: Apache-2.0
 servers:
   - url: https://api.braintrustdata.com
 components:
@@ -76,8 +75,13 @@ components:
       type: string
       description: Filter search results to within a particular organization
     Ids:
-      type: string
-      format: uuid
+      anyOf:
+        - type: string
+          format: uuid
+        - type: array
+          items:
+            type: string
+            format: uuid
       description: Filter search results to a particular set of object IDs. To specify
         a list of IDs, include the query param multiple times
     AppLimitParam:
@@ -192,21 +196,18 @@ components:
           type: string
           description: Name of the project
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of project creation
         deleted_at:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of project deletion, or null if the project is still active
         user_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifies the user who created the project
       required:
@@ -221,9 +222,8 @@ components:
           type: string
           description: Name of the project
         org_name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: For nearly all users, this parameter should be unnecessary. But in
             the rare case that your API key belongs to multiple organizations,
             you may specify the name of the organization the project belongs in.
@@ -234,9 +234,8 @@ components:
       type: object
       properties:
         name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the project
       additionalProperties: false
     InsertEventsResponse:
@@ -255,7 +254,7 @@ components:
       type: object
       properties:
         input:
-          description: The arguments that uniquely define a user input(an arbitrary, JSON
+          description: The arguments that uniquely define a user input (an arbitrary, JSON
             serializable object).
         output:
           description: The output of your application, including post-processing (an
@@ -273,13 +272,11 @@ components:
             navigate while digging into analyses. However, we may later use
             these values to re-score outputs or fine-tune your models.
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. The scores
@@ -292,9 +289,8 @@ components:
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare logs.
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -303,45 +299,38 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         metrics:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             start:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the project logs event started
             end:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the project logs event finished
             prompt_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the prompt used to generate the project
                 logs event (only set if this is an LLM span)
             completion_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the completion generated by the model (only
                 set if this is an LLM span)
             tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The total number of tokens in the input and output of the project
                 logs event.
           additionalProperties: {}
@@ -349,24 +338,20 @@ components:
             code that produced the project logs event. Use "start" and "end" to
             track the time span over which the project logs event was produced
         context:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             caller_functionname:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: The function in code which created the project logs event
             caller_filename:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the file in code where the project logs event was created
             caller_lineno:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: Line of code where the project logs event was created
           additionalProperties: {}
           description: Context is additional information about the code that produced the
@@ -374,19 +359,16 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the project logs event
         span_attributes:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             name:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the span, for display purposes only
             type:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               enum:
                 - llm
                 - score
@@ -398,22 +380,19 @@ components:
           additionalProperties: {}
           description: Human-identifying attributes of the span, such as name, type, etc.
         id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: A unique identifier for the project logs event. If you don't
             provide one, BrainTrust will generate one for you
         _object_delete:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Pass `_object_delete=true` to mark the project logs event deleted.
             Deleted events will not show up in subsequent fetches for this
             project logs
         _is_merge:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           enum:
             - false
           description: >-
@@ -425,9 +404,8 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
         _parent_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: >-
             Use the `_parent_id` field to create this row as a subspan of an
             existing row. It cannot be specified alongside `_is_merge=true`.
@@ -442,7 +420,7 @@ components:
       type: object
       properties:
         input:
-          description: The arguments that uniquely define a user input(an arbitrary, JSON
+          description: The arguments that uniquely define a user input (an arbitrary, JSON
             serializable object).
         output:
           description: The output of your application, including post-processing (an
@@ -460,13 +438,11 @@ components:
             navigate while digging into analyses. However, we may later use
             these values to re-score outputs or fine-tune your models.
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. The scores
@@ -479,9 +455,8 @@ components:
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare logs.
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -490,45 +465,38 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         metrics:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             start:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the project logs event started
             end:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the project logs event finished
             prompt_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the prompt used to generate the project
                 logs event (only set if this is an LLM span)
             completion_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the completion generated by the model (only
                 set if this is an LLM span)
             tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The total number of tokens in the input and output of the project
                 logs event.
           additionalProperties: {}
@@ -536,24 +504,20 @@ components:
             code that produced the project logs event. Use "start" and "end" to
             track the time span over which the project logs event was produced
         context:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             caller_functionname:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: The function in code which created the project logs event
             caller_filename:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the file in code where the project logs event was created
             caller_lineno:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: Line of code where the project logs event was created
           additionalProperties: {}
           description: Context is additional information about the code that produced the
@@ -561,19 +525,16 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the project logs event
         span_attributes:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             name:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the span, for display purposes only
             type:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               enum:
                 - llm
                 - score
@@ -585,15 +546,13 @@ components:
           additionalProperties: {}
           description: Human-identifying attributes of the span, such as name, type, etc.
         id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: A unique identifier for the project logs event. If you don't
             provide one, BrainTrust will generate one for you
         _object_delete:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Pass `_object_delete=true` to mark the project logs event deleted.
             Deleted events will not show up in subsequent fetches for this
             project logs
@@ -610,9 +569,8 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
         _merge_paths:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: array
             items:
@@ -675,7 +633,7 @@ components:
             - g
           description: A literal 'g' which identifies the log as a project log
         input:
-          description: The arguments that uniquely define a user input(an arbitrary, JSON
+          description: The arguments that uniquely define a user input (an arbitrary, JSON
             serializable object).
         output:
           description: The output of your application, including post-processing (an
@@ -693,13 +651,11 @@ components:
             navigate while digging into analyses. However, we may later use
             these values to re-score outputs or fine-tune your models.
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. The scores
@@ -712,9 +668,8 @@ components:
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare logs.
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -723,45 +678,38 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         metrics:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             start:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the project logs event started
             end:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the project logs event finished
             prompt_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the prompt used to generate the project
                 logs event (only set if this is an LLM span)
             completion_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the completion generated by the model (only
                 set if this is an LLM span)
             tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The total number of tokens in the input and output of the project
                 logs event.
           additionalProperties: {}
@@ -769,24 +717,20 @@ components:
             code that produced the project logs event. Use "start" and "end" to
             track the time span over which the project logs event was produced
         context:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             caller_functionname:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: The function in code which created the project logs event
             caller_filename:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the file in code where the project logs event was created
             caller_lineno:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: Line of code where the project logs event was created
           additionalProperties: {}
           description: Context is additional information about the code that produced the
@@ -800,9 +744,8 @@ components:
             guide](https://www.braintrustdata.com/docs/guides/tracing) for full
             details on tracing
         span_parents:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: An array of the parent `span_ids` of this project logs event. This
@@ -813,19 +756,16 @@ components:
           description: The `span_id` of the root of the trace this project logs event
             belongs to
         span_attributes:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             name:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the span, for display purposes only
             type:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               enum:
                 - llm
                 - score
@@ -889,9 +829,8 @@ components:
         on the value of `c` in `{"input": {"a": {"b": {"c": "hello"}}}}`, pass
         `path=["input", "a", "b", "c"]` and `value="hello"`'
     FetchEventsFilters:
-      type:
-        - array
-        - "null"
+      type: array
+      nullable: true
       items:
         $ref: "#/components/schemas/PathLookupFilter"
       description: A list of filters on the events to fetch. Currently, only
@@ -901,9 +840,8 @@ components:
       type: object
       properties:
         limit:
-          type:
-            - integer
-            - "null"
+          type: integer
+          nullable: true
           minimum: 0
           description: >-
             limit the number of traces fetched
@@ -914,9 +852,8 @@ components:
 
             The `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.
         max_xact_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: >-
             Together, `max_xact_id` and `max_root_span_id` form a pagination
             cursor
@@ -924,9 +861,8 @@ components:
 
             Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
         max_root_span_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: >-
             Together, `max_xact_id` and `max_root_span_id` form a pagination
             cursor
@@ -936,9 +872,8 @@ components:
         filters:
           $ref: "#/components/schemas/FetchEventsFilters"
         version:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: >-
             Retrieve a snapshot of events from a past time
 
@@ -953,13 +888,11 @@ components:
           description: The id of the project logs event to log feedback for. This is the
             row `id` returned by `POST /v1/project_logs/{project_id}/insert`
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. These
@@ -970,21 +903,18 @@ components:
             that you'd compare to `output` to determine if your `output` value
             is correct or not
         comment:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: An optional comment string to log about the project logs event
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the feedback. If you have a
             `user_id`, you can log it here and access it in the Braintrust UI.
         source:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum:
             - app
             - api
@@ -1006,54 +936,44 @@ components:
         - feedback
       additionalProperties: false
     RepoInfo:
-      type:
-        - object
-        - "null"
+      type: object
+      nullable: true
       properties:
         commit:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: SHA of most recent commit
         branch:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the branch the most recent commit belongs to
         tag:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the tag on the most recent commit
         dirty:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Whether or not the repo had uncommitted changes when snapshotted
         author_name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the author of the most recent commit
         author_email:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Email of the author of the most recent commit
         commit_message:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Most recent commit message
         commit_time:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Time of the most recent commit
         git_diff:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: If the repo was dirty when run, this includes the diff between the
             current state of the repo and the most recent commit.
       additionalProperties: false
@@ -1073,48 +993,41 @@ components:
           type: string
           description: Name of the experiment. Within a project, experiment names are unique
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the experiment
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of experiment creation
         repo_info:
           $ref: "#/components/schemas/RepoInfo"
         commit:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Commit, taken directly from `repo_info.commit`
         base_exp_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Id of default base experiment to compare against when viewing this
             experiment
         deleted_at:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of experiment deletion, or null if the experiment is still
             active
         dataset_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifier of the linked dataset, or null if the experiment is not
             linked to a dataset
         dataset_version:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Version number of the linked dataset the experiment was run
             against. This can be used to reproduce the experiment after the
             dataset has been modified.
@@ -1123,15 +1036,13 @@ components:
           description: Whether or not the experiment is public. Public experiments can be
             viewed by anybody inside or outside the organization
         user_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifies the user who created the experiment
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: User-controlled metadata about the experiment
       required:
@@ -1148,54 +1059,46 @@ components:
           format: uuid
           description: Unique identifier for the project that the experiment belongs under
         name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the experiment. Within a project, experiment names are unique
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the experiment
         repo_info:
           $ref: "#/components/schemas/RepoInfo"
         base_exp_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Id of default base experiment to compare against when viewing this
             experiment
         dataset_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifier of the linked dataset, or null if the experiment is not
             linked to a dataset
         dataset_version:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Version number of the linked dataset the experiment was run
             against. This can be used to reproduce the experiment after the
             dataset has been modified.
         public:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Whether or not the experiment is public. Public experiments can be
             viewed by anybody inside or outside the organization
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: User-controlled metadata about the experiment
         ensure_new:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Normally, creating an experiment with the same name as an existing
             experiment will return the existing one un-modified. But if
             `ensure_new` is true, registration will generate a new experiment
@@ -1207,48 +1110,41 @@ components:
       type: object
       properties:
         name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the experiment. Within a project, experiment names are unique
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the experiment
         repo_info:
           $ref: "#/components/schemas/RepoInfo"
         base_exp_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Id of default base experiment to compare against when viewing this
             experiment
         dataset_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifier of the linked dataset, or null if the experiment is not
             linked to a dataset
         dataset_version:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Version number of the linked dataset the experiment was run
             against. This can be used to reproduce the experiment after the
             dataset has been modified.
         public:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Whether or not the experiment is public. Public experiments can be
             viewed by anybody inside or outside the organization
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: User-controlled metadata about the experiment
       additionalProperties: false
@@ -1279,13 +1175,11 @@ components:
             may later use these values to re-score outputs or fine-tune your
             models
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. The scores
@@ -1298,9 +1192,8 @@ components:
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare experiments
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -1309,45 +1202,38 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         metrics:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             start:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the experiment event started
             end:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the experiment event finished
             prompt_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the prompt used to generate the experiment
                 event (only set if this is an LLM span)
             completion_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the completion generated by the model (only
                 set if this is an LLM span)
             tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The total number of tokens in the input and output of the
                 experiment event.
           additionalProperties: {}
@@ -1355,24 +1241,20 @@ components:
             code that produced the experiment event. Use "start" and "end" to
             track the time span over which the experiment event was produced
         context:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             caller_functionname:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: The function in code which created the experiment event
             caller_filename:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the file in code where the experiment event was created
             caller_lineno:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: Line of code where the experiment event was created
           additionalProperties: {}
           description: Context is additional information about the code that produced the
@@ -1380,19 +1262,16 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the experiment event
         span_attributes:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             name:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the span, for display purposes only
             type:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               enum:
                 - llm
                 - score
@@ -1404,28 +1283,24 @@ components:
           additionalProperties: {}
           description: Human-identifying attributes of the span, such as name, type, etc.
         id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: A unique identifier for the experiment event. If you don't provide
             one, BrainTrust will generate one for you
         dataset_record_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: If the experiment is associated to a dataset, this is the
             event-level dataset id this experiment event is tied to
         _object_delete:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Pass `_object_delete=true` to mark the experiment event deleted.
             Deleted events will not show up in subsequent fetches for this
             experiment
         _is_merge:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           enum:
             - false
           description: >-
@@ -1437,9 +1312,8 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
         _parent_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: >-
             Use the `_parent_id` field to create this row as a subspan of an
             existing row. It cannot be specified alongside `_is_merge=true`.
@@ -1477,13 +1351,11 @@ components:
             may later use these values to re-score outputs or fine-tune your
             models
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. The scores
@@ -1496,9 +1368,8 @@ components:
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare experiments
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -1507,45 +1378,38 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         metrics:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             start:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the experiment event started
             end:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the experiment event finished
             prompt_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the prompt used to generate the experiment
                 event (only set if this is an LLM span)
             completion_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the completion generated by the model (only
                 set if this is an LLM span)
             tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The total number of tokens in the input and output of the
                 experiment event.
           additionalProperties: {}
@@ -1553,24 +1417,20 @@ components:
             code that produced the experiment event. Use "start" and "end" to
             track the time span over which the experiment event was produced
         context:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             caller_functionname:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: The function in code which created the experiment event
             caller_filename:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the file in code where the experiment event was created
             caller_lineno:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: Line of code where the experiment event was created
           additionalProperties: {}
           description: Context is additional information about the code that produced the
@@ -1578,19 +1438,16 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the experiment event
         span_attributes:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             name:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the span, for display purposes only
             type:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               enum:
                 - llm
                 - score
@@ -1602,21 +1459,18 @@ components:
           additionalProperties: {}
           description: Human-identifying attributes of the span, such as name, type, etc.
         id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: A unique identifier for the experiment event. If you don't provide
             one, BrainTrust will generate one for you
         dataset_record_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: If the experiment is associated to a dataset, this is the
             event-level dataset id this experiment event is tied to
         _object_delete:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Pass `_object_delete=true` to mark the experiment event deleted.
             Deleted events will not show up in subsequent fetches for this
             experiment
@@ -1633,9 +1487,8 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
         _merge_paths:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: array
             items:
@@ -1675,9 +1528,8 @@ components:
           description: A unique identifier for the experiment event. If you don't provide
             one, BrainTrust will generate one for you
         dataset_record_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: If the experiment is associated to a dataset, this is the
             event-level dataset id this experiment event is tied to
         _xact_id:
@@ -1722,13 +1574,11 @@ components:
             may later use these values to re-score outputs or fine-tune your
             models
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. The scores
@@ -1741,9 +1591,8 @@ components:
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare experiments
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -1752,45 +1601,38 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         metrics:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             start:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the experiment event started
             end:
-              type:
-                - number
-                - "null"
+              type: number
+              nullable: true
               description: A unix timestamp recording when the section of code which produced
                 the experiment event finished
             prompt_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the prompt used to generate the experiment
                 event (only set if this is an LLM span)
             completion_tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The number of tokens in the completion generated by the model (only
                 set if this is an LLM span)
             tokens:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: The total number of tokens in the input and output of the
                 experiment event.
           additionalProperties: {}
@@ -1798,24 +1640,20 @@ components:
             code that produced the experiment event. Use "start" and "end" to
             track the time span over which the experiment event was produced
         context:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             caller_functionname:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: The function in code which created the experiment event
             caller_filename:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the file in code where the experiment event was created
             caller_lineno:
-              type:
-                - integer
-                - "null"
+              type: integer
+              nullable: true
               description: Line of code where the experiment event was created
           additionalProperties: {}
           description: Context is additional information about the code that produced the
@@ -1829,9 +1667,8 @@ components:
             guide](https://www.braintrustdata.com/docs/guides/tracing) for full
             details on tracing
         span_parents:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: An array of the parent `span_ids` of this experiment event. This
@@ -1842,19 +1679,16 @@ components:
           description: The `span_id` of the root of the trace this experiment event
             belongs to
         span_attributes:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             name:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               description: Name of the span, for display purposes only
             type:
-              type:
-                - string
-                - "null"
+              type: string
+              nullable: true
               enum:
                 - llm
                 - score
@@ -1893,13 +1727,11 @@ components:
           description: The id of the experiment event to log feedback for. This is the row
             `id` returned by `POST /v1/experiment/{experiment_id}/insert`
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
-            type:
-              - number
-              - "null"
+            type: number
+            nullable: true
             minimum: 0
             maximum: 1
           description: A dictionary of numeric values (between 0 and 1) to log. These
@@ -1910,21 +1742,18 @@ components:
             that you'd compare to `output` to determine if your `output` value
             is correct or not
         comment:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: An optional comment string to log about the experiment event
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the feedback. If you have a
             `user_id`, you can log it here and access it in the Braintrust UI.
         source:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum:
             - app
             - api
@@ -2027,21 +1856,18 @@ components:
           format: uri
           description: URL to the experiment's page in the Braintrust app
         comparison_experiment_name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: The experiment which scores are baselined against
         scores:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             $ref: "#/components/schemas/ScoreSummary"
           description: Summary of the experiment's scores
         metrics:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             $ref: "#/components/schemas/MetricSummary"
           description: Summary of the experiment's metrics
@@ -2060,35 +1886,30 @@ components:
           format: uuid
           description: Unique identifier for the dataset
         project_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Unique identifier for the project that the dataset belongs under
         name:
           type: string
           description: Name of the dataset. Within a project, dataset names are unique
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the dataset
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of dataset creation
         deleted_at:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of dataset deletion, or null if the dataset is still active
         user_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifies the user who created the dataset
       required:
@@ -2099,18 +1920,16 @@ components:
       type: object
       properties:
         project_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Unique identifier for the project that the dataset belongs under
         name:
           type: string
           description: Name of the dataset. Within a project, dataset names are unique
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the dataset
       required:
         - name
@@ -2119,14 +1938,12 @@ components:
       type: object
       properties:
         name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the dataset. Within a project, dataset names are unique
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the dataset
       additionalProperties: false
     InsertDatasetEventReplace:
@@ -2139,9 +1956,8 @@ components:
           description: The output of your application, including post-processing (an
             arbitrary, JSON serializable object)
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -2150,29 +1966,25 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: A unique identifier for the dataset event. If you don't provide
             one, BrainTrust will generate one for you
         _object_delete:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Pass `_object_delete=true` to mark the dataset event deleted.
             Deleted events will not show up in subsequent fetches for this
             dataset
         _is_merge:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           enum:
             - false
           description: >-
@@ -2184,9 +1996,8 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
         _parent_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: >-
             Use the `_parent_id` field to create this row as a subspan of an
             existing row. It cannot be specified alongside `_is_merge=true`.
@@ -2207,9 +2018,8 @@ components:
           description: The output of your application, including post-processing (an
             arbitrary, JSON serializable object)
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -2218,22 +2028,19 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
         id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: A unique identifier for the dataset event. If you don't provide
             one, BrainTrust will generate one for you
         _object_delete:
-          type:
-            - boolean
-            - "null"
+          type: boolean
+          nullable: true
           description: Pass `_object_delete=true` to mark the dataset event deleted.
             Deleted events will not show up in subsequent fetches for this
             dataset
@@ -2250,9 +2057,8 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
         _merge_paths:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: array
             items:
@@ -2302,9 +2108,8 @@ components:
           format: date-time
           description: The timestamp the dataset event was created
         project_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Unique identifier for the project that the dataset belongs under
         dataset_id:
@@ -2318,9 +2123,8 @@ components:
           description: The output of your application, including post-processing (an
             arbitrary, JSON serializable object)
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the test example, model
             outputs, or just about anything else that's relevant, that you can
@@ -2329,9 +2133,8 @@ components:
             useful to slice/dice later. The values in `metadata` can be any
             JSON-serializable type, but its keys must be strings
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags to log
@@ -2371,21 +2174,18 @@ components:
           description: The id of the dataset event to log feedback for. This is the row
             `id` returned by `POST /v1/dataset/{dataset_id}/insert`
         comment:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: An optional comment string to log about the dataset event
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the feedback. If you have a
             `user_id`, you can log it here and access it in the Braintrust UI.
         source:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum:
             - app
             - api
@@ -2407,9 +2207,8 @@ components:
         - feedback
       additionalProperties: false
     DataSummary:
-      type:
-        - object
-        - "null"
+      type: object
+      nullable: true
       properties:
         total_records:
           type: integer
@@ -2446,9 +2245,8 @@ components:
       additionalProperties: false
       description: Summary of a dataset
     PromptData:
-      type:
-        - object
-        - "null"
+      type: object
+      nullable: true
       properties:
         prompt:
           anyOf:
@@ -2549,9 +2347,8 @@ components:
                             enum:
                               - assistant
                           content:
-                            type:
-                              - string
-                              - "null"
+                            type: string
+                            nullable: true
                           function_call:
                             type: object
                             properties:
@@ -2625,11 +2422,13 @@ components:
                 - type
                 - messages
               additionalProperties: false
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
         options:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             model:
               type: string
@@ -2650,9 +2449,8 @@ components:
                     presence_penalty:
                       type: number
                     response_format:
-                      type:
-                        - object
-                        - "null"
+                      type: object
+                      nullable: true
                       properties:
                         type:
                           type: string
@@ -2749,9 +2547,8 @@ components:
             position:
               type: string
         origin:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           properties:
             prompt_id:
               type: string
@@ -2776,16 +2573,14 @@ components:
           type: string
           description: Unique identifier for the prompt
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the prompt
         prompt_data:
           $ref: "#/components/schemas/PromptData"
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags for the prompt
@@ -2798,21 +2593,18 @@ components:
       type: object
       properties:
         name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the prompt
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the prompt
         prompt_data:
           $ref: "#/components/schemas/PromptData"
         tags:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
           description: A list of tags for the prompt
@@ -2825,21 +2617,18 @@ components:
           description: The id of the prompt event to log feedback for. This is the row
             `id` returned by `POST /v1/prompt/{prompt_id}/insert`
         comment:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: An optional comment string to log about the prompt event
         metadata:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties: {}
           description: A dictionary with additional data about the feedback. If you have a
             `user_id`, you can log it here and access it in the Braintrust UI.
         source:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           enum:
             - app
             - api
@@ -2868,9 +2657,8 @@ components:
           format: uuid
           description: Unique identifier for the role
         org_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: >-
             Unique id for the organization that the role belongs under
@@ -2881,35 +2669,30 @@ components:
 
             It is forbidden to change the org after creating a role
         user_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifies the user who created the role
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of role creation
         name:
           type: string
           description: Name of the role
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the role
         deleted_at:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of role deletion, or null if the role is still active
         member_permissions:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             enum:
@@ -2929,9 +2712,8 @@ components:
               Permissions can be assigned to to objects on an individual basis, or grouped into roles
           description: Permissions which belong to this role
         member_roles:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
@@ -2957,14 +2739,12 @@ components:
           type: string
           description: Name of the role
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the role
         member_permissions:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             enum:
@@ -2984,9 +2764,8 @@ components:
               Permissions can be assigned to to objects on an individual basis, or grouped into roles
           description: Permissions which belong to this role
         member_roles:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
@@ -2996,9 +2775,8 @@ components:
 
             An inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions
         org_name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: For nearly all users, this parameter should be unnecessary. But in
             the rare case that your API key belongs to multiple organizations,
             you may specify the name of the organization the role belongs in.
@@ -3009,14 +2787,12 @@ components:
       type: object
       properties:
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the role
         member_permissions:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             enum:
@@ -3036,9 +2812,8 @@ components:
               Permissions can be assigned to to objects on an individual basis, or grouped into roles
           description: Permissions which belong to this role
         member_roles:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
@@ -3048,9 +2823,8 @@ components:
 
             An inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions
         name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the role
       additionalProperties: false
     Group:
@@ -3068,43 +2842,37 @@ components:
 
             It is forbidden to change the org after creating a group
         user_id:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: uuid
           description: Identifies the user who created the group
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of group creation
         name:
           type: string
           description: Name of the group
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the group
         deleted_at:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of group deletion, or null if the group is still active
         member_users:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
           description: Ids of users which belong to this group
         member_groups:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
@@ -3130,22 +2898,19 @@ components:
           type: string
           description: Name of the group
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the group
         member_users:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
           description: Ids of users which belong to this group
         member_groups:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
@@ -3155,9 +2920,8 @@ components:
 
             An inheriting group has all the users contained in its member groups, as well as all of their inherited users
         org_name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: For nearly all users, this parameter should be unnecessary. But in
             the rare case that your API key belongs to multiple organizations,
             you may specify the name of the organization the group belongs in.
@@ -3168,22 +2932,19 @@ components:
       type: object
       properties:
         description:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Textual description of the group
         member_users:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
           description: Ids of users which belong to this group
         member_groups:
-          type:
-            - array
-            - "null"
+          type: array
+          nullable: true
           items:
             type: string
             format: uuid
@@ -3193,9 +2954,8 @@ components:
 
             An inheriting group has all the users contained in its member groups, as well as all of their inherited users
         name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Name of the group
       additionalProperties: false
     UserPermissionAcl:
@@ -3238,8 +2998,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         _object_org_id:
@@ -3247,9 +3009,8 @@ components:
           format: uuid
           description: The organization the ACL's referred object belongs to
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of acl creation
         user_id:
@@ -3316,8 +3077,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         _object_org_id:
@@ -3325,9 +3088,8 @@ components:
           format: uuid
           description: The organization the ACL's referred object belongs to
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of acl creation
         user_id:
@@ -3386,8 +3148,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         _object_org_id:
@@ -3395,9 +3159,8 @@ components:
           format: uuid
           description: The organization the ACL's referred object belongs to
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of acl creation
         group_id:
@@ -3464,8 +3227,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         _object_org_id:
@@ -3473,9 +3238,8 @@ components:
           format: uuid
           description: The organization the ACL's referred object belongs to
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of acl creation
         group_id:
@@ -3545,8 +3309,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         user_id:
@@ -3607,8 +3373,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         user_id:
@@ -3661,8 +3429,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         group_id:
@@ -3723,8 +3493,10 @@ components:
                 - group
                 - role
               description: The object type that the ACL applies to
-            - type: "null"
-            - type: "null"
+            - type: object
+              properties: {}
+              nullable: true
+              additionalProperties: false
           description: Optionally restricts the permission grant to just the specified
             object type
         group_id:
@@ -3755,29 +3527,24 @@ components:
           format: uuid
           description: Unique identifier for the user
         given_name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Given name of the user
         family_name:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: Family name of the user
         email:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: The user's email
         avatar_url:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           description: URL of the user's Avatar image
         created:
-          type:
-            - string
-            - "null"
+          type: string
+          nullable: true
           format: date-time
           description: Date of user creation
       required:
@@ -3787,23 +3554,20 @@ components:
       type: object
       properties:
         experiment:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             $ref: "#/components/schemas/InsertEventsResponse"
           description: A mapping from experiment id to row ids for inserted `events`
         dataset:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             $ref: "#/components/schemas/InsertEventsResponse"
           description: A mapping from dataset id to row ids for inserted `events`
         project_logs:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             $ref: "#/components/schemas/InsertEventsResponse"
           description: A mapping from project id to row ids for inserted `events`
@@ -3812,23 +3576,20 @@ components:
       type: object
       properties:
         experiment:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             type: object
             properties:
               events:
-                type:
-                  - array
-                  - "null"
+                type: array
+                nullable: true
                 items:
                   $ref: "#/components/schemas/InsertExperimentEvent"
                 description: A list of experiment events to insert
               feedback:
-                type:
-                  - array
-                  - "null"
+                type: array
+                nullable: true
                 items:
                   $ref: "#/components/schemas/FeedbackExperimentItem"
                 description: A list of experiment feedback items
@@ -3836,23 +3597,20 @@ components:
           description: A mapping from experiment id to a set of log events and feedback
             items to insert
         dataset:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             type: object
             properties:
               events:
-                type:
-                  - array
-                  - "null"
+                type: array
+                nullable: true
                 items:
                   $ref: "#/components/schemas/InsertDatasetEvent"
                 description: A list of dataset events to insert
               feedback:
-                type:
-                  - array
-                  - "null"
+                type: array
+                nullable: true
                 items:
                   $ref: "#/components/schemas/FeedbackDatasetItem"
                 description: A list of dataset feedback items
@@ -3860,23 +3618,20 @@ components:
           description: A mapping from dataset id to a set of log events and feedback items
             to insert
         project_logs:
-          type:
-            - object
-            - "null"
+          type: object
+          nullable: true
           additionalProperties:
             type: object
             properties:
               events:
-                type:
-                  - array
-                  - "null"
+                type: array
+                nullable: true
                 items:
                   $ref: "#/components/schemas/InsertProjectLogsEvent"
                 description: A list of project logs events to insert
               feedback:
-                type:
-                  - array
-                  - "null"
+                type: array
+                nullable: true
                 items:
                   $ref: "#/components/schemas/FeedbackProjectLogsItem"
                 description: A list of project logs feedback items
@@ -4182,24 +3937,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     put:
       tags:
         - Projects
@@ -4234,24 +3997,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getProject
       tags:
@@ -4292,24 +4063,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsProject
       description: Enable CORS
@@ -4344,6 +4123,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/project/{project_id}:
     get:
       operationId: getProjectId
@@ -4370,24 +4151,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     patch:
       operationId: patchProjectId
       tags:
@@ -4423,24 +4212,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     delete:
       operationId: deleteProjectId
       tags:
@@ -4466,24 +4263,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsProjectId
       description: Enable CORS
@@ -4520,6 +4325,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/project_logs/{project_id}/insert:
     post:
       operationId: postProjectLogsIdInsert
@@ -4553,24 +4360,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsProjectLogsIdInsert
       description: Enable CORS
@@ -4607,6 +4422,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/project_logs/{project_id}/fetch:
     post:
       operationId: postProjectLogsIdFetch
@@ -4642,24 +4459,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getProjectLogsIdFetch
       tags:
@@ -4691,24 +4516,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsProjectLogsIdFetch
       description: Enable CORS
@@ -4745,6 +4578,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/project_logs/{project_id}/feedback:
     post:
       operationId: postProjectLogsIdFeedback
@@ -4774,24 +4609,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsProjectLogsIdFeedback
       description: Enable CORS
@@ -4828,6 +4671,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/experiment:
     post:
       tags:
@@ -4861,24 +4706,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     put:
       tags:
         - Experiments
@@ -4914,24 +4767,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getExperiment
       tags:
@@ -4973,24 +4834,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsExperiment
       description: Enable CORS
@@ -5025,6 +4894,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/experiment/{experiment_id}:
     get:
       operationId: getExperimentId
@@ -5051,24 +4922,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     patch:
       operationId: patchExperimentId
       tags:
@@ -5104,24 +4983,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     delete:
       operationId: deleteExperimentId
       tags:
@@ -5147,24 +5034,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsExperimentId
       description: Enable CORS
@@ -5201,6 +5096,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/experiment/{experiment_id}/insert:
     post:
       operationId: postExperimentIdInsert
@@ -5234,24 +5131,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsExperimentIdInsert
       description: Enable CORS
@@ -5288,6 +5193,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/experiment/{experiment_id}/fetch:
     post:
       operationId: postExperimentIdFetch
@@ -5323,24 +5230,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getExperimentIdFetch
       tags:
@@ -5372,24 +5287,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsExperimentIdFetch
       description: Enable CORS
@@ -5426,6 +5349,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/experiment/{experiment_id}/feedback:
     post:
       operationId: postExperimentIdFeedback
@@ -5455,24 +5380,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsExperimentIdFeedback
       description: Enable CORS
@@ -5509,6 +5442,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/experiment/{experiment_id}/summarize:
     get:
       operationId: getExperimentIdSummarize
@@ -5536,24 +5471,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsExperimentIdSummarize
       description: Enable CORS
@@ -5590,6 +5533,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/dataset:
     post:
       tags:
@@ -5623,24 +5568,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     put:
       tags:
         - Datasets
@@ -5675,24 +5628,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getDataset
       tags:
@@ -5734,24 +5695,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsDataset
       description: Enable CORS
@@ -5786,6 +5755,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/dataset/{dataset_id}:
     get:
       operationId: getDatasetId
@@ -5812,24 +5783,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     patch:
       operationId: patchDatasetId
       tags:
@@ -5865,24 +5844,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     delete:
       operationId: deleteDatasetId
       tags:
@@ -5908,24 +5895,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsDatasetId
       description: Enable CORS
@@ -5962,6 +5957,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/dataset/{dataset_id}/insert:
     post:
       operationId: postDatasetIdInsert
@@ -5995,24 +5992,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsDatasetIdInsert
       description: Enable CORS
@@ -6049,6 +6054,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/dataset/{dataset_id}/fetch:
     post:
       operationId: postDatasetIdFetch
@@ -6084,24 +6091,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getDatasetIdFetch
       tags:
@@ -6133,24 +6148,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsDatasetIdFetch
       description: Enable CORS
@@ -6187,6 +6210,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/dataset/{dataset_id}/feedback:
     post:
       operationId: postDatasetIdFeedback
@@ -6216,24 +6241,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsDatasetIdFeedback
       description: Enable CORS
@@ -6270,6 +6303,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/dataset/{dataset_id}/summarize:
     get:
       operationId: getDatasetIdSummarize
@@ -6296,24 +6331,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsDatasetIdSummarize
       description: Enable CORS
@@ -6350,6 +6393,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/prompt:
     post:
       tags:
@@ -6408,29 +6453,25 @@ paths:
                     type: string
                     description: Unique identifier for the prompt
                   description:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     description: Textual description of the prompt
                   created:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     format: date-time
                     description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
-                    type:
-                      - array
-                      - "null"
+                    type: array
+                    nullable: true
                     items:
                       type: string
                     description: A list of tags for the prompt
                   metadata:
-                    type:
-                      - object
-                      - "null"
+                    type: object
+                    nullable: true
                     additionalProperties: {}
                     description: User-controlled metadata about the prompt
                 required:
@@ -6449,24 +6490,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     put:
       tags:
         - Prompts
@@ -6526,29 +6575,25 @@ paths:
                     type: string
                     description: Unique identifier for the prompt
                   description:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     description: Textual description of the prompt
                   created:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     format: date-time
                     description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
-                    type:
-                      - array
-                      - "null"
+                    type: array
+                    nullable: true
                     items:
                       type: string
                     description: A list of tags for the prompt
                   metadata:
-                    type:
-                      - object
-                      - "null"
+                    type: object
+                    nullable: true
                     additionalProperties: {}
                     description: User-controlled metadata about the prompt
                 required:
@@ -6567,24 +6612,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getPrompt
       tags:
@@ -6649,29 +6702,25 @@ paths:
                           type: string
                           description: Unique identifier for the prompt
                         description:
-                          type:
-                            - string
-                            - "null"
+                          type: string
+                          nullable: true
                           description: Textual description of the prompt
                         created:
-                          type:
-                            - string
-                            - "null"
+                          type: string
+                          nullable: true
                           format: date-time
                           description: Date of prompt creation
                         prompt_data:
                           $ref: "#/components/schemas/PromptData"
                         tags:
-                          type:
-                            - array
-                            - "null"
+                          type: array
+                          nullable: true
                           items:
                             type: string
                           description: A list of tags for the prompt
                         metadata:
-                          type:
-                            - object
-                            - "null"
+                          type: object
+                          nullable: true
                           additionalProperties: {}
                           description: User-controlled metadata about the prompt
                       required:
@@ -6694,24 +6743,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsPrompt
       description: Enable CORS
@@ -6746,6 +6803,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/prompt/{prompt_id}:
     get:
       operationId: getPromptId
@@ -6797,29 +6856,25 @@ paths:
                     type: string
                     description: Unique identifier for the prompt
                   description:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     description: Textual description of the prompt
                   created:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     format: date-time
                     description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
-                    type:
-                      - array
-                      - "null"
+                    type: array
+                    nullable: true
                     items:
                       type: string
                     description: A list of tags for the prompt
                   metadata:
-                    type:
-                      - object
-                      - "null"
+                    type: object
+                    nullable: true
                     additionalProperties: {}
                     description: User-controlled metadata about the prompt
                 required:
@@ -6838,24 +6893,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     patch:
       operationId: patchPromptId
       tags:
@@ -6916,29 +6979,25 @@ paths:
                     type: string
                     description: Unique identifier for the prompt
                   description:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     description: Textual description of the prompt
                   created:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     format: date-time
                     description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
-                    type:
-                      - array
-                      - "null"
+                    type: array
+                    nullable: true
                     items:
                       type: string
                     description: A list of tags for the prompt
                   metadata:
-                    type:
-                      - object
-                      - "null"
+                    type: object
+                    nullable: true
                     additionalProperties: {}
                     description: User-controlled metadata about the prompt
                 required:
@@ -6957,24 +7016,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     delete:
       operationId: deletePromptId
       tags:
@@ -7025,29 +7092,25 @@ paths:
                     type: string
                     description: Unique identifier for the prompt
                   description:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     description: Textual description of the prompt
                   created:
-                    type:
-                      - string
-                      - "null"
+                    type: string
+                    nullable: true
                     format: date-time
                     description: Date of prompt creation
                   prompt_data:
                     $ref: "#/components/schemas/PromptData"
                   tags:
-                    type:
-                      - array
-                      - "null"
+                    type: array
+                    nullable: true
                     items:
                       type: string
                     description: A list of tags for the prompt
                   metadata:
-                    type:
-                      - object
-                      - "null"
+                    type: object
+                    nullable: true
                     additionalProperties: {}
                     description: User-controlled metadata about the prompt
                 required:
@@ -7066,24 +7129,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsPromptId
       description: Enable CORS
@@ -7120,6 +7191,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/prompt/{prompt_id}/feedback:
     post:
       operationId: postPromptIdFeedback
@@ -7149,24 +7222,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsPromptIdFeedback
       description: Enable CORS
@@ -7203,6 +7284,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/role:
     post:
       tags:
@@ -7236,24 +7319,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     put:
       tags:
         - Roles
@@ -7288,24 +7379,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getRole
       tags:
@@ -7346,24 +7445,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsRole
       description: Enable CORS
@@ -7398,6 +7505,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/role/{role_id}:
     get:
       operationId: getRoleId
@@ -7424,24 +7533,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     patch:
       operationId: patchRoleId
       tags:
@@ -7477,24 +7594,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     delete:
       operationId: deleteRoleId
       tags:
@@ -7520,24 +7645,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsRoleId
       description: Enable CORS
@@ -7574,6 +7707,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/group:
     post:
       tags:
@@ -7607,24 +7742,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     put:
       tags:
         - Groups
@@ -7659,24 +7802,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getGroup
       tags:
@@ -7717,24 +7868,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsGroup
       description: Enable CORS
@@ -7769,6 +7928,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/group/{group_id}:
     get:
       operationId: getGroupId
@@ -7795,24 +7956,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     patch:
       operationId: patchGroupId
       tags:
@@ -7848,24 +8017,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     delete:
       operationId: deleteGroupId
       tags:
@@ -7891,24 +8068,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsGroupId
       description: Enable CORS
@@ -7945,6 +8130,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/acl:
     post:
       tags:
@@ -7978,24 +8165,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     put:
       tags:
         - Acls
@@ -8030,24 +8225,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     get:
       operationId: getAcl
       tags:
@@ -8087,24 +8290,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsAcl
       description: Enable CORS
@@ -8139,6 +8350,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/acl/{acl_id}:
     get:
       operationId: getAclId
@@ -8165,24 +8378,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     delete:
       operationId: deleteAclId
       tags:
@@ -8208,24 +8429,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsAclId
       description: Enable CORS
@@ -8262,6 +8491,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/user:
     get:
       operationId: getUser
@@ -8305,24 +8536,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsUser
       description: Enable CORS
@@ -8357,6 +8596,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/user/{user_id}:
     get:
       operationId: getUserId
@@ -8383,24 +8624,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsUserId
       description: Enable CORS
@@ -8437,6 +8686,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1:
     get:
       operationId: getIndex
@@ -8460,12 +8711,16 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsIndex
       description: Enable CORS
@@ -8500,6 +8755,8 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
   /v1/insert:
     post:
       operationId: postCrossObjectInsert
@@ -8530,24 +8787,32 @@ paths:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "401":
           description: No valid API key provided
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "403":
           description: The API key doesn’t have permissions to perform the request
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
                 type: string
+            application/json:
+              schema: {}
     options:
       operationId: optionsCrossObjectInsert
       description: Enable CORS
@@ -8582,5 +8847,6 @@ paths:
             text/plain:
               schema:
                 type: string
-webhooks: {}
+            application/json:
+              schema: {}
 
