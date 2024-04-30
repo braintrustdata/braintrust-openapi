@@ -1801,7 +1801,6 @@ components:
       required:
         - name
         - score
-        - diff
         - improvements
         - regressions
       additionalProperties: false
@@ -1833,7 +1832,6 @@ components:
         - name
         - metric
         - unit
-        - diff
         - improvements
         - regressions
       additionalProperties: false
