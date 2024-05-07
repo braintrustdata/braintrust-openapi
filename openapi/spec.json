@@ -4466,8 +4466,7 @@
         "required": true,
         "description": "The object type that the ACL applies to",
         "name": "object_type",
-        "in": "query",
-        "allowReserved": true
+        "in": "query"
       },
       "AclObjectId": {
         "schema": {
