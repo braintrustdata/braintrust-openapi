@@ -4250,7 +4250,8 @@
         "required": false,
         "description": "Name of the experiment to search for",
         "name": "experiment_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "DatasetName": {
         "schema": {
@@ -4259,7 +4260,8 @@
         "required": false,
         "description": "Name of the dataset to search for",
         "name": "dataset_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "ProjectName": {
         "schema": {
@@ -4268,7 +4270,8 @@
         "required": false,
         "description": "Name of the project to search for",
         "name": "project_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "PromptName": {
         "schema": {
@@ -4277,7 +4280,8 @@
         "required": false,
         "description": "Name of the prompt to search for",
         "name": "prompt_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "RoleName": {
         "schema": {
@@ -4286,7 +4290,8 @@
         "required": false,
         "description": "Name of the role to search for",
         "name": "role_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "GroupName": {
         "schema": {
@@ -4295,7 +4300,8 @@
         "required": false,
         "description": "Name of the group to search for",
         "name": "group_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "OrgName": {
         "schema": {
@@ -4304,7 +4310,8 @@
         "required": false,
         "description": "Filter search results to within a particular organization",
         "name": "org_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "Ids": {
         "schema": {
@@ -4419,7 +4426,8 @@
         "required": false,
         "description": "Retrieve prompt with a specific slug",
         "name": "slug",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "UserGivenName": {
         "schema": {
@@ -4428,7 +4436,8 @@
         "required": false,
         "description": "Given name of the user to search for",
         "name": "given_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "UserFamilyName": {
         "schema": {
@@ -4437,7 +4446,8 @@
         "required": false,
         "description": "Family name of the user to search for",
         "name": "family_name",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "UserEmail": {
         "schema": {
@@ -4446,7 +4456,8 @@
         "required": false,
         "description": "Email of the user to search for",
         "name": "email",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "AclObjectType": {
         "schema": {
@@ -4455,7 +4466,8 @@
         "required": true,
         "description": "The object type that the ACL applies to",
         "name": "object_type",
-        "in": "query"
+        "in": "query",
+        "allowReserved": true
       },
       "AclObjectId": {
         "schema": {
@@ -4533,6 +4545,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4622,6 +4647,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4733,6 +4771,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4884,6 +4935,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -4978,6 +5042,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -5050,6 +5127,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5217,6 +5307,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -5373,6 +5476,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -5457,6 +5573,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5606,6 +5735,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5768,6 +5910,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -5846,6 +6001,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5960,6 +6128,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6111,6 +6292,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -6205,6 +6399,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -6277,6 +6484,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6444,6 +6664,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -6600,6 +6833,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -6684,6 +6930,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6844,6 +7103,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -6983,6 +7255,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7145,6 +7430,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -7223,6 +7521,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7337,6 +7648,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7488,6 +7812,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -7582,6 +7919,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -7654,6 +8004,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7821,6 +8184,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -7977,6 +8353,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -8061,6 +8450,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -8221,6 +8623,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -8357,6 +8772,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -8593,6 +9021,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -8745,6 +9186,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -8939,6 +9393,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -9164,6 +9631,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -9332,6 +9812,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -9489,6 +9982,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -9627,6 +10133,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -9789,6 +10308,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -9867,6 +10399,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -9978,6 +10523,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -10129,6 +10687,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -10223,6 +10794,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -10295,6 +10879,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -10457,6 +11054,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -10535,6 +11145,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -10646,6 +11269,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -10797,6 +11433,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -10891,6 +11540,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -10963,6 +11625,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -11125,6 +11800,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -11203,6 +11891,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -11311,6 +12012,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -11462,6 +12176,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -11534,6 +12261,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -11724,6 +12464,19 @@
               }
             }
           },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
           "500": {
             "description": "Something went wrong on Braintrust's end. (These are rare.)",
             "content": {
@@ -11853,6 +12606,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
@@ -12107,6 +12873,19 @@
           },
           "403": {
             "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
             "content": {
               "text/plain": {
                 "schema": {
