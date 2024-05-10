@@ -118,6 +118,11 @@ components:
     MaxXactId:
       type: string
       description: >-
+        DEPRECATION NOTICE: The manually-constructed pagination cursor is
+        deprecated in favor of the explicit 'cursor' returned by object fetch
+        requests. Please prefer the 'cursor' argument going forwards.
+
+
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
@@ -125,6 +130,11 @@ components:
     MaxRootSpanId:
       type: string
       description: >-
+        DEPRECATION NOTICE: The manually-constructed pagination cursor is
+        deprecated in favor of the explicit 'cursor' returned by object fetch
+        requests. Please prefer the 'cursor' argument going forwards.
+
+
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
@@ -794,6 +804,14 @@ components:
           items:
             $ref: "#/components/schemas/ProjectLogsEvent"
           description: A list of fetched events
+        cursor:
+          type: string
+          nullable: true
+          description: >-
+            Pagination cursor
+
+
+            Pass this string directly as the `cursor` param to your next fetch request to get the next page of results. Not provided if the returned result set is empty.
       required:
         - events
       additionalProperties: false
@@ -851,12 +869,25 @@ components:
 
 
             The `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.
+        cursor:
+          type: string
+          nullable: true
+          description: >-
+            An opaque string to be used as a cursor for the next page of
+            results, in order from latest to earliest.
+
+
+            The string can be obtained directly from the `cursor` property of the previous fetch query
         max_xact_id:
           type: string
           nullable: true
           description: >-
-            Together, `max_xact_id` and `max_root_span_id` form a pagination
-            cursor
+            DEPRECATION NOTICE: The manually-constructed pagination cursor is
+            deprecated in favor of the explicit 'cursor' returned by object
+            fetch requests. Please prefer the 'cursor' argument going forwards.
+
+
+            Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
             Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
@@ -864,8 +895,12 @@ components:
           type: string
           nullable: true
           description: >-
-            Together, `max_xact_id` and `max_root_span_id` form a pagination
-            cursor
+            DEPRECATION NOTICE: The manually-constructed pagination cursor is
+            deprecated in favor of the explicit 'cursor' returned by object
+            fetch requests. Please prefer the 'cursor' argument going forwards.
+
+
+            Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
             Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
@@ -1716,6 +1751,14 @@ components:
           items:
             $ref: "#/components/schemas/ExperimentEvent"
           description: A list of fetched events
+        cursor:
+          type: string
+          nullable: true
+          description: >-
+            Pagination cursor
+
+
+            Pass this string directly as the `cursor` param to your next fetch request to get the next page of results. Not provided if the returned result set is empty.
       required:
         - events
       additionalProperties: false
@@ -2161,6 +2204,14 @@ components:
           items:
             $ref: "#/components/schemas/DatasetEvent"
           description: A list of fetched events
+        cursor:
+          type: string
+          nullable: true
+          description: >-
+            Pagination cursor
+
+
+            Pass this string directly as the `cursor` param to your next fetch request to get the next page of results. Not provided if the returned result set is empty.
       required:
         - events
       additionalProperties: false
@@ -3860,6 +3911,11 @@ components:
         $ref: "#/components/schemas/MaxXactId"
       required: false
       description: >-
+        DEPRECATION NOTICE: The manually-constructed pagination cursor is
+        deprecated in favor of the explicit 'cursor' returned by object fetch
+        requests. Please prefer the 'cursor' argument going forwards.
+
+
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
@@ -3871,6 +3927,11 @@ components:
         $ref: "#/components/schemas/MaxRootSpanId"
       required: false
       description: >-
+        DEPRECATION NOTICE: The manually-constructed pagination cursor is
+        deprecated in favor of the explicit 'cursor' returned by object fetch
+        requests. Please prefer the 'cursor' argument going forwards.
+
+
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
