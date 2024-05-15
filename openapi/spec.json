@@ -180,7 +180,8 @@
           "project_score",
           "project_tag",
           "group",
-          "role"
+          "role",
+          null
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -388,7 +389,8 @@
                   "function",
                   "eval",
                   "task",
-                  "tool"
+                  "tool",
+                  null
                 ],
                 "description": "Type of the span, for display purposes only"
               }
@@ -410,7 +412,8 @@
             "type": "boolean",
             "nullable": true,
             "enum": [
-              false
+              false,
+              null
             ],
             "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
           },
@@ -533,7 +536,8 @@
                   "function",
                   "eval",
                   "task",
-                  "tool"
+                  "tool",
+                  null
                 ],
                 "description": "Type of the span, for display purposes only"
               }
@@ -759,7 +763,8 @@
                   "function",
                   "eval",
                   "task",
-                  "tool"
+                  "tool",
+                  null
                 ],
                 "description": "Type of the span, for display purposes only"
               }
@@ -910,7 +915,8 @@
             "enum": [
               "app",
               "api",
-              "external"
+              "external",
+              null
             ],
             "description": "The source of the feedback. Must be one of \"external\" (default), \"app\", or \"api\""
           }
@@ -1291,7 +1297,8 @@
                   "function",
                   "eval",
                   "task",
-                  "tool"
+                  "tool",
+                  null
                 ],
                 "description": "Type of the span, for display purposes only"
               }
@@ -1318,7 +1325,8 @@
             "type": "boolean",
             "nullable": true,
             "enum": [
-              false
+              false,
+              null
             ],
             "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
           },
@@ -1441,7 +1449,8 @@
                   "function",
                   "eval",
                   "task",
-                  "tool"
+                  "tool",
+                  null
                 ],
                 "description": "Type of the span, for display purposes only"
               }
@@ -1670,7 +1679,8 @@
                   "function",
                   "eval",
                   "task",
-                  "tool"
+                  "tool",
+                  null
                 ],
                 "description": "Type of the span, for display purposes only"
               }
@@ -1749,7 +1759,8 @@
             "enum": [
               "app",
               "api",
-              "external"
+              "external",
+              null
             ],
             "description": "The source of the feedback. Must be one of \"external\" (default), \"app\", or \"api\""
           }
@@ -2031,7 +2042,8 @@
             "type": "boolean",
             "nullable": true,
             "enum": [
-              false
+              false,
+              null
             ],
             "description": "The `_is_merge` field controls how the row is merged with any existing row with the same id in the DB. By default (or when set to `false`), the existing row is completely replaced by the new row. When set to `true`, the new row is deep-merged into the existing row\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 10}}`. If we merge a new row as `{\"_is_merge\": true, \"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"a\": 5, \"b\": 11, \"c\": 20}}`. If we replace the new row as `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`, the new row will be `{\"id\": \"foo\", \"input\": {\"b\": 11, \"c\": 20}}`"
           },
@@ -2238,7 +2250,8 @@
             "enum": [
               "app",
               "api",
-              "external"
+              "external",
+              null
             ],
             "description": "The source of the feedback. Must be one of \"external\" (default), \"app\", or \"api\""
           }
@@ -2603,15 +2616,6 @@
               },
               {
                 "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
                 "nullable": true,
                 "additionalProperties": false
               }
@@ -2836,6 +2840,83 @@
         "additionalProperties": false,
         "description": "The prompt, model, and its parameters"
       },
+      "Prompt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the prompt"
+          },
+          "_xact_id": {
+            "type": "string",
+            "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the prompt belongs under"
+          },
+          "log_id": {
+            "type": "string",
+            "enum": [
+              "p"
+            ],
+            "description": "A literal 'p' which identifies the object as a project prompt"
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the organization"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the prompt"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Unique identifier for the prompt"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the prompt"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of prompt creation"
+          },
+          "prompt_data": {
+            "$ref": "#/components/schemas/PromptData"
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags for the prompt"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {},
+            "description": "User-controlled metadata about the prompt"
+          }
+        },
+        "required": [
+          "id",
+          "_xact_id",
+          "project_id",
+          "log_id",
+          "org_id",
+          "name",
+          "slug"
+        ],
+        "additionalProperties": false
+      },
       "CreatePrompt": {
         "type": "object",
         "properties": {
@@ -2927,7 +3008,8 @@
             "enum": [
               "app",
               "api",
-              "external"
+              "external",
+              null
             ],
             "description": "The source of the feedback. Must be one of \"external\" (default), \"app\", or \"api\""
           }
@@ -3007,7 +3089,8 @@
                 "create_acls",
                 "read_acls",
                 "update_acls",
-                "delete_acls"
+                "delete_acls",
+                null
               ],
               "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
             },
@@ -3055,7 +3138,8 @@
                 "create_acls",
                 "read_acls",
                 "update_acls",
-                "delete_acls"
+                "delete_acls",
+                null
               ],
               "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
             },
@@ -3102,7 +3186,8 @@
                 "create_acls",
                 "read_acls",
                 "update_acls",
-                "delete_acls"
+                "delete_acls",
+                null
               ],
               "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
             },
@@ -3267,770 +3352,193 @@
         },
         "additionalProperties": false
       },
-      "UserPermissionAcl": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the acl"
-          },
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "_object_org_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The organization the ACL's referred object belongs to"
-          },
-          "created": {
-            "type": "string",
-            "nullable": true,
-            "format": "date-time",
-            "description": "Date of acl creation"
-          },
-          "user_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the user the ACL applies to"
-          },
-          "permission": {
-            "type": "string",
-            "enum": [
-              "create",
-              "read",
-              "update",
-              "delete",
-              "create_acls",
-              "read_acls",
-              "update_acls",
-              "delete_acls"
-            ],
-            "description": "Permission the ACL grants"
-          }
-        },
-        "required": [
-          "id",
-          "object_type",
-          "object_id",
-          "_object_org_id",
-          "user_id",
-          "permission"
-        ],
-        "additionalProperties": false
-      },
-      "UserRoleAcl": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the acl"
-          },
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "_object_org_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The organization the ACL's referred object belongs to"
-          },
-          "created": {
-            "type": "string",
-            "nullable": true,
-            "format": "date-time",
-            "description": "Date of acl creation"
-          },
-          "user_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the user the ACL applies to"
-          },
-          "role_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the role the ACL grants"
-          }
-        },
-        "required": [
-          "id",
-          "object_type",
-          "object_id",
-          "_object_org_id",
-          "user_id",
-          "role_id"
-        ],
-        "additionalProperties": false
-      },
-      "GroupPermissionAcl": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the acl"
-          },
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "_object_org_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The organization the ACL's referred object belongs to"
-          },
-          "created": {
-            "type": "string",
-            "nullable": true,
-            "format": "date-time",
-            "description": "Date of acl creation"
-          },
-          "group_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the group the ACL applies to"
-          },
-          "permission": {
-            "type": "string",
-            "enum": [
-              "create",
-              "read",
-              "update",
-              "delete",
-              "create_acls",
-              "read_acls",
-              "update_acls",
-              "delete_acls"
-            ],
-            "description": "Permission the ACL grants"
-          }
-        },
-        "required": [
-          "id",
-          "object_type",
-          "object_id",
-          "_object_org_id",
-          "group_id",
-          "permission"
-        ],
-        "additionalProperties": false
-      },
-      "GroupRoleAcl": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the acl"
-          },
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "_object_org_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The organization the ACL's referred object belongs to"
-          },
-          "created": {
-            "type": "string",
-            "nullable": true,
-            "format": "date-time",
-            "description": "Date of acl creation"
-          },
-          "group_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the group the ACL applies to"
-          },
-          "role_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the role the ACL grants"
-          }
-        },
-        "required": [
-          "id",
-          "object_type",
-          "object_id",
-          "_object_org_id",
-          "group_id",
-          "role_id"
-        ],
-        "additionalProperties": false
-      },
       "Acl": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/UserPermissionAcl"
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the acl"
           },
-          {
-            "$ref": "#/components/schemas/UserRoleAcl"
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "project_score",
+              "project_tag",
+              "group",
+              "role",
+              null
+            ],
+            "description": "The object type that the ACL applies to"
           },
-          {
-            "$ref": "#/components/schemas/GroupPermissionAcl"
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the ACL applies to"
           },
-          {
-            "$ref": "#/components/schemas/GroupRoleAcl"
+          "restrict_object_type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "project_score",
+              "project_tag",
+              "group",
+              "role",
+              null
+            ],
+            "description": "Optionally restricts the permission grant to just the specified object type"
+          },
+          "_object_org_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The organization the ACL's referred object belongs to"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of acl creation"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Id of the user the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
+          },
+          "group_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Id of the group the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
+          },
+          "permission": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "create",
+              "read",
+              "update",
+              "delete",
+              "create_acls",
+              "read_acls",
+              "update_acls",
+              "delete_acls",
+              null
+            ],
+            "description": "Permission the ACL grants. Exactly one of `permission` and `role_id` will be provided"
+          },
+          "role_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Id of the role the ACL grants. Exactly one of `permission` and `role_id` will be provided"
           }
+        },
+        "required": [
+          "id",
+          "object_type",
+          "object_id",
+          "_object_org_id"
         ],
+        "additionalProperties": false,
         "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL."
       },
-      "CreateUserPermissionAcl": {
-        "type": "object",
-        "properties": {
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "user_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the user the ACL applies to"
-          },
-          "permission": {
-            "type": "string",
-            "enum": [
-              "create",
-              "read",
-              "update",
-              "delete",
-              "create_acls",
-              "read_acls",
-              "update_acls",
-              "delete_acls"
-            ],
-            "description": "Permission the ACL grants"
-          }
-        },
-        "required": [
-          "object_type",
-          "object_id",
-          "user_id",
-          "permission"
-        ],
-        "additionalProperties": false
-      },
-      "CreateUserRoleAcl": {
-        "type": "object",
-        "properties": {
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "user_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the user the ACL applies to"
-          },
-          "role_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the role the ACL grants"
-          }
-        },
-        "required": [
-          "object_type",
-          "object_id",
-          "user_id",
-          "role_id"
-        ],
-        "additionalProperties": false
-      },
-      "CreateGroupPermissionAcl": {
-        "type": "object",
-        "properties": {
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "group_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the group the ACL applies to"
-          },
-          "permission": {
-            "type": "string",
-            "enum": [
-              "create",
-              "read",
-              "update",
-              "delete",
-              "create_acls",
-              "read_acls",
-              "update_acls",
-              "delete_acls"
-            ],
-            "description": "Permission the ACL grants"
-          }
-        },
-        "required": [
-          "object_type",
-          "object_id",
-          "group_id",
-          "permission"
-        ],
-        "additionalProperties": false
-      },
-      "CreateGroupRoleAcl": {
-        "type": "object",
-        "properties": {
-          "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "project_score",
-              "project_tag",
-              "group",
-              "role"
-            ],
-            "description": "The object type that the ACL applies to"
-          },
-          "object_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "The id of the object the ACL applies to"
-          },
-          "restrict_object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "project_score",
-                  "project_tag",
-                  "group",
-                  "role"
-                ],
-                "description": "The object type that the ACL applies to"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "__reserved_only_allow_null": {
-                    "type": "object",
-                    "description": "This is just a placeholder nullable object. Only pass null, not the object itself"
-                  }
-                },
-                "required": [
-                  "__reserved_only_allow_null"
-                ],
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ],
-            "description": "Optionally restricts the permission grant to just the specified object type"
-          },
-          "group_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the group the ACL applies to"
-          },
-          "role_id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Id of the role the ACL grants"
-          }
-        },
-        "required": [
-          "object_type",
-          "object_id",
-          "group_id",
-          "role_id"
-        ],
-        "additionalProperties": false
-      },
       "CreateAcl": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/CreateUserPermissionAcl"
+        "type": "object",
+        "properties": {
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "project_score",
+              "project_tag",
+              "group",
+              "role",
+              null
+            ],
+            "description": "The object type that the ACL applies to"
           },
-          {
-            "$ref": "#/components/schemas/CreateUserRoleAcl"
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the ACL applies to"
           },
-          {
-            "$ref": "#/components/schemas/CreateGroupPermissionAcl"
+          "restrict_object_type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "project_score",
+              "project_tag",
+              "group",
+              "role",
+              null
+            ],
+            "description": "Optionally restricts the permission grant to just the specified object type"
           },
-          {
-            "$ref": "#/components/schemas/CreateGroupRoleAcl"
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Id of the user the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
+          },
+          "group_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Id of the group the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
+          },
+          "permission": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "create",
+              "read",
+              "update",
+              "delete",
+              "create_acls",
+              "read_acls",
+              "update_acls",
+              "delete_acls",
+              null
+            ],
+            "description": "Permission the ACL grants. Exactly one of `permission` and `role_id` will be provided"
+          },
+          "role_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Id of the role the ACL grants. Exactly one of `permission` and `role_id` will be provided"
           }
-        ]
+        },
+        "required": [
+          "object_type",
+          "object_id"
+        ],
+        "additionalProperties": false,
+        "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL."
       },
       "User": {
         "type": "object",
@@ -8922,81 +8430,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "_xact_id": {
-                      "type": "string",
-                      "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-                    },
-                    "project_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the project that the prompt belongs under"
-                    },
-                    "log_id": {
-                      "type": "string",
-                      "enum": [
-                        "p"
-                      ],
-                      "description": "A literal 'p' which identifies the object as a project prompt"
-                    },
-                    "org_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the organization"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "Name of the prompt"
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "description": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "Textual description of the prompt"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of prompt creation"
-                    },
-                    "prompt_data": {
-                      "$ref": "#/components/schemas/PromptData"
-                    },
-                    "tags": {
-                      "type": "array",
-                      "nullable": true,
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "A list of tags for the prompt"
-                    },
-                    "metadata": {
-                      "type": "object",
-                      "nullable": true,
-                      "additionalProperties": {},
-                      "description": "User-controlled metadata about the prompt"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "_xact_id",
-                    "project_id",
-                    "log_id",
-                    "org_id",
-                    "name",
-                    "slug"
-                  ],
-                  "additionalProperties": false
+                  "$ref": "#/components/schemas/Prompt"
                 }
               }
             }
@@ -9098,81 +8532,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "_xact_id": {
-                      "type": "string",
-                      "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-                    },
-                    "project_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the project that the prompt belongs under"
-                    },
-                    "log_id": {
-                      "type": "string",
-                      "enum": [
-                        "p"
-                      ],
-                      "description": "A literal 'p' which identifies the object as a project prompt"
-                    },
-                    "org_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the organization"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "Name of the prompt"
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "description": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "Textual description of the prompt"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of prompt creation"
-                    },
-                    "prompt_data": {
-                      "$ref": "#/components/schemas/PromptData"
-                    },
-                    "tags": {
-                      "type": "array",
-                      "nullable": true,
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "A list of tags for the prompt"
-                    },
-                    "metadata": {
-                      "type": "object",
-                      "nullable": true,
-                      "additionalProperties": {},
-                      "description": "User-controlled metadata about the prompt"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "_xact_id",
-                    "project_id",
-                    "log_id",
-                    "org_id",
-                    "name",
-                    "slug"
-                  ],
-                  "additionalProperties": false
+                  "$ref": "#/components/schemas/Prompt"
                 }
               }
             }
@@ -9297,81 +8657,7 @@
                     "objects": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "description": "Unique identifier for the prompt"
-                          },
-                          "_xact_id": {
-                            "type": "string",
-                            "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-                          },
-                          "project_id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "description": "Unique identifier for the project that the prompt belongs under"
-                          },
-                          "log_id": {
-                            "type": "string",
-                            "enum": [
-                              "p"
-                            ],
-                            "description": "A literal 'p' which identifies the object as a project prompt"
-                          },
-                          "org_id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "description": "Unique identifier for the organization"
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "Name of the prompt"
-                          },
-                          "slug": {
-                            "type": "string",
-                            "description": "Unique identifier for the prompt"
-                          },
-                          "description": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Textual description of the prompt"
-                          },
-                          "created": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time",
-                            "description": "Date of prompt creation"
-                          },
-                          "prompt_data": {
-                            "$ref": "#/components/schemas/PromptData"
-                          },
-                          "tags": {
-                            "type": "array",
-                            "nullable": true,
-                            "items": {
-                              "type": "string"
-                            },
-                            "description": "A list of tags for the prompt"
-                          },
-                          "metadata": {
-                            "type": "object",
-                            "nullable": true,
-                            "additionalProperties": {},
-                            "description": "User-controlled metadata about the prompt"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "_xact_id",
-                          "project_id",
-                          "log_id",
-                          "org_id",
-                          "name",
-                          "slug"
-                        ],
-                        "additionalProperties": false
+                        "$ref": "#/components/schemas/Prompt"
                       },
                       "description": "A list of prompt objects"
                     }
@@ -9532,81 +8818,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "_xact_id": {
-                      "type": "string",
-                      "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-                    },
-                    "project_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the project that the prompt belongs under"
-                    },
-                    "log_id": {
-                      "type": "string",
-                      "enum": [
-                        "p"
-                      ],
-                      "description": "A literal 'p' which identifies the object as a project prompt"
-                    },
-                    "org_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the organization"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "Name of the prompt"
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "description": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "Textual description of the prompt"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of prompt creation"
-                    },
-                    "prompt_data": {
-                      "$ref": "#/components/schemas/PromptData"
-                    },
-                    "tags": {
-                      "type": "array",
-                      "nullable": true,
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "A list of tags for the prompt"
-                    },
-                    "metadata": {
-                      "type": "object",
-                      "nullable": true,
-                      "additionalProperties": {},
-                      "description": "User-controlled metadata about the prompt"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "_xact_id",
-                    "project_id",
-                    "log_id",
-                    "org_id",
-                    "name",
-                    "slug"
-                  ],
-                  "additionalProperties": false
+                  "$ref": "#/components/schemas/Prompt"
                 }
               }
             }
@@ -9713,81 +8925,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "_xact_id": {
-                      "type": "string",
-                      "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-                    },
-                    "project_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the project that the prompt belongs under"
-                    },
-                    "log_id": {
-                      "type": "string",
-                      "enum": [
-                        "p"
-                      ],
-                      "description": "A literal 'p' which identifies the object as a project prompt"
-                    },
-                    "org_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the organization"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "Name of the prompt"
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "description": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "Textual description of the prompt"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of prompt creation"
-                    },
-                    "prompt_data": {
-                      "$ref": "#/components/schemas/PromptData"
-                    },
-                    "tags": {
-                      "type": "array",
-                      "nullable": true,
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "A list of tags for the prompt"
-                    },
-                    "metadata": {
-                      "type": "object",
-                      "nullable": true,
-                      "additionalProperties": {},
-                      "description": "User-controlled metadata about the prompt"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "_xact_id",
-                    "project_id",
-                    "log_id",
-                    "org_id",
-                    "name",
-                    "slug"
-                  ],
-                  "additionalProperties": false
+                  "$ref": "#/components/schemas/Prompt"
                 }
               }
             }
@@ -9883,81 +9021,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "_xact_id": {
-                      "type": "string",
-                      "description": "The transaction id of an event is unique to the network operation that processed the event insertion. Transaction ids are monotonically increasing over time and can be used to retrieve a versioned snapshot of the prompt (see the `version` parameter)"
-                    },
-                    "project_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the project that the prompt belongs under"
-                    },
-                    "log_id": {
-                      "type": "string",
-                      "enum": [
-                        "p"
-                      ],
-                      "description": "A literal 'p' which identifies the object as a project prompt"
-                    },
-                    "org_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the organization"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "Name of the prompt"
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "Unique identifier for the prompt"
-                    },
-                    "description": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "Textual description of the prompt"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of prompt creation"
-                    },
-                    "prompt_data": {
-                      "$ref": "#/components/schemas/PromptData"
-                    },
-                    "tags": {
-                      "type": "array",
-                      "nullable": true,
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "A list of tags for the prompt"
-                    },
-                    "metadata": {
-                      "type": "object",
-                      "nullable": true,
-                      "additionalProperties": {},
-                      "description": "User-controlled metadata about the prompt"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "_xact_id",
-                    "project_id",
-                    "log_id",
-                    "org_id",
-                    "name",
-                    "slug"
-                  ],
-                  "additionalProperties": false
+                  "$ref": "#/components/schemas/Prompt"
                 }
               }
             }
