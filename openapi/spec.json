@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Braintrust Data API",
-    "description": "API specification for the backend data server. The API is hosted globally at\nhttps://api.braintrustdata.com or in your own environment. The v1 API is currently in \npreview mode and unstable until June 1, 2024. We may make backwards incompatible\nchanges before then, as we learn from our users.\n\nYou can access the OpenAPI spec for this API at https://github.com/braintrustdata/braintrust-openapi.\n",
+    "description": "API specification for the backend data server. The API is hosted globally at\nhttps://api.braintrustdata.com or in your own environment. The v1 API is currently in\npreview mode and unstable until June 1, 2024. We may make backwards incompatible\nchanges before then, as we learn from our users.\n\nYou can access the OpenAPI spec for this API at https://github.com/braintrustdata/braintrust-openapi.\n",
     "license": {
       "name": "Apache 2.0"
     }
@@ -420,7 +420,7 @@
           "_parent_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrustdata.com/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
+            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
           }
         },
         "additionalProperties": false
@@ -731,7 +731,7 @@
           },
           "span_id": {
             "type": "string",
-            "description": "A unique identifier used to link different project logs events together as part of a full trace. See the [tracing guide](https://www.braintrustdata.com/docs/guides/tracing) for full details on tracing"
+            "description": "A unique identifier used to link different project logs events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/guides/tracing) for full details on tracing"
           },
           "span_parents": {
             "type": "array",
@@ -1333,7 +1333,7 @@
           "_parent_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrustdata.com/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
+            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
           }
         },
         "additionalProperties": false
@@ -1647,7 +1647,7 @@
           },
           "span_id": {
             "type": "string",
-            "description": "A unique identifier used to link different experiment events together as part of a full trace. See the [tracing guide](https://www.braintrustdata.com/docs/guides/tracing) for full details on tracing"
+            "description": "A unique identifier used to link different experiment events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/guides/tracing) for full details on tracing"
           },
           "span_parents": {
             "type": "array",
@@ -2050,7 +2050,7 @@
           "_parent_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrustdata.com/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
+            "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
           }
         },
         "additionalProperties": false
@@ -2188,7 +2188,7 @@
           },
           "span_id": {
             "type": "string",
-            "description": "A unique identifier used to link different dataset events together as part of a full trace. See the [tracing guide](https://www.braintrustdata.com/docs/guides/tracing) for full details on tracing"
+            "description": "A unique identifier used to link different dataset events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/guides/tracing) for full details on tracing"
           },
           "root_span_id": {
             "type": "string",
