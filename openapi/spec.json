@@ -4122,7 +4122,7 @@
           {}
         ],
         "operationId": "putProject",
-        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new project. If there is an existing project with the same name as the one specified in the request, will return the existing project unmodified, will replace the existing project with the provided fields",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new project. If there is an existing project with the same name as the one specified in the request, will return the existing project unmodified",
         "summary": "DEPRECATED. Create or replace project",
         "requestBody": {
           "description": "Any desired information about the new project object",
@@ -5476,7 +5476,7 @@
           {}
         ],
         "operationId": "putExperiment",
-        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will return the existing experiment unmodified, will replace the existing experiment with the provided fields",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new experiment. If there is an existing experiment in the project with the same name as the one specified in the request, will return the existing experiment unmodified",
         "summary": "DEPRECATED. Create or replace experiment",
         "requestBody": {
           "description": "Any desired information about the new experiment object",
@@ -6996,7 +6996,7 @@
           {}
         ],
         "operationId": "putDataset",
-        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will return the existing dataset unmodified, will replace the existing dataset with the provided fields",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new dataset. If there is an existing dataset in the project with the same name as the one specified in the request, will return the existing dataset unmodified",
         "summary": "DEPRECATED. Create or replace dataset",
         "requestBody": {
           "description": "Any desired information about the new dataset object",
@@ -8513,8 +8513,8 @@
           {}
         ],
         "operationId": "putPrompt",
-        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new prompt. If there is an existing prompt in the project with the same slug as the one specified in the request, will return the existing prompt unmodified, will replace the existing prompt with the provided fields",
-        "summary": "DEPRECATED. Create or replace prompt",
+        "description": "Create or replace prompt. If there is an existing prompt in the project with the same slug as the one specified in the request, will replace the existing prompt with the provided fields",
+        "summary": "Create or replace prompt",
         "requestBody": {
           "description": "Any desired information about the new prompt object",
           "required": true,
@@ -9430,7 +9430,7 @@
           {}
         ],
         "operationId": "putRole",
-        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new role. If there is an existing role with the same name as the one specified in the request, will return the existing role unmodified, will replace the existing role with the provided fields",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new role. If there is an existing role with the same name as the one specified in the request, will return the existing role unmodified",
         "summary": "DEPRECATED. Create or replace role",
         "requestBody": {
           "description": "Any desired information about the new role object",
@@ -10176,7 +10176,7 @@
           {}
         ],
         "operationId": "putGroup",
-        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new group. If there is an existing group with the same name as the one specified in the request, will return the existing group unmodified, will replace the existing group with the provided fields",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new group. If there is an existing group with the same name as the one specified in the request, will return the existing group unmodified",
         "summary": "DEPRECATED. Create or replace group",
         "requestBody": {
           "description": "Any desired information about the new group object",
@@ -10922,7 +10922,7 @@
           {}
         ],
         "operationId": "putAcl",
-        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new acl. If there is an existing acl with the same contents as the one specified in the request, will return the existing acl unmodified, will replace the existing acl with the provided fields",
+        "description": "NOTE: This operation is deprecated and will be removed in a future revision of the API. Create or replace a new acl. If there is an existing acl with the same contents as the one specified in the request, will return the existing acl unmodified",
         "summary": "DEPRECATED. Create or replace acl",
         "requestBody": {
           "description": "Any desired information about the new acl object",
