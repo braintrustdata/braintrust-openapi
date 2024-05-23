@@ -60,6 +60,14 @@ components:
       type: string
       format: uuid
       description: User id
+    ProjectScoreId:
+      type: string
+      format: uuid
+      description: ProjectScore id
+    ProjectTagId:
+      type: string
+      format: uuid
+      description: ProjectTag id
     ExperimentName:
       type: string
       description: Name of the experiment to search for
@@ -78,6 +86,12 @@ components:
     GroupName:
       type: string
       description: Name of the group to search for
+    ProjectScoreName:
+      type: string
+      description: Name of the project_score to search for
+    ProjectTagName:
+      type: string
+      description: Name of the project_tag to search for
     OrgName:
       type: string
       description: Filter search results to within a particular organization
@@ -3309,6 +3323,203 @@ components:
       required:
         - id
       additionalProperties: false
+    ProjectScoreCategory:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the category
+        value:
+          type: number
+          description: Numerical value of the category. Must be between 0 and 1, inclusive
+      required:
+        - name
+        - value
+      description: For categorical-type project scores, defines a single category
+    ProjectScore:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project score
+        project_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project that the project score belongs
+            under
+        user_id:
+          type: string
+          format: uuid
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of project score creation
+        name:
+          type: string
+          description: Name of the project score
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project score
+        score_type:
+          type: string
+          enum:
+            - slider
+            - categorical
+            - null
+          description: The type of the configured score
+        categories:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProjectScoreCategory"
+          description: For categorical-type project scores, the list of all categories
+      required:
+        - id
+        - project_id
+        - user_id
+        - name
+        - score_type
+      additionalProperties: false
+      description: A project score is a user-configured score, which can be
+        manually-labeled through the UI
+    CreateProjectScore:
+      type: object
+      properties:
+        project_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project that the project score belongs
+            under
+        name:
+          type: string
+          description: Name of the project score
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project score
+        score_type:
+          type: string
+          enum:
+            - slider
+            - categorical
+            - null
+          description: The type of the configured score
+        categories:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProjectScoreCategory"
+          description: For categorical-type project scores, the list of all categories
+      required:
+        - project_id
+        - name
+        - score_type
+      additionalProperties: false
+    PatchProjectScore:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Name of the project score
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project score
+        score_type:
+          type: string
+          nullable: true
+          enum:
+            - slider
+            - categorical
+            - null
+          description: The type of the configured score
+        categories:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/ProjectScoreCategory"
+          description: For categorical-type project scores, the list of all categories
+      additionalProperties: false
+    ProjectTag:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project tag
+        project_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project that the project tag belongs under
+        user_id:
+          type: string
+          format: uuid
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of project tag creation
+        name:
+          type: string
+          description: Name of the project tag
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project tag
+        color:
+          type: string
+          nullable: true
+          description: Color of the tag for the UI
+      required:
+        - id
+        - project_id
+        - user_id
+        - name
+      additionalProperties: false
+      description: A project tag is a user-configured tag for tracking and filtering
+        your experiments, logs, and other data
+    CreateProjectTag:
+      type: object
+      properties:
+        project_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project that the project tag belongs under
+        name:
+          type: string
+          description: Name of the project tag
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project tag
+        color:
+          type: string
+          nullable: true
+          description: Color of the tag for the UI
+      required:
+        - project_id
+        - name
+      additionalProperties: false
+    PatchProjectTag:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Name of the project tag
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project tag
+        color:
+          type: string
+          nullable: true
+          description: Color of the tag for the UI
+      additionalProperties: false
     CrossObjectInsertResponse:
       type: object
       properties:
@@ -3455,6 +3666,20 @@ components:
       description: User id
       name: user_id
       in: path
+    ProjectScoreId:
+      schema:
+        $ref: "#/components/schemas/ProjectScoreId"
+      required: true
+      description: ProjectScore id
+      name: project_score_id
+      in: path
+    ProjectTagId:
+      schema:
+        $ref: "#/components/schemas/ProjectTagId"
+      required: true
+      description: ProjectTag id
+      name: project_tag_id
+      in: path
     ExperimentName:
       schema:
         $ref: "#/components/schemas/ExperimentName"
@@ -3501,6 +3726,22 @@ components:
       required: false
       description: Name of the group to search for
       name: group_name
+      in: query
+      allowReserved: true
+    ProjectScoreName:
+      schema:
+        $ref: "#/components/schemas/ProjectScoreName"
+      required: false
+      description: Name of the project_score to search for
+      name: project_score_name
+      in: query
+      allowReserved: true
+    ProjectTagName:
+      schema:
+        $ref: "#/components/schemas/ProjectTagName"
+      required: false
+      description: Name of the project_tag to search for
+      name: project_tag_name
       in: query
       allowReserved: true
     OrgName:
@@ -8581,6 +8822,960 @@ paths:
         - CORS
       parameters:
         - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+  /v1/project_score:
+    post:
+      tags:
+        - ProjectScores
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: postProjectScore
+      description: Create a new project_score. If there is an existing project_score
+        in the project with the same name as the one specified in the request,
+        will return the existing project_score unmodified
+      summary: Create project_score
+      requestBody:
+        description: Any desired information about the new project_score object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectScore"
+      responses:
+        "200":
+          description: Returns the new project_score object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectScore"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    put:
+      tags:
+        - ProjectScores
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: putProjectScore
+      description: Create or replace project_score. If there is an existing
+        project_score in the project with the same name as the one specified in
+        the request, will replace the existing project_score with the provided
+        fields
+      summary: Create or replace project_score
+      requestBody:
+        description: Any desired information about the new project_score object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectScore"
+      responses:
+        "200":
+          description: Returns the new project_score object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectScore"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    get:
+      operationId: getProjectScore
+      tags:
+        - ProjectScores
+      description: List out all project_scores. The project_scores are sorted by
+        creation date, with the most recently-created project_scores coming
+        first
+      summary: List project_scores
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/ProjectScoreName"
+        - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
+      responses:
+        "200":
+          description: Returns a list of project_score objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProjectScore"
+                    description: A list of project_score objects
+                required:
+                  - objects
+                additionalProperties: false
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    options:
+      operationId: optionsProjectScore
+      description: Enable CORS
+      summary: Enable CORS (`/v1/project_score`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+  /v1/project_score/{project_score_id}:
+    get:
+      operationId: getProjectScoreId
+      tags:
+        - ProjectScores
+      description: Get a project_score object by its id
+      summary: Get project_score
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectScoreId"
+      responses:
+        "200":
+          description: Returns the project_score object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectScore"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    patch:
+      operationId: patchProjectScoreId
+      tags:
+        - ProjectScores
+      description: Partially update a project_score object. Specify the fields to
+        update in the payload. Any object-type fields will be deep-merged with
+        existing content. Currently we do not support removing fields or setting
+        them to null.
+      summary: Partially update project_score
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectScoreId"
+      requestBody:
+        description: Fields to update
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchProjectScore"
+      responses:
+        "200":
+          description: Returns the project_score object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectScore"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    delete:
+      operationId: deleteProjectScoreId
+      tags:
+        - ProjectScores
+      description: Delete a project_score object by its id
+      summary: Delete project_score
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectScoreId"
+      responses:
+        "200":
+          description: Returns the deleted project_score object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectScore"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    options:
+      operationId: optionsProjectScoreId
+      description: Enable CORS
+      summary: Enable CORS (`/v1/project_score/{project_score_id}`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/ProjectScoreId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+  /v1/project_tag:
+    post:
+      tags:
+        - ProjectTags
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: postProjectTag
+      description: Create a new project_tag. If there is an existing project_tag in
+        the project with the same name as the one specified in the request, will
+        return the existing project_tag unmodified
+      summary: Create project_tag
+      requestBody:
+        description: Any desired information about the new project_tag object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectTag"
+      responses:
+        "200":
+          description: Returns the new project_tag object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectTag"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    put:
+      tags:
+        - ProjectTags
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: putProjectTag
+      description: Create or replace project_tag. If there is an existing project_tag
+        in the project with the same name as the one specified in the request,
+        will replace the existing project_tag with the provided fields
+      summary: Create or replace project_tag
+      requestBody:
+        description: Any desired information about the new project_tag object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectTag"
+      responses:
+        "200":
+          description: Returns the new project_tag object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectTag"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    get:
+      operationId: getProjectTag
+      tags:
+        - ProjectTags
+      description: List out all project_tags. The project_tags are sorted by creation
+        date, with the most recently-created project_tags coming first
+      summary: List project_tags
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/ProjectTagName"
+        - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/Ids"
+      responses:
+        "200":
+          description: Returns a list of project_tag objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProjectTag"
+                    description: A list of project_tag objects
+                required:
+                  - objects
+                additionalProperties: false
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    options:
+      operationId: optionsProjectTag
+      description: Enable CORS
+      summary: Enable CORS (`/v1/project_tag`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+  /v1/project_tag/{project_tag_id}:
+    get:
+      operationId: getProjectTagId
+      tags:
+        - ProjectTags
+      description: Get a project_tag object by its id
+      summary: Get project_tag
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectTagId"
+      responses:
+        "200":
+          description: Returns the project_tag object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectTag"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    patch:
+      operationId: patchProjectTagId
+      tags:
+        - ProjectTags
+      description: Partially update a project_tag object. Specify the fields to update
+        in the payload. Any object-type fields will be deep-merged with existing
+        content. Currently we do not support removing fields or setting them to
+        null.
+      summary: Partially update project_tag
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectTagId"
+      requestBody:
+        description: Fields to update
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchProjectTag"
+      responses:
+        "200":
+          description: Returns the project_tag object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectTag"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    delete:
+      operationId: deleteProjectTagId
+      tags:
+        - ProjectTags
+      description: Delete a project_tag object by its id
+      summary: Delete project_tag
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectTagId"
+      responses:
+        "200":
+          description: Returns the deleted project_tag object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectTag"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema: {}
+    options:
+      operationId: optionsProjectTagId
+      description: Enable CORS
+      summary: Enable CORS (`/v1/project_tag/{project_tag_id}`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/ProjectTagId"
       responses:
         "200":
           description: Response for CORS method
