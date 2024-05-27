@@ -3006,7 +3006,11 @@ components:
           type: string
           nullable: true
           description: Textual description of the role
-        member_permissions:
+        name:
+          type: string
+          nullable: true
+          description: Name of the role
+        add_member_permissions:
           type: array
           nullable: true
           items:
@@ -3027,22 +3031,43 @@ components:
 
 
               Permissions can be assigned to to objects on an individual basis, or grouped into roles
-          description: Permissions which belong to this role
-        member_roles:
+          description: A list of permissions to add to the role
+        remove_member_permissions:
+          type: array
+          nullable: true
+          items:
+            type: string
+            enum:
+              - create
+              - read
+              - update
+              - delete
+              - create_acls
+              - read_acls
+              - update_acls
+              - delete_acls
+              - null
+            description: >-
+              Each permission permits a certain type of operation on an object
+              in the system
+
+
+              Permissions can be assigned to to objects on an individual basis, or grouped into roles
+          description: A list of permissions to remove from the role
+        add_member_roles:
           type: array
           nullable: true
           items:
             type: string
             format: uuid
-          description: >-
-            Ids of the roles this role inherits from
-
-
-            An inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions
-        name:
-          type: string
+          description: A list of role IDs to add to the role's inheriting-from set
+        remove_member_roles:
+          type: array
           nullable: true
-          description: Name of the role
+          items:
+            type: string
+            format: uuid
+          description: A list of role IDs to remove from the role's inheriting-from set
       additionalProperties: false
     Group:
       type: object
@@ -3152,28 +3177,38 @@ components:
           type: string
           nullable: true
           description: Textual description of the group
-        member_users:
-          type: array
-          nullable: true
-          items:
-            type: string
-            format: uuid
-          description: Ids of users which belong to this group
-        member_groups:
-          type: array
-          nullable: true
-          items:
-            type: string
-            format: uuid
-          description: >-
-            Ids of the groups this group inherits from
-
-
-            An inheriting group has all the users contained in its member groups, as well as all of their inherited users
         name:
           type: string
           nullable: true
           description: Name of the group
+        add_member_users:
+          type: array
+          nullable: true
+          items:
+            type: string
+            format: uuid
+          description: A list of user IDs to add to the group
+        remove_member_users:
+          type: array
+          nullable: true
+          items:
+            type: string
+            format: uuid
+          description: A list of user IDs to remove from the group
+        add_member_groups:
+          type: array
+          nullable: true
+          items:
+            type: string
+            format: uuid
+          description: A list of group IDs to add to the group's inheriting-from set
+        remove_member_groups:
+          type: array
+          nullable: true
+          items:
+            type: string
+            format: uuid
+          description: A list of group IDs to remove from the group's inheriting-from set
       additionalProperties: false
     Acl:
       type: object
