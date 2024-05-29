@@ -207,6 +207,8 @@ components:
         - project_tag
         - group
         - role
+        - org_member
+        - project_log
         - null
       description: The object type that the ACL applies to
     AclObjectId:
@@ -3230,6 +3232,8 @@ components:
             - project_tag
             - group
             - role
+            - org_member
+            - project_log
             - null
           description: The object type that the ACL applies to
         object_id:
@@ -3250,6 +3254,8 @@ components:
             - project_tag
             - group
             - role
+            - org_member
+            - project_log
             - null
           description: Optionally restricts the permission grant to just the specified
             object type
@@ -3326,6 +3332,8 @@ components:
             - project_tag
             - group
             - role
+            - org_member
+            - project_log
             - null
           description: The object type that the ACL applies to
         object_id:
@@ -3346,6 +3354,8 @@ components:
             - project_tag
             - group
             - role
+            - org_member
+            - project_log
             - null
           description: Optionally restricts the permission grant to just the specified
             object type
