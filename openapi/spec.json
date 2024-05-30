@@ -201,6 +201,7 @@
           "role",
           "org_member",
           "project_log",
+          "org_project",
           null
         ],
         "description": "The object type that the ACL applies to"
@@ -3545,6 +3546,7 @@
               "role",
               "org_member",
               "project_log",
+              "org_project",
               null
             ],
             "description": "The object type that the ACL applies to"
@@ -3570,6 +3572,7 @@
               "role",
               "org_member",
               "project_log",
+              "org_project",
               null
             ],
             "description": "Optionally restricts the permission grant to just the specified object type"
@@ -3647,6 +3650,7 @@
               "role",
               "org_member",
               "project_log",
+              "org_project",
               null
             ],
             "description": "The object type that the ACL applies to"
@@ -3672,6 +3676,7 @@
               "role",
               "org_member",
               "project_log",
+              "org_project",
               null
             ],
             "description": "Optionally restricts the permission grant to just the specified object type"
