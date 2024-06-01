@@ -2911,24 +2911,49 @@ components:
           type: array
           nullable: true
           items:
-            type: string
-            enum:
-              - create
-              - read
-              - update
-              - delete
-              - create_acls
-              - read_acls
-              - update_acls
-              - delete_acls
-              - null
-            description: >-
-              Each permission permits a certain type of operation on an object
-              in the system
+            type: object
+            properties:
+              permission:
+                type: string
+                enum:
+                  - create
+                  - read
+                  - update
+                  - delete
+                  - create_acls
+                  - read_acls
+                  - update_acls
+                  - delete_acls
+                  - null
+                description: >-
+                  Each permission permits a certain type of operation on an
+                  object in the system
 
 
-              Permissions can be assigned to to objects on an individual basis, or grouped into roles
-          description: Permissions which belong to this role
+                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+              restrict_object_type:
+                type: string
+                nullable: true
+                enum:
+                  - organization
+                  - project
+                  - experiment
+                  - dataset
+                  - prompt
+                  - prompt_session
+                  - project_score
+                  - project_tag
+                  - group
+                  - role
+                  - org_member
+                  - project_log
+                  - org_project
+                  - null
+                description: The object type that the ACL applies to
+            required:
+              - permission
+            additionalProperties: false
+          description: (permission, restrict_object_type) tuples which belong to this role
         member_roles:
           type: array
           nullable: true
@@ -2964,24 +2989,49 @@ components:
           type: array
           nullable: true
           items:
-            type: string
-            enum:
-              - create
-              - read
-              - update
-              - delete
-              - create_acls
-              - read_acls
-              - update_acls
-              - delete_acls
-              - null
-            description: >-
-              Each permission permits a certain type of operation on an object
-              in the system
+            type: object
+            properties:
+              permission:
+                type: string
+                enum:
+                  - create
+                  - read
+                  - update
+                  - delete
+                  - create_acls
+                  - read_acls
+                  - update_acls
+                  - delete_acls
+                  - null
+                description: >-
+                  Each permission permits a certain type of operation on an
+                  object in the system
 
 
-              Permissions can be assigned to to objects on an individual basis, or grouped into roles
-          description: Permissions which belong to this role
+                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+              restrict_object_type:
+                type: string
+                nullable: true
+                enum:
+                  - organization
+                  - project
+                  - experiment
+                  - dataset
+                  - prompt
+                  - prompt_session
+                  - project_score
+                  - project_tag
+                  - group
+                  - role
+                  - org_member
+                  - project_log
+                  - org_project
+                  - null
+                description: The object type that the ACL applies to
+            required:
+              - permission
+            additionalProperties: false
+          description: (permission, restrict_object_type) tuples which belong to this role
         member_roles:
           type: array
           nullable: true
@@ -3017,45 +3067,95 @@ components:
           type: array
           nullable: true
           items:
-            type: string
-            enum:
-              - create
-              - read
-              - update
-              - delete
-              - create_acls
-              - read_acls
-              - update_acls
-              - delete_acls
-              - null
-            description: >-
-              Each permission permits a certain type of operation on an object
-              in the system
+            type: object
+            properties:
+              permission:
+                type: string
+                enum:
+                  - create
+                  - read
+                  - update
+                  - delete
+                  - create_acls
+                  - read_acls
+                  - update_acls
+                  - delete_acls
+                  - null
+                description: >-
+                  Each permission permits a certain type of operation on an
+                  object in the system
 
 
-              Permissions can be assigned to to objects on an individual basis, or grouped into roles
+                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+              restrict_object_type:
+                type: string
+                nullable: true
+                enum:
+                  - organization
+                  - project
+                  - experiment
+                  - dataset
+                  - prompt
+                  - prompt_session
+                  - project_score
+                  - project_tag
+                  - group
+                  - role
+                  - org_member
+                  - project_log
+                  - org_project
+                  - null
+                description: The object type that the ACL applies to
+            required:
+              - permission
+            additionalProperties: false
           description: A list of permissions to add to the role
         remove_member_permissions:
           type: array
           nullable: true
           items:
-            type: string
-            enum:
-              - create
-              - read
-              - update
-              - delete
-              - create_acls
-              - read_acls
-              - update_acls
-              - delete_acls
-              - null
-            description: >-
-              Each permission permits a certain type of operation on an object
-              in the system
+            type: object
+            properties:
+              permission:
+                type: string
+                enum:
+                  - create
+                  - read
+                  - update
+                  - delete
+                  - create_acls
+                  - read_acls
+                  - update_acls
+                  - delete_acls
+                  - null
+                description: >-
+                  Each permission permits a certain type of operation on an
+                  object in the system
 
 
-              Permissions can be assigned to to objects on an individual basis, or grouped into roles
+                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+              restrict_object_type:
+                type: string
+                nullable: true
+                enum:
+                  - organization
+                  - project
+                  - experiment
+                  - dataset
+                  - prompt
+                  - prompt_session
+                  - project_score
+                  - project_tag
+                  - group
+                  - role
+                  - org_member
+                  - project_log
+                  - org_project
+                  - null
+                description: The object type that the ACL applies to
+            required:
+              - permission
+            additionalProperties: false
           description: A list of permissions to remove from the role
         add_member_roles:
           type: array
@@ -3242,35 +3342,6 @@ components:
           type: string
           format: uuid
           description: The id of the object the ACL applies to
-        restrict_object_type:
-          type: string
-          nullable: true
-          enum:
-            - organization
-            - project
-            - experiment
-            - dataset
-            - prompt
-            - prompt_session
-            - project_score
-            - project_tag
-            - group
-            - role
-            - org_member
-            - project_log
-            - org_project
-            - null
-          description: Optionally restricts the permission grant to just the specified
-            object type
-        _object_org_id:
-          type: string
-          format: uuid
-          description: The organization the ACL's referred object belongs to
-        created:
-          type: string
-          nullable: true
-          format: date-time
-          description: Date of acl creation
         user_id:
           type: string
           nullable: true
@@ -3298,12 +3369,42 @@ components:
             - null
           description: Permission the ACL grants. Exactly one of `permission` and
             `role_id` will be provided
+        restrict_object_type:
+          type: string
+          nullable: true
+          enum:
+            - organization
+            - project
+            - experiment
+            - dataset
+            - prompt
+            - prompt_session
+            - project_score
+            - project_tag
+            - group
+            - role
+            - org_member
+            - project_log
+            - org_project
+            - null
+          description: When setting a permission directly, optionally restricts the
+            permission grant to just the specified object type. Cannot be set
+            alongside a `role_id`.
         role_id:
           type: string
           nullable: true
           format: uuid
           description: Id of the role the ACL grants. Exactly one of `permission` and
             `role_id` will be provided
+        _object_org_id:
+          type: string
+          format: uuid
+          description: The organization the ACL's referred object belongs to
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of acl creation
       required:
         - id
         - object_type
@@ -3318,7 +3419,7 @@ components:
         ACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.
 
 
-        To restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL.
+        To restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role.
     CreateAcl:
       type: object
       properties:
@@ -3344,26 +3445,6 @@ components:
           type: string
           format: uuid
           description: The id of the object the ACL applies to
-        restrict_object_type:
-          type: string
-          nullable: true
-          enum:
-            - organization
-            - project
-            - experiment
-            - dataset
-            - prompt
-            - prompt_session
-            - project_score
-            - project_tag
-            - group
-            - role
-            - org_member
-            - project_log
-            - org_project
-            - null
-          description: Optionally restricts the permission grant to just the specified
-            object type
         user_id:
           type: string
           nullable: true
@@ -3391,6 +3472,27 @@ components:
             - null
           description: Permission the ACL grants. Exactly one of `permission` and
             `role_id` will be provided
+        restrict_object_type:
+          type: string
+          nullable: true
+          enum:
+            - organization
+            - project
+            - experiment
+            - dataset
+            - prompt
+            - prompt_session
+            - project_score
+            - project_tag
+            - group
+            - role
+            - org_member
+            - project_log
+            - org_project
+            - null
+          description: When setting a permission directly, optionally restricts the
+            permission grant to just the specified object type. Cannot be set
+            alongside a `role_id`.
         role_id:
           type: string
           nullable: true
@@ -3409,7 +3511,7 @@ components:
         ACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.
 
 
-        To restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL.
+        To restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role.
     User:
       type: object
       properties:
