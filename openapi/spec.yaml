@@ -3588,14 +3588,23 @@ components:
           enum:
             - slider
             - categorical
+            - weighted
+            - minimum
             - null
           description: The type of the configured score
         categories:
-          type: array
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProjectScoreCategory"
-          description: For categorical-type project scores, the list of all categories
+          anyOf:
+            - type: array
+              items:
+                $ref: "#/components/schemas/ProjectScoreCategory"
+              description: For categorical-type project scores, the list of all categories
+            - type: object
+              additionalProperties:
+                type: number
+              description: For weighted-type project scores, the weights of each score
+            - type: object
+              nullable: true
+              additionalProperties: false
       required:
         - id
         - project_id
@@ -3625,14 +3634,23 @@ components:
           enum:
             - slider
             - categorical
+            - weighted
+            - minimum
             - null
           description: The type of the configured score
         categories:
-          type: array
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProjectScoreCategory"
-          description: For categorical-type project scores, the list of all categories
+          anyOf:
+            - type: array
+              items:
+                $ref: "#/components/schemas/ProjectScoreCategory"
+              description: For categorical-type project scores, the list of all categories
+            - type: object
+              additionalProperties:
+                type: number
+              description: For weighted-type project scores, the weights of each score
+            - type: object
+              nullable: true
+              additionalProperties: false
       required:
         - project_id
         - name
@@ -3655,14 +3673,23 @@ components:
           enum:
             - slider
             - categorical
+            - weighted
+            - minimum
             - null
           description: The type of the configured score
-        categories:
-          type: array
-          nullable: true
-          items:
-            $ref: "#/components/schemas/ProjectScoreCategory"
-          description: For categorical-type project scores, the list of all categories
+        config:
+          anyOf:
+            - type: array
+              items:
+                $ref: "#/components/schemas/ProjectScoreCategory"
+              description: For categorical-type project scores, the list of all categories
+            - type: object
+              additionalProperties:
+                type: number
+              description: For weighted-type project scores, the weights of each score
+            - type: object
+              nullable: true
+              additionalProperties: false
       additionalProperties: false
     ProjectTag:
       type: object
