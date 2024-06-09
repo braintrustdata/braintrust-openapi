@@ -3961,6 +3961,13 @@
                 "description": "For weighted-type project scores, the weights of each score"
               },
               {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
                 "type": "object",
                 "nullable": true,
                 "additionalProperties": false
@@ -4023,6 +4030,13 @@
                 "description": "For weighted-type project scores, the weights of each score"
               },
               {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
                 "type": "object",
                 "nullable": true,
                 "additionalProperties": false
@@ -4077,6 +4091,13 @@
                   "type": "number"
                 },
                 "description": "For weighted-type project scores, the weights of each score"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
               },
               {
                 "type": "object",
