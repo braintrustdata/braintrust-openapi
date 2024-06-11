@@ -167,6 +167,13 @@ components:
 
 
         The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.
+    PromptVersion:
+      type: string
+      description: >-
+        Retrieve prompt at a specific version.
+
+
+        The version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3').
     SummarizeScores:
       type: boolean
       description: Whether to summarize the scores and metrics. If false (or omitted),
@@ -4057,13 +4064,18 @@ components:
       in: query
     Version:
       schema:
-        allOf:
-          - $ref: "#/components/schemas/Version"
-          - description: >-
-              Retrieve prompt at a specific version.
+        $ref: "#/components/schemas/Version"
+      required: false
+      description: >-
+        Retrieve a snapshot of events from a past time
 
 
-              The version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3').
+        The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.
+      name: version
+      in: query
+    PromptVersion:
+      schema:
+        $ref: "#/components/schemas/PromptVersion"
       required: false
       description: >-
         Retrieve prompt at a specific version.
@@ -7260,7 +7272,7 @@ paths:
         - $ref: "#/components/parameters/PromptName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/Slug"
-        - $ref: "#/components/parameters/Version"
+        - $ref: "#/components/parameters/PromptVersion"
         - $ref: "#/components/parameters/OrgName"
         - $ref: "#/components/parameters/Ids"
       responses:
