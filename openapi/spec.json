@@ -157,7 +157,7 @@
         "type": "string",
         "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
       },
-      "PromptVersion": {
+      "Version (prompt)": {
         "type": "string",
         "description": "Retrieve prompt at a specific version.\n\nThe version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3')."
       },
@@ -3942,17 +3942,41 @@
             "enum": [
               "slider",
               "categorical",
+              "weighted",
+              "minimum",
               null
             ],
             "description": "The type of the configured score"
           },
           "categories": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ProjectScoreCategory"
-            },
-            "description": "For categorical-type project scores, the list of all categories"
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProjectScoreCategory"
+                },
+                "description": "For categorical-type project scores, the list of all categories"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "description": "For weighted-type project scores, the weights of each score"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "required": [
@@ -3987,17 +4011,41 @@
             "enum": [
               "slider",
               "categorical",
+              "weighted",
+              "minimum",
               null
             ],
             "description": "The type of the configured score"
           },
           "categories": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ProjectScoreCategory"
-            },
-            "description": "For categorical-type project scores, the list of all categories"
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProjectScoreCategory"
+                },
+                "description": "For categorical-type project scores, the list of all categories"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "description": "For weighted-type project scores, the weights of each score"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "required": [
@@ -4026,17 +4074,41 @@
             "enum": [
               "slider",
               "categorical",
+              "weighted",
+              "minimum",
               null
             ],
             "description": "The type of the configured score"
           },
-          "categories": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ProjectScoreCategory"
-            },
-            "description": "For categorical-type project scores, the list of all categories"
+          "config": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProjectScoreCategory"
+                },
+                "description": "For categorical-type project scores, the list of all categories"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "description": "For weighted-type project scores, the weights of each score"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -4509,9 +4581,9 @@
         "name": "version",
         "in": "query"
       },
-      "PromptVersion": {
+      "Version (prompt)": {
         "schema": {
-          "$ref": "#/components/schemas/PromptVersion"
+          "$ref": "#/components/schemas/Version (prompt)"
         },
         "required": false,
         "description": "Retrieve prompt at a specific version.\n\nThe version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3').",
@@ -9609,7 +9681,7 @@
             "$ref": "#/components/parameters/Slug"
           },
           {
-            "$ref": "#/components/parameters/PromptVersion"
+            "$ref": "#/components/parameters/Version (prompt)"
           },
           {
             "$ref": "#/components/parameters/OrgName"
