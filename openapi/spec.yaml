@@ -5,14 +5,17 @@ info:
   description: >
     API specification for the backend data server. The API is hosted globally at
 
-    https://api.braintrustdata.com or in your own environment. The v1 API is currently in
+    https://api.braintrustdata.com or in your own environment. The v1 API is
+    currently in
 
-    preview mode and unstable until June 1, 2024. We may make backwards incompatible
+    preview mode and unstable until June 1, 2024. We may make backwards
+    incompatible
 
     changes before then, as we learn from our users.
 
 
-    You can access the OpenAPI spec for this API at https://github.com/braintrustdata/braintrust-openapi.
+    You can access the OpenAPI spec for this API at
+    https://github.com/braintrustdata/braintrust-openapi.
   license:
     name: Apache 2.0
 servers:
@@ -116,10 +119,20 @@ components:
         limit the number of traces fetched
 
 
-        Fetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.
+        Fetch queries may be paginated if the total result size is expected to
+        be large (e.g. project_logs which accumulate over a long time). Note
+        that fetch queries only support pagination in descending time order
+        (from latest to earliest `_xact_id`. Furthermore, later pages may return
+        rows which showed up in earlier pages, except with an earlier
+        `_xact_id`. This happens because pagination occurs over the whole
+        version history of the event log. You will most likely want to exclude
+        any such duplicate, outdated rows (by `id`) from your combined result
+        set.
 
 
-        The `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.
+        The `limit` parameter controls the number of full traces to return. So
+        you may end up with more individual rows than the specified limit if you
+        are fetching events containing traces.
     StartingAfter:
       type: string
       format: uuid
@@ -127,7 +140,9 @@ components:
         Pagination cursor id.
 
 
-        For example, if the final item in the last page you fetched had an id of `foo`, pass `starting_after=foo` to fetch the next page. Note: you may only pass one of `starting_after` and `ending_before`
+        For example, if the final item in the last page you fetched had an id of
+        `foo`, pass `starting_after=foo` to fetch the next page. Note: you may
+        only pass one of `starting_after` and `ending_before`
     EndingBefore:
       type: string
       format: uuid
@@ -135,7 +150,9 @@ components:
         Pagination cursor id.
 
 
-        For example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`
+        For example, if the initial item in the last page you fetched had an id
+        of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you
+        may only pass one of `starting_after` and `ending_before`
     MaxXactId:
       type: string
       description: >-
@@ -147,7 +164,11 @@ components:
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
-        Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
+        Since a paginated fetch query returns results in order from latest to
+        earliest, the cursor for the next page can be found as the row with the
+        minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See
+        the documentation of `limit` for an overview of paginating fetch
+        queries.
     MaxRootSpanId:
       type: string
       description: >-
@@ -159,14 +180,20 @@ components:
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
-        Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
+        Since a paginated fetch query returns results in order from latest to
+        earliest, the cursor for the next page can be found as the row with the
+        minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See
+        the documentation of `limit` for an overview of paginating fetch
+        queries.
     Version:
       type: string
       description: >-
         Retrieve a snapshot of events from a past time
 
 
-        The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.
+        The version id is essentially a filter on the latest event transaction
+        id. You can use the `max_xact_id` returned by a past fetch as the
+        version to reproduce that exact fetch.
     SummarizeScores:
       type: boolean
       description: Whether to summarize the scores and metrics. If false (or omitted),
@@ -446,7 +473,13 @@ components:
             When set to `true`, the new row is deep-merged into the existing row
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": 5, "b": 10}}`. If we merge a new row as
+            `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the
+            new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c":
+            20}}`. If we replace the new row as `{"id": "foo", "input": {"b":
+            11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b":
+            11, "c": 20}}`
         _parent_id:
           type: string
           nullable: true
@@ -458,7 +491,14 @@ components:
             details).
 
 
-            For example, say we have logged a row `{"id": "abc", "input": "foo", "output": "bar", "expected": "boo", "scores": {"correctness": 0.33}}`. We can create a sub-span of the parent row by logging `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span row `"abc"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `"llm_call"` row) by clicking on the "abc" row.
+            For example, say we have logged a row `{"id": "abc", "input": "foo",
+            "output": "bar", "expected": "boo", "scores": {"correctness":
+            0.33}}`. We can create a sub-span of the parent row by logging
+            `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What
+            comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In
+            the webapp, only the root span row `"abc"` will show up in the
+            summary view. You can view the full trace hierarchy (in this case,
+            the `"llm_call"` row) by clicking on the "abc" row.
       additionalProperties: false
     InsertProjectLogsEventMerge:
       type: object
@@ -619,7 +659,13 @@ components:
             When set to `true`, the new row is deep-merged into the existing row
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": 5, "b": 10}}`. If we merge a new row as
+            `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the
+            new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c":
+            20}}`. If we replace the new row as `{"id": "foo", "input": {"b":
+            11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b":
+            11, "c": 20}}`
         _merge_paths:
           type: array
           nullable: true
@@ -634,7 +680,15 @@ components:
             deep merge will not descend below any of the specified merge paths.
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If we merge a new row as `{"_is_merge": true, "_merge_paths": [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e": 30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30}, "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`.
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If
+            we merge a new row as `{"_is_merge": true, "_merge_paths":
+            [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e":
+            30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be
+            `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30},
+            "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge
+            paths, we have replaced `input.a` and `output`, but have still
+            deep-merged `input` and `input.c`.
       required:
         - _is_merge
       additionalProperties: false
@@ -863,7 +917,9 @@ components:
             Pagination cursor
 
 
-            Pass this string directly as the `cursor` param to your next fetch request to get the next page of results. Not provided if the returned result set is empty.
+            Pass this string directly as the `cursor` param to your next fetch
+            request to get the next page of results. Not provided if the
+            returned result set is empty.
       required:
         - events
       additionalProperties: false
@@ -918,10 +974,20 @@ components:
             limit the number of traces fetched
 
 
-            Fetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.
+            Fetch queries may be paginated if the total result size is expected
+            to be large (e.g. project_logs which accumulate over a long time).
+            Note that fetch queries only support pagination in descending time
+            order (from latest to earliest `_xact_id`. Furthermore, later pages
+            may return rows which showed up in earlier pages, except with an
+            earlier `_xact_id`. This happens because pagination occurs over the
+            whole version history of the event log. You will most likely want to
+            exclude any such duplicate, outdated rows (by `id`) from your
+            combined result set.
 
 
-            The `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.
+            The `limit` parameter controls the number of full traces to return.
+            So you may end up with more individual rows than the specified limit
+            if you are fetching events containing traces.
         cursor:
           type: string
           nullable: true
@@ -930,7 +996,8 @@ components:
             results, in order from latest to earliest.
 
 
-            The string can be obtained directly from the `cursor` property of the previous fetch query
+            The string can be obtained directly from the `cursor` property of
+            the previous fetch query
         max_xact_id:
           type: string
           nullable: true
@@ -940,10 +1007,15 @@ components:
             fetch requests. Please prefer the 'cursor' argument going forwards.
 
 
-            Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
+            Together, `max_xact_id` and `max_root_span_id` form a pagination
+            cursor
 
 
-            Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
+            Since a paginated fetch query returns results in order from latest
+            to earliest, the cursor for the next page can be found as the row
+            with the minimum (earliest) value of the tuple `(_xact_id,
+            root_span_id)`. See the documentation of `limit` for an overview of
+            paginating fetch queries.
         max_root_span_id:
           type: string
           nullable: true
@@ -953,10 +1025,15 @@ components:
             fetch requests. Please prefer the 'cursor' argument going forwards.
 
 
-            Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
+            Together, `max_xact_id` and `max_root_span_id` form a pagination
+            cursor
 
 
-            Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
+            Since a paginated fetch query returns results in order from latest
+            to earliest, the cursor for the next page can be found as the row
+            with the minimum (earliest) value of the tuple `(_xact_id,
+            root_span_id)`. See the documentation of `limit` for an overview of
+            paginating fetch queries.
         filters:
           $ref: "#/components/schemas/FetchEventsFilters"
         version:
@@ -966,7 +1043,9 @@ components:
             Retrieve a snapshot of events from a past time
 
 
-            The version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch.
+            The version id is essentially a filter on the latest event
+            transaction id. You can use the `max_xact_id` returned by a past
+            fetch as the version to reproduce that exact fetch.
       additionalProperties: false
     FeedbackProjectLogsItem:
       type: object
@@ -1413,7 +1492,13 @@ components:
             When set to `true`, the new row is deep-merged into the existing row
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": 5, "b": 10}}`. If we merge a new row as
+            `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the
+            new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c":
+            20}}`. If we replace the new row as `{"id": "foo", "input": {"b":
+            11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b":
+            11, "c": 20}}`
         _parent_id:
           type: string
           nullable: true
@@ -1425,7 +1510,14 @@ components:
             details).
 
 
-            For example, say we have logged a row `{"id": "abc", "input": "foo", "output": "bar", "expected": "boo", "scores": {"correctness": 0.33}}`. We can create a sub-span of the parent row by logging `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span row `"abc"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `"llm_call"` row) by clicking on the "abc" row.
+            For example, say we have logged a row `{"id": "abc", "input": "foo",
+            "output": "bar", "expected": "boo", "scores": {"correctness":
+            0.33}}`. We can create a sub-span of the parent row by logging
+            `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What
+            comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In
+            the webapp, only the root span row `"abc"` will show up in the
+            summary view. You can view the full trace hierarchy (in this case,
+            the `"llm_call"` row) by clicking on the "abc" row.
       additionalProperties: false
     InsertExperimentEventMerge:
       type: object
@@ -1596,7 +1688,13 @@ components:
             When set to `true`, the new row is deep-merged into the existing row
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": 5, "b": 10}}`. If we merge a new row as
+            `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the
+            new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c":
+            20}}`. If we replace the new row as `{"id": "foo", "input": {"b":
+            11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b":
+            11, "c": 20}}`
         _merge_paths:
           type: array
           nullable: true
@@ -1611,7 +1709,15 @@ components:
             deep merge will not descend below any of the specified merge paths.
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If we merge a new row as `{"_is_merge": true, "_merge_paths": [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e": 30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30}, "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`.
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If
+            we merge a new row as `{"_is_merge": true, "_merge_paths":
+            [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e":
+            30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be
+            `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30},
+            "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge
+            paths, we have replaced `input.a` and `output`, but have still
+            deep-merged `input` and `input.c`.
       required:
         - _is_merge
       additionalProperties: false
@@ -1844,7 +1950,9 @@ components:
             Pagination cursor
 
 
-            Pass this string directly as the `cursor` param to your next fetch request to get the next page of results. Not provided if the returned result set is empty.
+            Pass this string directly as the `cursor` param to your next fetch
+            request to get the next page of results. Not provided if the
+            returned result set is empty.
       required:
         - events
       additionalProperties: false
@@ -2128,7 +2236,13 @@ components:
             When set to `true`, the new row is deep-merged into the existing row
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": 5, "b": 10}}`. If we merge a new row as
+            `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the
+            new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c":
+            20}}`. If we replace the new row as `{"id": "foo", "input": {"b":
+            11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b":
+            11, "c": 20}}`
         _parent_id:
           type: string
           nullable: true
@@ -2140,7 +2254,14 @@ components:
             details).
 
 
-            For example, say we have logged a row `{"id": "abc", "input": "foo", "output": "bar", "expected": "boo", "scores": {"correctness": 0.33}}`. We can create a sub-span of the parent row by logging `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span row `"abc"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `"llm_call"` row) by clicking on the "abc" row.
+            For example, say we have logged a row `{"id": "abc", "input": "foo",
+            "output": "bar", "expected": "boo", "scores": {"correctness":
+            0.33}}`. We can create a sub-span of the parent row by logging
+            `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What
+            comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In
+            the webapp, only the root span row `"abc"` will show up in the
+            summary view. You can view the full trace hierarchy (in this case,
+            the `"llm_call"` row) by clicking on the "abc" row.
       additionalProperties: false
     InsertDatasetEventMerge:
       type: object
@@ -2192,7 +2313,13 @@ components:
             When set to `true`, the new row is deep-merged into the existing row
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": 5, "b": 10}}`. If we merge a new row as `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c": 20}}`. If we replace the new row as `{"id": "foo", "input": {"b": 11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b": 11, "c": 20}}`
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": 5, "b": 10}}`. If we merge a new row as
+            `{"_is_merge": true, "id": "foo", "input": {"b": 11, "c": 20}}`, the
+            new row will be `{"id": "foo", "input": {"a": 5, "b": 11, "c":
+            20}}`. If we replace the new row as `{"id": "foo", "input": {"b":
+            11, "c": 20}}`, the new row will be `{"id": "foo", "input": {"b":
+            11, "c": 20}}`
         _merge_paths:
           type: array
           nullable: true
@@ -2207,7 +2334,15 @@ components:
             deep merge will not descend below any of the specified merge paths.
 
 
-            For example, say there is an existing row in the DB `{"id": "foo", "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If we merge a new row as `{"_is_merge": true, "_merge_paths": [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e": 30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30}, "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`.
+            For example, say there is an existing row in the DB `{"id": "foo",
+            "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If
+            we merge a new row as `{"_is_merge": true, "_merge_paths":
+            [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e":
+            30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be
+            `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30},
+            "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge
+            paths, we have replaced `input.a` and `output`, but have still
+            deep-merged `input` and `input.c`.
       required:
         - _is_merge
       additionalProperties: false
@@ -2312,7 +2447,9 @@ components:
             Pagination cursor
 
 
-            Pass this string directly as the `cursor` param to your next fetch request to get the next page of results. Not provided if the returned result set is empty.
+            Pass this string directly as the `cursor` param to your next fetch
+            request to get the next page of results. Not provided if the
+            returned result set is empty.
       required:
         - events
       additionalProperties: false
@@ -2881,7 +3018,8 @@ components:
             Unique id for the organization that the role belongs under
 
 
-            A null org_id indicates a system role, which may be assigned to anybody and inherited by any other role, but cannot be edited.
+            A null org_id indicates a system role, which may be assigned to
+            anybody and inherited by any other role, but cannot be edited.
 
 
             It is forbidden to change the org after creating a role
@@ -2930,7 +3068,8 @@ components:
                   object in the system
 
 
-                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+                  Permissions can be assigned to to objects on an individual
+                  basis, or grouped into roles
               restrict_object_type:
                 type: string
                 nullable: true
@@ -2964,7 +3103,8 @@ components:
             Ids of the roles this role inherits from
 
 
-            An inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions
+            An inheriting role has all the permissions contained in its member
+            roles, as well as all of their inherited permissions
       required:
         - id
         - name
@@ -2974,7 +3114,8 @@ components:
         ACL
 
 
-        Roles can consist of individual permissions, as well as a set of roles they inherit from
+        Roles can consist of individual permissions, as well as a set of roles
+        they inherit from
     CreateRole:
       type: object
       properties:
@@ -3008,7 +3149,8 @@ components:
                   object in the system
 
 
-                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+                  Permissions can be assigned to to objects on an individual
+                  basis, or grouped into roles
               restrict_object_type:
                 type: string
                 nullable: true
@@ -3042,7 +3184,8 @@ components:
             Ids of the roles this role inherits from
 
 
-            An inheriting role has all the permissions contained in its member roles, as well as all of their inherited permissions
+            An inheriting role has all the permissions contained in its member
+            roles, as well as all of their inherited permissions
         org_name:
           type: string
           nullable: true
@@ -3086,7 +3229,8 @@ components:
                   object in the system
 
 
-                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+                  Permissions can be assigned to to objects on an individual
+                  basis, or grouped into roles
               restrict_object_type:
                 type: string
                 nullable: true
@@ -3133,7 +3277,8 @@ components:
                   object in the system
 
 
-                  Permissions can be assigned to to objects on an individual basis, or grouped into roles
+                  Permissions can be assigned to to objects on an individual
+                  basis, or grouped into roles
               restrict_object_type:
                 type: string
                 nullable: true
@@ -3225,7 +3370,8 @@ components:
             Ids of the groups this group inherits from
 
 
-            An inheriting group has all the users contained in its member groups, as well as all of their inherited users
+            An inheriting group has all the users contained in its member
+            groups, as well as all of their inherited users
       required:
         - id
         - org_id
@@ -3235,7 +3381,8 @@ components:
         A group is a collection of users which can be assigned an ACL
 
 
-        Groups can consist of individual users, as well as a set of groups they inherit from
+        Groups can consist of individual users, as well as a set of groups they
+        inherit from
     CreateGroup:
       type: object
       properties:
@@ -3263,7 +3410,8 @@ components:
             Ids of the groups this group inherits from
 
 
-            An inheriting group has all the users contained in its member groups, as well as all of their inherited users
+            An inheriting group has all the users contained in its member
+            groups, as well as all of their inherited users
         org_name:
           type: string
           nullable: true
@@ -3416,10 +3564,15 @@ components:
         an object.
 
 
-        ACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.
+        ACLs are inherited across the object hierarchy. So for example, if a
+        user has read permissions on a project, they will also have read
+        permissions on any experiment, dataset, etc. created within that
+        project.
 
 
-        To restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role.
+        To restrict a grant to a particular sub-object, you may specify
+        `restrict_object_type` in the ACL, as part of a direct permission grant
+        or as part of a role.
     CreateAcl:
       type: object
       properties:
@@ -3508,10 +3661,15 @@ components:
         an object.
 
 
-        ACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.
+        ACLs are inherited across the object hierarchy. So for example, if a
+        user has read permissions on a project, they will also have read
+        permissions on any experiment, dataset, etc. created within that
+        project.
 
 
-        To restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role.
+        To restrict a grant to a particular sub-object, you may specify
+        `restrict_object_type` in the ACL, as part of a direct permission grant
+        or as part of a role.
     User:
       type: object
       properties:
@@ -3685,7 +3843,7 @@ components:
             - minimum
             - null
           description: The type of the configured score
-        config:
+        categories:
           anyOf:
             - type: array
               items:
@@ -4034,10 +4192,20 @@ components:
         limit the number of traces fetched
 
 
-        Fetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.
+        Fetch queries may be paginated if the total result size is expected to
+        be large (e.g. project_logs which accumulate over a long time). Note
+        that fetch queries only support pagination in descending time order
+        (from latest to earliest `_xact_id`. Furthermore, later pages may return
+        rows which showed up in earlier pages, except with an earlier
+        `_xact_id`. This happens because pagination occurs over the whole
+        version history of the event log. You will most likely want to exclude
+        any such duplicate, outdated rows (by `id`) from your combined result
+        set.
 
 
-        The `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.
+        The `limit` parameter controls the number of full traces to return. So
+        you may end up with more individual rows than the specified limit if you
+        are fetching events containing traces.
       name: limit
       in: query
     StartingAfter:
@@ -4048,7 +4216,9 @@ components:
         Pagination cursor id.
 
 
-        For example, if the final item in the last page you fetched had an id of `foo`, pass `starting_after=foo` to fetch the next page. Note: you may only pass one of `starting_after` and `ending_before`
+        For example, if the final item in the last page you fetched had an id of
+        `foo`, pass `starting_after=foo` to fetch the next page. Note: you may
+        only pass one of `starting_after` and `ending_before`
       name: starting_after
       in: query
     EndingBefore:
@@ -4059,7 +4229,9 @@ components:
         Pagination cursor id.
 
 
-        For example, if the initial item in the last page you fetched had an id of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you may only pass one of `starting_after` and `ending_before`
+        For example, if the initial item in the last page you fetched had an id
+        of `foo`, pass `ending_before=foo` to fetch the previous page. Note: you
+        may only pass one of `starting_after` and `ending_before`
       name: ending_before
       in: query
     MaxXactId:
@@ -4075,7 +4247,11 @@ components:
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
-        Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
+        Since a paginated fetch query returns results in order from latest to
+        earliest, the cursor for the next page can be found as the row with the
+        minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See
+        the documentation of `limit` for an overview of paginating fetch
+        queries.
       name: max_xact_id
       in: query
     MaxRootSpanId:
@@ -4091,7 +4267,11 @@ components:
         Together, `max_xact_id` and `max_root_span_id` form a pagination cursor
 
 
-        Since a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries.
+        Since a paginated fetch query returns results in order from latest to
+        earliest, the cursor for the next page can be found as the row with the
+        minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See
+        the documentation of `limit` for an overview of paginating fetch
+        queries.
       name: max_root_span_id
       in: query
     Version:
@@ -4102,13 +4282,17 @@ components:
               Retrieve prompt at a specific version.
 
 
-              The version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3').
+              The version id can either be a transaction id (e.g.
+              '1000192656880881099') or a version identifier (e.g.
+              '81cd05ee665fdfb3').
       required: false
       description: >-
         Retrieve prompt at a specific version.
 
 
-        The version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3').
+        The version id can either be a transaction id (e.g.
+        '1000192656880881099') or a version identifier (e.g.
+        '81cd05ee665fdfb3').
       name: version
       in: query
     SummarizeScores:
