@@ -3947,17 +3947,41 @@
             "enum": [
               "slider",
               "categorical",
+              "weighted",
+              "minimum",
               null
             ],
             "description": "The type of the configured score"
           },
           "categories": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ProjectScoreCategory"
-            },
-            "description": "For categorical-type project scores, the list of all categories"
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProjectScoreCategory"
+                },
+                "description": "For categorical-type project scores, the list of all categories"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "description": "For weighted-type project scores, the weights of each score"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "required": [
@@ -3992,17 +4016,41 @@
             "enum": [
               "slider",
               "categorical",
+              "weighted",
+              "minimum",
               null
             ],
             "description": "The type of the configured score"
           },
           "categories": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ProjectScoreCategory"
-            },
-            "description": "For categorical-type project scores, the list of all categories"
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProjectScoreCategory"
+                },
+                "description": "For categorical-type project scores, the list of all categories"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "description": "For weighted-type project scores, the weights of each score"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "required": [
@@ -4031,17 +4079,41 @@
             "enum": [
               "slider",
               "categorical",
+              "weighted",
+              "minimum",
               null
             ],
             "description": "The type of the configured score"
           },
           "categories": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ProjectScoreCategory"
-            },
-            "description": "For categorical-type project scores, the list of all categories"
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProjectScoreCategory"
+                },
+                "description": "For categorical-type project scores, the list of all categories"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "description": "For weighted-type project scores, the weights of each score"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "For minimum-type project scores, the list of included scores"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "additionalProperties": false
