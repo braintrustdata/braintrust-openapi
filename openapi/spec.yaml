@@ -3852,7 +3852,7 @@ components:
             - minimum
             - null
           description: The type of the configured score
-        config:
+        categories:
           anyOf:
             - type: array
               items:
