@@ -3973,6 +3973,25 @@
                 "additionalProperties": false
               }
             ]
+          },
+          "config": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "multi_select": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "destination": {
+                "type": "string",
+                "nullable": true,
+                "enum": [
+                  "expected",
+                  null
+                ]
+              }
+            },
+            "additionalProperties": false
           }
         },
         "required": [
