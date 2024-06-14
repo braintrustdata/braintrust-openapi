@@ -11231,7 +11231,7 @@ paths:
         - $ref: "#/components/parameters/FunctionName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/Slug"
-        - $ref: "#/components/parameters/Version"
+        - $ref: "#/components/parameters/Version (prompt)"
         - $ref: "#/components/parameters/OrgName"
         - $ref: "#/components/parameters/Ids"
       responses:
