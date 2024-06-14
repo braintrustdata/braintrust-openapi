@@ -281,6 +281,14 @@ components:
           nullable: true
           format: uuid
           description: Identifies the user who created the project
+        settings:
+          type: object
+          nullable: true
+          properties:
+            comparison_key:
+              type: string
+              nullable: true
+              description: The key used to join two experiments (defaults to `input`).
       required:
         - id
         - org_id
