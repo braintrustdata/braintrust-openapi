@@ -246,8 +246,6 @@ components:
         - dataset
         - prompt
         - prompt_session
-        - project_score
-        - project_tag
         - group
         - role
         - org_member
@@ -3114,8 +3112,6 @@ components:
                   - dataset
                   - prompt
                   - prompt_session
-                  - project_score
-                  - project_tag
                   - group
                   - role
                   - org_member
@@ -3195,8 +3191,6 @@ components:
                   - dataset
                   - prompt
                   - prompt_session
-                  - project_score
-                  - project_tag
                   - group
                   - role
                   - org_member
@@ -3275,8 +3269,6 @@ components:
                   - dataset
                   - prompt
                   - prompt_session
-                  - project_score
-                  - project_tag
                   - group
                   - role
                   - org_member
@@ -3323,8 +3315,6 @@ components:
                   - dataset
                   - prompt
                   - prompt_session
-                  - project_score
-                  - project_tag
                   - group
                   - role
                   - org_member
@@ -3511,8 +3501,6 @@ components:
             - dataset
             - prompt
             - prompt_session
-            - project_score
-            - project_tag
             - group
             - role
             - org_member
@@ -3561,8 +3549,6 @@ components:
             - dataset
             - prompt
             - prompt_session
-            - project_score
-            - project_tag
             - group
             - role
             - org_member
@@ -3619,8 +3605,6 @@ components:
             - dataset
             - prompt
             - prompt_session
-            - project_score
-            - project_tag
             - group
             - role
             - org_member
@@ -3669,8 +3653,6 @@ components:
             - dataset
             - prompt
             - prompt_session
-            - project_score
-            - project_tag
             - group
             - role
             - org_member
