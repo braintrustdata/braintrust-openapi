@@ -4092,6 +4092,18 @@ components:
                 - type
                 - data
               additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - global
+                name:
+                  type: string
+              required:
+                - type
+                - name
+              additionalProperties: false
       required:
         - id
         - _xact_id
@@ -4197,6 +4209,18 @@ components:
                 - type
                 - data
               additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - global
+                name:
+                  type: string
+              required:
+                - type
+                - name
+              additionalProperties: false
       required:
         - project_id
         - name
@@ -4285,6 +4309,18 @@ components:
               required:
                 - type
                 - data
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - global
+                name:
+                  type: string
+              required:
+                - type
+                - name
               additionalProperties: false
             - type: object
               nullable: true
