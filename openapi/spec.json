@@ -4968,7 +4968,6 @@
           },
           "view_type": {
             "type": "string",
-            "nullable": true,
             "enum": [
               "projects",
               "logs",
@@ -5015,6 +5014,7 @@
           "id",
           "object_type",
           "object_id",
+          "view_type",
           "name"
         ],
         "additionalProperties": false
@@ -5047,7 +5047,6 @@
           },
           "view_type": {
             "type": "string",
-            "nullable": true,
             "enum": [
               "projects",
               "logs",
@@ -5087,6 +5086,7 @@
         "required": [
           "object_type",
           "object_id",
+          "view_type",
           "name"
         ],
         "additionalProperties": false
@@ -5649,7 +5649,7 @@
         "schema": {
           "$ref": "#/components/schemas/ViewType"
         },
-        "required": true,
+        "required": false,
         "description": "Type of table that the view corresponds to.",
         "name": "view_type",
         "in": "query"
