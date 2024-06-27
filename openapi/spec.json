@@ -78,6 +78,11 @@
         "format": "uuid",
         "description": "ProjectTag id"
       },
+      "ViewId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "View id"
+      },
       "ExperimentName": {
         "type": "string",
         "description": "Name of the experiment to search for"
@@ -113,6 +118,10 @@
       "ProjectTagName": {
         "type": "string",
         "description": "Name of the project_tag to search for"
+      },
+      "ViewName": {
+        "type": "string",
+        "description": "Name of the view to search for"
       },
       "OrgName": {
         "type": "string",
@@ -186,6 +195,21 @@
       "Slug": {
         "type": "string",
         "description": "Retrieve prompt with a specific slug"
+      },
+      "ViewType": {
+        "type": "string",
+        "enum": [
+          "projects",
+          "logs",
+          "experiments",
+          "datasets",
+          "prompts",
+          "playgrounds",
+          "experiment",
+          "dataset",
+          null
+        ],
+        "description": "Type of table that the view corresponds to."
       },
       "UserGivenName": {
         "type": "string",
@@ -4844,6 +4868,336 @@
         ],
         "additionalProperties": false
       },
+      "ViewDataSearch": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "filter": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            }
+          },
+          "tag": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            }
+          },
+          "match": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            }
+          },
+          "sort": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ViewData": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "search": {
+            "$ref": "#/components/schemas/ViewDataSearch"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The view definition"
+      },
+      "ViewOptions": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "columnVisibility": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          },
+          "columnOrder": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "columnSizing": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "number"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "Options for the view in the app"
+      },
+      "View": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the view"
+          },
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "group",
+              "role",
+              "org_member",
+              "project_log",
+              "org_project",
+              null
+            ],
+            "description": "The object type that the ACL applies to"
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the view applies to"
+          },
+          "view_type": {
+            "type": "string",
+            "enum": [
+              "projects",
+              "logs",
+              "experiments",
+              "datasets",
+              "prompts",
+              "playgrounds",
+              "experiment",
+              "dataset",
+              null
+            ],
+            "description": "Type of table that the view corresponds to."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the view"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of view creation"
+          },
+          "view_data": {
+            "$ref": "#/components/schemas/ViewData"
+          },
+          "options": {
+            "$ref": "#/components/schemas/ViewOptions"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Identifies the user who created the view"
+          },
+          "deleted_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of role deletion, or null if the role is still active"
+          }
+        },
+        "required": [
+          "id",
+          "object_type",
+          "object_id",
+          "view_type",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "CreateView": {
+        "type": "object",
+        "properties": {
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "group",
+              "role",
+              "org_member",
+              "project_log",
+              "org_project",
+              null
+            ],
+            "description": "The object type that the ACL applies to"
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the view applies to"
+          },
+          "view_type": {
+            "type": "string",
+            "enum": [
+              "projects",
+              "logs",
+              "experiments",
+              "datasets",
+              "prompts",
+              "playgrounds",
+              "experiment",
+              "dataset",
+              null
+            ],
+            "description": "Type of table that the view corresponds to."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the view"
+          },
+          "view_data": {
+            "$ref": "#/components/schemas/ViewData"
+          },
+          "options": {
+            "$ref": "#/components/schemas/ViewOptions"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Identifies the user who created the view"
+          },
+          "deleted_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of role deletion, or null if the role is still active"
+          }
+        },
+        "required": [
+          "object_type",
+          "object_id",
+          "view_type",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "PatchView": {
+        "type": "object",
+        "properties": {
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "group",
+              "role",
+              "org_member",
+              "project_log",
+              "org_project",
+              null
+            ],
+            "description": "The object type that the ACL applies to"
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the view applies to"
+          },
+          "view_type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "projects",
+              "logs",
+              "experiments",
+              "datasets",
+              "prompts",
+              "playgrounds",
+              "experiment",
+              "dataset",
+              null
+            ],
+            "description": "Type of table that the view corresponds to."
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the view"
+          },
+          "view_data": {
+            "$ref": "#/components/schemas/ViewData"
+          },
+          "options": {
+            "$ref": "#/components/schemas/ViewOptions"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Identifies the user who created the view"
+          }
+        },
+        "required": [
+          "object_type",
+          "object_id"
+        ],
+        "additionalProperties": false
+      },
+      "DeleteView": {
+        "type": "object",
+        "properties": {
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "experiment",
+              "dataset",
+              "prompt",
+              "prompt_session",
+              "group",
+              "role",
+              "org_member",
+              "project_log",
+              "org_project",
+              null
+            ],
+            "description": "The object type that the ACL applies to"
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the view applies to"
+          }
+        },
+        "required": [
+          "object_type",
+          "object_id"
+        ],
+        "additionalProperties": false
+      },
       "CrossObjectInsertResponse": {
         "type": "object",
         "properties": {
@@ -5062,6 +5416,15 @@
         "name": "project_tag_id",
         "in": "path"
       },
+      "ViewId": {
+        "schema": {
+          "$ref": "#/components/schemas/ViewId"
+        },
+        "required": true,
+        "description": "View id",
+        "name": "view_id",
+        "in": "path"
+      },
       "ExperimentName": {
         "schema": {
           "$ref": "#/components/schemas/ExperimentName"
@@ -5149,6 +5512,16 @@
         "required": false,
         "description": "Name of the project_tag to search for",
         "name": "project_tag_name",
+        "in": "query",
+        "allowReserved": true
+      },
+      "ViewName": {
+        "schema": {
+          "$ref": "#/components/schemas/ViewName"
+        },
+        "required": false,
+        "description": "Name of the view to search for",
+        "name": "view_name",
         "in": "query",
         "allowReserved": true
       },
@@ -5279,6 +5652,15 @@
         "name": "slug",
         "in": "query",
         "allowReserved": true
+      },
+      "ViewType": {
+        "schema": {
+          "$ref": "#/components/schemas/ViewType"
+        },
+        "required": false,
+        "description": "Type of table that the view corresponds to.",
+        "name": "view_type",
+        "in": "query"
       },
       "UserGivenName": {
         "schema": {
@@ -16315,6 +16697,845 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/FunctionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/view": {
+      "post": {
+        "tags": [
+          "Views"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "postView",
+        "description": "Create a new view. If there is an existing view in the project with the same name as the one specified in the request, will return the existing view unmodified",
+        "summary": "Create view",
+        "requestBody": {
+          "description": "Any desired information about the new view object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateView"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new view object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Views"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "putView",
+        "description": "Create or replace view. If there is an existing view in the project with the same name as the one specified in the request, will replace the existing view with the provided fields",
+        "summary": "Create or replace view",
+        "requestBody": {
+          "description": "Any desired information about the new view object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateView"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new view object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getView",
+        "tags": [
+          "Views"
+        ],
+        "description": "List out all views. The views are sorted by creation date, with the most recently-created views coming first",
+        "summary": "List views",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/StartingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/EndingBefore"
+          },
+          {
+            "$ref": "#/components/parameters/ViewName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/AclObjectType"
+          },
+          {
+            "$ref": "#/components/parameters/AclObjectId"
+          },
+          {
+            "$ref": "#/components/parameters/ViewType"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of view objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/View"
+                      },
+                      "description": "A list of view objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsView",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/view`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/view/{view_id}": {
+      "get": {
+        "operationId": "getViewId",
+        "tags": [
+          "Views"
+        ],
+        "description": "Get a view object by its id",
+        "summary": "Get view",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ViewId"
+          },
+          {
+            "$ref": "#/components/parameters/AclObjectType"
+          },
+          {
+            "$ref": "#/components/parameters/AclObjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the view object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchViewId",
+        "tags": [
+          "Views"
+        ],
+        "description": "Partially update a view object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "summary": "Partially update view",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ViewId"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchView"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the view object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteViewId",
+        "tags": [
+          "Views"
+        ],
+        "description": "Delete a view object by its id",
+        "summary": "Delete view",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ViewId"
+          }
+        ],
+        "requestBody": {
+          "description": "Additional parameters for the delete operation",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteView"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the deleted view object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/View"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsViewId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/view/{view_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ViewId"
           }
         ],
         "responses": {
