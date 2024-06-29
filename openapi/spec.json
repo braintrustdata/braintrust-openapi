@@ -2119,6 +2119,14 @@
             "nullable": true,
             "format": "uuid",
             "description": "Identifies the user who created the dataset"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "User-controlled metadata about the dataset"
           }
         },
         "required": [
