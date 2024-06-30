@@ -2786,6 +2786,29 @@
                             "name",
                             "role"
                           ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "system",
+                                "user",
+                                "assistant",
+                                "function",
+                                "tool",
+                                "model"
+                              ]
+                            },
+                            "content": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          },
+                          "required": [
+                            "role"
+                          ]
                         }
                       ]
                     }
