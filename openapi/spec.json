@@ -2793,11 +2793,6 @@
                             "role": {
                               "type": "string",
                               "enum": [
-                                "system",
-                                "user",
-                                "assistant",
-                                "function",
-                                "tool",
                                 "model"
                               ]
                             },
