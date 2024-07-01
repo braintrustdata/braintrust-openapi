@@ -2786,6 +2786,24 @@
                             "name",
                             "role"
                           ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "model"
+                              ]
+                            },
+                            "content": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          },
+                          "required": [
+                            "role"
+                          ]
                         }
                       ]
                     }
@@ -2986,10 +3004,21 @@
                       "topK": {
                         "type": "number"
                       }
-                    },
-                    "required": [
-                      "temperature"
-                    ]
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "use_cache": {
+                        "type": "boolean"
+                      },
+                      "temperature": {
+                        "type": "number"
+                      },
+                      "topK": {
+                        "type": "number"
+                      }
+                    }
                   },
                   {
                     "type": "object",

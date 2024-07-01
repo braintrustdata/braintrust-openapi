@@ -2763,6 +2763,17 @@ components:
                         required:
                           - name
                           - role
+                      - type: object
+                        properties:
+                          role:
+                            type: string
+                            enum:
+                              - model
+                          content:
+                            type: string
+                            nullable: true
+                        required:
+                          - role
                 tools:
                   type: string
               required:
@@ -2884,8 +2895,14 @@ components:
                       type: number
                     topK:
                       type: number
-                  required:
-                    - temperature
+                - type: object
+                  properties:
+                    use_cache:
+                      type: boolean
+                    temperature:
+                      type: number
+                    topK:
+                      type: number
                 - type: object
                   properties:
                     use_cache:
