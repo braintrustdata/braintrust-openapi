@@ -2902,8 +2902,14 @@ components:
                       type: number
                     topK:
                       type: number
-                  required:
-                    - temperature
+                - type: object
+                  properties:
+                    use_cache:
+                      type: boolean
+                    temperature:
+                      type: number
+                    topK:
+                      type: number
                 - type: object
                   properties:
                     use_cache:
