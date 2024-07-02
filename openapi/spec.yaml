@@ -31,6 +31,10 @@ components:
         You can create an API key in the Braintrust [organization settings
         page](https://www.braintrustdata.com/app/settings?subroute=api-keys)."
   schemas:
+    ProjectId:
+      type: string
+      format: uuid
+      description: Project id
     ExperimentId:
       type: string
       format: uuid
@@ -39,18 +43,14 @@ components:
       type: string
       format: uuid
       description: Dataset id
-    ProjectId:
-      type: string
-      format: uuid
-      description: Project id
     PromptId:
       type: string
       format: uuid
       description: Prompt id
-    FunctionId:
+    PromptSessionId:
       type: string
       format: uuid
-      description: Function id
+      description: PromptSession id
     RoleId:
       type: string
       format: uuid
@@ -75,6 +75,10 @@ components:
       type: string
       format: uuid
       description: ProjectTag id
+    FunctionId:
+      type: string
+      format: uuid
+      description: Function id
     ViewId:
       type: string
       format: uuid
@@ -83,33 +87,42 @@ components:
       type: string
       format: uuid
       description: Organization id
+    ProjectName:
+      type: string
+      description: Name of the project to search for
     ExperimentName:
       type: string
       description: Name of the experiment to search for
     DatasetName:
       type: string
       description: Name of the dataset to search for
-    ProjectName:
-      type: string
-      description: Name of the project to search for
     PromptName:
       type: string
       description: Name of the prompt to search for
-    FunctionName:
+    PromptSessionName:
       type: string
-      description: Name of the function to search for
+      description: Name of the prompt_session to search for
     RoleName:
       type: string
       description: Name of the role to search for
     GroupName:
       type: string
       description: Name of the group to search for
+    AclName:
+      type: string
+      description: Name of the acl to search for
+    UserName:
+      type: string
+      description: Name of the user to search for
     ProjectScoreName:
       type: string
       description: Name of the project_score to search for
     ProjectTagName:
       type: string
       description: Name of the project_tag to search for
+    FunctionName:
+      type: string
+      description: Name of the function to search for
     ViewName:
       type: string
       description: Name of the view to search for
@@ -4822,6 +4835,13 @@ components:
             to insert
       additionalProperties: false
   parameters:
+    ProjectId:
+      schema:
+        $ref: "#/components/schemas/ProjectId"
+      required: true
+      description: Project id
+      name: project_id
+      in: path
     ExperimentId:
       schema:
         $ref: "#/components/schemas/ExperimentId"
@@ -4836,13 +4856,6 @@ components:
       description: Dataset id
       name: dataset_id
       in: path
-    ProjectId:
-      schema:
-        $ref: "#/components/schemas/ProjectId"
-      required: true
-      description: Project id
-      name: project_id
-      in: path
     PromptId:
       schema:
         $ref: "#/components/schemas/PromptId"
@@ -4850,12 +4863,12 @@ components:
       description: Prompt id
       name: prompt_id
       in: path
-    FunctionId:
+    PromptSessionId:
       schema:
-        $ref: "#/components/schemas/FunctionId"
+        $ref: "#/components/schemas/PromptSessionId"
       required: true
-      description: Function id
-      name: function_id
+      description: PromptSession id
+      name: prompt_session_id
       in: path
     RoleId:
       schema:
@@ -4899,6 +4912,13 @@ components:
       description: ProjectTag id
       name: project_tag_id
       in: path
+    FunctionId:
+      schema:
+        $ref: "#/components/schemas/FunctionId"
+      required: true
+      description: Function id
+      name: function_id
+      in: path
     ViewId:
       schema:
         $ref: "#/components/schemas/ViewId"
@@ -4913,6 +4933,14 @@ components:
       description: Organization id
       name: organization_id
       in: path
+    ProjectName:
+      schema:
+        $ref: "#/components/schemas/ProjectName"
+      required: false
+      description: Name of the project to search for
+      name: project_name
+      in: query
+      allowReserved: true
     ExperimentName:
       schema:
         $ref: "#/components/schemas/ExperimentName"
@@ -4929,14 +4957,6 @@ components:
       name: dataset_name
       in: query
       allowReserved: true
-    ProjectName:
-      schema:
-        $ref: "#/components/schemas/ProjectName"
-      required: false
-      description: Name of the project to search for
-      name: project_name
-      in: query
-      allowReserved: true
     PromptName:
       schema:
         $ref: "#/components/schemas/PromptName"
@@ -4945,12 +4965,12 @@ components:
       name: prompt_name
       in: query
       allowReserved: true
-    FunctionName:
+    PromptSessionName:
       schema:
-        $ref: "#/components/schemas/FunctionName"
+        $ref: "#/components/schemas/PromptSessionName"
       required: false
-      description: Name of the function to search for
-      name: function_name
+      description: Name of the prompt_session to search for
+      name: prompt_session_name
       in: query
       allowReserved: true
     RoleName:
@@ -4969,6 +4989,22 @@ components:
       name: group_name
       in: query
       allowReserved: true
+    AclName:
+      schema:
+        $ref: "#/components/schemas/AclName"
+      required: false
+      description: Name of the acl to search for
+      name: acl_name
+      in: query
+      allowReserved: true
+    UserName:
+      schema:
+        $ref: "#/components/schemas/UserName"
+      required: false
+      description: Name of the user to search for
+      name: user_name
+      in: query
+      allowReserved: true
     ProjectScoreName:
       schema:
         $ref: "#/components/schemas/ProjectScoreName"
@@ -4983,6 +5019,14 @@ components:
       required: false
       description: Name of the project_tag to search for
       name: project_tag_name
+      in: query
+      allowReserved: true
+    FunctionName:
+      schema:
+        $ref: "#/components/schemas/FunctionName"
+      required: false
+      description: Name of the function to search for
+      name: function_name
       in: query
       allowReserved: true
     ViewName:
@@ -5293,79 +5337,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    put:
-      tags:
-        - Projects
-      security:
-        - bearerAuth: []
-        - {}
-      operationId: putProject
-      description: "NOTE: This operation is deprecated and will be removed in a future
-        revision of the API. Create or replace a new project. If there is an
-        existing project with the same name as the one specified in the request,
-        will return the existing project unmodified"
-      summary: DEPRECATED. Create or replace project
-      requestBody:
-        description: Any desired information about the new project object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateProject"
-      responses:
-        "200":
-          description: Returns the new project object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Project"
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "401":
-          description: No valid API key provided
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "403":
-          description: The API key doesn’t have permissions to perform the request
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "429":
-          description: Too many requests hit the API too quickly. We recommend an
-            exponential backoff of your requests
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "500":
-          description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
     get:
       operationId: getProject
       tags:
@@ -5380,9 +5351,9 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of project objects
@@ -6206,80 +6177,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    put:
-      tags:
-        - Experiments
-      security:
-        - bearerAuth: []
-        - {}
-      operationId: putExperiment
-      description: "NOTE: This operation is deprecated and will be removed in a future
-        revision of the API. Create or replace a new experiment. If there is an
-        existing experiment in the project with the same name as the one
-        specified in the request, will return the existing experiment
-        unmodified"
-      summary: DEPRECATED. Create or replace experiment
-      requestBody:
-        description: Any desired information about the new experiment object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateExperiment"
-      responses:
-        "200":
-          description: Returns the new experiment object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Experiment"
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "401":
-          description: No valid API key provided
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "403":
-          description: The API key doesn’t have permissions to perform the request
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "429":
-          description: Too many requests hit the API too quickly. We recommend an
-            exponential backoff of your requests
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "500":
-          description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
     get:
       operationId: getExperiment
       tags:
@@ -6294,10 +6191,10 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ExperimentName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of experiment objects
@@ -7227,79 +7124,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    put:
-      tags:
-        - Datasets
-      security:
-        - bearerAuth: []
-        - {}
-      operationId: putDataset
-      description: "NOTE: This operation is deprecated and will be removed in a future
-        revision of the API. Create or replace a new dataset. If there is an
-        existing dataset in the project with the same name as the one specified
-        in the request, will return the existing dataset unmodified"
-      summary: DEPRECATED. Create or replace dataset
-      requestBody:
-        description: Any desired information about the new dataset object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateDataset"
-      responses:
-        "200":
-          description: Returns the new dataset object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Dataset"
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "401":
-          description: No valid API key provided
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "403":
-          description: The API key doesn’t have permissions to perform the request
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "429":
-          description: Too many requests hit the API too quickly. We recommend an
-            exponential backoff of your requests
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "500":
-          description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
     get:
       operationId: getDataset
       tags:
@@ -7314,10 +7138,10 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/DatasetName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of dataset objects
@@ -8332,12 +8156,12 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/PromptName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/Slug"
         - $ref: "#/components/parameters/Version (prompt)"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of prompt objects
@@ -8871,11 +8695,10 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putRole
-      description: "NOTE: This operation is deprecated and will be removed in a future
-        revision of the API. Create or replace a new role. If there is an
-        existing role with the same name as the one specified in the request,
-        will return the existing role unmodified"
-      summary: DEPRECATED. Create or replace role
+      description: Create or replace role. If there is an existing role with the same
+        name as the one specified in the request, will replace the existing role
+        with the provided fields
+      summary: Create or replace role
       requestBody:
         description: Any desired information about the new role object
         required: true
@@ -8951,9 +8774,9 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/RoleName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of role objects
@@ -9379,11 +9202,10 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putGroup
-      description: "NOTE: This operation is deprecated and will be removed in a future
-        revision of the API. Create or replace a new group. If there is an
-        existing group with the same name as the one specified in the request,
-        will return the existing group unmodified"
-      summary: DEPRECATED. Create or replace group
+      description: Create or replace group. If there is an existing group with the
+        same name as the one specified in the request, will replace the existing
+        group with the provided fields
+      summary: Create or replace group
       requestBody:
         description: Any desired information about the new group object
         required: true
@@ -9459,9 +9281,9 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/GroupName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of group objects
@@ -9815,83 +9637,10 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postAcl
-      description: Create a new acl. If there is an existing acl with the same
-        contents as the one specified in the request, will return the existing
-        acl unmodified
+      description: Create a new acl. If there is an existing acl with the same name as
+        the one specified in the request, will return the existing acl
+        unmodified
       summary: Create acl
-      requestBody:
-        description: Any desired information about the new acl object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateAcl"
-      responses:
-        "200":
-          description: Returns the new acl object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Acl"
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "401":
-          description: No valid API key provided
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "403":
-          description: The API key doesn’t have permissions to perform the request
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "429":
-          description: Too many requests hit the API too quickly. We recommend an
-            exponential backoff of your requests
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "500":
-          description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    put:
-      tags:
-        - Acls
-      security:
-        - bearerAuth: []
-        - {}
-      operationId: putAcl
-      description: "NOTE: This operation is deprecated and will be removed in a future
-        revision of the API. Create or replace a new acl. If there is an
-        existing acl with the same contents as the one specified in the request,
-        will return the existing acl unmodified"
-      summary: DEPRECATED. Create or replace acl
       requestBody:
         description: Any desired information about the new acl object
         required: true
@@ -9967,6 +9716,8 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/AclName"
         - $ref: "#/components/parameters/AclObjectType"
         - $ref: "#/components/parameters/AclObjectId"
       responses:
@@ -10254,11 +10005,12 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/UserName"
         - $ref: "#/components/parameters/UserGivenName"
         - $ref: "#/components/parameters/UserFamilyName"
         - $ref: "#/components/parameters/UserEmail"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of user objects
@@ -10625,10 +10377,10 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ProjectScoreName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of project_score objects
@@ -11133,10 +10885,10 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ProjectTagName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of project_tag objects
@@ -11641,12 +11393,12 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/FunctionName"
         - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/Slug"
         - $ref: "#/components/parameters/Version (prompt)"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of function objects
@@ -12259,13 +12011,12 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ViewName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/ViewType"
         - $ref: "#/components/parameters/AclObjectType"
         - $ref: "#/components/parameters/AclObjectId"
-        - $ref: "#/components/parameters/ViewType"
-        - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of view objects
@@ -12635,9 +12386,9 @@ paths:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/OrganizationName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/Ids"
       responses:
         "200":
           description: Returns a list of organization objects
