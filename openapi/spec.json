@@ -121,14 +121,6 @@
         "type": "string",
         "description": "Name of the group to search for"
       },
-      "AclName": {
-        "type": "string",
-        "description": "Name of the acl to search for"
-      },
-      "UserName": {
-        "type": "string",
-        "description": "Name of the user to search for"
-      },
       "ProjectScoreName": {
         "type": "string",
         "description": "Name of the project_score to search for"
@@ -5625,26 +5617,6 @@
         "required": false,
         "description": "Name of the group to search for",
         "name": "group_name",
-        "in": "query",
-        "allowReserved": true
-      },
-      "AclName": {
-        "schema": {
-          "$ref": "#/components/schemas/AclName"
-        },
-        "required": false,
-        "description": "Name of the acl to search for",
-        "name": "acl_name",
-        "in": "query",
-        "allowReserved": true
-      },
-      "UserName": {
-        "schema": {
-          "$ref": "#/components/schemas/UserName"
-        },
-        "required": false,
-        "description": "Name of the user to search for",
-        "name": "user_name",
         "in": "query",
         "allowReserved": true
       },
@@ -12920,7 +12892,7 @@
           {}
         ],
         "operationId": "postAcl",
-        "description": "Create a new acl. If there is an existing acl with the same name as the one specified in the request, will return the existing acl unmodified",
+        "description": "Create a new acl. If there is an existing acl with the same contents as the one specified in the request, will return the existing acl unmodified",
         "summary": "Create acl",
         "requestBody": {
           "description": "Any desired information about the new acl object",
@@ -13046,9 +13018,6 @@
           },
           {
             "$ref": "#/components/parameters/Ids"
-          },
-          {
-            "$ref": "#/components/parameters/AclName"
           },
           {
             "$ref": "#/components/parameters/AclObjectType"
@@ -13518,9 +13487,6 @@
           },
           {
             "$ref": "#/components/parameters/Ids"
-          },
-          {
-            "$ref": "#/components/parameters/UserName"
           },
           {
             "$ref": "#/components/parameters/UserGivenName"
