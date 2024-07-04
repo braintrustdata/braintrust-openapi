@@ -2811,12 +2811,12 @@
                               ]
                             },
                             "tool_call_id": {
-                              "type": "string"
+                              "type": "string",
+                              "default": ""
                             }
                           },
                           "required": [
-                            "role",
-                            "tool_call_id"
+                            "role"
                           ]
                         },
                         {

@@ -2790,9 +2790,9 @@ components:
                               - tool
                           tool_call_id:
                             type: string
+                            default: ""
                         required:
                           - role
-                          - tool_call_id
                       - type: object
                         properties:
                           content:
