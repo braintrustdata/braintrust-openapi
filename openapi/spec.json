@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "version": "1.0.0",
-    "title": "Braintrust Data API",
-    "description": "API specification for the backend data server. The API is hosted globally at\nhttps://api.braintrustdata.com or in your own environment. The v1 API is currently in\npreview mode and unstable until June 1, 2024. We may make backwards incompatible\nchanges before then, as we learn from our users.\n\nYou can access the OpenAPI spec for this API at https://github.com/braintrustdata/braintrust-openapi.\n",
+    "title": "Braintrust API",
+    "description": "API specification for the backend data server. The API is hosted globally at\nhttps://api.braintrustdata.com or in your own environment.\n\nYou can access the OpenAPI spec for this API at https://github.com/braintrustdata/braintrust-openapi.",
     "license": {
       "name": "Apache 2.0"
     }
