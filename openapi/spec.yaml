@@ -4479,14 +4479,12 @@ components:
           nullable: true
           items:
             nullable: true
-      additionalProperties: false
     ViewData:
       type: object
       nullable: true
       properties:
         search:
           $ref: "#/components/schemas/ViewDataSearch"
-      additionalProperties: false
       description: The view definition
     ViewOptions:
       type: object
@@ -4507,7 +4505,6 @@ components:
           nullable: true
           additionalProperties:
             type: number
-      additionalProperties: false
       description: Options for the view in the app
     View:
       type: object
