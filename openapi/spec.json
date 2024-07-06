@@ -4983,8 +4983,7 @@
               "nullable": true
             }
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ViewData": {
         "type": "object",
@@ -4994,7 +4993,6 @@
             "$ref": "#/components/schemas/ViewDataSearch"
           }
         },
-        "additionalProperties": false,
         "description": "The view definition"
       },
       "ViewOptions": {
@@ -5023,7 +5021,6 @@
             }
           }
         },
-        "additionalProperties": false,
         "description": "Options for the view in the app"
       },
       "View": {
