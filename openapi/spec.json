@@ -5907,7 +5907,7 @@
         "summary": "Create project",
         "requestBody": {
           "description": "Any desired information about the new project object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -6323,7 +6323,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -6610,7 +6610,7 @@
         ],
         "requestBody": {
           "description": "An array of project logs events to insert",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -6791,7 +6791,7 @@
         ],
         "requestBody": {
           "description": "Filters for the fetch query",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -7090,7 +7090,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -7259,7 +7259,7 @@
         "summary": "Create experiment",
         "requestBody": {
           "description": "Any desired information about the new experiment object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -7678,7 +7678,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -7965,7 +7965,7 @@
         ],
         "requestBody": {
           "description": "An array of experiment events to insert",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -8146,7 +8146,7 @@
         ],
         "requestBody": {
           "description": "Filters for the fetch query",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -8445,7 +8445,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -8789,7 +8789,7 @@
         "summary": "Create dataset",
         "requestBody": {
           "description": "Any desired information about the new dataset object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -9208,7 +9208,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -9495,7 +9495,7 @@
         ],
         "requestBody": {
           "description": "An array of dataset events to insert",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -9676,7 +9676,7 @@
         ],
         "requestBody": {
           "description": "Filters for the fetch query",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -9975,7 +9975,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -10316,7 +10316,7 @@
         "summary": "Create prompt",
         "requestBody": {
           "description": "Any desired information about the new prompt object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -10428,7 +10428,7 @@
         "summary": "Create or replace prompt",
         "requestBody": {
           "description": "Any desired information about the new prompt object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -10853,7 +10853,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -11140,7 +11140,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -11309,7 +11309,7 @@
         "summary": "Create role",
         "requestBody": {
           "description": "Any desired information about the new role object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -11421,7 +11421,7 @@
         "summary": "Create or replace role",
         "requestBody": {
           "description": "Any desired information about the new role object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -11837,7 +11837,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -12119,7 +12119,7 @@
         "summary": "Create group",
         "requestBody": {
           "description": "Any desired information about the new group object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -12231,7 +12231,7 @@
         "summary": "Create or replace group",
         "requestBody": {
           "description": "Any desired information about the new group object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -12647,7 +12647,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -12929,7 +12929,7 @@
         "summary": "Create acl",
         "requestBody": {
           "description": "Any desired information about the new acl object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -13879,7 +13879,7 @@
         "summary": "Create project_score",
         "requestBody": {
           "description": "Any desired information about the new project_score object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -13991,7 +13991,7 @@
         "summary": "Create or replace project_score",
         "requestBody": {
           "description": "Any desired information about the new project_score object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -14410,7 +14410,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -14692,7 +14692,7 @@
         "summary": "Create project_tag",
         "requestBody": {
           "description": "Any desired information about the new project_tag object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -14804,7 +14804,7 @@
         "summary": "Create or replace project_tag",
         "requestBody": {
           "description": "Any desired information about the new project_tag object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -15223,7 +15223,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -15505,7 +15505,7 @@
         "summary": "Create function",
         "requestBody": {
           "description": "Any desired information about the new function object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -15617,7 +15617,7 @@
         "summary": "Create or replace function",
         "requestBody": {
           "description": "Any desired information about the new function object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -16042,7 +16042,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -16329,7 +16329,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -16498,7 +16498,7 @@
         "summary": "Create view",
         "requestBody": {
           "description": "Any desired information about the new view object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -16610,7 +16610,7 @@
         "summary": "Create or replace view",
         "requestBody": {
           "description": "Any desired information about the new view object",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -17041,7 +17041,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -17158,7 +17158,7 @@
         ],
         "requestBody": {
           "description": "Additional parameters for the delete operation",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -17638,7 +17638,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
@@ -18029,7 +18029,7 @@
         ],
         "requestBody": {
           "description": "A mapping from event object type -> object id -> events to insert",
-          "required": true,
+          "required": false,
           "content": {
             "application/json": {
               "schema": {
