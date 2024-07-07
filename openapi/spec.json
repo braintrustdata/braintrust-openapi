@@ -6323,7 +6323,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -6791,7 +6791,7 @@
         ],
         "requestBody": {
           "description": "Filters for the fetch query",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -7678,7 +7678,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -8146,7 +8146,7 @@
         ],
         "requestBody": {
           "description": "Filters for the fetch query",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -9208,7 +9208,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -9676,7 +9676,7 @@
         ],
         "requestBody": {
           "description": "Filters for the fetch query",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -10853,7 +10853,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -11837,7 +11837,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -12647,7 +12647,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -14410,7 +14410,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -15223,7 +15223,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -16042,7 +16042,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -17638,7 +17638,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -18029,7 +18029,7 @@
         ],
         "requestBody": {
           "description": "A mapping from event object type -> object id -> events to insert",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {

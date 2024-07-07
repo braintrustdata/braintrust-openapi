@@ -5535,7 +5535,7 @@ paths:
         - $ref: "#/components/parameters/ProjectId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -5826,7 +5826,7 @@ paths:
         - $ref: "#/components/parameters/ProjectId"
       requestBody:
         description: Filters for the fetch query
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -6376,7 +6376,7 @@ paths:
         - $ref: "#/components/parameters/ExperimentId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -6667,7 +6667,7 @@ paths:
         - $ref: "#/components/parameters/ExperimentId"
       requestBody:
         description: Filters for the fetch query
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -7323,7 +7323,7 @@ paths:
         - $ref: "#/components/parameters/DatasetId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -7614,7 +7614,7 @@ paths:
         - $ref: "#/components/parameters/DatasetId"
       requestBody:
         description: Filters for the fetch query
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -8343,7 +8343,7 @@ paths:
         - $ref: "#/components/parameters/PromptId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -8958,7 +8958,7 @@ paths:
         - $ref: "#/components/parameters/RoleId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -9465,7 +9465,7 @@ paths:
         - $ref: "#/components/parameters/GroupId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -10560,7 +10560,7 @@ paths:
         - $ref: "#/components/parameters/ProjectScoreId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -11068,7 +11068,7 @@ paths:
         - $ref: "#/components/parameters/ProjectTagId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -11578,7 +11578,7 @@ paths:
         - $ref: "#/components/parameters/FunctionId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -12568,7 +12568,7 @@ paths:
         - $ref: "#/components/parameters/OrganizationId"
       requestBody:
         description: Fields to update
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -12814,7 +12814,7 @@ paths:
         - bearerAuth: []
       requestBody:
         description: A mapping from event object type -> object id -> events to insert
-        required: false
+        required: true
         content:
           application/json:
             schema:
