@@ -315,8 +315,7 @@
           "id",
           "org_id",
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "CreateProject": {
         "type": "object",
@@ -333,8 +332,7 @@
         },
         "required": [
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchProject": {
         "type": "object",
@@ -356,8 +354,7 @@
             },
             "description": "Project settings. Patch operations replace all settings, so make sure you include all settings you want to keep."
           }
-        },
-        "additionalProperties": false
+        }
       },
       "InsertEventsResponse": {
         "type": "object",
@@ -372,8 +369,7 @@
         },
         "required": [
           "row_ids"
-        ],
-        "additionalProperties": false
+        ]
       },
       "InsertProjectLogsEventReplace": {
         "type": "object",
@@ -536,8 +532,7 @@
             "nullable": true,
             "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
           }
-        },
-        "additionalProperties": false
+        }
       },
       "InsertProjectLogsEventMerge": {
         "type": "object",
@@ -707,8 +702,7 @@
         },
         "required": [
           "_is_merge"
-        ],
-        "additionalProperties": false
+        ]
       },
       "InsertProjectLogsEvent": {
         "anyOf": [
@@ -734,8 +728,7 @@
         },
         "required": [
           "events"
-        ],
-        "additionalProperties": false
+        ]
       },
       "ProjectLogsEvent": {
         "type": "object",
@@ -926,8 +919,7 @@
           "log_id",
           "span_id",
           "root_span_id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FetchProjectLogsEventsResponse": {
         "type": "object",
@@ -947,8 +939,7 @@
         },
         "required": [
           "events"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PathLookupFilter": {
         "type": "object",
@@ -976,7 +967,6 @@
           "type",
           "path"
         ],
-        "additionalProperties": false,
         "description": "A path-lookup filter describes an equality comparison against a specific sub-field in the event row. For instance, if you wish to filter on the value of `c` in `{\"input\": {\"a\": {\"b\": {\"c\": \"hello\"}}}}`, pass `path=[\"input\", \"a\", \"b\", \"c\"]` and `value=\"hello\"`"
       },
       "FetchEventsFilters": {
@@ -1019,8 +1009,7 @@
             "nullable": true,
             "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
           }
-        },
-        "additionalProperties": false
+        }
       },
       "FeedbackProjectLogsItem": {
         "type": "object",
@@ -1071,8 +1060,7 @@
         },
         "required": [
           "id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FeedbackProjectLogsEventRequest": {
         "type": "object",
@@ -1087,8 +1075,7 @@
         },
         "required": [
           "feedback"
-        ],
-        "additionalProperties": false
+        ]
       },
       "RepoInfo": {
         "type": "object",
@@ -1140,7 +1127,6 @@
             "description": "If the repo was dirty when run, this includes the diff between the current state of the repo and the most recent commit."
           }
         },
-        "additionalProperties": false,
         "description": "Metadata about the state of the repo when the experiment was created"
       },
       "Experiment": {
@@ -1226,8 +1212,7 @@
           "project_id",
           "name",
           "public"
-        ],
-        "additionalProperties": false
+        ]
       },
       "CreateExperiment": {
         "type": "object",
@@ -1288,8 +1273,7 @@
         },
         "required": [
           "project_id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchExperiment": {
         "type": "object",
@@ -1337,8 +1321,7 @@
             },
             "description": "User-controlled metadata about the experiment"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "InsertExperimentEventReplace": {
         "type": "object",
@@ -1506,8 +1489,7 @@
             "nullable": true,
             "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
           }
-        },
-        "additionalProperties": false
+        }
       },
       "InsertExperimentEventMerge": {
         "type": "object",
@@ -1682,8 +1664,7 @@
         },
         "required": [
           "_is_merge"
-        ],
-        "additionalProperties": false
+        ]
       },
       "InsertExperimentEvent": {
         "anyOf": [
@@ -1709,8 +1690,7 @@
         },
         "required": [
           "events"
-        ],
-        "additionalProperties": false
+        ]
       },
       "ExperimentEvent": {
         "type": "object",
@@ -1898,8 +1878,7 @@
           "experiment_id",
           "span_id",
           "root_span_id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FetchExperimentEventsResponse": {
         "type": "object",
@@ -1919,8 +1898,7 @@
         },
         "required": [
           "events"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FeedbackExperimentItem": {
         "type": "object",
@@ -1971,8 +1949,7 @@
         },
         "required": [
           "id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FeedbackExperimentEventRequest": {
         "type": "object",
@@ -1987,8 +1964,7 @@
         },
         "required": [
           "feedback"
-        ],
-        "additionalProperties": false
+        ]
       },
       "ScoreSummary": {
         "type": "object",
@@ -2026,7 +2002,6 @@
           "improvements",
           "regressions"
         ],
-        "additionalProperties": false,
         "description": "Summary of a score's performance"
       },
       "MetricSummary": {
@@ -2066,7 +2041,6 @@
           "improvements",
           "regressions"
         ],
-        "additionalProperties": false,
         "description": "Summary of a metric's performance"
       },
       "SummarizeExperimentResponse": {
@@ -2118,7 +2092,6 @@
           "project_url",
           "experiment_url"
         ],
-        "additionalProperties": false,
         "description": "Summary of an experiment"
       },
       "Dataset": {
@@ -2174,8 +2147,7 @@
         "required": [
           "id",
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "CreateDataset": {
         "type": "object",
@@ -2198,8 +2170,7 @@
         },
         "required": [
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchDataset": {
         "type": "object",
@@ -2214,8 +2185,7 @@
             "nullable": true,
             "description": "Textual description of the dataset"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "InsertDatasetEventReplace": {
         "type": "object",
@@ -2274,8 +2244,7 @@
             "nullable": true,
             "description": "Use the `_parent_id` field to create this row as a subspan of an existing row. It cannot be specified alongside `_is_merge=true`. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row."
           }
-        },
-        "additionalProperties": false
+        }
       },
       "InsertDatasetEventMerge": {
         "type": "object",
@@ -2341,8 +2310,7 @@
         },
         "required": [
           "_is_merge"
-        ],
-        "additionalProperties": false
+        ]
       },
       "InsertDatasetEvent": {
         "anyOf": [
@@ -2368,8 +2336,7 @@
         },
         "required": [
           "events"
-        ],
-        "additionalProperties": false
+        ]
       },
       "DatasetEvent": {
         "type": "object",
@@ -2440,8 +2407,7 @@
           "dataset_id",
           "span_id",
           "root_span_id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FetchDatasetEventsResponse": {
         "type": "object",
@@ -2461,8 +2427,7 @@
         },
         "required": [
           "events"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FeedbackDatasetItem": {
         "type": "object",
@@ -2498,8 +2463,7 @@
         },
         "required": [
           "id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FeedbackDatasetEventRequest": {
         "type": "object",
@@ -2514,8 +2478,7 @@
         },
         "required": [
           "feedback"
-        ],
-        "additionalProperties": false
+        ]
       },
       "DataSummary": {
         "type": "object",
@@ -2530,7 +2493,6 @@
         "required": [
           "total_records"
         ],
-        "additionalProperties": false,
         "description": "Summary of a dataset's data"
       },
       "SummarizeDatasetResponse": {
@@ -2564,7 +2526,6 @@
           "project_url",
           "dataset_url"
         ],
-        "additionalProperties": false,
         "description": "Summary of a dataset"
       },
       "PromptData": {
@@ -2589,8 +2550,7 @@
                 "required": [
                   "type",
                   "content"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -2869,8 +2829,7 @@
                 "required": [
                   "type",
                   "messages"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -2922,8 +2881,7 @@
                         },
                         "required": [
                           "type"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "tool_choice": {
                         "anyOf": [
@@ -2990,8 +2948,7 @@
                             },
                             "required": [
                               "name"
-                            ],
-                            "additionalProperties": false
+                            ]
                           }
                         ]
                       },
@@ -3102,11 +3059,9 @@
               "prompt_version": {
                 "type": "string"
               }
-            },
-            "additionalProperties": false
+            }
           }
         },
-        "additionalProperties": false,
         "description": "The prompt, model, and its parameters"
       },
       "Prompt": {
@@ -3185,8 +3140,7 @@
           "org_id",
           "name",
           "slug"
-        ],
-        "additionalProperties": false
+        ]
       },
       "CreatePrompt": {
         "type": "object",
@@ -3225,8 +3179,7 @@
           "project_id",
           "name",
           "slug"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchPrompt": {
         "type": "object",
@@ -3252,8 +3205,7 @@
             },
             "description": "A list of tags for the prompt"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "FeedbackPromptItem": {
         "type": "object",
@@ -3289,8 +3241,7 @@
         },
         "required": [
           "id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FeedbackPromptEventRequest": {
         "type": "object",
@@ -3305,8 +3256,7 @@
         },
         "required": [
           "feedback"
-        ],
-        "additionalProperties": false
+        ]
       },
       "Role": {
         "type": "object",
@@ -3392,8 +3342,7 @@
               },
               "required": [
                 "permission"
-              ],
-              "additionalProperties": false
+              ]
             },
             "description": "(permission, restrict_object_type) tuples which belong to this role"
           },
@@ -3411,7 +3360,6 @@
           "id",
           "name"
         ],
-        "additionalProperties": false,
         "description": "A role is a collection of permissions which can be granted as part of an ACL\n\nRoles can consist of individual permissions, as well as a set of roles they inherit from"
       },
       "CreateRole": {
@@ -3469,8 +3417,7 @@
               },
               "required": [
                 "permission"
-              ],
-              "additionalProperties": false
+              ]
             },
             "description": "(permission, restrict_object_type) tuples which belong to this role"
           },
@@ -3491,8 +3438,7 @@
         },
         "required": [
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchRole": {
         "type": "object",
@@ -3550,8 +3496,7 @@
               },
               "required": [
                 "permission"
-              ],
-              "additionalProperties": false
+              ]
             },
             "description": "A list of permissions to add to the role"
           },
@@ -3598,8 +3543,7 @@
               },
               "required": [
                 "permission"
-              ],
-              "additionalProperties": false
+              ]
             },
             "description": "A list of permissions to remove from the role"
           },
@@ -3621,8 +3565,7 @@
             },
             "description": "A list of role IDs to remove from the role's inheriting-from set"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "Group": {
         "type": "object",
@@ -3688,7 +3631,6 @@
           "org_id",
           "name"
         ],
-        "additionalProperties": false,
         "description": "A group is a collection of users which can be assigned an ACL\n\nGroups can consist of individual users, as well as a set of groups they inherit from"
       },
       "CreateGroup": {
@@ -3729,8 +3671,7 @@
         },
         "required": [
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchGroup": {
         "type": "object",
@@ -3781,8 +3722,7 @@
             },
             "description": "A list of group IDs to remove from the group's inheriting-from set"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "Acl": {
         "type": "object",
@@ -3886,7 +3826,6 @@
           "object_id",
           "_object_org_id"
         ],
-        "additionalProperties": false,
         "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
       },
       "CreateAcl": {
@@ -3973,7 +3912,6 @@
           "object_type",
           "object_id"
         ],
-        "additionalProperties": false,
         "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
       },
       "User": {
@@ -4013,8 +3951,7 @@
         },
         "required": [
           "id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "ProjectScoreCategory": {
         "type": "object",
@@ -4123,8 +4060,12 @@
                   null
                 ]
               }
-            },
-            "additionalProperties": false
+            }
+          },
+          "position": {
+            "type": "string",
+            "nullable": true,
+            "description": "An optional LexoRank-based string that sets the sort position for the score in the UI"
           }
         },
         "required": [
@@ -4134,7 +4075,6 @@
           "name",
           "score_type"
         ],
-        "additionalProperties": false,
         "description": "A project score is a user-configured score, which can be manually-labeled through the UI"
       },
       "CreateProjectScore": {
@@ -4200,8 +4140,7 @@
           "project_id",
           "name",
           "score_type"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchProjectScore": {
         "type": "object",
@@ -4258,8 +4197,7 @@
               }
             ]
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ProjectTag": {
         "type": "object",
@@ -4305,7 +4243,6 @@
           "user_id",
           "name"
         ],
-        "additionalProperties": false,
         "description": "A project tag is a user-configured tag for tracking and filtering your experiments, logs, and other data"
       },
       "CreateProjectTag": {
@@ -4334,8 +4271,7 @@
         "required": [
           "project_id",
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchProjectTag": {
         "type": "object",
@@ -4355,8 +4291,7 @@
             "nullable": true,
             "description": "Color of the tag for the UI"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "Function": {
         "type": "object",
@@ -4439,8 +4374,7 @@
                 },
                 "required": [
                   "type"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -4470,8 +4404,7 @@
                         "required": [
                           "runtime",
                           "version"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "location": {
                         "type": "object",
@@ -4502,8 +4435,7 @@
                                 },
                                 "required": [
                                   "score"
-                                ],
-                                "additionalProperties": false
+                                ]
                               }
                             ]
                           }
@@ -4512,8 +4444,7 @@
                           "type",
                           "eval_name",
                           "position"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "bundle_id": {
                         "type": "string"
@@ -4523,15 +4454,13 @@
                       "runtime_context",
                       "location",
                       "bundle_id"
-                    ],
-                    "additionalProperties": false
+                    ]
                   }
                 },
                 "required": [
                   "type",
                   "data"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -4549,8 +4478,7 @@
                 "required": [
                   "type",
                   "name"
-                ],
-                "additionalProperties": false
+                ]
               }
             ]
           }
@@ -4564,8 +4492,7 @@
           "name",
           "slug",
           "function_data"
-        ],
-        "additionalProperties": false
+        ]
       },
       "CreateFunction": {
         "type": "object",
@@ -4613,8 +4540,7 @@
                 },
                 "required": [
                   "type"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -4644,8 +4570,7 @@
                         "required": [
                           "runtime",
                           "version"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "location": {
                         "type": "object",
@@ -4676,8 +4601,7 @@
                                 },
                                 "required": [
                                   "score"
-                                ],
-                                "additionalProperties": false
+                                ]
                               }
                             ]
                           }
@@ -4686,8 +4610,7 @@
                           "type",
                           "eval_name",
                           "position"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "bundle_id": {
                         "type": "string"
@@ -4697,15 +4620,13 @@
                       "runtime_context",
                       "location",
                       "bundle_id"
-                    ],
-                    "additionalProperties": false
+                    ]
                   }
                 },
                 "required": [
                   "type",
                   "data"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -4723,8 +4644,7 @@
                 "required": [
                   "type",
                   "name"
-                ],
-                "additionalProperties": false
+                ]
               }
             ]
           }
@@ -4734,8 +4654,7 @@
           "name",
           "slug",
           "function_data"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchFunction": {
         "type": "object",
@@ -4767,8 +4686,7 @@
                 },
                 "required": [
                   "type"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -4798,8 +4716,7 @@
                         "required": [
                           "runtime",
                           "version"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "location": {
                         "type": "object",
@@ -4830,8 +4747,7 @@
                                 },
                                 "required": [
                                   "score"
-                                ],
-                                "additionalProperties": false
+                                ]
                               }
                             ]
                           }
@@ -4840,8 +4756,7 @@
                           "type",
                           "eval_name",
                           "position"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "bundle_id": {
                         "type": "string"
@@ -4851,15 +4766,13 @@
                       "runtime_context",
                       "location",
                       "bundle_id"
-                    ],
-                    "additionalProperties": false
+                    ]
                   }
                 },
                 "required": [
                   "type",
                   "data"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -4877,8 +4790,7 @@
                 "required": [
                   "type",
                   "name"
-                ],
-                "additionalProperties": false
+                ]
               },
               {
                 "type": "object",
@@ -4895,8 +4807,7 @@
             },
             "description": "A list of tags for the prompt"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "FeedbackFunctionItem": {
         "type": "object",
@@ -4932,8 +4843,7 @@
         },
         "required": [
           "id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "FeedbackFunctionEventRequest": {
         "type": "object",
@@ -4948,8 +4858,7 @@
         },
         "required": [
           "feedback"
-        ],
-        "additionalProperties": false
+        ]
       },
       "ViewDataSearch": {
         "type": "object",
@@ -5104,8 +5013,7 @@
           "object_id",
           "view_type",
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "CreateView": {
         "type": "object",
@@ -5176,8 +5084,7 @@
           "object_id",
           "view_type",
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchView": {
         "type": "object",
@@ -5242,8 +5149,7 @@
         "required": [
           "object_type",
           "object_id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "DeleteView": {
         "type": "object",
@@ -5275,8 +5181,7 @@
         "required": [
           "object_type",
           "object_id"
-        ],
-        "additionalProperties": false
+        ]
       },
       "Organization": {
         "type": "object",
@@ -5312,8 +5217,7 @@
         "required": [
           "id",
           "name"
-        ],
-        "additionalProperties": false
+        ]
       },
       "PatchOrganization": {
         "type": "object",
@@ -5335,8 +5239,7 @@
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CrossObjectInsertResponse": {
         "type": "object",
@@ -5365,8 +5268,7 @@
             },
             "description": "A mapping from project id to row ids for inserted `events`"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "CrossObjectInsertRequest": {
         "type": "object",
@@ -5393,8 +5295,7 @@
                   },
                   "description": "A list of experiment feedback items"
                 }
-              },
-              "additionalProperties": false
+              }
             },
             "description": "A mapping from experiment id to a set of log events and feedback items to insert"
           },
@@ -5420,8 +5321,7 @@
                   },
                   "description": "A list of dataset feedback items"
                 }
-              },
-              "additionalProperties": false
+              }
             },
             "description": "A mapping from dataset id to a set of log events and feedback items to insert"
           },
@@ -5447,13 +5347,11 @@
                   },
                   "description": "A list of project logs feedback items"
                 }
-              },
-              "additionalProperties": false
+              }
             },
             "description": "A mapping from project id to a set of log events and feedback items to insert"
           }
-        },
-        "additionalProperties": false
+        }
       }
     },
     "parameters": {
