@@ -326,7 +326,6 @@ components:
         - id
         - org_id
         - name
-      additionalProperties: false
     CreateProject:
       type: object
       properties:
@@ -341,7 +340,6 @@ components:
             you may specify the name of the organization the project belongs in.
       required:
         - name
-      additionalProperties: false
     PatchProject:
       type: object
       properties:
@@ -359,7 +357,6 @@ components:
               description: The key used to join two experiments (defaults to `input`).
           description: Project settings. Patch operations replace all settings, so make
             sure you include all settings you want to keep.
-      additionalProperties: false
     InsertEventsResponse:
       type: object
       properties:
@@ -371,7 +368,6 @@ components:
             the rows provided as input
       required:
         - row_ids
-      additionalProperties: false
     InsertProjectLogsEventReplace:
       type: object
       properties:
@@ -564,7 +560,6 @@ components:
             the webapp, only the root span row `"abc"` will show up in the
             summary view. You can view the full trace hierarchy (in this case,
             the `"llm_call"` row) by clicking on the "abc" row.
-      additionalProperties: false
     InsertProjectLogsEventMerge:
       type: object
       properties:
@@ -761,7 +756,6 @@ components:
             deep-merged `input` and `input.c`.
       required:
         - _is_merge
-      additionalProperties: false
     InsertProjectLogsEvent:
       anyOf:
         - $ref: "#/components/schemas/InsertProjectLogsEventReplace"
@@ -777,7 +771,6 @@ components:
           description: A list of project logs events to insert
       required:
         - events
-      additionalProperties: false
     ProjectLogsEvent:
       type: object
       properties:
@@ -971,7 +964,6 @@ components:
         - log_id
         - span_id
         - root_span_id
-      additionalProperties: false
     FetchProjectLogsEventsResponse:
       type: object
       properties:
@@ -992,7 +984,6 @@ components:
             returned result set is empty.
       required:
         - events
-      additionalProperties: false
     PathLookupFilter:
       type: object
       properties:
@@ -1020,7 +1011,6 @@ components:
       required:
         - type
         - path
-      additionalProperties: false
       description: 'A path-lookup filter describes an equality comparison against a
         specific sub-field in the event row. For instance, if you wish to filter
         on the value of `c` in `{"input": {"a": {"b": {"c": "hello"}}}}`, pass
@@ -1116,7 +1106,6 @@ components:
             The version id is essentially a filter on the latest event
             transaction id. You can use the `max_xact_id` returned by a past
             fetch as the version to reproduce that exact fetch.
-      additionalProperties: false
     FeedbackProjectLogsItem:
       type: object
       properties:
@@ -1163,7 +1152,6 @@ components:
             "app", or "api"
       required:
         - id
-      additionalProperties: false
     FeedbackProjectLogsEventRequest:
       type: object
       properties:
@@ -1174,7 +1162,6 @@ components:
           description: A list of project logs feedback items
       required:
         - feedback
-      additionalProperties: false
     RepoInfo:
       type: object
       nullable: true
@@ -1216,7 +1203,6 @@ components:
           nullable: true
           description: If the repo was dirty when run, this includes the diff between the
             current state of the repo and the most recent commit.
-      additionalProperties: false
       description: Metadata about the state of the repo when the experiment was created
     Experiment:
       type: object
@@ -1291,7 +1277,6 @@ components:
         - project_id
         - name
         - public
-      additionalProperties: false
     CreateExperiment:
       type: object
       properties:
@@ -1347,7 +1332,6 @@ components:
             with a unique name in case of a conflict.
       required:
         - project_id
-      additionalProperties: false
     PatchExperiment:
       type: object
       properties:
@@ -1390,7 +1374,6 @@ components:
           additionalProperties:
             nullable: true
           description: User-controlled metadata about the experiment
-      additionalProperties: false
     InsertExperimentEventReplace:
       type: object
       properties:
@@ -1593,7 +1576,6 @@ components:
             the webapp, only the root span row `"abc"` will show up in the
             summary view. You can view the full trace hierarchy (in this case,
             the `"llm_call"` row) by clicking on the "abc" row.
-      additionalProperties: false
     InsertExperimentEventMerge:
       type: object
       properties:
@@ -1800,7 +1782,6 @@ components:
             deep-merged `input` and `input.c`.
       required:
         - _is_merge
-      additionalProperties: false
     InsertExperimentEvent:
       anyOf:
         - $ref: "#/components/schemas/InsertExperimentEventReplace"
@@ -1816,7 +1797,6 @@ components:
           description: A list of experiment events to insert
       required:
         - events
-      additionalProperties: false
     ExperimentEvent:
       type: object
       properties:
@@ -2014,7 +1994,6 @@ components:
         - experiment_id
         - span_id
         - root_span_id
-      additionalProperties: false
     FetchExperimentEventsResponse:
       type: object
       properties:
@@ -2035,7 +2014,6 @@ components:
             returned result set is empty.
       required:
         - events
-      additionalProperties: false
     FeedbackExperimentItem:
       type: object
       properties:
@@ -2082,7 +2060,6 @@ components:
             "app", or "api"
       required:
         - id
-      additionalProperties: false
     FeedbackExperimentEventRequest:
       type: object
       properties:
@@ -2093,7 +2070,6 @@ components:
           description: A list of experiment feedback items
       required:
         - feedback
-      additionalProperties: false
     ScoreSummary:
       type: object
       properties:
@@ -2123,7 +2099,6 @@ components:
         - score
         - improvements
         - regressions
-      additionalProperties: false
       description: Summary of a score's performance
     MetricSummary:
       type: object
@@ -2154,7 +2129,6 @@ components:
         - unit
         - improvements
         - regressions
-      additionalProperties: false
       description: Summary of a metric's performance
     SummarizeExperimentResponse:
       type: object
@@ -2194,7 +2168,6 @@ components:
         - experiment_name
         - project_url
         - experiment_url
-      additionalProperties: false
       description: Summary of an experiment
     Dataset:
       type: object
@@ -2239,7 +2212,6 @@ components:
       required:
         - id
         - name
-      additionalProperties: false
     CreateDataset:
       type: object
       properties:
@@ -2257,7 +2229,6 @@ components:
           description: Textual description of the dataset
       required:
         - name
-      additionalProperties: false
     PatchDataset:
       type: object
       properties:
@@ -2269,7 +2240,6 @@ components:
           type: string
           nullable: true
           description: Textual description of the dataset
-      additionalProperties: false
     InsertDatasetEventReplace:
       type: object
       properties:
@@ -2353,7 +2323,6 @@ components:
             the webapp, only the root span row `"abc"` will show up in the
             summary view. You can view the full trace hierarchy (in this case,
             the `"llm_call"` row) by clicking on the "abc" row.
-      additionalProperties: false
     InsertDatasetEventMerge:
       type: object
       properties:
@@ -2441,7 +2410,6 @@ components:
             deep-merged `input` and `input.c`.
       required:
         - _is_merge
-      additionalProperties: false
     InsertDatasetEvent:
       anyOf:
         - $ref: "#/components/schemas/InsertDatasetEventReplace"
@@ -2457,7 +2425,6 @@ components:
           description: A list of dataset events to insert
       required:
         - events
-      additionalProperties: false
     DatasetEvent:
       type: object
       properties:
@@ -2527,7 +2494,6 @@ components:
         - dataset_id
         - span_id
         - root_span_id
-      additionalProperties: false
     FetchDatasetEventsResponse:
       type: object
       properties:
@@ -2548,7 +2514,6 @@ components:
             returned result set is empty.
       required:
         - events
-      additionalProperties: false
     FeedbackDatasetItem:
       type: object
       properties:
@@ -2579,7 +2544,6 @@ components:
             "app", or "api"
       required:
         - id
-      additionalProperties: false
     FeedbackDatasetEventRequest:
       type: object
       properties:
@@ -2590,7 +2554,6 @@ components:
           description: A list of dataset feedback items
       required:
         - feedback
-      additionalProperties: false
     DataSummary:
       type: object
       nullable: true
@@ -2601,7 +2564,6 @@ components:
           description: Total number of records in the dataset
       required:
         - total_records
-      additionalProperties: false
       description: Summary of a dataset's data
     SummarizeDatasetResponse:
       type: object
@@ -2627,7 +2589,6 @@ components:
         - dataset_name
         - project_url
         - dataset_url
-      additionalProperties: false
       description: Summary of a dataset
     PromptData:
       type: object
@@ -2646,7 +2607,6 @@ components:
               required:
                 - type
                 - content
-              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -2817,7 +2777,6 @@ components:
               required:
                 - type
                 - messages
-              additionalProperties: false
             - type: object
               nullable: true
               additionalProperties: false
@@ -2853,7 +2812,6 @@ components:
                             - json_object
                       required:
                         - type
-                      additionalProperties: false
                     tool_choice:
                       anyOf:
                         - type: string
@@ -2892,7 +2850,6 @@ components:
                               type: string
                           required:
                             - name
-                          additionalProperties: false
                     n:
                       type: number
                     stop:
@@ -2957,8 +2914,6 @@ components:
               type: string
             prompt_version:
               type: string
-          additionalProperties: false
-      additionalProperties: false
       description: The prompt, model, and its parameters
     Prompt:
       type: object
@@ -3023,7 +2978,6 @@ components:
         - org_id
         - name
         - slug
-      additionalProperties: false
     CreatePrompt:
       type: object
       properties:
@@ -3053,7 +3007,6 @@ components:
         - project_id
         - name
         - slug
-      additionalProperties: false
     PatchPrompt:
       type: object
       properties:
@@ -3073,7 +3026,6 @@ components:
           items:
             type: string
           description: A list of tags for the prompt
-      additionalProperties: false
     FeedbackPromptItem:
       type: object
       properties:
@@ -3104,7 +3056,6 @@ components:
             "app", or "api"
       required:
         - id
-      additionalProperties: false
     FeedbackPromptEventRequest:
       type: object
       properties:
@@ -3115,7 +3066,6 @@ components:
           description: A list of prompt feedback items
       required:
         - feedback
-      additionalProperties: false
     Role:
       type: object
       properties:
@@ -3202,7 +3152,6 @@ components:
                 description: The object type that the ACL applies to
             required:
               - permission
-            additionalProperties: false
           description: (permission, restrict_object_type) tuples which belong to this role
         member_roles:
           type: array
@@ -3219,7 +3168,6 @@ components:
       required:
         - id
         - name
-      additionalProperties: false
       description: >-
         A role is a collection of permissions which can be granted as part of an
         ACL
@@ -3281,7 +3229,6 @@ components:
                 description: The object type that the ACL applies to
             required:
               - permission
-            additionalProperties: false
           description: (permission, restrict_object_type) tuples which belong to this role
         member_roles:
           type: array
@@ -3303,7 +3250,6 @@ components:
             you may specify the name of the organization the role belongs in.
       required:
         - name
-      additionalProperties: false
     PatchRole:
       type: object
       properties:
@@ -3359,7 +3305,6 @@ components:
                 description: The object type that the ACL applies to
             required:
               - permission
-            additionalProperties: false
           description: A list of permissions to add to the role
         remove_member_permissions:
           type: array
@@ -3405,7 +3350,6 @@ components:
                 description: The object type that the ACL applies to
             required:
               - permission
-            additionalProperties: false
           description: A list of permissions to remove from the role
         add_member_roles:
           type: array
@@ -3421,7 +3365,6 @@ components:
             type: string
             format: uuid
           description: A list of role IDs to remove from the role's inheriting-from set
-      additionalProperties: false
     Group:
       type: object
       properties:
@@ -3481,7 +3424,6 @@ components:
         - id
         - org_id
         - name
-      additionalProperties: false
       description: >-
         A group is a collection of users which can be assigned an ACL
 
@@ -3525,7 +3467,6 @@ components:
             you may specify the name of the organization the group belongs in.
       required:
         - name
-      additionalProperties: false
     PatchGroup:
       type: object
       properties:
@@ -3565,7 +3506,6 @@ components:
             type: string
             format: uuid
           description: A list of group IDs to remove from the group's inheriting-from set
-      additionalProperties: false
     Acl:
       type: object
       properties:
@@ -3659,7 +3599,6 @@ components:
         - object_type
         - object_id
         - _object_org_id
-      additionalProperties: false
       description: >-
         An ACL grants a certain permission or role to a certain user or group on
         an object.
@@ -3752,7 +3691,6 @@ components:
       required:
         - object_type
         - object_id
-      additionalProperties: false
       description: >-
         An ACL grants a certain permission or role to a certain user or group on
         an object.
@@ -3797,7 +3735,6 @@ components:
           description: Date of user creation
       required:
         - id
-      additionalProperties: false
     ProjectScoreCategory:
       type: object
       properties:
@@ -3877,14 +3814,17 @@ components:
               enum:
                 - expected
                 - null
-          additionalProperties: false
+        position:
+          type: string
+          nullable: true
+          description: An optional LexoRank-based string that sets the sort position for
+            the score in the UI
       required:
         - id
         - project_id
         - user_id
         - name
         - score_type
-      additionalProperties: false
       description: A project score is a user-configured score, which can be
         manually-labeled through the UI
     CreateProjectScore:
@@ -3932,7 +3872,6 @@ components:
         - project_id
         - name
         - score_type
-      additionalProperties: false
     PatchProjectScore:
       type: object
       properties:
@@ -3971,7 +3910,6 @@ components:
             - type: object
               nullable: true
               additionalProperties: false
-      additionalProperties: false
     ProjectTag:
       type: object
       properties:
@@ -4007,7 +3945,6 @@ components:
         - project_id
         - user_id
         - name
-      additionalProperties: false
       description: A project tag is a user-configured tag for tracking and filtering
         your experiments, logs, and other data
     CreateProjectTag:
@@ -4031,7 +3968,6 @@ components:
       required:
         - project_id
         - name
-      additionalProperties: false
     PatchProjectTag:
       type: object
       properties:
@@ -4047,7 +3983,6 @@ components:
           type: string
           nullable: true
           description: Color of the tag for the UI
-      additionalProperties: false
     Function:
       type: object
       properties:
@@ -4113,7 +4048,6 @@ components:
                     - prompt
               required:
                 - type
-              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -4135,7 +4069,6 @@ components:
                       required:
                         - runtime
                         - version
-                      additionalProperties: false
                     location:
                       type: object
                       properties:
@@ -4156,23 +4089,19 @@ components:
                                   type: number
                               required:
                                 - score
-                              additionalProperties: false
                       required:
                         - type
                         - eval_name
                         - position
-                      additionalProperties: false
                     bundle_id:
                       type: string
                   required:
                     - runtime_context
                     - location
                     - bundle_id
-                  additionalProperties: false
               required:
                 - type
                 - data
-              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -4184,7 +4113,6 @@ components:
               required:
                 - type
                 - name
-              additionalProperties: false
       required:
         - id
         - _xact_id
@@ -4194,7 +4122,6 @@ components:
         - name
         - slug
         - function_data
-      additionalProperties: false
     CreateFunction:
       type: object
       properties:
@@ -4230,7 +4157,6 @@ components:
                     - prompt
               required:
                 - type
-              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -4252,7 +4178,6 @@ components:
                       required:
                         - runtime
                         - version
-                      additionalProperties: false
                     location:
                       type: object
                       properties:
@@ -4273,23 +4198,19 @@ components:
                                   type: number
                               required:
                                 - score
-                              additionalProperties: false
                       required:
                         - type
                         - eval_name
                         - position
-                      additionalProperties: false
                     bundle_id:
                       type: string
                   required:
                     - runtime_context
                     - location
                     - bundle_id
-                  additionalProperties: false
               required:
                 - type
                 - data
-              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -4301,13 +4222,11 @@ components:
               required:
                 - type
                 - name
-              additionalProperties: false
       required:
         - project_id
         - name
         - slug
         - function_data
-      additionalProperties: false
     PatchFunction:
       type: object
       properties:
@@ -4331,7 +4250,6 @@ components:
                     - prompt
               required:
                 - type
-              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -4353,7 +4271,6 @@ components:
                       required:
                         - runtime
                         - version
-                      additionalProperties: false
                     location:
                       type: object
                       properties:
@@ -4374,23 +4291,19 @@ components:
                                   type: number
                               required:
                                 - score
-                              additionalProperties: false
                       required:
                         - type
                         - eval_name
                         - position
-                      additionalProperties: false
                     bundle_id:
                       type: string
                   required:
                     - runtime_context
                     - location
                     - bundle_id
-                  additionalProperties: false
               required:
                 - type
                 - data
-              additionalProperties: false
             - type: object
               properties:
                 type:
@@ -4402,7 +4315,6 @@ components:
               required:
                 - type
                 - name
-              additionalProperties: false
             - type: object
               nullable: true
               additionalProperties: false
@@ -4412,7 +4324,6 @@ components:
           items:
             type: string
           description: A list of tags for the prompt
-      additionalProperties: false
     FeedbackFunctionItem:
       type: object
       properties:
@@ -4443,7 +4354,6 @@ components:
             "app", or "api"
       required:
         - id
-      additionalProperties: false
     FeedbackFunctionEventRequest:
       type: object
       properties:
@@ -4454,7 +4364,6 @@ components:
           description: A list of function feedback items
       required:
         - feedback
-      additionalProperties: false
     ViewDataSearch:
       type: object
       nullable: true
@@ -4574,7 +4483,6 @@ components:
         - object_id
         - view_type
         - name
-      additionalProperties: false
     CreateView:
       type: object
       properties:
@@ -4633,7 +4541,6 @@ components:
         - object_id
         - view_type
         - name
-      additionalProperties: false
     PatchView:
       type: object
       properties:
@@ -4687,7 +4594,6 @@ components:
       required:
         - object_type
         - object_id
-      additionalProperties: false
     DeleteView:
       type: object
       properties:
@@ -4714,7 +4620,6 @@ components:
       required:
         - object_type
         - object_id
-      additionalProperties: false
     Organization:
       type: object
       properties:
@@ -4742,7 +4647,6 @@ components:
       required:
         - id
         - name
-      additionalProperties: false
     PatchOrganization:
       type: object
       properties:
@@ -4759,7 +4663,6 @@ components:
         realtime_url:
           type: string
           nullable: true
-      additionalProperties: false
     CrossObjectInsertResponse:
       type: object
       properties:
@@ -4781,7 +4684,6 @@ components:
           additionalProperties:
             $ref: "#/components/schemas/InsertEventsResponse"
           description: A mapping from project id to row ids for inserted `events`
-      additionalProperties: false
     CrossObjectInsertRequest:
       type: object
       properties:
@@ -4803,7 +4705,6 @@ components:
                 items:
                   $ref: "#/components/schemas/FeedbackExperimentItem"
                 description: A list of experiment feedback items
-            additionalProperties: false
           description: A mapping from experiment id to a set of log events and feedback
             items to insert
         dataset:
@@ -4824,7 +4725,6 @@ components:
                 items:
                   $ref: "#/components/schemas/FeedbackDatasetItem"
                 description: A list of dataset feedback items
-            additionalProperties: false
           description: A mapping from dataset id to a set of log events and feedback items
             to insert
         project_logs:
@@ -4845,10 +4745,8 @@ components:
                 items:
                   $ref: "#/components/schemas/FeedbackProjectLogsItem"
                 description: A list of project logs feedback items
-            additionalProperties: false
           description: A mapping from project id to a set of log events and feedback items
             to insert
-      additionalProperties: false
   parameters:
     ProjectId:
       schema:
