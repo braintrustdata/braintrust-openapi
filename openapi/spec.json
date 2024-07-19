@@ -16071,15 +16071,6 @@
               "schema": {
                 "allOf": [
                   {
-                    "type": "object",
-                    "properties": {
-                      "api_version": {
-                        "type": "number",
-                        "default": 1
-                      }
-                    }
-                  },
-                  {
                     "anyOf": [
                       {
                         "type": "object",
@@ -16095,8 +16086,7 @@
                         },
                         "required": [
                           "function_id"
-                        ],
-                        "description": "Function id with optional version"
+                        ]
                       },
                       {
                         "type": "object",
@@ -16153,7 +16143,7 @@
                         ]
                       }
                     ],
-                    "description": "The function's identifier."
+                    "description": "Various options for identifying a function."
                   },
                   {
                     "type": "object",
@@ -16169,7 +16159,8 @@
                       }
                     }
                   }
-                ]
+                ],
+                "description": "The request to invoke a function."
               }
             }
           }

@@ -11560,11 +11560,6 @@ paths:
           application/json:
             schema:
               allOf:
-                - type: object
-                  properties:
-                    api_version:
-                      type: number
-                      default: 1
                 - anyOf:
                     - type: object
                       properties:
@@ -11576,7 +11571,6 @@ paths:
                           description: The version of the function.
                       required:
                         - function_id
-                      description: Function id with optional version
                     - type: object
                       properties:
                         project_name:
@@ -11613,7 +11607,7 @@ paths:
                       required:
                         - prompt_session_id
                         - prompt_session_function_id
-                  description: The function's identifier.
+                  description: Various options for identifying a function.
                 - type: object
                   properties:
                     input:
@@ -11622,6 +11616,7 @@ paths:
                       type: string
                     stream:
                       type: boolean
+              description: The request to invoke a function.
       responses:
         "200":
           description: Function invocation response
