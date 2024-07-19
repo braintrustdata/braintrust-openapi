@@ -16077,90 +16077,122 @@
                         "properties": {
                           "function_id": {
                             "type": "string",
-                            "description": "The ID of the function."
+                            "description": "The ID of the function"
                           },
                           "version": {
                             "type": "string",
-                            "description": "The version of the function."
+                            "description": "The version of the function"
                           }
                         },
                         "required": [
                           "function_id"
-                        ]
+                        ],
+                        "description": "Function id"
                       },
                       {
                         "type": "object",
                         "properties": {
                           "project_name": {
                             "type": "string",
-                            "description": "The name of the project containing the function."
+                            "description": "The name of the project containing the function"
                           },
                           "slug": {
                             "type": "string",
-                            "description": "The slug of the function."
+                            "description": "The slug of the function"
                           },
                           "version": {
                             "type": "string",
-                            "description": "The version of the function."
+                            "description": "The version of the function"
                           }
                         },
                         "required": [
                           "project_name",
                           "slug"
-                        ]
+                        ],
+                        "description": "Project name and slug"
                       },
                       {
                         "type": "object",
                         "properties": {
                           "global_function": {
                             "type": "string",
-                            "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals."
+                            "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
                           }
                         },
                         "required": [
                           "global_function"
-                        ]
+                        ],
+                        "description": "Global function name"
                       },
                       {
                         "type": "object",
                         "properties": {
                           "prompt_session_id": {
                             "type": "string",
-                            "description": "The ID of the prompt session."
+                            "description": "The ID of the prompt session"
                           },
                           "prompt_session_function_id": {
                             "type": "string",
-                            "description": "The ID of the function in the prompt session."
+                            "description": "The ID of the function in the prompt session"
                           },
                           "version": {
                             "type": "string",
-                            "description": "The version of the function."
+                            "description": "The version of the function"
                           }
                         },
                         "required": [
                           "prompt_session_id",
                           "prompt_session_function_id"
-                        ]
+                        ],
+                        "description": "Prompt session id"
                       }
                     ],
-                    "description": "Various options for identifying a function."
+                    "description": "Options for identifying a function"
                   },
                   {
                     "type": "object",
                     "properties": {
                       "input": {
-                        "nullable": true
+                        "nullable": true,
+                        "description": "Argument to the function, which can be any JSON serializable value"
                       },
                       "parent": {
-                        "type": "string"
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "object_type": {
+                                "type": "string",
+                                "enum": [
+                                  "project_log",
+                                  "experiment"
+                                ]
+                              },
+                              "object_id": {
+                                "type": "string",
+                                "description": "The id of the container object you are logging to"
+                              }
+                            },
+                            "required": [
+                              "object_type",
+                              "object_id"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "description": "The parent's span identifier, created by calling `.export()` on a span"
+                          }
+                        ],
+                        "description": "Options for tracing the function call"
                       },
                       "stream": {
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Whether to stream the response. If true, results will be returned in the Braintrust SSE format."
                       }
                     }
                   }
                 ],
-                "description": "The request to invoke a function."
+                "description": "The request to invoke a function"
               }
             }
           }
