@@ -16051,6 +16051,205 @@
         }
       }
     },
+    "/v1/function/{function_id}/invoke": {
+      "post": {
+        "operationId": "postFunctionIdInvoke",
+        "tags": [
+          "Functions"
+        ],
+        "description": "Invoke a function. ",
+        "summary": "Invoke function",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FunctionId"
+          }
+        ],
+        "requestBody": {
+          "description": "Function invocation parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "api_version": {
+                        "type": "number",
+                        "default": 1
+                      }
+                    }
+                  },
+                  {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "function_id": {
+                            "type": "string",
+                            "description": "The ID of the function."
+                          },
+                          "version": {
+                            "type": "string",
+                            "description": "The version of the function."
+                          }
+                        },
+                        "required": [
+                          "function_id"
+                        ],
+                        "description": "Function id with optional version"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "project_name": {
+                            "type": "string",
+                            "description": "The name of the project containing the function."
+                          },
+                          "slug": {
+                            "type": "string",
+                            "description": "The slug of the function."
+                          },
+                          "version": {
+                            "type": "string",
+                            "description": "The version of the function."
+                          }
+                        },
+                        "required": [
+                          "project_name",
+                          "slug"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "global_function": {
+                            "type": "string",
+                            "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals."
+                          }
+                        },
+                        "required": [
+                          "global_function"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "prompt_session_id": {
+                            "type": "string",
+                            "description": "The ID of the prompt session."
+                          },
+                          "prompt_session_function_id": {
+                            "type": "string",
+                            "description": "The ID of the function in the prompt session."
+                          },
+                          "version": {
+                            "type": "string",
+                            "description": "The version of the function."
+                          }
+                        },
+                        "required": [
+                          "prompt_session_id",
+                          "prompt_session_function_id"
+                        ]
+                      }
+                    ],
+                    "description": "The function's identifier."
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "nullable": true
+                      },
+                      "parent": {
+                        "type": "string"
+                      },
+                      "stream": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Function invocation response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsFunctionIdInvoke",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/function/{function_id}/invoke`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/FunctionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/view": {
       "post": {
         "tags": [
