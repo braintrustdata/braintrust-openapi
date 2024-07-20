@@ -11624,7 +11624,7 @@ paths:
                             object_type:
                               type: string
                               enum:
-                                - project_log
+                                - project_logs
                                 - experiment
                             object_id:
                               type: string
@@ -11632,6 +11632,7 @@ paths:
                           required:
                             - object_type
                             - object_id
+                          description: Object type and id
                         - type: string
                           description: The parent's span identifier, created by calling `.export()` on a
                             span

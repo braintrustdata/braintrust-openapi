@@ -16164,7 +16164,7 @@
                               "object_type": {
                                 "type": "string",
                                 "enum": [
-                                  "project_log",
+                                  "project_logs",
                                   "experiment"
                                 ]
                               },
@@ -16176,7 +16176,8 @@
                             "required": [
                               "object_type",
                               "object_id"
-                            ]
+                            ],
+                            "description": "Object type and id"
                           },
                           {
                             "type": "string",
