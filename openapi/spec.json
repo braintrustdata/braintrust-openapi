@@ -5150,6 +5150,10 @@
             "type": "string",
             "nullable": true
           },
+          "is_universal_api": {
+            "type": "boolean",
+            "nullable": true
+          },
           "proxy_url": {
             "type": "string",
             "nullable": true
@@ -18965,9 +18969,9 @@
         }
       }
     },
-    "/v1/proxy/*": {
+    "/v1/proxy/{path}": {
       "post": {
-        "operationId": "proxy*",
+        "operationId": "proxy{path}",
         "tags": [
           "Proxy"
         ],
@@ -19004,9 +19008,9 @@
         }
       },
       "options": {
-        "operationId": "optionsProxyproxy*",
+        "operationId": "optionsProxyproxy{path}",
         "description": "Enable CORS",
-        "summary": "Enable CORS (`/v1/proxy/*`)",
+        "summary": "Enable CORS (`/v1/proxy/{path}`)",
         "security": [],
         "tags": [
           "CORS"

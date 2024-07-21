@@ -4593,6 +4593,9 @@ components:
         api_url:
           type: string
           nullable: true
+        is_universal_api:
+          type: boolean
+          nullable: true
         proxy_url:
           type: string
           nullable: true
@@ -13383,9 +13386,9 @@ paths:
             application/json:
               schema:
                 nullable: true
-  /v1/proxy/*:
+  /v1/proxy/{path}:
     post:
-      operationId: proxy*
+      operationId: proxy{path}
       tags:
         - Proxy
       description: Any requests which do not match the above paths will be proxied
@@ -13409,9 +13412,9 @@ paths:
               schema:
                 nullable: true
     options:
-      operationId: optionsProxyproxy*
+      operationId: optionsProxyproxy{path}
       description: Enable CORS
-      summary: Enable CORS (`/v1/proxy/*`)
+      summary: Enable CORS (`/v1/proxy/{path}`)
       security: []
       tags:
         - CORS
