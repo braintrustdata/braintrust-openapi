@@ -517,17 +517,17 @@ components:
           nullable: true
           description: A unique identifier for the project logs event. If you don't
             provide one, BrainTrust will generate one for you
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: The timestamp the project logs event was created
         _object_delete:
           type: boolean
           nullable: true
           description: Pass `_object_delete=true` to mark the project logs event deleted.
             Deleted events will not show up in subsequent fetches for this
             project logs
-        created:
-          type: string
-          nullable: true
-          format: date-time
-          description: The timestamp the experiment event was created
         _is_merge:
           type: boolean
           nullable: true
@@ -709,17 +709,17 @@ components:
           nullable: true
           description: A unique identifier for the project logs event. If you don't
             provide one, BrainTrust will generate one for you
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: The timestamp the project logs event was created
         _object_delete:
           type: boolean
           nullable: true
           description: Pass `_object_delete=true` to mark the project logs event deleted.
             Deleted events will not show up in subsequent fetches for this
             project logs
-        created:
-          type: string
-          nullable: true
-          format: date-time
-          description: The timestamp the experiment event was created
         _is_merge:
           type: boolean
           enum:
@@ -1533,17 +1533,17 @@ components:
           nullable: true
           description: If the experiment is associated to a dataset, this is the
             event-level dataset id this experiment event is tied to
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: The timestamp the experiment event was created
         _object_delete:
           type: boolean
           nullable: true
           description: Pass `_object_delete=true` to mark the experiment event deleted.
             Deleted events will not show up in subsequent fetches for this
             experiment
-        created:
-          type: string
-          nullable: true
-          format: date-time
-          description: The timestamp the experiment event was created
         _is_merge:
           type: boolean
           nullable: true
@@ -1735,17 +1735,17 @@ components:
           nullable: true
           description: If the experiment is associated to a dataset, this is the
             event-level dataset id this experiment event is tied to
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: The timestamp the experiment event was created
         _object_delete:
           type: boolean
           nullable: true
           description: Pass `_object_delete=true` to mark the experiment event deleted.
             Deleted events will not show up in subsequent fetches for this
             experiment
-        created:
-          type: string
-          nullable: true
-          format: date-time
-          description: The timestamp the experiment event was created
         _is_merge:
           type: boolean
           enum:
@@ -2286,17 +2286,17 @@ components:
           nullable: true
           description: A unique identifier for the dataset event. If you don't provide
             one, BrainTrust will generate one for you
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: The timestamp the dataset event was created
         _object_delete:
           type: boolean
           nullable: true
           description: Pass `_object_delete=true` to mark the dataset event deleted.
             Deleted events will not show up in subsequent fetches for this
             dataset
-        created:
-          type: string
-          nullable: true
-          format: date-time
-          description: The timestamp the experiment event was created
         _is_merge:
           type: boolean
           nullable: true
@@ -2369,17 +2369,17 @@ components:
           nullable: true
           description: A unique identifier for the dataset event. If you don't provide
             one, BrainTrust will generate one for you
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: The timestamp the dataset event was created
         _object_delete:
           type: boolean
           nullable: true
           description: Pass `_object_delete=true` to mark the dataset event deleted.
             Deleted events will not show up in subsequent fetches for this
             dataset
-        created:
-          type: string
-          nullable: true
-          format: date-time
-          description: The timestamp the experiment event was created
         _is_merge:
           type: boolean
           enum:
