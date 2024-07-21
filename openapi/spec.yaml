@@ -5,7 +5,7 @@ info:
   description: >-
     API specification for the backend data server. The API is hosted globally at
 
-    https://api.braintrustdata.com or in your own environment.
+    https://api.braintrust.dev or in your own environment.
 
 
     You can access the OpenAPI spec for this API at
@@ -13,7 +13,7 @@ info:
   license:
     name: Apache 2.0
 servers:
-  - url: https://api.braintrustdata.com
+  - url: https://api.braintrust.dev
 components:
   securitySchemes:
     bearerAuth:
@@ -4565,6 +4565,9 @@ components:
           description: Name of the organization
         api_url:
           type: string
+          nullable: true
+        is_universal_api:
+          type: boolean
           nullable: true
         proxy_url:
           type: string
@@ -13122,20 +13125,23 @@ paths:
             application/json:
               schema:
                 nullable: true
-  /v1/proxy:
+  /v1/proxy/chat/completions:
     post:
       operationId: proxy
       tags:
         - Proxy
-      description: Proxy
-      summary: Proxy
+      description: Proxy a chat/completions request to the specified model, converting
+        its format as needed
+      summary: Proxy chat/completions
       requestBody:
-        description: A mapping from event object type -> object id -> events to insert
+        description: See the [openai
+          docs](https://platform.openai.com/docs/api-reference/chat/create) for
+          details
         required: false
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CrossObjectInsertRequest"
+              nullable: true
       responses:
         "200":
           description: Proxy response
@@ -13143,6 +13149,7 @@ paths:
             application/json:
               schema:
                 nullable: true
+  /v1/proxy:
     options:
       operationId: optionsProxy
       description: Enable CORS
