@@ -13136,6 +13136,9 @@ paths:
       description: Proxy a chat/completions request to the specified model, converting
         its format as needed. Will cache if temperature=0 or seed is set.
       summary: Proxy chat/completions
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: See the [openai
           docs](https://platform.openai.com/docs/api-reference/chat/create) for
@@ -13197,6 +13200,9 @@ paths:
       description: Proxy a completions request to the specified model, converting its
         format as needed. Will cache if temperature=0 or seed is set.
       summary: Proxy completions
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: See the [openai
           docs](https://platform.openai.com/docs/api-reference/completions/create)
@@ -13259,6 +13265,9 @@ paths:
         automatically based on the model. Will cache if temperature=0 or seed is
         set.
       summary: Proxy a model to chat/completions or completions automatically
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: The chat/completions or completions payload (depending on the model)
         required: true
@@ -13318,6 +13327,9 @@ paths:
       description: Proxy an embeddings request to the specified model, converting its
         format as needed. Will cache automatically.
       summary: Proxy embeddings
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: See the [openai
           docs](https://platform.openai.com/docs/api-reference/embeddings/create)
@@ -13379,6 +13391,9 @@ paths:
       description: Any requests which do not match the above paths will be proxied
         directly to the OpenAI API.
       summary: Proxy any OpenAI request (fallback)
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: The request body
         required: true
@@ -13436,7 +13451,7 @@ paths:
       tags:
         - Evals
       description: Launch an evaluation. This is the API-equivalent of the `Eval`
-        function that is built intothe Braintrust SDK. In the Eval API, you
+        function that is built into the Braintrust SDK. In the Eval API, you
         provide pointers to a dataset, task function, and scoring functions. The
         API will then run the evaluation, create an experiment, and return the
         results along with a link to the experiment. To learn more about evals,
