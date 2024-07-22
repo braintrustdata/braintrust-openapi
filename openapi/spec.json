@@ -18900,7 +18900,7 @@
         "summary": "Proxy any OpenAI request (fallback)",
         "parameters": [
           {
-            "name": "path",
+            "name": "path+",
             "in": "path",
             "required": true,
             "schema": {
@@ -18952,7 +18952,7 @@
         ],
         "parameters": [
           {
-            "name": "path",
+            "name": "path+",
             "in": "path",
             "required": true,
             "schema": {

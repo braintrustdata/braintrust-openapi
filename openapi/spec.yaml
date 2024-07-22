@@ -13345,7 +13345,7 @@ paths:
         directly to the OpenAI API.
       summary: Proxy any OpenAI request (fallback)
       parameters:
-        - name: path
+        - name: path+
           in: path
           required: true
           schema:
@@ -13378,7 +13378,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - name: path
+        - name: path+
           in: path
           required: true
           schema:
