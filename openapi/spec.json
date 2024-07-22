@@ -18890,14 +18890,28 @@
         }
       }
     },
-    "/v1/proxy/{path}": {
+    "/v1/proxy/{path+}": {
       "post": {
-        "operationId": "proxy{path}",
+        "operationId": "proxy{path+}",
         "tags": [
           "Proxy"
         ],
         "description": "Any requests which do not match the above paths will be proxied directly to the OpenAI API.",
         "summary": "Proxy any OpenAI request (fallback)",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The path to proxy"
+          }
+        ],
         "security": [
           {
             "bearerAuth": []
@@ -18929,12 +18943,26 @@
         }
       },
       "options": {
-        "operationId": "optionsProxyproxy{path}",
+        "operationId": "optionsProxyproxy{path+}",
         "description": "Enable CORS",
-        "summary": "Enable CORS (`/v1/proxy/{path}`)",
+        "summary": "Enable CORS (`/v1/proxy/{path+}`)",
         "security": [],
         "tags": [
           "CORS"
+        ],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "The path to proxy"
+          }
         ],
         "responses": {
           "200": {
