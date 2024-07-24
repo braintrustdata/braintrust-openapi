@@ -11556,7 +11556,7 @@ paths:
       operationId: postFunctionIdInvoke
       tags:
         - Functions
-      description: "Invoke a function. "
+      description: Invoke a function.
       summary: Invoke function
       security:
         - bearerAuth: []
