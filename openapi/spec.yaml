@@ -264,14 +264,29 @@ components:
         - null
       description: Type of table that the view corresponds to.
     UserGivenName:
-      type: string
-      description: Given name of the user to search for
+      anyOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      description: Given name of the user to search for. You may pass the param
+        multiple times to filter for more than one given name
     UserFamilyName:
-      type: string
-      description: Family name of the user to search for
+      anyOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      description: Family name of the user to search for. You may pass the param
+        multiple times to filter for more than one family name
     UserEmail:
-      type: string
-      description: Email of the user to search for
+      anyOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      description: Email of the user to search for. You may pass the param multiple
+        times to filter for more than one email
     AclObjectType:
       type: string
       enum:
@@ -4602,6 +4617,62 @@ components:
         realtime_url:
           type: string
           nullable: true
+    PatchOrganizationMembers:
+      type: object
+      properties:
+        invite_users:
+          type: object
+          nullable: true
+          properties:
+            ids:
+              type: array
+              nullable: true
+              items:
+                type: string
+                format: uuid
+                description: Unique identifier for the user
+              description: Ids of existing users to invite
+            emails:
+              type: array
+              nullable: true
+              items:
+                type: string
+              description: Emails of users to invite
+            send_invite_emails:
+              type: boolean
+              nullable: true
+              description: If true, send invite emails to the users who wore actually added
+            group_id:
+              type: string
+              nullable: true
+              format: uuid
+              description: Optional id of a group to add newly-invited users to. Cannot
+                specify both a group id and a group name.
+            group_name:
+              type: string
+              nullable: true
+              description: Optional name of a group to add newly-invited users to. Cannot
+                specify both a group id and a group name.
+          description: Users to invite to the organization
+        remove_users:
+          type: object
+          nullable: true
+          properties:
+            ids:
+              type: array
+              nullable: true
+              items:
+                type: string
+                format: uuid
+                description: Unique identifier for the user
+              description: Ids of users to remove
+            emails:
+              type: array
+              nullable: true
+              items:
+                type: string
+              description: Emails of users to remove
+          description: Users to remove from the organization
     CreateApiKeyOutput:
       type: object
       properties:
@@ -5146,7 +5217,8 @@ components:
       schema:
         $ref: "#/components/schemas/UserGivenName"
       required: false
-      description: Given name of the user to search for
+      description: Given name of the user to search for. You may pass the param
+        multiple times to filter for more than one given name
       name: given_name
       in: query
       allowReserved: true
@@ -5154,7 +5226,8 @@ components:
       schema:
         $ref: "#/components/schemas/UserFamilyName"
       required: false
-      description: Family name of the user to search for
+      description: Family name of the user to search for. You may pass the param
+        multiple times to filter for more than one family name
       name: family_name
       in: query
       allowReserved: true
@@ -5162,7 +5235,8 @@ components:
       schema:
         $ref: "#/components/schemas/UserEmail"
       required: false
-      description: Email of the user to search for
+      description: Email of the user to search for. You may pass the param multiple
+        times to filter for more than one email
       name: email
       in: query
       allowReserved: true
@@ -12499,6 +12573,126 @@ paths:
         - CORS
       parameters:
         - $ref: "#/components/parameters/OrganizationId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/organization/members:
+    patch:
+      operationId: patchOrganizationMembers
+      tags:
+        - Organizations
+      description: Modify organization membership
+      summary: Modify organization membership
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Members to add/remove
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchOrganizationMembers"
+      responses:
+        "200":
+          description: A success status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                  send_email_error:
+                    type: string
+                    nullable: true
+                    description: If invite emails failed to send for some reason, the patch
+                      operation will still complete, but we will return an error
+                      message here
+                required:
+                  - status
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsOrganizationMembers
+      description: Enable CORS
+      summary: Enable CORS (`/v1/organization/members`)
+      security: []
+      tags:
+        - CORS
       responses:
         "200":
           description: Response for CORS method
