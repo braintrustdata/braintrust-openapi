@@ -5198,70 +5198,44 @@
         "type": "object",
         "properties": {
           "invite_users": {
-            "anyOf": [
-              {
-                "allOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "ids": {
-                        "type": "array",
-                        "nullable": true,
-                        "items": {
-                          "type": "string",
-                          "format": "uuid",
-                          "description": "Unique identifier for the user"
-                        },
-                        "description": "Ids of existing users to invite"
-                      },
-                      "emails": {
-                        "type": "array",
-                        "nullable": true,
-                        "items": {
-                          "type": "string"
-                        },
-                        "description": "Emails of users to invite"
-                      },
-                      "send_invite_emails": {
-                        "type": "boolean",
-                        "nullable": true,
-                        "description": "If true, send invite emails to the users who wore actually added"
-                      }
-                    }
-                  },
-                  {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "group_id": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "uuid",
-                            "description": "Optional id of a group to add the invited users to within the org. Will not affect users who are already in the organization."
-                          }
-                        }
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "group_name": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Optional name of a group to add the invited users to within the org. Will not affect users who are already in the organization."
-                          }
-                        }
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "object",
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "ids": {
+                "type": "array",
                 "nullable": true,
-                "additionalProperties": false
+                "items": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Unique identifier for the user"
+                },
+                "description": "Ids of existing users to invite"
+              },
+              "emails": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Emails of users to invite"
+              },
+              "send_invite_emails": {
+                "type": "boolean",
+                "nullable": true,
+                "description": "If true, send invite emails to the users who wore actually added"
+              },
+              "group_id": {
+                "type": "string",
+                "nullable": true,
+                "format": "uuid",
+                "description": "Optional id of a group to add newly-invited users to. Cannot specify both a group id and a group name."
+              },
+              "group_name": {
+                "type": "string",
+                "nullable": true,
+                "description": "Optional name of a group to add newly-invited users to. Cannot specify both a group id and a group name."
               }
-            ],
+            },
             "description": "Users to invite to the organization"
           },
           "remove_users": {
