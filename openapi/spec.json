@@ -6619,7 +6619,7 @@
       "post": {
         "operationId": "postProjectLogsIdInsert",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Insert a set of events into the project logs",
         "summary": "Insert project logs events",
@@ -6800,7 +6800,7 @@
       "post": {
         "operationId": "postProjectLogsIdFetch",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Fetch the events in a project logs. Equivalent to the GET form of the same path, but with the parameters in the request body rather than in the URL query",
         "summary": "Fetch project logs (POST form)",
@@ -6917,7 +6917,7 @@
       "get": {
         "operationId": "getProjectLogsIdFetch",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Fetch the events in a project logs. Equivalent to the POST form of the same path, but with the parameters in the URL query rather than in the request body",
         "summary": "Fetch project logs (GET form)",
@@ -7099,7 +7099,7 @@
       "post": {
         "operationId": "postProjectLogsIdFeedback",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Log feedback for a set of project logs events",
         "summary": "Feedback for project logs events",
