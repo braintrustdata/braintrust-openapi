@@ -414,6 +414,9 @@ components:
             that correctly. Instead, these values are just used to help you
             navigate while digging into analyses. However, we may later use
             these values to re-score outputs or fine-tune your models.
+        error:
+          nullable: true
+          description: The error that occurred, if any
         scores:
           type: object
           nullable: true
@@ -606,6 +609,9 @@ components:
             that correctly. Instead, these values are just used to help you
             navigate while digging into analyses. However, we may later use
             these values to re-score outputs or fine-tune your models.
+        error:
+          nullable: true
+          description: The error that occurred, if any
         scores:
           type: object
           nullable: true
@@ -844,6 +850,9 @@ components:
             that correctly. Instead, these values are just used to help you
             navigate while digging into analyses. However, we may later use
             these values to re-score outputs or fine-tune your models.
+        error:
+          nullable: true
+          description: The error that occurred, if any
         scores:
           type: object
           nullable: true
@@ -1425,6 +1434,9 @@ components:
             navigate your experiments while digging into analyses. However, we
             may later use these values to re-score outputs or fine-tune your
             models
+        error:
+          nullable: true
+          description: The error that occurred, if any
         scores:
           type: object
           nullable: true
@@ -1627,6 +1639,9 @@ components:
             navigate your experiments while digging into analyses. However, we
             may later use these values to re-score outputs or fine-tune your
             models
+        error:
+          nullable: true
+          description: The error that occurred, if any
         scores:
           type: object
           nullable: true
@@ -1875,6 +1890,9 @@ components:
             navigate your experiments while digging into analyses. However, we
             may later use these values to re-score outputs or fine-tune your
             models
+        error:
+          nullable: true
+          description: The error that occurred, if any
         scores:
           type: object
           nullable: true
