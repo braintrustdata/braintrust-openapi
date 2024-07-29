@@ -5286,6 +5286,16 @@
               }
             },
             "description": "Users to remove from the organization"
+          },
+          "org_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, or in case you want to explicitly assert the organization you are modifying, you may specify the name of the organization."
+          },
+          "org_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, or in case you want to explicitly assert the organization you are modifying, you may specify the id of the organization."
           }
         }
       },
@@ -6643,7 +6653,7 @@
       "post": {
         "operationId": "postProjectLogsIdInsert",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Insert a set of events into the project logs",
         "summary": "Insert project logs events",
@@ -6824,7 +6834,7 @@
       "post": {
         "operationId": "postProjectLogsIdFetch",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Fetch the events in a project logs. Equivalent to the GET form of the same path, but with the parameters in the request body rather than in the URL query",
         "summary": "Fetch project logs (POST form)",
@@ -6941,7 +6951,7 @@
       "get": {
         "operationId": "getProjectLogsIdFetch",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Fetch the events in a project logs. Equivalent to the POST form of the same path, but with the parameters in the URL query rather than in the request body",
         "summary": "Fetch project logs (GET form)",
@@ -7123,7 +7133,7 @@
       "post": {
         "operationId": "postProjectLogsIdFeedback",
         "tags": [
-          "Projects"
+          "Logs"
         ],
         "description": "Log feedback for a set of project logs events",
         "summary": "Feedback for project logs events",
