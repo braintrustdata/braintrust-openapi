@@ -13,6 +13,12 @@
       "url": "https://api.braintrust.dev"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    },
+    {}
+  ],
   "components": {
     "securitySchemes": {
       "bearerAuth": {
@@ -2597,7 +2603,8 @@
                 "required": [
                   "type",
                   "content"
-                ]
+                ],
+                "title": "completion"
               },
               {
                 "type": "object",
@@ -2631,7 +2638,8 @@
                           },
                           "required": [
                             "role"
-                          ]
+                          ],
+                          "title": "system"
                         },
                         {
                           "type": "object",
@@ -2640,7 +2648,8 @@
                               "anyOf": [
                                 {
                                   "type": "string",
-                                  "default": ""
+                                  "default": "",
+                                  "title": "text"
                                 },
                                 {
                                   "type": "array",
@@ -2662,7 +2671,8 @@
                                         },
                                         "required": [
                                           "type"
-                                        ]
+                                        ],
+                                        "title": "text"
                                       },
                                       {
                                         "type": "object",
@@ -2679,19 +2689,22 @@
                                                     "type": "string",
                                                     "enum": [
                                                       "auto"
-                                                    ]
+                                                    ],
+                                                    "title": "auto"
                                                   },
                                                   {
                                                     "type": "string",
                                                     "enum": [
                                                       "low"
-                                                    ]
+                                                    ],
+                                                    "title": "low"
                                                   },
                                                   {
                                                     "type": "string",
                                                     "enum": [
                                                       "high"
-                                                    ]
+                                                    ],
+                                                    "title": "high"
                                                   }
                                                 ]
                                               }
@@ -2710,10 +2723,12 @@
                                         "required": [
                                           "image_url",
                                           "type"
-                                        ]
+                                        ],
+                                        "title": "image_url"
                                       }
                                     ]
-                                  }
+                                  },
+                                  "title": "array"
                                 }
                               ]
                             },
@@ -2729,7 +2744,8 @@
                           },
                           "required": [
                             "role"
-                          ]
+                          ],
+                          "title": "user"
                         },
                         {
                           "type": "object",
@@ -2802,7 +2818,8 @@
                           },
                           "required": [
                             "role"
-                          ]
+                          ],
+                          "title": "assistant"
                         },
                         {
                           "type": "object",
@@ -2824,7 +2841,8 @@
                           },
                           "required": [
                             "role"
-                          ]
+                          ],
+                          "title": "tool"
                         },
                         {
                           "type": "object",
@@ -2846,7 +2864,8 @@
                           "required": [
                             "name",
                             "role"
-                          ]
+                          ],
+                          "title": "function"
                         },
                         {
                           "type": "object",
@@ -2864,7 +2883,8 @@
                           },
                           "required": [
                             "role"
-                          ]
+                          ],
+                          "title": "fallback"
                         }
                       ]
                     }
@@ -2876,9 +2896,11 @@
                 "required": [
                   "type",
                   "messages"
-                ]
+                ],
+                "title": "chat"
               },
               {
+                "title": "nullableVariant",
                 "type": "object",
                 "nullable": true,
                 "additionalProperties": false
@@ -2936,13 +2958,15 @@
                             "type": "string",
                             "enum": [
                               "auto"
-                            ]
+                            ],
+                            "title": "auto"
                           },
                           {
                             "type": "string",
                             "enum": [
                               "none"
-                            ]
+                            ],
+                            "title": "none"
                           },
                           {
                             "type": "object",
@@ -2968,7 +2992,8 @@
                             "required": [
                               "type",
                               "function"
-                            ]
+                            ],
+                            "title": "function"
                           }
                         ]
                       },
@@ -2978,13 +3003,15 @@
                             "type": "string",
                             "enum": [
                               "auto"
-                            ]
+                            ],
+                            "title": "auto"
                           },
                           {
                             "type": "string",
                             "enum": [
                               "none"
-                            ]
+                            ],
+                            "title": "none"
                           },
                           {
                             "type": "object",
@@ -2995,7 +3022,8 @@
                             },
                             "required": [
                               "name"
-                            ]
+                            ],
+                            "title": "function"
                           }
                         ]
                       },
@@ -3008,7 +3036,8 @@
                           "type": "string"
                         }
                       }
-                    }
+                    },
+                    "title": "OpenAIModelParams"
                   },
                   {
                     "type": "object",
@@ -3042,7 +3071,8 @@
                     "required": [
                       "max_tokens",
                       "temperature"
-                    ]
+                    ],
+                    "title": "AnthropicModelParams"
                   },
                   {
                     "type": "object",
@@ -3062,7 +3092,8 @@
                       "topK": {
                         "type": "number"
                       }
-                    }
+                    },
+                    "title": "GoogleModelParams"
                   },
                   {
                     "type": "object",
@@ -3076,7 +3107,8 @@
                       "topK": {
                         "type": "number"
                       }
-                    }
+                    },
+                    "title": "WindowAIModelParams"
                   },
                   {
                     "type": "object",
@@ -3084,7 +3116,8 @@
                       "use_cache": {
                         "type": "boolean"
                       }
-                    }
+                    },
+                    "title": "JsCompletionParams"
                   }
                 ]
               },
@@ -4017,23 +4050,30 @@
                 "items": {
                   "$ref": "#/components/schemas/ProjectScoreCategory"
                 },
-                "description": "For categorical-type project scores, the list of all categories"
+                "description": "For categorical-type project scores, the list of all categories",
+                "title": "categorical"
               },
               {
                 "type": "object",
                 "additionalProperties": {
                   "type": "number"
                 },
-                "description": "For weighted-type project scores, the weights of each score"
+                "description": "For weighted-type project scores, the weights of each score",
+                "title": "weighted",
+                "x-stainless-skip": [
+                  "go"
+                ]
               },
               {
                 "type": "array",
                 "items": {
                   "type": "string"
                 },
-                "description": "For minimum-type project scores, the list of included scores"
+                "description": "For minimum-type project scores, the list of included scores",
+                "title": "minimum"
               },
               {
+                "title": "nullableVariant",
                 "type": "object",
                 "nullable": true,
                 "additionalProperties": false
@@ -4108,23 +4148,30 @@
                 "items": {
                   "$ref": "#/components/schemas/ProjectScoreCategory"
                 },
-                "description": "For categorical-type project scores, the list of all categories"
+                "description": "For categorical-type project scores, the list of all categories",
+                "title": "categorical"
               },
               {
                 "type": "object",
                 "additionalProperties": {
                   "type": "number"
                 },
-                "description": "For weighted-type project scores, the weights of each score"
+                "description": "For weighted-type project scores, the weights of each score",
+                "title": "weighted",
+                "x-stainless-skip": [
+                  "go"
+                ]
               },
               {
                 "type": "array",
                 "items": {
                   "type": "string"
                 },
-                "description": "For minimum-type project scores, the list of included scores"
+                "description": "For minimum-type project scores, the list of included scores",
+                "title": "minimum"
               },
               {
+                "title": "nullableVariant",
                 "type": "object",
                 "nullable": true,
                 "additionalProperties": false
@@ -4170,23 +4217,30 @@
                 "items": {
                   "$ref": "#/components/schemas/ProjectScoreCategory"
                 },
-                "description": "For categorical-type project scores, the list of all categories"
+                "description": "For categorical-type project scores, the list of all categories",
+                "title": "categorical"
               },
               {
                 "type": "object",
                 "additionalProperties": {
                   "type": "number"
                 },
-                "description": "For weighted-type project scores, the weights of each score"
+                "description": "For weighted-type project scores, the weights of each score",
+                "title": "weighted",
+                "x-stainless-skip": [
+                  "go"
+                ]
               },
               {
                 "type": "array",
                 "items": {
                   "type": "string"
                 },
-                "description": "For minimum-type project scores, the list of included scores"
+                "description": "For minimum-type project scores, the list of included scores",
+                "title": "minimum"
               },
               {
+                "title": "nullableVariant",
                 "type": "object",
                 "nullable": true,
                 "additionalProperties": false
@@ -4370,7 +4424,8 @@
                 },
                 "required": [
                   "type"
-                ]
+                ],
+                "title": "prompt"
               },
               {
                 "type": "object",
@@ -4420,7 +4475,8 @@
                                 "type": "string",
                                 "enum": [
                                   "task"
-                                ]
+                                ],
+                                "title": "task"
                               },
                               {
                                 "type": "object",
@@ -4431,7 +4487,8 @@
                                 },
                                 "required": [
                                   "score"
-                                ]
+                                ],
+                                "title": "score"
                               }
                             ]
                           }
@@ -4456,7 +4513,8 @@
                 "required": [
                   "type",
                   "data"
-                ]
+                ],
+                "title": "code"
               },
               {
                 "type": "object",
@@ -4474,7 +4532,8 @@
                 "required": [
                   "type",
                   "name"
-                ]
+                ],
+                "title": "global"
               }
             ]
           }
@@ -4536,7 +4595,8 @@
                 },
                 "required": [
                   "type"
-                ]
+                ],
+                "title": "prompt"
               },
               {
                 "type": "object",
@@ -4586,7 +4646,8 @@
                                 "type": "string",
                                 "enum": [
                                   "task"
-                                ]
+                                ],
+                                "title": "task"
                               },
                               {
                                 "type": "object",
@@ -4597,7 +4658,8 @@
                                 },
                                 "required": [
                                   "score"
-                                ]
+                                ],
+                                "title": "score"
                               }
                             ]
                           }
@@ -4622,7 +4684,8 @@
                 "required": [
                   "type",
                   "data"
-                ]
+                ],
+                "title": "code"
               },
               {
                 "type": "object",
@@ -4640,7 +4703,8 @@
                 "required": [
                   "type",
                   "name"
-                ]
+                ],
+                "title": "global"
               }
             ]
           }
@@ -4682,7 +4746,8 @@
                 },
                 "required": [
                   "type"
-                ]
+                ],
+                "title": "prompt"
               },
               {
                 "type": "object",
@@ -4732,7 +4797,8 @@
                                 "type": "string",
                                 "enum": [
                                   "task"
-                                ]
+                                ],
+                                "title": "task"
                               },
                               {
                                 "type": "object",
@@ -4743,7 +4809,8 @@
                                 },
                                 "required": [
                                   "score"
-                                ]
+                                ],
+                                "title": "score"
                               }
                             ]
                           }
@@ -4768,7 +4835,8 @@
                 "required": [
                   "type",
                   "data"
-                ]
+                ],
+                "title": "code"
               },
               {
                 "type": "object",
@@ -4786,9 +4854,11 @@
                 "required": [
                   "type",
                   "name"
-                ]
+                ],
+                "title": "global"
               },
               {
+                "title": "nullableVariant",
                 "type": "object",
                 "nullable": true,
                 "additionalProperties": false
