@@ -14,6 +14,9 @@ info:
     name: Apache 2.0
 servers:
   - url: https://api.braintrust.dev
+security:
+  - bearerAuth: []
+  - {}
 components:
   securitySchemes:
     bearerAuth:
@@ -2653,6 +2656,7 @@ components:
               required:
                 - type
                 - content
+              title: completion
             - type: object
               properties:
                 type:
@@ -2676,12 +2680,14 @@ components:
                             type: string
                         required:
                           - role
+                        title: system
                       - type: object
                         properties:
                           content:
                             anyOf:
                               - type: string
                                 default: ""
+                                title: text
                               - type: array
                                 items:
                                   anyOf:
@@ -2696,6 +2702,7 @@ components:
                                             - text
                                       required:
                                         - type
+                                      title: text
                                     - type: object
                                       properties:
                                         image_url:
@@ -2708,12 +2715,15 @@ components:
                                                 - type: string
                                                   enum:
                                                     - auto
+                                                  title: auto
                                                 - type: string
                                                   enum:
                                                     - low
+                                                  title: low
                                                 - type: string
                                                   enum:
                                                     - high
+                                                  title: high
                                           required:
                                             - url
                                         type:
@@ -2723,6 +2733,8 @@ components:
                                       required:
                                         - image_url
                                         - type
+                                      title: image_url
+                                title: array
                           role:
                             type: string
                             enum:
@@ -2731,6 +2743,7 @@ components:
                             type: string
                         required:
                           - role
+                        title: user
                       - type: object
                         properties:
                           role:
@@ -2779,6 +2792,7 @@ components:
                                 - type
                         required:
                           - role
+                        title: assistant
                       - type: object
                         properties:
                           content:
@@ -2793,6 +2807,7 @@ components:
                             default: ""
                         required:
                           - role
+                        title: tool
                       - type: object
                         properties:
                           content:
@@ -2807,6 +2822,7 @@ components:
                         required:
                           - name
                           - role
+                        title: function
                       - type: object
                         properties:
                           role:
@@ -2818,12 +2834,15 @@ components:
                             nullable: true
                         required:
                           - role
+                        title: fallback
                 tools:
                   type: string
               required:
                 - type
                 - messages
-            - type: object
+              title: chat
+            - title: nullableVariant
+              type: object
               nullable: true
               additionalProperties: false
         options:
@@ -2863,9 +2882,11 @@ components:
                         - type: string
                           enum:
                             - auto
+                          title: auto
                         - type: string
                           enum:
                             - none
+                          title: none
                         - type: object
                           properties:
                             type:
@@ -2882,26 +2903,31 @@ components:
                           required:
                             - type
                             - function
+                          title: function
                     function_call:
                       anyOf:
                         - type: string
                           enum:
                             - auto
+                          title: auto
                         - type: string
                           enum:
                             - none
+                          title: none
                         - type: object
                           properties:
                             name:
                               type: string
                           required:
                             - name
+                          title: function
                     n:
                       type: number
                     stop:
                       type: array
                       items:
                         type: string
+                  title: OpenAIModelParams
                 - type: object
                   properties:
                     use_cache:
@@ -2924,6 +2950,7 @@ components:
                   required:
                     - max_tokens
                     - temperature
+                  title: AnthropicModelParams
                 - type: object
                   properties:
                     use_cache:
@@ -2936,6 +2963,7 @@ components:
                       type: number
                     topK:
                       type: number
+                  title: GoogleModelParams
                 - type: object
                   properties:
                     use_cache:
@@ -2944,10 +2972,12 @@ components:
                       type: number
                     topK:
                       type: number
+                  title: WindowAIModelParams
                 - type: object
                   properties:
                     use_cache:
                       type: boolean
+                  title: JsCompletionParams
             position:
               type: string
         origin:
@@ -3796,15 +3826,21 @@ components:
               items:
                 $ref: "#/components/schemas/ProjectScoreCategory"
               description: For categorical-type project scores, the list of all categories
+              title: categorical
             - type: object
               additionalProperties:
                 type: number
               description: For weighted-type project scores, the weights of each score
+              title: weighted
+              x-stainless-skip:
+                - go
             - type: array
               items:
                 type: string
               description: For minimum-type project scores, the list of included scores
-            - type: object
+              title: minimum
+            - title: nullableVariant
+              type: object
               nullable: true
               additionalProperties: false
         config:
@@ -3863,15 +3899,21 @@ components:
               items:
                 $ref: "#/components/schemas/ProjectScoreCategory"
               description: For categorical-type project scores, the list of all categories
+              title: categorical
             - type: object
               additionalProperties:
                 type: number
               description: For weighted-type project scores, the weights of each score
+              title: weighted
+              x-stainless-skip:
+                - go
             - type: array
               items:
                 type: string
               description: For minimum-type project scores, the list of included scores
-            - type: object
+              title: minimum
+            - title: nullableVariant
+              type: object
               nullable: true
               additionalProperties: false
       required:
@@ -3905,15 +3947,21 @@ components:
               items:
                 $ref: "#/components/schemas/ProjectScoreCategory"
               description: For categorical-type project scores, the list of all categories
+              title: categorical
             - type: object
               additionalProperties:
                 type: number
               description: For weighted-type project scores, the weights of each score
+              title: weighted
+              x-stainless-skip:
+                - go
             - type: array
               items:
                 type: string
               description: For minimum-type project scores, the list of included scores
-            - type: object
+              title: minimum
+            - title: nullableVariant
+              type: object
               nullable: true
               additionalProperties: false
     ProjectTag:
@@ -4054,6 +4102,7 @@ components:
                     - prompt
               required:
                 - type
+              title: prompt
             - type: object
               properties:
                 type:
@@ -4089,12 +4138,14 @@ components:
                             - type: string
                               enum:
                                 - task
+                              title: task
                             - type: object
                               properties:
                                 score:
                                   type: number
                               required:
                                 - score
+                              title: score
                       required:
                         - type
                         - eval_name
@@ -4108,6 +4159,7 @@ components:
               required:
                 - type
                 - data
+              title: code
             - type: object
               properties:
                 type:
@@ -4119,6 +4171,7 @@ components:
               required:
                 - type
                 - name
+              title: global
       required:
         - id
         - _xact_id
@@ -4163,6 +4216,7 @@ components:
                     - prompt
               required:
                 - type
+              title: prompt
             - type: object
               properties:
                 type:
@@ -4198,12 +4252,14 @@ components:
                             - type: string
                               enum:
                                 - task
+                              title: task
                             - type: object
                               properties:
                                 score:
                                   type: number
                               required:
                                 - score
+                              title: score
                       required:
                         - type
                         - eval_name
@@ -4217,6 +4273,7 @@ components:
               required:
                 - type
                 - data
+              title: code
             - type: object
               properties:
                 type:
@@ -4228,6 +4285,7 @@ components:
               required:
                 - type
                 - name
+              title: global
       required:
         - project_id
         - name
@@ -4256,6 +4314,7 @@ components:
                     - prompt
               required:
                 - type
+              title: prompt
             - type: object
               properties:
                 type:
@@ -4291,12 +4350,14 @@ components:
                             - type: string
                               enum:
                                 - task
+                              title: task
                             - type: object
                               properties:
                                 score:
                                   type: number
                               required:
                                 - score
+                              title: score
                       required:
                         - type
                         - eval_name
@@ -4310,6 +4371,7 @@ components:
               required:
                 - type
                 - data
+              title: code
             - type: object
               properties:
                 type:
@@ -4321,7 +4383,9 @@ components:
               required:
                 - type
                 - name
-            - type: object
+              title: global
+            - title: nullableVariant
+              type: object
               nullable: true
               additionalProperties: false
         tags:
