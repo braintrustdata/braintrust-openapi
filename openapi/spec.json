@@ -104,6 +104,11 @@
         "format": "uuid",
         "description": "ApiKey id"
       },
+      "ProjectIdQuery": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Project id"
+      },
       "ProjectName": {
         "type": "string",
         "description": "Name of the project to search for"
@@ -5679,6 +5684,15 @@
         "name": "api_key_id",
         "in": "path"
       },
+      "ProjectIdQuery": {
+        "schema": {
+          "$ref": "#/components/schemas/ProjectIdQuery"
+        },
+        "required": true,
+        "description": "Project id",
+        "name": "project_id",
+        "in": "query"
+      },
       "ProjectName": {
         "schema": {
           "$ref": "#/components/schemas/ProjectName"
@@ -7495,6 +7509,9 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "$ref": "#/components/parameters/ProjectIdQuery"
+          },
+          {
             "$ref": "#/components/parameters/OrgName"
           }
         ],
@@ -9023,6 +9040,9 @@
           },
           {
             "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/OrgName"
@@ -10662,6 +10682,9 @@
           },
           {
             "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/Slug"
@@ -14053,6 +14076,9 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "$ref": "#/components/parameters/ProjectIdQuery"
+          },
+          {
             "$ref": "#/components/parameters/OrgName"
           }
         ],
@@ -14866,6 +14892,9 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "$ref": "#/components/parameters/ProjectIdQuery"
+          },
+          {
             "$ref": "#/components/parameters/OrgName"
           }
         ],
@@ -15677,6 +15706,9 @@
           },
           {
             "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/Slug"
@@ -16646,6 +16678,9 @@
           },
           {
             "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/ViewType"
