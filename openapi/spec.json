@@ -5688,7 +5688,7 @@
         "schema": {
           "$ref": "#/components/schemas/ProjectIdQuery"
         },
-        "required": true,
+        "required": false,
         "description": "Project id",
         "name": "project_id",
         "in": "query"
@@ -16434,7 +16434,7 @@
           {}
         ],
         "operationId": "postView",
-        "description": "Create a new view. If there is an existing view in the project with the same name as the one specified in the request, will return the existing view unmodified",
+        "description": "Create a new view. If there is an existing view with the same name as the one specified in the request, will return the existing view unmodified",
         "summary": "Create view",
         "requestBody": {
           "description": "Any desired information about the new view object",
@@ -16546,7 +16546,7 @@
           {}
         ],
         "operationId": "putView",
-        "description": "Create or replace view. If there is an existing view in the project with the same name as the one specified in the request, will replace the existing view with the provided fields",
+        "description": "Create or replace view. If there is an existing view with the same name as the one specified in the request, will replace the existing view with the provided fields",
         "summary": "Create or replace view",
         "requestBody": {
           "description": "Any desired information about the new view object",
@@ -16675,12 +16675,6 @@
           },
           {
             "$ref": "#/components/parameters/ViewName"
-          },
-          {
-            "$ref": "#/components/parameters/ProjectName"
-          },
-          {
-            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/ViewType"
