@@ -213,7 +213,7 @@
         "type": "string",
         "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
       },
-      "Version (prompt)": {
+      "PromptVersion": {
         "type": "string",
         "description": "Retrieve prompt at a specific version.\n\nThe version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3')."
       },
@@ -5929,9 +5929,9 @@
         "name": "version",
         "in": "query"
       },
-      "Version (prompt)": {
+      "PromptVersion": {
         "schema": {
-          "$ref": "#/components/schemas/Version (prompt)"
+          "$ref": "#/components/schemas/PromptVersion"
         },
         "required": false,
         "description": "Retrieve prompt at a specific version.\n\nThe version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3').",
@@ -10714,7 +10714,7 @@
             "$ref": "#/components/parameters/Slug"
           },
           {
-            "$ref": "#/components/parameters/Version (prompt)"
+            "$ref": "#/components/parameters/PromptVersion"
           },
           {
             "$ref": "#/components/parameters/OrgName"
@@ -15738,7 +15738,7 @@
             "$ref": "#/components/parameters/Slug"
           },
           {
-            "$ref": "#/components/parameters/Version (prompt)"
+            "$ref": "#/components/parameters/PromptVersion"
           },
           {
             "$ref": "#/components/parameters/OrgName"
