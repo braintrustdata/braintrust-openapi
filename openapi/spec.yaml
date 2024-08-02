@@ -88,6 +88,10 @@ components:
       type: string
       format: uuid
       description: ApiKey id
+    ProjectIdQuery:
+      type: string
+      format: uuid
+      description: Project id
     ProjectName:
       type: string
       description: Name of the project to search for
@@ -5025,6 +5029,13 @@ components:
       description: ApiKey id
       name: api_key_id
       in: path
+    ProjectIdQuery:
+      schema:
+        $ref: "#/components/schemas/ProjectIdQuery"
+      required: false
+      description: Project id
+      name: project_id
+      in: query
     ProjectName:
       schema:
         $ref: "#/components/schemas/ProjectName"
@@ -6281,6 +6292,7 @@ paths:
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ExperimentName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/ProjectIdQuery"
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
@@ -7228,6 +7240,7 @@ paths:
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/DatasetName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/ProjectIdQuery"
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
@@ -8246,6 +8259,7 @@ paths:
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/PromptName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/ProjectIdQuery"
         - $ref: "#/components/parameters/Slug"
         - $ref: "#/components/parameters/Version (prompt)"
         - $ref: "#/components/parameters/OrgName"
@@ -10357,6 +10371,7 @@ paths:
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ProjectScoreName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/ProjectIdQuery"
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
@@ -10865,6 +10880,7 @@ paths:
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ProjectTagName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/ProjectIdQuery"
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
@@ -11373,6 +11389,7 @@ paths:
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/FunctionName"
         - $ref: "#/components/parameters/ProjectName"
+        - $ref: "#/components/parameters/ProjectIdQuery"
         - $ref: "#/components/parameters/Slug"
         - $ref: "#/components/parameters/Version (prompt)"
         - $ref: "#/components/parameters/OrgName"
@@ -11825,9 +11842,9 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postView
-      description: Create a new view. If there is an existing view in the project with
-        the same name as the one specified in the request, will return the
-        existing view unmodified
+      description: Create a new view. If there is an existing view with the same name
+        as the one specified in the request, will return the existing view
+        unmodified
       summary: Create view
       requestBody:
         description: Any desired information about the new view object
@@ -11897,9 +11914,9 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putView
-      description: Create or replace view. If there is an existing view in the project
-        with the same name as the one specified in the request, will replace the
-        existing view with the provided fields
+      description: Create or replace view. If there is an existing view with the same
+        name as the one specified in the request, will replace the existing view
+        with the provided fields
       summary: Create or replace view
       requestBody:
         description: Any desired information about the new view object
@@ -11978,7 +11995,6 @@ paths:
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/ViewName"
-        - $ref: "#/components/parameters/ProjectName"
         - $ref: "#/components/parameters/ViewType"
         - $ref: "#/components/parameters/AclObjectType"
         - $ref: "#/components/parameters/AclObjectId"

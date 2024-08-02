@@ -104,6 +104,11 @@
         "format": "uuid",
         "description": "ApiKey id"
       },
+      "ProjectIdQuery": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Project id"
+      },
       "ProjectName": {
         "type": "string",
         "description": "Name of the project to search for"
@@ -5703,6 +5708,15 @@
         "name": "api_key_id",
         "in": "path"
       },
+      "ProjectIdQuery": {
+        "schema": {
+          "$ref": "#/components/schemas/ProjectIdQuery"
+        },
+        "required": false,
+        "description": "Project id",
+        "name": "project_id",
+        "in": "query"
+      },
       "ProjectName": {
         "schema": {
           "$ref": "#/components/schemas/ProjectName"
@@ -7519,6 +7533,9 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "$ref": "#/components/parameters/ProjectIdQuery"
+          },
+          {
             "$ref": "#/components/parameters/OrgName"
           }
         ],
@@ -9047,6 +9064,9 @@
           },
           {
             "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/OrgName"
@@ -10686,6 +10706,9 @@
           },
           {
             "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/Slug"
@@ -14077,6 +14100,9 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "$ref": "#/components/parameters/ProjectIdQuery"
+          },
+          {
             "$ref": "#/components/parameters/OrgName"
           }
         ],
@@ -14888,6 +14914,9 @@
           },
           {
             "$ref": "#/components/parameters/ProjectName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectIdQuery"
           },
           {
             "$ref": "#/components/parameters/OrgName"
@@ -15703,6 +15732,9 @@
             "$ref": "#/components/parameters/ProjectName"
           },
           {
+            "$ref": "#/components/parameters/ProjectIdQuery"
+          },
+          {
             "$ref": "#/components/parameters/Slug"
           },
           {
@@ -16426,7 +16458,7 @@
           {}
         ],
         "operationId": "postView",
-        "description": "Create a new view. If there is an existing view in the project with the same name as the one specified in the request, will return the existing view unmodified",
+        "description": "Create a new view. If there is an existing view with the same name as the one specified in the request, will return the existing view unmodified",
         "summary": "Create view",
         "requestBody": {
           "description": "Any desired information about the new view object",
@@ -16538,7 +16570,7 @@
           {}
         ],
         "operationId": "putView",
-        "description": "Create or replace view. If there is an existing view in the project with the same name as the one specified in the request, will replace the existing view with the provided fields",
+        "description": "Create or replace view. If there is an existing view with the same name as the one specified in the request, will replace the existing view with the provided fields",
         "summary": "Create or replace view",
         "requestBody": {
           "description": "Any desired information about the new view object",
@@ -16667,9 +16699,6 @@
           },
           {
             "$ref": "#/components/parameters/ViewName"
-          },
-          {
-            "$ref": "#/components/parameters/ProjectName"
           },
           {
             "$ref": "#/components/parameters/ViewType"
