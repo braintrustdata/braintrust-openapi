@@ -213,7 +213,7 @@
         "type": "string",
         "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
       },
-      "Version (prompt)": {
+      "PromptVersion": {
         "type": "string",
         "description": "Retrieve prompt at a specific version.\n\nThe version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3')."
       },
@@ -436,6 +436,10 @@
             "nullable": true,
             "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models."
           },
+          "error": {
+            "nullable": true,
+            "description": "The error that occurred, if any."
+          },
           "scores": {
             "type": "object",
             "nullable": true,
@@ -598,6 +602,10 @@
           "expected": {
             "nullable": true,
             "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models."
+          },
+          "error": {
+            "nullable": true,
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -824,6 +832,10 @@
           "expected": {
             "nullable": true,
             "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models."
+          },
+          "error": {
+            "nullable": true,
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -1388,6 +1400,10 @@
             "nullable": true,
             "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate your experiments while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models"
           },
+          "error": {
+            "nullable": true,
+            "description": "The error that occurred, if any."
+          },
           "scores": {
             "type": "object",
             "nullable": true,
@@ -1555,6 +1571,10 @@
           "expected": {
             "nullable": true,
             "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate your experiments while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models"
+          },
+          "error": {
+            "nullable": true,
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -1784,6 +1804,10 @@
           "expected": {
             "nullable": true,
             "description": "The ground truth value (an arbitrary, JSON serializable object) that you'd compare to `output` to determine if your `output` value is correct or not. Braintrust currently does not compare `output` to `expected` for you, since there are so many different ways to do that correctly. Instead, these values are just used to help you navigate your experiments while digging into analyses. However, we may later use these values to re-score outputs or fine-tune your models"
+          },
+          "error": {
+            "nullable": true,
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -5905,9 +5929,9 @@
         "name": "version",
         "in": "query"
       },
-      "Version (prompt)": {
+      "PromptVersion": {
         "schema": {
-          "$ref": "#/components/schemas/Version (prompt)"
+          "$ref": "#/components/schemas/PromptVersion"
         },
         "required": false,
         "description": "Retrieve prompt at a specific version.\n\nThe version id can either be a transaction id (e.g. '1000192656880881099') or a version identifier (e.g. '81cd05ee665fdfb3').",
@@ -10690,7 +10714,7 @@
             "$ref": "#/components/parameters/Slug"
           },
           {
-            "$ref": "#/components/parameters/Version (prompt)"
+            "$ref": "#/components/parameters/PromptVersion"
           },
           {
             "$ref": "#/components/parameters/OrgName"
@@ -15714,7 +15738,7 @@
             "$ref": "#/components/parameters/Slug"
           },
           {
-            "$ref": "#/components/parameters/Version (prompt)"
+            "$ref": "#/components/parameters/PromptVersion"
           },
           {
             "$ref": "#/components/parameters/OrgName"
