@@ -423,7 +423,7 @@ components:
             these values to re-score outputs or fine-tune your models.
         error:
           nullable: true
-          description: The error that occurred, if any
+          description: The error that occurred, if any.
         scores:
           type: object
           nullable: true
@@ -618,7 +618,7 @@ components:
             these values to re-score outputs or fine-tune your models.
         error:
           nullable: true
-          description: The error that occurred, if any
+          description: The error that occurred, if any.
         scores:
           type: object
           nullable: true
@@ -859,7 +859,7 @@ components:
             these values to re-score outputs or fine-tune your models.
         error:
           nullable: true
-          description: The error that occurred, if any
+          description: The error that occurred, if any.
         scores:
           type: object
           nullable: true
@@ -1443,7 +1443,7 @@ components:
             models
         error:
           nullable: true
-          description: The error that occurred, if any
+          description: The error that occurred, if any.
         scores:
           type: object
           nullable: true
@@ -1648,7 +1648,7 @@ components:
             models
         error:
           nullable: true
-          description: The error that occurred, if any
+          description: The error that occurred, if any.
         scores:
           type: object
           nullable: true
@@ -1899,7 +1899,7 @@ components:
             models
         error:
           nullable: true
-          description: The error that occurred, if any
+          description: The error that occurred, if any.
         scores:
           type: object
           nullable: true

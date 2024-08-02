@@ -438,7 +438,7 @@
           },
           "error": {
             "nullable": true,
-            "description": "The error that occurred, if any"
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -605,7 +605,7 @@
           },
           "error": {
             "nullable": true,
-            "description": "The error that occurred, if any"
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -835,7 +835,7 @@
           },
           "error": {
             "nullable": true,
-            "description": "The error that occurred, if any"
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -1402,7 +1402,7 @@
           },
           "error": {
             "nullable": true,
-            "description": "The error that occurred, if any"
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -1574,7 +1574,7 @@
           },
           "error": {
             "nullable": true,
-            "description": "The error that occurred, if any"
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
@@ -1807,7 +1807,7 @@
           },
           "error": {
             "nullable": true,
-            "description": "The error that occurred, if any"
+            "description": "The error that occurred, if any."
           },
           "scores": {
             "type": "object",
