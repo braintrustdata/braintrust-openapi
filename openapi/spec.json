@@ -2785,6 +2785,7 @@
                             },
                             "function_call": {
                               "type": "object",
+                              "nullable": true,
                               "properties": {
                                 "arguments": {
                                   "type": "string"
@@ -2799,10 +2800,12 @@
                               ]
                             },
                             "name": {
-                              "type": "string"
+                              "type": "string",
+                              "nullable": true
                             },
                             "tool_calls": {
                               "type": "array",
+                              "nullable": true,
                               "items": {
                                 "type": "object",
                                 "properties": {
