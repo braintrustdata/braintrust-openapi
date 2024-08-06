@@ -2753,6 +2753,7 @@ components:
                             nullable: true
                           function_call:
                             type: object
+                            nullable: true
                             properties:
                               arguments:
                                 type: string
@@ -2763,8 +2764,10 @@ components:
                               - name
                           name:
                             type: string
+                            nullable: true
                           tool_calls:
                             type: array
+                            nullable: true
                             items:
                               type: object
                               properties:
