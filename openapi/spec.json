@@ -3152,6 +3152,34 @@
               }
             }
           },
+          "parser": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "llm_classifier"
+                ]
+              },
+              "use_cot": {
+                "type": "boolean"
+              },
+              "choice_scores": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            },
+            "required": [
+              "type",
+              "use_cot",
+              "choice_scores"
+            ]
+          },
           "origin": {
             "type": "object",
             "nullable": true,
