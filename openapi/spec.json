@@ -4491,76 +4491,135 @@
                     ]
                   },
                   "data": {
-                    "type": "object",
-                    "properties": {
-                      "runtime_context": {
-                        "type": "object",
-                        "properties": {
-                          "runtime": {
-                            "type": "string",
-                            "enum": [
-                              "node"
+                    "anyOf": [
+                      {
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "bundle"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type"
                             ]
                           },
-                          "version": {
-                            "type": "string"
+                          {
+                            "type": "object",
+                            "properties": {
+                              "runtime_context": {
+                                "type": "object",
+                                "properties": {
+                                  "runtime": {
+                                    "type": "string",
+                                    "enum": [
+                                      "node"
+                                    ]
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "runtime",
+                                  "version"
+                                ]
+                              },
+                              "location": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "experiment"
+                                    ]
+                                  },
+                                  "eval_name": {
+                                    "type": "string"
+                                  },
+                                  "position": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "task"
+                                        ],
+                                        "title": "task"
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "score": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "score"
+                                        ],
+                                        "title": "score"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "eval_name",
+                                  "position"
+                                ]
+                              },
+                              "bundle_id": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "runtime_context",
+                              "location",
+                              "bundle_id"
+                            ]
                           }
-                        },
-                        "required": [
-                          "runtime",
-                          "version"
                         ]
                       },
-                      "location": {
+                      {
                         "type": "object",
                         "properties": {
                           "type": {
                             "type": "string",
                             "enum": [
-                              "experiment"
+                              "inline"
                             ]
                           },
-                          "eval_name": {
-                            "type": "string"
-                          },
-                          "position": {
-                            "anyOf": [
-                              {
+                          "runtime_context": {
+                            "type": "object",
+                            "properties": {
+                              "runtime": {
                                 "type": "string",
                                 "enum": [
-                                  "task"
-                                ],
-                                "title": "task"
+                                  "node"
+                                ]
                               },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "score": {
-                                    "type": "number"
-                                  }
-                                },
-                                "required": [
-                                  "score"
-                                ],
-                                "title": "score"
+                              "version": {
+                                "type": "string"
                               }
+                            },
+                            "required": [
+                              "runtime",
+                              "version"
                             ]
+                          },
+                          "code": {
+                            "type": "string"
                           }
                         },
                         "required": [
                           "type",
-                          "eval_name",
-                          "position"
+                          "runtime_context",
+                          "code"
                         ]
-                      },
-                      "bundle_id": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "runtime_context",
-                      "location",
-                      "bundle_id"
                     ]
                   }
                 },
@@ -4671,76 +4730,135 @@
                     ]
                   },
                   "data": {
-                    "type": "object",
-                    "properties": {
-                      "runtime_context": {
-                        "type": "object",
-                        "properties": {
-                          "runtime": {
-                            "type": "string",
-                            "enum": [
-                              "node"
+                    "anyOf": [
+                      {
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "bundle"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type"
                             ]
                           },
-                          "version": {
-                            "type": "string"
+                          {
+                            "type": "object",
+                            "properties": {
+                              "runtime_context": {
+                                "type": "object",
+                                "properties": {
+                                  "runtime": {
+                                    "type": "string",
+                                    "enum": [
+                                      "node"
+                                    ]
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "runtime",
+                                  "version"
+                                ]
+                              },
+                              "location": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "experiment"
+                                    ]
+                                  },
+                                  "eval_name": {
+                                    "type": "string"
+                                  },
+                                  "position": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "task"
+                                        ],
+                                        "title": "task"
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "score": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "score"
+                                        ],
+                                        "title": "score"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "eval_name",
+                                  "position"
+                                ]
+                              },
+                              "bundle_id": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "runtime_context",
+                              "location",
+                              "bundle_id"
+                            ]
                           }
-                        },
-                        "required": [
-                          "runtime",
-                          "version"
                         ]
                       },
-                      "location": {
+                      {
                         "type": "object",
                         "properties": {
                           "type": {
                             "type": "string",
                             "enum": [
-                              "experiment"
+                              "inline"
                             ]
                           },
-                          "eval_name": {
-                            "type": "string"
-                          },
-                          "position": {
-                            "anyOf": [
-                              {
+                          "runtime_context": {
+                            "type": "object",
+                            "properties": {
+                              "runtime": {
                                 "type": "string",
                                 "enum": [
-                                  "task"
-                                ],
-                                "title": "task"
+                                  "node"
+                                ]
                               },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "score": {
-                                    "type": "number"
-                                  }
-                                },
-                                "required": [
-                                  "score"
-                                ],
-                                "title": "score"
+                              "version": {
+                                "type": "string"
                               }
+                            },
+                            "required": [
+                              "runtime",
+                              "version"
                             ]
+                          },
+                          "code": {
+                            "type": "string"
                           }
                         },
                         "required": [
                           "type",
-                          "eval_name",
-                          "position"
+                          "runtime_context",
+                          "code"
                         ]
-                      },
-                      "bundle_id": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "runtime_context",
-                      "location",
-                      "bundle_id"
                     ]
                   }
                 },
@@ -4831,76 +4949,135 @@
                     ]
                   },
                   "data": {
-                    "type": "object",
-                    "properties": {
-                      "runtime_context": {
-                        "type": "object",
-                        "properties": {
-                          "runtime": {
-                            "type": "string",
-                            "enum": [
-                              "node"
+                    "anyOf": [
+                      {
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "bundle"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type"
                             ]
                           },
-                          "version": {
-                            "type": "string"
+                          {
+                            "type": "object",
+                            "properties": {
+                              "runtime_context": {
+                                "type": "object",
+                                "properties": {
+                                  "runtime": {
+                                    "type": "string",
+                                    "enum": [
+                                      "node"
+                                    ]
+                                  },
+                                  "version": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "runtime",
+                                  "version"
+                                ]
+                              },
+                              "location": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "experiment"
+                                    ]
+                                  },
+                                  "eval_name": {
+                                    "type": "string"
+                                  },
+                                  "position": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "task"
+                                        ],
+                                        "title": "task"
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "score": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "score"
+                                        ],
+                                        "title": "score"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "type",
+                                  "eval_name",
+                                  "position"
+                                ]
+                              },
+                              "bundle_id": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "runtime_context",
+                              "location",
+                              "bundle_id"
+                            ]
                           }
-                        },
-                        "required": [
-                          "runtime",
-                          "version"
                         ]
                       },
-                      "location": {
+                      {
                         "type": "object",
                         "properties": {
                           "type": {
                             "type": "string",
                             "enum": [
-                              "experiment"
+                              "inline"
                             ]
                           },
-                          "eval_name": {
-                            "type": "string"
-                          },
-                          "position": {
-                            "anyOf": [
-                              {
+                          "runtime_context": {
+                            "type": "object",
+                            "properties": {
+                              "runtime": {
                                 "type": "string",
                                 "enum": [
-                                  "task"
-                                ],
-                                "title": "task"
+                                  "node"
+                                ]
                               },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "score": {
-                                    "type": "number"
-                                  }
-                                },
-                                "required": [
-                                  "score"
-                                ],
-                                "title": "score"
+                              "version": {
+                                "type": "string"
                               }
+                            },
+                            "required": [
+                              "runtime",
+                              "version"
                             ]
+                          },
+                          "code": {
+                            "type": "string"
                           }
                         },
                         "required": [
                           "type",
-                          "eval_name",
-                          "position"
+                          "runtime_context",
+                          "code"
                         ]
-                      },
-                      "bundle_id": {
-                        "type": "string"
                       }
-                    },
-                    "required": [
-                      "runtime_context",
-                      "location",
-                      "bundle_id"
                     ]
                   }
                 },
@@ -19632,12 +19809,17 @@
                               "runtime",
                               "version"
                             ]
+                          },
+                          "code": {
+                            "type": "string",
+                            "description": "The inline code to execute"
                           }
                         },
                         "required": [
-                          "inline_context"
+                          "inline_context",
+                          "code"
                         ],
-                        "description": "The runtime to use for inline code"
+                        "description": "Inline code function"
                       }
                     ],
                     "description": "The function to evaluate"
@@ -19740,12 +19922,17 @@
                                 "runtime",
                                 "version"
                               ]
+                            },
+                            "code": {
+                              "type": "string",
+                              "description": "The inline code to execute"
                             }
                           },
                           "required": [
-                            "inline_context"
+                            "inline_context",
+                            "code"
                           ],
-                          "description": "The runtime to use for inline code"
+                          "description": "Inline code function"
                         }
                       ],
                       "description": "Options for identifying a function"
