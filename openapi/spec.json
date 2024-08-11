@@ -4590,6 +4590,15 @@
                 "title": "global"
               }
             ]
+          },
+          "function_type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "llm",
+              "scorer",
+              null
+            ]
           }
         },
         "required": [
@@ -4760,6 +4769,15 @@
                 ],
                 "title": "global"
               }
+            ]
+          },
+          "function_type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "llm",
+              "scorer",
+              null
             ]
           }
         },
@@ -19593,6 +19611,33 @@
                           "prompt_session_function_id"
                         ],
                         "description": "Prompt session id"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "inline_context": {
+                            "type": "object",
+                            "properties": {
+                              "runtime": {
+                                "type": "string",
+                                "enum": [
+                                  "node"
+                                ]
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "runtime",
+                              "version"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "inline_context"
+                        ],
+                        "description": "The runtime to use for inline code"
                       }
                     ],
                     "description": "The function to evaluate"
@@ -19674,6 +19719,33 @@
                             "prompt_session_function_id"
                           ],
                           "description": "Prompt session id"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "inline_context": {
+                              "type": "object",
+                              "properties": {
+                                "runtime": {
+                                  "type": "string",
+                                  "enum": [
+                                    "node"
+                                  ]
+                                },
+                                "version": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "runtime",
+                                "version"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "inline_context"
+                          ],
+                          "description": "The runtime to use for inline code"
                         }
                       ],
                       "description": "Options for identifying a function"

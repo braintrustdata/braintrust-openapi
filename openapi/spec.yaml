@@ -4193,6 +4193,13 @@ components:
                 - type
                 - name
               title: global
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
       required:
         - id
         - _xact_id
@@ -4307,6 +4314,13 @@ components:
                 - type
                 - name
               title: global
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
       required:
         - project_id
         - name
@@ -13837,6 +13851,23 @@ paths:
                         - prompt_session_id
                         - prompt_session_function_id
                       description: Prompt session id
+                    - type: object
+                      properties:
+                        inline_context:
+                          type: object
+                          properties:
+                            runtime:
+                              type: string
+                              enum:
+                                - node
+                            version:
+                              type: string
+                          required:
+                            - runtime
+                            - version
+                      required:
+                        - inline_context
+                      description: The runtime to use for inline code
                   description: The function to evaluate
                 scores:
                   type: array
@@ -13892,6 +13923,23 @@ paths:
                           - prompt_session_id
                           - prompt_session_function_id
                         description: Prompt session id
+                      - type: object
+                        properties:
+                          inline_context:
+                            type: object
+                            properties:
+                              runtime:
+                                type: string
+                                enum:
+                                  - node
+                              version:
+                                type: string
+                            required:
+                              - runtime
+                              - version
+                        required:
+                          - inline_context
+                        description: The runtime to use for inline code
                     description: Options for identifying a function
                   description: The functions to score the eval on
                 experiment_name:
