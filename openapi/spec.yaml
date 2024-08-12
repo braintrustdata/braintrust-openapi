@@ -125,9 +125,6 @@ components:
     ViewName:
       type: string
       description: Name of the view to search for
-    OrganizationName:
-      type: string
-      description: Name of the organization to search for
     ApiKeyName:
       type: string
       description: Name of the api_key to search for
@@ -5119,14 +5116,6 @@ components:
       required: false
       description: Name of the view to search for
       name: view_name
-      in: query
-      allowReserved: true
-    OrganizationName:
-      schema:
-        $ref: "#/components/schemas/OrganizationName"
-      required: false
-      description: Name of the organization to search for
-      name: organization_name
       in: query
       allowReserved: true
     ApiKeyName:
@@ -12365,7 +12354,6 @@ paths:
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/Ids"
-        - $ref: "#/components/parameters/OrganizationName"
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
