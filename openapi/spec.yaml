@@ -4193,6 +4193,13 @@ components:
                 - type
                 - name
               title: global
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
       required:
         - id
         - _xact_id
@@ -4307,6 +4314,13 @@ components:
                 - type
                 - name
               title: global
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
       required:
         - project_id
         - name
