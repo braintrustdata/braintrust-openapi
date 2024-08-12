@@ -3067,6 +3067,13 @@ components:
           additionalProperties:
             nullable: true
           description: User-controlled metadata about the prompt
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
       required:
         - id
         - _xact_id
@@ -3100,6 +3107,13 @@ components:
           items:
             type: string
           description: A list of tags for the prompt
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
       required:
         - project_id
         - name
@@ -4113,6 +4127,13 @@ components:
           additionalProperties:
             nullable: true
           description: User-controlled metadata about the prompt
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
         function_data:
           anyOf:
             - type: object
@@ -4227,13 +4248,6 @@ components:
                 - type
                 - name
               title: global
-        function_type:
-          type: string
-          nullable: true
-          enum:
-            - llm
-            - scorer
-            - null
       required:
         - id
         - _xact_id
@@ -4268,6 +4282,13 @@ components:
           items:
             type: string
           description: A list of tags for the prompt
+        function_type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - scorer
+            - null
         function_data:
           anyOf:
             - type: object
@@ -4382,13 +4403,6 @@ components:
                 - type
                 - name
               title: global
-        function_type:
-          type: string
-          nullable: true
-          enum:
-            - llm
-            - scorer
-            - null
       required:
         - project_id
         - name
