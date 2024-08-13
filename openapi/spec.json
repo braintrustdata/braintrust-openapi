@@ -4672,15 +4672,6 @@
                 "title": "global"
               }
             ]
-          },
-          "function_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "llm",
-              "scorer",
-              null
-            ]
           }
         },
         "required": [
@@ -4919,15 +4910,6 @@
                 ],
                 "title": "global"
               }
-            ]
-          },
-          "function_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "llm",
-              "scorer",
-              null
             ]
           }
         },
