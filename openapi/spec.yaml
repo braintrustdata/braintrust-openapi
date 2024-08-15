@@ -4174,6 +4174,7 @@ components:
                                   type: string
                                   enum:
                                     - node
+                                    - python
                                 version:
                                   type: string
                               required:
@@ -4224,6 +4225,7 @@ components:
                               type: string
                               enum:
                                 - node
+                                - python
                             version:
                               type: string
                           required:
@@ -4329,6 +4331,7 @@ components:
                                   type: string
                                   enum:
                                     - node
+                                    - python
                                 version:
                                   type: string
                               required:
@@ -4379,6 +4382,7 @@ components:
                               type: string
                               enum:
                                 - node
+                                - python
                             version:
                               type: string
                           required:
@@ -4461,6 +4465,7 @@ components:
                                   type: string
                                   enum:
                                     - node
+                                    - python
                                 version:
                                   type: string
                               required:
@@ -4511,6 +4516,7 @@ components:
                               type: string
                               enum:
                                 - node
+                                - python
                             version:
                               type: string
                           required:
@@ -13970,6 +13976,7 @@ paths:
                               type: string
                               enum:
                                 - node
+                                - python
                             version:
                               type: string
                           required:
@@ -14046,6 +14053,7 @@ paths:
                                 type: string
                                 enum:
                                   - node
+                                  - python
                               version:
                                 type: string
                             required:
