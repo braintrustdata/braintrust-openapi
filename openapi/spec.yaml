@@ -3687,7 +3687,7 @@ components:
         To restrict a grant to a particular sub-object, you may specify
         `restrict_object_type` in the ACL, as part of a direct permission grant
         or as part of a role.
-    CreateAcl:
+    AclItem:
       type: object
       properties:
         object_type:
@@ -9788,10 +9788,80 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateAcl"
+              $ref: "#/components/schemas/AclItem"
       responses:
         "200":
           description: Returns the new acl object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Acl"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteAcl
+      tags:
+        - Acls
+      description: Delete a single acl
+      summary: Delete single acl
+      security:
+        - bearerAuth: []
+        - {}
+      requestBody:
+        description: Parameters which uniquely specify the acl to delete
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AclItem"
+      responses:
+        "200":
+          description: Returns the deleted acl object
           content:
             application/json:
               schema:
@@ -10100,6 +10170,196 @@ paths:
         - CORS
       parameters:
         - $ref: "#/components/parameters/AclId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/acl/batch-update:
+    post:
+      operationId: aclBatchUpdate
+      tags:
+        - Acls
+      description: Batch update acls. This operation is idempotent, so adding acls
+        which already exist will have no effect, and removing acls which do not
+        exist will have no effect.
+      summary: Batch update acls
+      security:
+        - bearerAuth: []
+        - {}
+      requestBody:
+        description: ${objectTypeCap}s to add/remove.
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                add_acls:
+                  type: array
+                  nullable: true
+                  items:
+                    $ref: "#/components/schemas/AclItem"
+                  description: >-
+                    An ACL grants a certain permission or role to a certain user
+                    or group on an object.
+
+
+                    ACLs are inherited across the object hierarchy. So for
+                    example, if a user has read permissions on a project, they
+                    will also have read permissions on any experiment, dataset,
+                    etc. created within that project.
+
+
+                    To restrict a grant to a particular sub-object, you may
+                    specify `restrict_object_type` in the ACL, as part of a
+                    direct permission grant or as part of a role.
+                remove_acls:
+                  type: array
+                  nullable: true
+                  items:
+                    $ref: "#/components/schemas/AclItem"
+                  description: >-
+                    An ACL grants a certain permission or role to a certain user
+                    or group on an object.
+
+
+                    ACLs are inherited across the object hierarchy. So for
+                    example, if a user has read permissions on a project, they
+                    will also have read permissions on any experiment, dataset,
+                    etc. created within that project.
+
+
+                    To restrict a grant to a particular sub-object, you may
+                    specify `restrict_object_type` in the ACL, as part of a
+                    direct permission grant or as part of a role.
+      responses:
+        "200":
+          description: A success status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  added_acls:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Acl"
+                    description: >-
+                      An ACL grants a certain permission or role to a certain
+                      user or group on an object.
+
+
+                      ACLs are inherited across the object hierarchy. So for
+                      example, if a user has read permissions on a project, they
+                      will also have read permissions on any experiment,
+                      dataset, etc. created within that project.
+
+
+                      To restrict a grant to a particular sub-object, you may
+                      specify `restrict_object_type` in the ACL, as part of a
+                      direct permission grant or as part of a role.
+                  removed_acls:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Acl"
+                    description: >-
+                      An ACL grants a certain permission or role to a certain
+                      user or group on an object.
+
+
+                      ACLs are inherited across the object hierarchy. So for
+                      example, if a user has read permissions on a project, they
+                      will also have read permissions on any experiment,
+                      dataset, etc. created within that project.
+
+
+                      To restrict a grant to a particular sub-object, you may
+                      specify `restrict_object_type` in the ACL, as part of a
+                      direct permission grant or as part of a role.
+                required:
+                  - added_acls
+                  - removed_acls
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/acl/acl/batch_update:
+    options:
+      operationId: optionsAclBatchUpdate
+      description: Enable CORS
+      summary: Enable CORS (`/v1/acl/acl/batch_update`)
+      security: []
+      tags:
+        - CORS
       responses:
         "200":
           description: Response for CORS method
@@ -12871,6 +13131,7 @@ paths:
       summary: Modify organization membership
       security:
         - bearerAuth: []
+        - {}
       requestBody:
         description: Members to add/remove
         required: false
