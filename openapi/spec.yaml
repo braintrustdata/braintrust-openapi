@@ -3074,6 +3074,7 @@ components:
           type: string
           nullable: true
           enum:
+            - task
             - llm
             - scorer
             - null
@@ -3114,6 +3115,7 @@ components:
           type: string
           nullable: true
           enum:
+            - task
             - llm
             - scorer
             - null
@@ -4134,6 +4136,7 @@ components:
           type: string
           nullable: true
           enum:
+            - task
             - llm
             - scorer
             - null
@@ -4191,17 +4194,26 @@ components:
                                   type: string
                                 position:
                                   anyOf:
-                                    - type: string
-                                      enum:
-                                        - task
-                                      title: task
                                     - type: object
                                       properties:
-                                        score:
+                                        type:
+                                          type: string
+                                          enum:
+                                            - task
+                                      required:
+                                        - type
+                                    - type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          enum:
+                                            - scorer
+                                        index:
                                           type: number
                                       required:
-                                        - score
-                                      title: score
+                                        - type
+                                        - index
+                                      title: scorer
                               required:
                                 - type
                                 - eval_name
@@ -4253,6 +4265,38 @@ components:
                 - type
                 - name
               title: global
+        origin:
+          type: object
+          nullable: true
+          properties:
+            object_type:
+              type: string
+              enum:
+                - organization
+                - project
+                - experiment
+                - dataset
+                - prompt
+                - prompt_session
+                - group
+                - role
+                - org_member
+                - project_log
+                - org_project
+                - null
+              description: The object type that the ACL applies to
+            object_id:
+              type: string
+              format: uuid
+              description: Id of the object the function is originating from
+            internal:
+              type: boolean
+              nullable: true
+              description: The function exists for internal purposes and should not be
+                displayed in the list of functions.
+          required:
+            - object_type
+            - object_id
       required:
         - id
         - _xact_id
@@ -4291,6 +4335,7 @@ components:
           type: string
           nullable: true
           enum:
+            - task
             - llm
             - scorer
             - null
@@ -4348,17 +4393,26 @@ components:
                                   type: string
                                 position:
                                   anyOf:
-                                    - type: string
-                                      enum:
-                                        - task
-                                      title: task
                                     - type: object
                                       properties:
-                                        score:
+                                        type:
+                                          type: string
+                                          enum:
+                                            - task
+                                      required:
+                                        - type
+                                    - type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          enum:
+                                            - scorer
+                                        index:
                                           type: number
                                       required:
-                                        - score
-                                      title: score
+                                        - type
+                                        - index
+                                      title: scorer
                               required:
                                 - type
                                 - eval_name
@@ -4410,6 +4464,38 @@ components:
                 - type
                 - name
               title: global
+        origin:
+          type: object
+          nullable: true
+          properties:
+            object_type:
+              type: string
+              enum:
+                - organization
+                - project
+                - experiment
+                - dataset
+                - prompt
+                - prompt_session
+                - group
+                - role
+                - org_member
+                - project_log
+                - org_project
+                - null
+              description: The object type that the ACL applies to
+            object_id:
+              type: string
+              format: uuid
+              description: Id of the object the function is originating from
+            internal:
+              type: boolean
+              nullable: true
+              description: The function exists for internal purposes and should not be
+                displayed in the list of functions.
+          required:
+            - object_type
+            - object_id
       required:
         - project_id
         - name
@@ -4482,17 +4568,26 @@ components:
                                   type: string
                                 position:
                                   anyOf:
-                                    - type: string
-                                      enum:
-                                        - task
-                                      title: task
                                     - type: object
                                       properties:
-                                        score:
+                                        type:
+                                          type: string
+                                          enum:
+                                            - task
+                                      required:
+                                        - type
+                                    - type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                          enum:
+                                            - scorer
+                                        index:
                                           type: number
                                       required:
-                                        - score
-                                      title: score
+                                        - type
+                                        - index
+                                      title: scorer
                               required:
                                 - type
                                 - eval_name
