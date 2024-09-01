@@ -3130,6 +3130,10 @@ components:
           type: string
           nullable: true
           description: Name of the prompt
+        slug:
+          type: string
+          nullable: true
+          description: Unique identifier for the prompt
         description:
           type: string
           nullable: true
