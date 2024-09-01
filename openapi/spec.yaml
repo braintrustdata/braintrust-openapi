@@ -4224,6 +4224,10 @@ components:
                                 - position
                             bundle_id:
                               type: string
+                            preview:
+                              type: string
+                              nullable: true
+                              description: A preview of the code
                           required:
                             - runtime_context
                             - location
@@ -4423,6 +4427,10 @@ components:
                                 - position
                             bundle_id:
                               type: string
+                            preview:
+                              type: string
+                              nullable: true
+                              description: A preview of the code
                           required:
                             - runtime_context
                             - location
@@ -4598,6 +4606,10 @@ components:
                                 - position
                             bundle_id:
                               type: string
+                            preview:
+                              type: string
+                              nullable: true
+                              description: A preview of the code
                           required:
                             - runtime_context
                             - location
