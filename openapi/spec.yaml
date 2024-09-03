@@ -10217,7 +10217,7 @@ paths:
         - bearerAuth: []
         - {}
       requestBody:
-        description: ${objectTypeCap}s to add/remove.
+        description: Acls to add/remove.
         required: false
         content:
           application/json:
