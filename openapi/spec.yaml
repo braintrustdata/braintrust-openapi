@@ -12291,10 +12291,28 @@ paths:
                         object_id:
                           type: string
                           description: The id of the container object you are logging to
+                        row_ids:
+                          type: object
+                          nullable: true
+                          properties:
+                            id:
+                              type: string
+                              description: The id of the row
+                            span_id:
+                              type: string
+                              description: The span_id of the row
+                            root_span_id:
+                              type: string
+                              description: The root_span_id of the row
+                          required:
+                            - id
+                            - span_id
+                            - root_span_id
+                          description: Identifiers for the row to to log a subspan under
                       required:
                         - object_type
                         - object_id
-                      description: Object type and id
+                      description: Object type, object id, and optional row IDs
                     - type: string
                       description: The parent's span identifier, created by calling `.export()` on a
                         span
