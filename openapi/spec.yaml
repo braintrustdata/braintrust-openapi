@@ -1145,6 +1145,15 @@ components:
             The version id is essentially a filter on the latest event
             transaction id. You can use the `max_xact_id` returned by a past
             fetch as the version to reproduce that exact fetch.
+    FeedbackResponseSchema:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+      required:
+        - status
     FeedbackProjectLogsItem:
       type: object
       properties:
@@ -6374,7 +6383,11 @@ paths:
               $ref: "#/components/schemas/FeedbackProjectLogsEventRequest"
       responses:
         "200":
-          description: No return value
+          description: Returns a success status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackResponseSchema"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -7216,7 +7229,11 @@ paths:
               $ref: "#/components/schemas/FeedbackExperimentEventRequest"
       responses:
         "200":
-          description: No return value
+          description: Returns a success status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackResponseSchema"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -8164,7 +8181,11 @@ paths:
               $ref: "#/components/schemas/FeedbackDatasetEventRequest"
       responses:
         "200":
-          description: No return value
+          description: Returns a success status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FeedbackResponseSchema"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter

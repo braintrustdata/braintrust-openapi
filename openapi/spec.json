@@ -1067,6 +1067,20 @@
           }
         }
       },
+      "FeedbackResponseSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "FeedbackProjectLogsItem": {
         "type": "object",
         "properties": {
@@ -7617,7 +7631,14 @@
         },
         "responses": {
           "200": {
-            "description": "No return value"
+            "description": "Returns a success status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponseSchema"
+                }
+              }
+            }
           },
           "400": {
             "description": "The request was unacceptable, often due to missing a required parameter",
@@ -8975,7 +8996,14 @@
         },
         "responses": {
           "200": {
-            "description": "No return value"
+            "description": "Returns a success status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponseSchema"
+                }
+              }
+            }
           },
           "400": {
             "description": "The request was unacceptable, often due to missing a required parameter",
@@ -10508,7 +10536,14 @@
         },
         "responses": {
           "200": {
-            "description": "No return value"
+            "description": "Returns a success status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponseSchema"
+                }
+              }
+            }
           },
           "400": {
             "description": "The request was unacceptable, often due to missing a required parameter",
