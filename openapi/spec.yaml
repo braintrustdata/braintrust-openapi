@@ -5019,6 +5019,15 @@ components:
                 type: string
                 description: Name of the group
               description: Optional list of group names to add newly-invited users to.
+            group_id:
+              type: string
+              nullable: true
+              format: uuid
+              description: Singular form of group_ids
+            group_name:
+              type: string
+              nullable: true
+              description: Singular form of group_names
           description: Users to invite to the organization
         remove_users:
           type: object
