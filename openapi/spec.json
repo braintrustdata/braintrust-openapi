@@ -4128,6 +4128,7 @@
               "categorical",
               "weighted",
               "minimum",
+              "online",
               null
             ],
             "description": "The type of the configured score"
@@ -4184,6 +4185,138 @@
                   "expected",
                   null
                 ]
+              },
+              "online": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "samplingRate": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "The sampling rate for online scoring"
+                  },
+                  "scorers": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "function_id": {
+                              "type": "string",
+                              "description": "The ID of the function"
+                            },
+                            "version": {
+                              "type": "string",
+                              "description": "The version of the function"
+                            }
+                          },
+                          "required": [
+                            "function_id"
+                          ],
+                          "description": "Function id"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "project_name": {
+                              "type": "string",
+                              "description": "The name of the project containing the function"
+                            },
+                            "slug": {
+                              "type": "string",
+                              "description": "The slug of the function"
+                            },
+                            "version": {
+                              "type": "string",
+                              "description": "The version of the function"
+                            }
+                          },
+                          "required": [
+                            "project_name",
+                            "slug"
+                          ],
+                          "description": "Project name and slug"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "global_function": {
+                              "type": "string",
+                              "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
+                            }
+                          },
+                          "required": [
+                            "global_function"
+                          ],
+                          "description": "Global function name"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "prompt_session_id": {
+                              "type": "string",
+                              "description": "The ID of the prompt session"
+                            },
+                            "prompt_session_function_id": {
+                              "type": "string",
+                              "description": "The ID of the function in the prompt session"
+                            },
+                            "version": {
+                              "type": "string",
+                              "description": "The version of the function"
+                            }
+                          },
+                          "required": [
+                            "prompt_session_id",
+                            "prompt_session_function_id"
+                          ],
+                          "description": "Prompt session id"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "inline_context": {
+                              "type": "object",
+                              "properties": {
+                                "runtime": {
+                                  "type": "string",
+                                  "enum": [
+                                    "node",
+                                    "python"
+                                  ]
+                                },
+                                "version": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "runtime",
+                                "version"
+                              ]
+                            },
+                            "code": {
+                              "type": "string",
+                              "description": "The inline code to execute"
+                            }
+                          },
+                          "required": [
+                            "inline_context",
+                            "code"
+                          ],
+                          "description": "Inline code function"
+                        }
+                      ],
+                      "description": "Options for identifying a function"
+                    },
+                    "description": "The list of scorers to use for online scoring"
+                  }
+                },
+                "required": [
+                  "samplingRate",
+                  "scorers"
+                ]
               }
             }
           },
@@ -4226,6 +4359,7 @@
               "categorical",
               "weighted",
               "minimum",
+              "online",
               null
             ],
             "description": "The type of the configured score"
@@ -4295,6 +4429,7 @@
               "categorical",
               "weighted",
               "minimum",
+              "online",
               null
             ],
             "description": "The type of the configured score"
