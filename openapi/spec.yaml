@@ -5046,17 +5046,30 @@ components:
               type: boolean
               nullable: true
               description: If true, send invite emails to the users who wore actually added
+            group_ids:
+              type: array
+              nullable: true
+              items:
+                type: string
+                format: uuid
+                description: Unique identifier for the group
+              description: Optional list of group ids to add newly-invited users to.
+            group_names:
+              type: array
+              nullable: true
+              items:
+                type: string
+                description: Name of the group
+              description: Optional list of group names to add newly-invited users to.
             group_id:
               type: string
               nullable: true
               format: uuid
-              description: Optional id of a group to add newly-invited users to. Cannot
-                specify both a group id and a group name.
+              description: Singular form of group_ids
             group_name:
               type: string
               nullable: true
-              description: Optional name of a group to add newly-invited users to. Cannot
-                specify both a group id and a group name.
+              description: Singular form of group_names
           description: Users to invite to the organization
         remove_users:
           type: object
