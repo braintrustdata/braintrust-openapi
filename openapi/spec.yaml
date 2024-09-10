@@ -319,6 +319,7 @@ components:
             - categorical
             - weighted
             - minimum
+            - online
             - null
           description: The type of the configured score
         - type: array
@@ -329,6 +330,7 @@ components:
               - categorical
               - weighted
               - minimum
+              - online
               - null
             description: The type of the configured score
           description: The type of the configured score
@@ -3892,6 +3894,7 @@ components:
             - categorical
             - weighted
             - minimum
+            - online
             - null
           description: The type of the configured score
         categories:
@@ -3930,6 +3933,45 @@ components:
               enum:
                 - expected
                 - null
+            online:
+              type: object
+              nullable: true
+              properties:
+                samplingRate:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  description: The sampling rate for online scoring
+                scorers:
+                  type: array
+                  items:
+                    anyOf:
+                      - type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                              - function
+                          id:
+                            type: string
+                        required:
+                          - type
+                          - id
+                      - type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                              - global
+                          name:
+                            type: string
+                        required:
+                          - type
+                          - name
+                  description: The list of scorers to use for online scoring
+              required:
+                - samplingRate
+                - scorers
         position:
           type: string
           nullable: true
@@ -3965,6 +4007,7 @@ components:
             - categorical
             - weighted
             - minimum
+            - online
             - null
           description: The type of the configured score
         categories:
@@ -4013,6 +4056,7 @@ components:
             - categorical
             - weighted
             - minimum
+            - online
             - null
           description: The type of the configured score
         categories:
