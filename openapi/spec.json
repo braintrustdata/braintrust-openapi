@@ -310,6 +310,36 @@
         "format": "uuid",
         "description": "The id of the object the ACL applies to"
       },
+      "ProjectScoreType": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "slider",
+              "categorical",
+              "weighted",
+              "minimum",
+              null
+            ],
+            "description": "The type of the configured score"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "slider",
+                "categorical",
+                "weighted",
+                "minimum",
+                null
+              ],
+              "description": "The type of the configured score"
+            },
+            "description": "The type of the configured score"
+          }
+        ]
+      },
       "Project": {
         "type": "object",
         "properties": {
@@ -6498,6 +6528,14 @@
         "required": true,
         "description": "The id of the object the ACL applies to",
         "name": "object_id",
+        "in": "query"
+      },
+      "ProjectScoreType": {
+        "schema": {
+          "$ref": "#/components/schemas/ProjectScoreType"
+        },
+        "required": false,
+        "name": "score_type",
         "in": "query"
       }
     }
@@ -14916,6 +14954,9 @@
           },
           {
             "$ref": "#/components/parameters/OrgName"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectScoreType"
           }
         ],
         "responses": {
