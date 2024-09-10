@@ -319,6 +319,7 @@
               "categorical",
               "weighted",
               "minimum",
+              "online",
               null
             ],
             "description": "The type of the configured score"
@@ -332,6 +333,7 @@
                 "categorical",
                 "weighted",
                 "minimum",
+                "online",
                 null
               ],
               "description": "The type of the configured score"
