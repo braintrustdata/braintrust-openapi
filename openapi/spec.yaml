@@ -12415,10 +12415,16 @@ paths:
                             - span_id
                             - root_span_id
                           description: Identifiers for the row to to log a subspan under
+                        propagated_event:
+                          type: object
+                          nullable: true
+                          additionalProperties:
+                            nullable: true
+                          description: Include these properties in every span created under this parent
                       required:
                         - object_type
                         - object_id
-                      description: Object type, object id, and optional row IDs
+                      description: Span parent properties
                     - type: string
                       description: The parent's span identifier, created by calling `.export()` on a
                         span
