@@ -3937,7 +3937,7 @@ components:
               type: object
               nullable: true
               properties:
-                samplingRate:
+                sampling_rate:
                   type: number
                   minimum: 0
                   maximum: 1
@@ -3980,7 +3980,7 @@ components:
                     type: string
                   description: Trigger online scoring on any spans with a name in this list
               required:
-                - samplingRate
+                - sampling_rate
                 - scorers
         position:
           type: string
