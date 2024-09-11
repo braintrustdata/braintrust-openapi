@@ -4271,6 +4271,19 @@
                       ]
                     },
                     "description": "The list of scorers to use for online scoring"
+                  },
+                  "apply_to_root_span": {
+                    "type": "boolean",
+                    "nullable": true,
+                    "description": "Whether to trigger online scoring on the root span of each trace"
+                  },
+                  "apply_to_span_names": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Trigger online scoring on any spans with a name in this list"
                   }
                 },
                 "required": [
