@@ -3937,7 +3937,7 @@ components:
               type: object
               nullable: true
               properties:
-                samplingRate:
+                sampling_rate:
                   type: number
                   minimum: 0
                   maximum: 1
@@ -3969,8 +3969,18 @@ components:
                           - type
                           - name
                   description: The list of scorers to use for online scoring
+                apply_to_root_span:
+                  type: boolean
+                  nullable: true
+                  description: Whether to trigger online scoring on the root span of each trace
+                apply_to_span_names:
+                  type: array
+                  nullable: true
+                  items:
+                    type: string
+                  description: Trigger online scoring on any spans with a name in this list
               required:
-                - samplingRate
+                - sampling_rate
                 - scorers
         position:
           type: string
@@ -12457,10 +12467,16 @@ paths:
                             - span_id
                             - root_span_id
                           description: Identifiers for the row to to log a subspan under
+                        propagated_event:
+                          type: object
+                          nullable: true
+                          additionalProperties:
+                            nullable: true
+                          description: Include these properties in every span created under this parent
                       required:
                         - object_type
                         - object_id
-                      description: Object type, object id, and optional row IDs
+                      description: Span parent properties
                     - type: string
                       description: The parent's span identifier, created by calling `.export()` on a
                         span
