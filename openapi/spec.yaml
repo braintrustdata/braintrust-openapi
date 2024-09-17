@@ -3036,7 +3036,7 @@ components:
             - type
             - use_cot
             - choice_scores
-        structured_tools:
+        tool_functions:
           type: array
           nullable: true
           items:
@@ -4340,7 +4340,7 @@ components:
                                     type:
                                       type: string
                                       enum:
-                                        - task
+                                        - function
                                     index:
                                       type: integer
                                       minimum: 0
@@ -4566,7 +4566,7 @@ components:
                                     type:
                                       type: string
                                       enum:
-                                        - task
+                                        - function
                                     index:
                                       type: integer
                                       minimum: 0
@@ -4768,7 +4768,7 @@ components:
                                     type:
                                       type: string
                                       enum:
-                                        - task
+                                        - function
                                     index:
                                       type: integer
                                       minimum: 0
@@ -12528,13 +12528,16 @@ paths:
                   description: Options for tracing the function call
                 stream:
                   type: boolean
+                  nullable: true
                   description: Whether to stream the response. If true, results will be returned
                     in the Braintrust SSE format.
                 mode:
                   type: string
+                  nullable: true
                   enum:
                     - auto
                     - parallel
+                    - null
                   description: The mode format of the returned value (defaults to 'auto')
                 version:
                   type: string

@@ -3222,7 +3222,7 @@
               "choice_scores"
             ]
           },
-          "structured_tools": {
+          "tool_functions": {
             "type": "array",
             "nullable": true,
             "items": {
@@ -4792,7 +4792,7 @@
                                       "type": {
                                         "type": "string",
                                         "enum": [
-                                          "task"
+                                          "function"
                                         ]
                                       },
                                       "index": {
@@ -5128,7 +5128,7 @@
                                       "type": {
                                         "type": "string",
                                         "enum": [
-                                          "task"
+                                          "function"
                                         ]
                                       },
                                       "index": {
@@ -5434,7 +5434,7 @@
                                       "type": {
                                         "type": "string",
                                         "enum": [
-                                          "task"
+                                          "function"
                                         ]
                                       },
                                       "index": {
@@ -17400,13 +17400,16 @@
                   },
                   "stream": {
                     "type": "boolean",
+                    "nullable": true,
                     "description": "Whether to stream the response. If true, results will be returned in the Braintrust SSE format."
                   },
                   "mode": {
                     "type": "string",
+                    "nullable": true,
                     "enum": [
                       "auto",
-                      "parallel"
+                      "parallel",
+                      null
                     ],
                     "description": "The mode format of the returned value (defaults to 'auto')"
                   },
