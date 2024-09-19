@@ -3133,9 +3133,10 @@ components:
           type: string
           nullable: true
           enum:
-            - task
             - llm
             - scorer
+            - task
+            - tool
             - null
       required:
         - id
@@ -3174,9 +3175,10 @@ components:
           type: string
           nullable: true
           enum:
-            - task
             - llm
             - scorer
+            - task
+            - tool
             - null
       required:
         - project_id
@@ -4251,9 +4253,10 @@ components:
           type: string
           nullable: true
           enum:
-            - task
             - llm
             - scorer
+            - task
+            - tool
             - null
         function_data:
           anyOf:
@@ -4477,9 +4480,10 @@ components:
           type: string
           nullable: true
           enum:
-            - task
             - llm
             - scorer
+            - task
+            - tool
             - null
         function_data:
           anyOf:
@@ -14593,6 +14597,9 @@ paths:
                         code:
                           type: string
                           description: The inline code to execute
+                        name:
+                          type: string
+                          description: The name of the inline code function
                       required:
                         - inline_context
                         - code
@@ -14601,6 +14608,9 @@ paths:
                       properties:
                         inline_prompt:
                           $ref: "#/components/schemas/PromptData"
+                        name:
+                          type: string
+                          description: The name of the inline prompt
                       required:
                         - inline_prompt
                       description: Inline prompt definition
@@ -14677,6 +14687,9 @@ paths:
                           code:
                             type: string
                             description: The inline code to execute
+                          name:
+                            type: string
+                            description: The name of the inline code function
                         required:
                           - inline_context
                           - code
@@ -14685,6 +14698,9 @@ paths:
                         properties:
                           inline_prompt:
                             $ref: "#/components/schemas/PromptData"
+                          name:
+                            type: string
+                            description: The name of the inline prompt
                         required:
                           - inline_prompt
                         description: Inline prompt definition

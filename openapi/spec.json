@@ -3355,9 +3355,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           }
@@ -3408,9 +3409,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           }
@@ -4655,9 +4657,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           },
@@ -4991,9 +4994,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           },
@@ -20645,6 +20649,10 @@
                           "code": {
                             "type": "string",
                             "description": "The inline code to execute"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the inline code function"
                           }
                         },
                         "required": [
@@ -20658,6 +20666,10 @@
                         "properties": {
                           "inline_prompt": {
                             "$ref": "#/components/schemas/PromptData"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the inline prompt"
                           }
                         },
                         "required": [
@@ -20771,6 +20783,10 @@
                             "code": {
                               "type": "string",
                               "description": "The inline code to execute"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "The name of the inline code function"
                             }
                           },
                           "required": [
@@ -20784,6 +20800,10 @@
                           "properties": {
                             "inline_prompt": {
                               "$ref": "#/components/schemas/PromptData"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "The name of the inline prompt"
                             }
                           },
                           "required": [
