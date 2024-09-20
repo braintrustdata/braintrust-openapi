@@ -88,6 +88,10 @@ components:
       type: string
       format: uuid
       description: ApiKey id
+    OrgSecretId:
+      type: string
+      format: uuid
+      description: OrgSecret id
     ProjectIdQuery:
       type: string
       format: uuid
@@ -128,6 +132,9 @@ components:
     ApiKeyName:
       type: string
       description: Name of the api_key to search for
+    OrgSecretName:
+      type: string
+      description: Name of the org_secret to search for
     OrgName:
       type: string
       description: Filter search results to within a particular organization
@@ -334,6 +341,12 @@ components:
               - null
             description: The type of the configured score
           description: The type of the configured score
+    OrgSecretType:
+      anyOf:
+        - type: string
+        - type: array
+          items:
+            type: string
     Project:
       type: object
       properties:
@@ -5294,6 +5307,40 @@ components:
         - id
         - name
         - preview_name
+    OrgSecret:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the org secret
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of org secret creation
+        org_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the organization
+        name:
+          type: string
+          description: Name of the org secret
+        type:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties:
+            nullable: true
+        preview_secret:
+          type: string
+          nullable: true
+      required:
+        - id
+        - org_id
+        - name
     CrossObjectInsertResponse:
       type: object
       properties:
@@ -5484,6 +5531,13 @@ components:
       description: ApiKey id
       name: api_key_id
       in: path
+    OrgSecretId:
+      schema:
+        $ref: "#/components/schemas/OrgSecretId"
+      required: true
+      description: OrgSecret id
+      name: org_secret_id
+      in: path
     ProjectIdQuery:
       schema:
         $ref: "#/components/schemas/ProjectIdQuery"
@@ -5585,6 +5639,14 @@ components:
       required: false
       description: Name of the api_key to search for
       name: api_key_name
+      in: query
+      allowReserved: true
+    OrgSecretName:
+      schema:
+        $ref: "#/components/schemas/OrgSecretName"
+      required: false
+      description: Name of the org_secret to search for
+      name: org_secret_name
       in: query
       allowReserved: true
     OrgName:
@@ -5813,6 +5875,12 @@ components:
         $ref: "#/components/schemas/ProjectScoreType"
       required: false
       name: score_type
+      in: query
+    OrgSecretType:
+      schema:
+        $ref: "#/components/schemas/OrgSecretType"
+      required: false
+      name: org_secret_type
       in: query
 paths:
   /v1/project:
@@ -13233,7 +13301,7 @@ paths:
       operationId: getOrganizationId
       tags:
         - Organizations
-      description: Get a organization object by its id
+      description: Get an organization object by its id
       summary: Get organization
       security:
         - bearerAuth: []
@@ -13298,7 +13366,7 @@ paths:
       operationId: patchOrganizationId
       tags:
         - Organizations
-      description: Partially update a organization object. Specify the fields to
+      description: Partially update an organization object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
@@ -13373,7 +13441,7 @@ paths:
       operationId: deleteOrganizationId
       tags:
         - Organizations
-      description: Delete a organization object by its id
+      description: Delete an organization object by its id
       summary: Delete organization
       security:
         - bearerAuth: []
@@ -13937,6 +14005,665 @@ paths:
         - CORS
       parameters:
         - $ref: "#/components/parameters/ApiKeyId"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/org_secret:
+    post:
+      tags:
+        - OrgSecrets
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: postOrgSecret
+      description: Create a new org_secret. If there is an existing org_secret with
+        the same name as the one specified in the request, will return the
+        existing org_secret unmodified
+      summary: Create org_secret
+      requestBody:
+        description: Any desired information about the new org_secret object
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the org secret
+                type:
+                  type: string
+                  nullable: true
+                metadata:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    nullable: true
+                secret:
+                  type: string
+                  nullable: true
+                  description: Secret value. If omitted in a PUT request, the existing secret
+                    value will be left intact, not replaced with null.
+                org_name:
+                  type: string
+                  nullable: true
+                  description: For nearly all users, this parameter should be unnecessary. But in
+                    the rare case that your API key belongs to multiple
+                    organizations, you may specify the name of the organization
+                    the Org Secret belongs in.
+              required:
+                - name
+      responses:
+        "200":
+          description: Returns the new org_secret object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgSecret"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    put:
+      tags:
+        - OrgSecrets
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: putOrgSecret
+      description: Create or replace org_secret. If there is an existing org_secret
+        with the same name as the one specified in the request, will replace the
+        existing org_secret with the provided fields
+      summary: Create or replace org_secret
+      requestBody:
+        description: Any desired information about the new org_secret object
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the org secret
+                type:
+                  type: string
+                  nullable: true
+                metadata:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    nullable: true
+                secret:
+                  type: string
+                  nullable: true
+                  description: Secret value. If omitted in a PUT request, the existing secret
+                    value will be left intact, not replaced with null.
+                org_name:
+                  type: string
+                  nullable: true
+                  description: For nearly all users, this parameter should be unnecessary. But in
+                    the rare case that your API key belongs to multiple
+                    organizations, you may specify the name of the organization
+                    the Org Secret belongs in.
+              required:
+                - name
+      responses:
+        "200":
+          description: Returns the new org_secret object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgSecret"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteOrgSecret
+      tags:
+        - OrgSecrets
+      description: Delete a single org_secret
+      summary: Delete single org_secret
+      security:
+        - bearerAuth: []
+        - {}
+      requestBody:
+        description: Parameters which uniquely specify the org_secret to delete
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the org secret
+                org_name:
+                  type: string
+                  nullable: true
+                  description: For nearly all users, this parameter should be unnecessary. But in
+                    the rare case that your API key belongs to multiple
+                    organizations, you may specify the name of the organization
+                    the Org Secret belongs in.
+              required:
+                - name
+      responses:
+        "200":
+          description: Returns the deleted org_secret object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgSecret"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    get:
+      operationId: getOrgSecret
+      tags:
+        - OrgSecrets
+      description: List out all org_secrets. The org_secrets are sorted by creation
+        date, with the most recently-created org_secrets coming first
+      summary: List org_secrets
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/OrgSecretName"
+        - $ref: "#/components/parameters/OrgName"
+        - $ref: "#/components/parameters/OrgSecretType"
+      responses:
+        "200":
+          description: Returns a list of org_secret objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrgSecret"
+                    description: A list of org_secret objects
+                required:
+                  - objects
+                additionalProperties: false
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsOrgSecret
+      description: Enable CORS
+      summary: Enable CORS (`/v1/org_secret`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/org_secret/{org_secret_id}:
+    get:
+      operationId: getOrgSecretId
+      tags:
+        - OrgSecrets
+      description: Get an org_secret object by its id
+      summary: Get org_secret
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/OrgSecretId"
+      responses:
+        "200":
+          description: Returns the org_secret object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgSecret"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    patch:
+      operationId: patchOrgSecretId
+      tags:
+        - OrgSecrets
+      description: Partially update an org_secret object. Specify the fields to update
+        in the payload. Any object-type fields will be deep-merged with existing
+        content. Currently we do not support removing fields or setting them to
+        null.
+      summary: Partially update org_secret
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/OrgSecretId"
+      requestBody:
+        description: Fields to update
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  nullable: true
+                  description: Name of the org secret
+                type:
+                  type: string
+                  nullable: true
+                metadata:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    nullable: true
+                secret:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Returns the org_secret object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgSecret"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteOrgSecretId
+      tags:
+        - OrgSecrets
+      description: Delete an org_secret object by its id
+      summary: Delete org_secret
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/OrgSecretId"
+      responses:
+        "200":
+          description: Returns the deleted org_secret object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgSecret"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsOrgSecretId
+      description: Enable CORS
+      summary: Enable CORS (`/v1/org_secret/{org_secret_id}`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/OrgSecretId"
       responses:
         "200":
           description: Response for CORS method
