@@ -12554,6 +12554,182 @@ paths:
                 input:
                   nullable: true
                   description: Argument to the function, which can be any JSON serializable value
+                messages:
+                  type: array
+                  items:
+                    anyOf:
+                      - type: object
+                        properties:
+                          content:
+                            type: string
+                            default: ""
+                          role:
+                            type: string
+                            enum:
+                              - system
+                          name:
+                            type: string
+                        required:
+                          - role
+                        title: system
+                      - type: object
+                        properties:
+                          content:
+                            anyOf:
+                              - type: string
+                                default: ""
+                                title: text
+                              - type: array
+                                items:
+                                  anyOf:
+                                    - type: object
+                                      properties:
+                                        text:
+                                          type: string
+                                          default: ""
+                                        type:
+                                          type: string
+                                          enum:
+                                            - text
+                                      required:
+                                        - type
+                                      title: text
+                                    - type: object
+                                      properties:
+                                        image_url:
+                                          type: object
+                                          properties:
+                                            url:
+                                              type: string
+                                            detail:
+                                              anyOf:
+                                                - type: string
+                                                  enum:
+                                                    - auto
+                                                  title: auto
+                                                - type: string
+                                                  enum:
+                                                    - low
+                                                  title: low
+                                                - type: string
+                                                  enum:
+                                                    - high
+                                                  title: high
+                                          required:
+                                            - url
+                                        type:
+                                          type: string
+                                          enum:
+                                            - image_url
+                                      required:
+                                        - image_url
+                                        - type
+                                      title: image_url
+                                title: array
+                          role:
+                            type: string
+                            enum:
+                              - user
+                          name:
+                            type: string
+                        required:
+                          - role
+                        title: user
+                      - type: object
+                        properties:
+                          role:
+                            type: string
+                            enum:
+                              - assistant
+                          content:
+                            type: string
+                            nullable: true
+                          function_call:
+                            type: object
+                            nullable: true
+                            properties:
+                              arguments:
+                                type: string
+                              name:
+                                type: string
+                            required:
+                              - arguments
+                              - name
+                          name:
+                            type: string
+                            nullable: true
+                          tool_calls:
+                            type: array
+                            nullable: true
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                function:
+                                  type: object
+                                  properties:
+                                    arguments:
+                                      type: string
+                                    name:
+                                      type: string
+                                  required:
+                                    - arguments
+                                    - name
+                                type:
+                                  type: string
+                                  enum:
+                                    - function
+                              required:
+                                - id
+                                - function
+                                - type
+                        required:
+                          - role
+                        title: assistant
+                      - type: object
+                        properties:
+                          content:
+                            type: string
+                            default: ""
+                          role:
+                            type: string
+                            enum:
+                              - tool
+                          tool_call_id:
+                            type: string
+                            default: ""
+                        required:
+                          - role
+                        title: tool
+                      - type: object
+                        properties:
+                          content:
+                            type: string
+                            default: ""
+                          name:
+                            type: string
+                          role:
+                            type: string
+                            enum:
+                              - function
+                        required:
+                          - name
+                          - role
+                        title: function
+                      - type: object
+                        properties:
+                          role:
+                            type: string
+                            enum:
+                              - model
+                          content:
+                            type: string
+                            nullable: true
+                        required:
+                          - role
+                        title: fallback
+                  description: If the function is an LLM, additional messages to pass along to it
                 parent:
                   anyOf:
                     - type: object
