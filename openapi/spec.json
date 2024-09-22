@@ -4270,7 +4270,8 @@
                           "required": [
                             "type",
                             "id"
-                          ]
+                          ],
+                          "title": "function"
                         },
                         {
                           "type": "object",
@@ -4288,7 +4289,8 @@
                           "required": [
                             "type",
                             "name"
-                          ]
+                          ],
+                          "title": "global"
                         }
                       ]
                     },
@@ -4776,7 +4778,8 @@
                               "bundle_id"
                             ]
                           }
-                        ]
+                        ],
+                        "title": "bundle"
                       },
                       {
                         "type": "object",
@@ -4814,7 +4817,8 @@
                           "type",
                           "runtime_context",
                           "code"
-                        ]
+                        ],
+                        "title": "inline"
                       }
                     ]
                   }
@@ -5075,7 +5079,8 @@
                               "bundle_id"
                             ]
                           }
-                        ]
+                        ],
+                        "title": "bundle"
                       },
                       {
                         "type": "object",
@@ -5113,7 +5118,8 @@
                           "type",
                           "runtime_context",
                           "code"
-                        ]
+                        ],
+                        "title": "inline"
                       }
                     ]
                   }
@@ -5344,7 +5350,8 @@
                               "bundle_id"
                             ]
                           }
-                        ]
+                        ],
+                        "title": "bundle"
                       },
                       {
                         "type": "object",
@@ -5382,7 +5389,8 @@
                           "type",
                           "runtime_context",
                           "code"
-                        ]
+                        ],
+                        "title": "inline"
                       }
                     ]
                   }

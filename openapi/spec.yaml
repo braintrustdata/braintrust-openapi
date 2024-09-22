@@ -3970,6 +3970,7 @@ components:
                         required:
                           - type
                           - id
+                        title: function
                       - type: object
                         properties:
                           type:
@@ -3981,6 +3982,7 @@ components:
                         required:
                           - type
                           - name
+                        title: global
                   description: The list of scorers to use for online scoring
                 apply_to_root_span:
                   type: boolean
@@ -4329,6 +4331,7 @@ components:
                             - runtime_context
                             - location
                             - bundle_id
+                      title: bundle
                     - type: object
                       properties:
                         type:
@@ -4354,6 +4357,7 @@ components:
                         - type
                         - runtime_context
                         - code
+                      title: inline
               required:
                 - type
                 - data
@@ -4532,6 +4536,7 @@ components:
                             - runtime_context
                             - location
                             - bundle_id
+                      title: bundle
                     - type: object
                       properties:
                         type:
@@ -4557,6 +4562,7 @@ components:
                         - type
                         - runtime_context
                         - code
+                      title: inline
               required:
                 - type
                 - data
@@ -4711,6 +4717,7 @@ components:
                             - runtime_context
                             - location
                             - bundle_id
+                      title: bundle
                     - type: object
                       properties:
                         type:
@@ -4736,6 +4743,7 @@ components:
                         - type
                         - runtime_context
                         - code
+                      title: inline
               required:
                 - type
                 - data
