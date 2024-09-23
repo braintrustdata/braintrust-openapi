@@ -22055,6 +22055,7 @@
                           },
                           "name": {
                             "type": "string",
+                            "nullable": true,
                             "description": "The name of the inline code function"
                           }
                         },
@@ -22072,6 +22073,7 @@
                           },
                           "name": {
                             "type": "string",
+                            "nullable": true,
                             "description": "The name of the inline prompt"
                           }
                         },
@@ -22189,6 +22191,7 @@
                             },
                             "name": {
                               "type": "string",
+                              "nullable": true,
                               "description": "The name of the inline code function"
                             }
                           },
@@ -22206,6 +22209,7 @@
                             },
                             "name": {
                               "type": "string",
+                              "nullable": true,
                               "description": "The name of the inline prompt"
                             }
                           },

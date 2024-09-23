@@ -15512,6 +15512,7 @@ paths:
                           description: The inline code to execute
                         name:
                           type: string
+                          nullable: true
                           description: The name of the inline code function
                       required:
                         - inline_context
@@ -15523,6 +15524,7 @@ paths:
                           $ref: "#/components/schemas/PromptData"
                         name:
                           type: string
+                          nullable: true
                           description: The name of the inline prompt
                       required:
                         - inline_prompt
@@ -15602,6 +15604,7 @@ paths:
                             description: The inline code to execute
                           name:
                             type: string
+                            nullable: true
                             description: The name of the inline code function
                         required:
                           - inline_context
@@ -15613,6 +15616,7 @@ paths:
                             $ref: "#/components/schemas/PromptData"
                           name:
                             type: string
+                            nullable: true
                             description: The name of the inline prompt
                         required:
                           - inline_prompt
