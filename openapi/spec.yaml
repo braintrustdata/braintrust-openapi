@@ -88,10 +88,10 @@ components:
       type: string
       format: uuid
       description: ApiKey id
-    OrgSecretId:
+    AiSecretId:
       type: string
       format: uuid
-      description: OrgSecret id
+      description: AiSecret id
     ProjectIdQuery:
       type: string
       format: uuid
@@ -132,9 +132,9 @@ components:
     ApiKeyName:
       type: string
       description: Name of the api_key to search for
-    OrgSecretName:
+    AiSecretName:
       type: string
-      description: Name of the org_secret to search for
+      description: Name of the ai_secret to search for
     OrgName:
       type: string
       description: Filter search results to within a particular organization
@@ -341,7 +341,7 @@ components:
               - null
             description: The type of the configured score
           description: The type of the configured score
-    OrgSecretType:
+    AISecretType:
       anyOf:
         - type: string
         - type: array
@@ -5224,25 +5224,25 @@ components:
         - id
         - name
         - preview_name
-    OrgSecret:
+    AISecret:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          description: Unique identifier for the org secret
+          description: Unique identifier for the AI secret
         created:
           type: string
           nullable: true
           format: date-time
-          description: Date of org secret creation
+          description: Date of AI secret creation
         org_id:
           type: string
           format: uuid
           description: Unique identifier for the organization
         name:
           type: string
-          description: Name of the org secret
+          description: Name of the AI secret
         type:
           type: string
           nullable: true
@@ -5448,12 +5448,12 @@ components:
       description: ApiKey id
       name: api_key_id
       in: path
-    OrgSecretId:
+    AiSecretId:
       schema:
-        $ref: "#/components/schemas/OrgSecretId"
+        $ref: "#/components/schemas/AiSecretId"
       required: true
-      description: OrgSecret id
-      name: org_secret_id
+      description: AiSecret id
+      name: ai_secret_id
       in: path
     ProjectIdQuery:
       schema:
@@ -5558,12 +5558,12 @@ components:
       name: api_key_name
       in: query
       allowReserved: true
-    OrgSecretName:
+    AiSecretName:
       schema:
-        $ref: "#/components/schemas/OrgSecretName"
+        $ref: "#/components/schemas/AiSecretName"
       required: false
-      description: Name of the org_secret to search for
-      name: org_secret_name
+      description: Name of the ai_secret to search for
+      name: ai_secret_name
       in: query
       allowReserved: true
     OrgName:
@@ -5793,11 +5793,11 @@ components:
       required: false
       name: score_type
       in: query
-    OrgSecretType:
+    AISecretType:
       schema:
-        $ref: "#/components/schemas/OrgSecretType"
+        $ref: "#/components/schemas/AISecretType"
       required: false
-      name: org_secret_type
+      name: ai_secret_type
       in: query
 paths:
   /v1/project:
@@ -13943,20 +13943,20 @@ paths:
             application/json:
               schema:
                 nullable: true
-  /v1/org_secret:
+  /v1/ai_secret:
     post:
       tags:
-        - OrgSecrets
+        - AiSecrets
       security:
         - bearerAuth: []
         - {}
-      operationId: postOrgSecret
-      description: Create a new org_secret. If there is an existing org_secret with
-        the same name as the one specified in the request, will return the
-        existing org_secret unmodified
-      summary: Create org_secret
+      operationId: postAiSecret
+      description: Create a new ai_secret. If there is an existing ai_secret with the
+        same name as the one specified in the request, will return the existing
+        ai_secret unmodified
+      summary: Create ai_secret
       requestBody:
-        description: Any desired information about the new org_secret object
+        description: Any desired information about the new ai_secret object
         required: false
         content:
           application/json:
@@ -13965,7 +13965,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: Name of the org secret
+                  description: Name of the AI secret
                 type:
                   type: string
                   nullable: true
@@ -13985,16 +13985,16 @@ paths:
                   description: For nearly all users, this parameter should be unnecessary. But in
                     the rare case that your API key belongs to multiple
                     organizations, you may specify the name of the organization
-                    the Org Secret belongs in.
+                    the AI Secret belongs in.
               required:
                 - name
       responses:
         "200":
-          description: Returns the new org_secret object
+          description: Returns the new ai_secret object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrgSecret"
+                $ref: "#/components/schemas/AISecret"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -14044,17 +14044,17 @@ paths:
                 nullable: true
     put:
       tags:
-        - OrgSecrets
+        - AiSecrets
       security:
         - bearerAuth: []
         - {}
-      operationId: putOrgSecret
-      description: Create or replace org_secret. If there is an existing org_secret
-        with the same name as the one specified in the request, will replace the
-        existing org_secret with the provided fields
-      summary: Create or replace org_secret
+      operationId: putAiSecret
+      description: Create or replace ai_secret. If there is an existing ai_secret with
+        the same name as the one specified in the request, will replace the
+        existing ai_secret with the provided fields
+      summary: Create or replace ai_secret
       requestBody:
-        description: Any desired information about the new org_secret object
+        description: Any desired information about the new ai_secret object
         required: false
         content:
           application/json:
@@ -14063,7 +14063,7 @@ paths:
               properties:
                 name:
                   type: string
-                  description: Name of the org secret
+                  description: Name of the AI secret
                 type:
                   type: string
                   nullable: true
@@ -14083,16 +14083,16 @@ paths:
                   description: For nearly all users, this parameter should be unnecessary. But in
                     the rare case that your API key belongs to multiple
                     organizations, you may specify the name of the organization
-                    the Org Secret belongs in.
+                    the AI Secret belongs in.
               required:
                 - name
       responses:
         "200":
-          description: Returns the new org_secret object
+          description: Returns the new ai_secret object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrgSecret"
+                $ref: "#/components/schemas/AISecret"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -14141,16 +14141,16 @@ paths:
               schema:
                 nullable: true
     delete:
-      operationId: deleteOrgSecret
+      operationId: deleteAiSecret
       tags:
-        - OrgSecrets
-      description: Delete a single org_secret
-      summary: Delete single org_secret
+        - AiSecrets
+      description: Delete a single ai_secret
+      summary: Delete single ai_secret
       security:
         - bearerAuth: []
         - {}
       requestBody:
-        description: Parameters which uniquely specify the org_secret to delete
+        description: Parameters which uniquely specify the ai_secret to delete
         required: false
         content:
           application/json:
@@ -14159,23 +14159,23 @@ paths:
               properties:
                 name:
                   type: string
-                  description: Name of the org secret
+                  description: Name of the AI secret
                 org_name:
                   type: string
                   nullable: true
                   description: For nearly all users, this parameter should be unnecessary. But in
                     the rare case that your API key belongs to multiple
                     organizations, you may specify the name of the organization
-                    the Org Secret belongs in.
+                    the AI Secret belongs in.
               required:
                 - name
       responses:
         "200":
-          description: Returns the deleted org_secret object
+          description: Returns the deleted ai_secret object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrgSecret"
+                $ref: "#/components/schemas/AISecret"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -14224,12 +14224,12 @@ paths:
               schema:
                 nullable: true
     get:
-      operationId: getOrgSecret
+      operationId: getAiSecret
       tags:
-        - OrgSecrets
-      description: List out all org_secrets. The org_secrets are sorted by creation
-        date, with the most recently-created org_secrets coming first
-      summary: List org_secrets
+        - AiSecrets
+      description: List out all ai_secrets. The ai_secrets are sorted by creation
+        date, with the most recently-created ai_secrets coming first
+      summary: List ai_secrets
       security:
         - bearerAuth: []
         - {}
@@ -14238,12 +14238,12 @@ paths:
         - $ref: "#/components/parameters/StartingAfter"
         - $ref: "#/components/parameters/EndingBefore"
         - $ref: "#/components/parameters/Ids"
-        - $ref: "#/components/parameters/OrgSecretName"
+        - $ref: "#/components/parameters/AiSecretName"
         - $ref: "#/components/parameters/OrgName"
-        - $ref: "#/components/parameters/OrgSecretType"
+        - $ref: "#/components/parameters/AISecretType"
       responses:
         "200":
-          description: Returns a list of org_secret objects
+          description: Returns a list of ai_secret objects
           content:
             application/json:
               schema:
@@ -14252,8 +14252,8 @@ paths:
                   objects:
                     type: array
                     items:
-                      $ref: "#/components/schemas/OrgSecret"
-                    description: A list of org_secret objects
+                      $ref: "#/components/schemas/AISecret"
+                    description: A list of ai_secret objects
                 required:
                   - objects
                 additionalProperties: false
@@ -14305,9 +14305,9 @@ paths:
               schema:
                 nullable: true
     options:
-      operationId: optionsOrgSecret
+      operationId: optionsAiSecret
       description: Enable CORS
-      summary: Enable CORS (`/v1/org_secret`)
+      summary: Enable CORS (`/v1/ai_secret`)
       security: []
       tags:
         - CORS
@@ -14341,25 +14341,25 @@ paths:
             application/json:
               schema:
                 nullable: true
-  /v1/org_secret/{org_secret_id}:
+  /v1/ai_secret/{ai_secret_id}:
     get:
-      operationId: getOrgSecretId
+      operationId: getAiSecretId
       tags:
-        - OrgSecrets
-      description: Get an org_secret object by its id
-      summary: Get org_secret
+        - AiSecrets
+      description: Get an ai_secret object by its id
+      summary: Get ai_secret
       security:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/OrgSecretId"
+        - $ref: "#/components/parameters/AiSecretId"
       responses:
         "200":
-          description: Returns the org_secret object
+          description: Returns the ai_secret object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrgSecret"
+                $ref: "#/components/schemas/AISecret"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -14408,19 +14408,19 @@ paths:
               schema:
                 nullable: true
     patch:
-      operationId: patchOrgSecretId
+      operationId: patchAiSecretId
       tags:
-        - OrgSecrets
-      description: Partially update an org_secret object. Specify the fields to update
+        - AiSecrets
+      description: Partially update an ai_secret object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
-      summary: Partially update org_secret
+      summary: Partially update ai_secret
       security:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/OrgSecretId"
+        - $ref: "#/components/parameters/AiSecretId"
       requestBody:
         description: Fields to update
         required: false
@@ -14432,7 +14432,7 @@ paths:
                 name:
                   type: string
                   nullable: true
-                  description: Name of the org secret
+                  description: Name of the AI secret
                 type:
                   type: string
                   nullable: true
@@ -14446,11 +14446,11 @@ paths:
                   nullable: true
       responses:
         "200":
-          description: Returns the org_secret object
+          description: Returns the ai_secret object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrgSecret"
+                $ref: "#/components/schemas/AISecret"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -14499,23 +14499,23 @@ paths:
               schema:
                 nullable: true
     delete:
-      operationId: deleteOrgSecretId
+      operationId: deleteAiSecretId
       tags:
-        - OrgSecrets
-      description: Delete an org_secret object by its id
-      summary: Delete org_secret
+        - AiSecrets
+      description: Delete an ai_secret object by its id
+      summary: Delete ai_secret
       security:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/OrgSecretId"
+        - $ref: "#/components/parameters/AiSecretId"
       responses:
         "200":
-          description: Returns the deleted org_secret object
+          description: Returns the deleted ai_secret object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrgSecret"
+                $ref: "#/components/schemas/AISecret"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -14564,14 +14564,14 @@ paths:
               schema:
                 nullable: true
     options:
-      operationId: optionsOrgSecretId
+      operationId: optionsAiSecretId
       description: Enable CORS
-      summary: Enable CORS (`/v1/org_secret/{org_secret_id}`)
+      summary: Enable CORS (`/v1/ai_secret/{ai_secret_id}`)
       security: []
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/OrgSecretId"
+        - $ref: "#/components/parameters/AiSecretId"
       responses:
         "200":
           description: Response for CORS method
