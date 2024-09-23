@@ -3265,7 +3265,8 @@
                   "required": [
                     "type",
                     "id"
-                  ]
+                  ],
+                  "title": "function"
                 },
                 {
                   "type": "object",
@@ -3283,7 +3284,8 @@
                   "required": [
                     "type",
                     "name"
-                  ]
+                  ],
+                  "title": "global"
                 }
               ]
             }

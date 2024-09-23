@@ -3065,6 +3065,7 @@ components:
                 required:
                   - type
                   - id
+                title: function
               - type: object
                 properties:
                   type:
@@ -3076,6 +3077,7 @@ components:
                 required:
                   - type
                   - name
+                title: global
         origin:
           type: object
           nullable: true
