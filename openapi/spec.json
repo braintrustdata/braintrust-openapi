@@ -6849,7 +6849,7 @@
         "schema": {
           "$ref": "#/components/schemas/EnvVarObjectType"
         },
-        "required": true,
+        "required": false,
         "description": "The type of the object the environment variable is scoped for",
         "name": "object_type",
         "in": "query"
@@ -6858,7 +6858,7 @@
         "schema": {
           "$ref": "#/components/schemas/EnvVarObjectId"
         },
-        "required": true,
+        "required": false,
         "description": "The id of the object the environment variable is scoped for",
         "name": "object_id",
         "in": "query"
@@ -21553,19 +21553,10 @@
             "$ref": "#/components/parameters/AppLimitParam"
           },
           {
-            "$ref": "#/components/parameters/StartingAfter"
-          },
-          {
-            "$ref": "#/components/parameters/EndingBefore"
-          },
-          {
             "$ref": "#/components/parameters/Ids"
           },
           {
             "$ref": "#/components/parameters/EnvVarName"
-          },
-          {
-            "$ref": "#/components/parameters/OrgName"
           },
           {
             "$ref": "#/components/parameters/EnvVarObjectType"
