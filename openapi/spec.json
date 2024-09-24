@@ -331,7 +331,8 @@
               "online",
               null
             ],
-            "description": "The type of the configured score"
+            "description": "The type of the configured score",
+            "title": "project_score_type_single"
           },
           {
             "type": "array",
@@ -345,7 +346,8 @@
                 "online",
                 null
               ],
-              "description": "The type of the configured score"
+              "description": "The type of the configured score",
+              "title": "project_score_type"
             },
             "description": "The type of the configured score"
           }
@@ -2813,7 +2815,8 @@
                                         ],
                                         "title": "image_url"
                                       }
-                                    ]
+                                    ],
+                                    "title": "chat_completion_content_part"
                                   },
                                   "title": "array"
                                 }
@@ -4813,7 +4816,8 @@
                                       "type",
                                       "eval_name",
                                       "position"
-                                    ]
+                                    ],
+                                    "title": "experiment"
                                   },
                                   {
                                     "type": "object",
@@ -4832,7 +4836,8 @@
                                     "required": [
                                       "type",
                                       "index"
-                                    ]
+                                    ],
+                                    "title": "function"
                                   }
                                 ]
                               },
@@ -5152,7 +5157,8 @@
                                       "type",
                                       "eval_name",
                                       "position"
-                                    ]
+                                    ],
+                                    "title": "experiment"
                                   },
                                   {
                                     "type": "object",
@@ -5171,7 +5177,8 @@
                                     "required": [
                                       "type",
                                       "index"
-                                    ]
+                                    ],
+                                    "title": "function"
                                   }
                                 ]
                               },
@@ -5460,7 +5467,8 @@
                                       "type",
                                       "eval_name",
                                       "position"
-                                    ]
+                                    ],
+                                    "title": "experiment"
                                   },
                                   {
                                     "type": "object",
@@ -5479,7 +5487,8 @@
                                     "required": [
                                       "type",
                                       "index"
-                                    ]
+                                    ],
+                                    "title": "function"
                                   }
                                 ]
                               },
@@ -17555,7 +17564,8 @@
                                         ],
                                         "title": "image_url"
                                       }
-                                    ]
+                                    ],
+                                    "title": "chat_completion_content_part"
                                   },
                                   "title": "array"
                                 }
@@ -17775,7 +17785,8 @@
                           "object_type",
                           "object_id"
                         ],
-                        "description": "Span parent properties"
+                        "description": "Span parent properties",
+                        "title": "span_parent_struct"
                       },
                       {
                         "type": "string",
