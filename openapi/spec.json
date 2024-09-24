@@ -6228,6 +6228,52 @@
           "name"
         ]
       },
+      "EnvVar": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the environment variable"
+          },
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "function"
+            ],
+            "description": "The type of the object the environment variable is scoped for"
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the environment variable is scoped for"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the environment variable"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of environment variable creation"
+          },
+          "used": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date the environment variable was last used"
+          }
+        },
+        "required": [
+          "id",
+          "object_type",
+          "object_id",
+          "name"
+        ]
+      },
       "CrossObjectInsertResponse": {
         "type": "object",
         "properties": {
@@ -21225,50 +21271,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the environment variable"
-                    },
-                    "object_type": {
-                      "type": "string",
-                      "enum": [
-                        "organization",
-                        "project",
-                        "function"
-                      ],
-                      "description": "The type of the object the environment variable is scoped for"
-                    },
-                    "object_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "The id of the object the environment variable is scoped for"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the environment variable"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of environment variable creation"
-                    },
-                    "used": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date the environment variable was last used"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "object_type",
-                    "object_id",
-                    "name"
-                  ]
+                  "$ref": "#/components/schemas/EnvVar"
                 }
               }
             }
@@ -21410,50 +21413,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the environment variable"
-                    },
-                    "object_type": {
-                      "type": "string",
-                      "enum": [
-                        "organization",
-                        "project",
-                        "function"
-                      ],
-                      "description": "The type of the object the environment variable is scoped for"
-                    },
-                    "object_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "The id of the object the environment variable is scoped for"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the environment variable"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of environment variable creation"
-                    },
-                    "used": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date the environment variable was last used"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "object_type",
-                    "object_id",
-                    "name"
-                  ]
+                  "$ref": "#/components/schemas/EnvVar"
                 }
               }
             }
@@ -21576,50 +21536,7 @@
                     "objects": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "description": "Unique identifier for the environment variable"
-                          },
-                          "object_type": {
-                            "type": "string",
-                            "enum": [
-                              "organization",
-                              "project",
-                              "function"
-                            ],
-                            "description": "The type of the object the environment variable is scoped for"
-                          },
-                          "object_id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "description": "The id of the object the environment variable is scoped for"
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "The name of the environment variable"
-                          },
-                          "created": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time",
-                            "description": "Date of environment variable creation"
-                          },
-                          "used": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "date-time",
-                            "description": "Date the environment variable was last used"
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "object_type",
-                          "object_id",
-                          "name"
-                        ]
+                        "$ref": "#/components/schemas/EnvVar"
                       },
                       "description": "A list of env_var objects"
                     }
@@ -21792,50 +21709,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the environment variable"
-                    },
-                    "object_type": {
-                      "type": "string",
-                      "enum": [
-                        "organization",
-                        "project",
-                        "function"
-                      ],
-                      "description": "The type of the object the environment variable is scoped for"
-                    },
-                    "object_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "The id of the object the environment variable is scoped for"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the environment variable"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of environment variable creation"
-                    },
-                    "used": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date the environment variable was last used"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "object_type",
-                    "object_id",
-                    "name"
-                  ]
+                  "$ref": "#/components/schemas/EnvVar"
                 }
               }
             }
@@ -21964,50 +21838,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the environment variable"
-                    },
-                    "object_type": {
-                      "type": "string",
-                      "enum": [
-                        "organization",
-                        "project",
-                        "function"
-                      ],
-                      "description": "The type of the object the environment variable is scoped for"
-                    },
-                    "object_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "The id of the object the environment variable is scoped for"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the environment variable"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of environment variable creation"
-                    },
-                    "used": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date the environment variable was last used"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "object_type",
-                    "object_id",
-                    "name"
-                  ]
+                  "$ref": "#/components/schemas/EnvVar"
                 }
               }
             }
@@ -22113,50 +21944,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the environment variable"
-                    },
-                    "object_type": {
-                      "type": "string",
-                      "enum": [
-                        "organization",
-                        "project",
-                        "function"
-                      ],
-                      "description": "The type of the object the environment variable is scoped for"
-                    },
-                    "object_id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "The id of the object the environment variable is scoped for"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the environment variable"
-                    },
-                    "created": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date of environment variable creation"
-                    },
-                    "used": {
-                      "type": "string",
-                      "nullable": true,
-                      "format": "date-time",
-                      "description": "Date the environment variable was last used"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "object_type",
-                    "object_id",
-                    "name"
-                  ]
+                  "$ref": "#/components/schemas/EnvVar"
                 }
               }
             }

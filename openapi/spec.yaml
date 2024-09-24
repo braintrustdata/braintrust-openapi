@@ -5369,6 +5369,42 @@ components:
         - id
         - org_id
         - name
+    EnvVar:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the environment variable
+        object_type:
+          type: string
+          enum:
+            - organization
+            - project
+            - function
+          description: The type of the object the environment variable is scoped for
+        object_id:
+          type: string
+          format: uuid
+          description: The id of the object the environment variable is scoped for
+        name:
+          type: string
+          description: The name of the environment variable
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of environment variable creation
+        used:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date the environment variable was last used
+      required:
+        - id
+        - object_type
+        - object_id
+        - name
     CrossObjectInsertResponse:
       type: object
       properties:
@@ -14975,41 +15011,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: Unique identifier for the environment variable
-                  object_type:
-                    type: string
-                    enum:
-                      - organization
-                      - project
-                      - function
-                    description: The type of the object the environment variable is scoped for
-                  object_id:
-                    type: string
-                    format: uuid
-                    description: The id of the object the environment variable is scoped for
-                  name:
-                    type: string
-                    description: The name of the environment variable
-                  created:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date of environment variable creation
-                  used:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date the environment variable was last used
-                required:
-                  - id
-                  - object_type
-                  - object_id
-                  - name
+                $ref: "#/components/schemas/EnvVar"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -15104,41 +15106,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: Unique identifier for the environment variable
-                  object_type:
-                    type: string
-                    enum:
-                      - organization
-                      - project
-                      - function
-                    description: The type of the object the environment variable is scoped for
-                  object_id:
-                    type: string
-                    format: uuid
-                    description: The id of the object the environment variable is scoped for
-                  name:
-                    type: string
-                    description: The name of the environment variable
-                  created:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date of environment variable creation
-                  used:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date the environment variable was last used
-                required:
-                  - id
-                  - object_type
-                  - object_id
-                  - name
+                $ref: "#/components/schemas/EnvVar"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -15213,41 +15181,7 @@ paths:
                   objects:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          description: Unique identifier for the environment variable
-                        object_type:
-                          type: string
-                          enum:
-                            - organization
-                            - project
-                            - function
-                          description: The type of the object the environment variable is scoped for
-                        object_id:
-                          type: string
-                          format: uuid
-                          description: The id of the object the environment variable is scoped for
-                        name:
-                          type: string
-                          description: The name of the environment variable
-                        created:
-                          type: string
-                          nullable: true
-                          format: date-time
-                          description: Date of environment variable creation
-                        used:
-                          type: string
-                          nullable: true
-                          format: date-time
-                          description: Date the environment variable was last used
-                      required:
-                        - id
-                        - object_type
-                        - object_id
-                        - name
+                      $ref: "#/components/schemas/EnvVar"
                     description: A list of env_var objects
                 required:
                   - objects
@@ -15354,41 +15288,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: Unique identifier for the environment variable
-                  object_type:
-                    type: string
-                    enum:
-                      - organization
-                      - project
-                      - function
-                    description: The type of the object the environment variable is scoped for
-                  object_id:
-                    type: string
-                    format: uuid
-                    description: The id of the object the environment variable is scoped for
-                  name:
-                    type: string
-                    description: The name of the environment variable
-                  created:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date of environment variable creation
-                  used:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date the environment variable was last used
-                required:
-                  - id
-                  - object_type
-                  - object_id
-                  - name
+                $ref: "#/components/schemas/EnvVar"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -15472,41 +15372,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: Unique identifier for the environment variable
-                  object_type:
-                    type: string
-                    enum:
-                      - organization
-                      - project
-                      - function
-                    description: The type of the object the environment variable is scoped for
-                  object_id:
-                    type: string
-                    format: uuid
-                    description: The id of the object the environment variable is scoped for
-                  name:
-                    type: string
-                    description: The name of the environment variable
-                  created:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date of environment variable creation
-                  used:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date the environment variable was last used
-                required:
-                  - id
-                  - object_type
-                  - object_id
-                  - name
+                $ref: "#/components/schemas/EnvVar"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -15571,41 +15437,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: Unique identifier for the environment variable
-                  object_type:
-                    type: string
-                    enum:
-                      - organization
-                      - project
-                      - function
-                    description: The type of the object the environment variable is scoped for
-                  object_id:
-                    type: string
-                    format: uuid
-                    description: The id of the object the environment variable is scoped for
-                  name:
-                    type: string
-                    description: The name of the environment variable
-                  created:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date of environment variable creation
-                  used:
-                    type: string
-                    nullable: true
-                    format: date-time
-                    description: Date the environment variable was last used
-                required:
-                  - id
-                  - object_type
-                  - object_id
-                  - name
+                $ref: "#/components/schemas/EnvVar"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
