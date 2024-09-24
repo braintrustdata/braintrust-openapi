@@ -21701,7 +21701,7 @@
         "tags": [
           "EnvVars"
         ],
-        "description": "Get a env_var object by its id",
+        "description": "Get an env_var object by its id",
         "summary": "Get env_var",
         "security": [
           {
@@ -21807,7 +21807,7 @@
         "tags": [
           "EnvVars"
         ],
-        "description": "Partially update a env_var object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "description": "Partially update an env_var object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update env_var",
         "security": [
           {
@@ -21830,7 +21830,6 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "nullable": true,
                     "description": "The name of the environment variable"
                   },
                   "value": {
@@ -21838,7 +21837,10 @@
                     "nullable": true,
                     "description": "The value of the environment variable. Will be encrypted at rest."
                   }
-                }
+                },
+                "required": [
+                  "name"
+                ]
               }
             }
           }
@@ -21936,7 +21938,7 @@
         "tags": [
           "EnvVars"
         ],
-        "description": "Delete a env_var object by its id",
+        "description": "Delete an env_var object by its id",
         "summary": "Delete env_var",
         "security": [
           {
