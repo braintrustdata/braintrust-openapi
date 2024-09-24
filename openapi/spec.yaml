@@ -329,6 +329,7 @@ components:
             - online
             - null
           description: The type of the configured score
+          title: project_score_type_single
         - type: array
           items:
             type: string
@@ -340,6 +341,7 @@ components:
               - online
               - null
             description: The type of the configured score
+            title: project_score_type
           description: The type of the configured score
     AISecretType:
       anyOf:
@@ -2780,6 +2782,7 @@ components:
                                         - image_url
                                         - type
                                       title: image_url
+                                  title: chat_completion_content_part
                                 title: array
                           role:
                             type: string
@@ -4355,6 +4358,7 @@ components:
                                     - type
                                     - eval_name
                                     - position
+                                  title: experiment
                                 - type: object
                                   properties:
                                     type:
@@ -4367,6 +4371,7 @@ components:
                                   required:
                                     - type
                                     - index
+                                  title: function
                             bundle_id:
                               type: string
                             preview:
@@ -4584,6 +4589,7 @@ components:
                                     - type
                                     - eval_name
                                     - position
+                                  title: experiment
                                 - type: object
                                   properties:
                                     type:
@@ -4596,6 +4602,7 @@ components:
                                   required:
                                     - type
                                     - index
+                                  title: function
                             bundle_id:
                               type: string
                             preview:
@@ -4788,6 +4795,7 @@ components:
                                     - type
                                     - eval_name
                                     - position
+                                  title: experiment
                                 - type: object
                                   properties:
                                     type:
@@ -4800,6 +4808,7 @@ components:
                                   required:
                                     - type
                                     - index
+                                  title: function
                             bundle_id:
                               type: string
                             preview:
@@ -12635,6 +12644,7 @@ paths:
                                         - image_url
                                         - type
                                       title: image_url
+                                  title: chat_completion_content_part
                                 title: array
                           role:
                             type: string
@@ -12780,6 +12790,7 @@ paths:
                         - object_type
                         - object_id
                       description: Span parent properties
+                      title: span_parent_struct
                     - type: string
                       description: The parent's span identifier, created by calling `.export()` on a
                         span
