@@ -3244,6 +3244,52 @@
               "choice_scores"
             ]
           },
+          "tool_functions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "function"
+                      ]
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "id"
+                  ],
+                  "title": "function"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "global"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "name"
+                  ],
+                  "title": "global"
+                }
+              ]
+            }
+          },
           "origin": {
             "type": "object",
             "nullable": true,
@@ -3333,9 +3379,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           }
@@ -3386,9 +3433,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           }
@@ -4635,9 +4683,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           },
@@ -4708,59 +4757,83 @@
                                 ]
                               },
                               "location": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "experiment"
-                                    ]
-                                  },
-                                  "eval_name": {
-                                    "type": "string"
-                                  },
-                                  "position": {
-                                    "anyOf": [
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "task"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "type"
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "experiment"
                                         ]
                                       },
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "scorer"
+                                      "eval_name": {
+                                        "type": "string"
+                                      },
+                                      "position": {
+                                        "anyOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "task"
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "type"
                                             ]
                                           },
-                                          "index": {
-                                            "type": "number"
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "scorer"
+                                                ]
+                                              },
+                                              "index": {
+                                                "type": "integer",
+                                                "minimum": 0
+                                              }
+                                            },
+                                            "required": [
+                                              "type",
+                                              "index"
+                                            ],
+                                            "title": "scorer"
                                           }
-                                        },
-                                        "required": [
-                                          "type",
-                                          "index"
-                                        ],
-                                        "title": "scorer"
+                                        ]
                                       }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "eval_name",
+                                      "position"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "function"
+                                        ]
+                                      },
+                                      "index": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "index"
                                     ]
                                   }
-                                },
-                                "required": [
-                                  "type",
-                                  "eval_name",
-                                  "position"
                                 ]
                               },
                               "bundle_id": {
@@ -4887,6 +4960,19 @@
               "object_type",
               "object_id"
             ]
+          },
+          "function_schema": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "parameters": {
+                "nullable": true
+              },
+              "returns": {
+                "nullable": true
+              }
+            },
+            "description": "JSON schema for the function's parameters and return type"
           }
         },
         "required": [
@@ -4936,9 +5022,10 @@
             "type": "string",
             "nullable": true,
             "enum": [
-              "task",
               "llm",
               "scorer",
+              "task",
+              "tool",
               null
             ]
           },
@@ -5009,59 +5096,83 @@
                                 ]
                               },
                               "location": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "experiment"
-                                    ]
-                                  },
-                                  "eval_name": {
-                                    "type": "string"
-                                  },
-                                  "position": {
-                                    "anyOf": [
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "task"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "type"
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "experiment"
                                         ]
                                       },
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "scorer"
+                                      "eval_name": {
+                                        "type": "string"
+                                      },
+                                      "position": {
+                                        "anyOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "task"
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "type"
                                             ]
                                           },
-                                          "index": {
-                                            "type": "number"
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "scorer"
+                                                ]
+                                              },
+                                              "index": {
+                                                "type": "integer",
+                                                "minimum": 0
+                                              }
+                                            },
+                                            "required": [
+                                              "type",
+                                              "index"
+                                            ],
+                                            "title": "scorer"
                                           }
-                                        },
-                                        "required": [
-                                          "type",
-                                          "index"
-                                        ],
-                                        "title": "scorer"
+                                        ]
                                       }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "eval_name",
+                                      "position"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "function"
+                                        ]
+                                      },
+                                      "index": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "index"
                                     ]
                                   }
-                                },
-                                "required": [
-                                  "type",
-                                  "eval_name",
-                                  "position"
                                 ]
                               },
                               "bundle_id": {
@@ -5188,6 +5299,19 @@
               "object_type",
               "object_id"
             ]
+          },
+          "function_schema": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "parameters": {
+                "nullable": true
+              },
+              "returns": {
+                "nullable": true
+              }
+            },
+            "description": "JSON schema for the function's parameters and return type"
           }
         },
         "required": [
@@ -5280,59 +5404,83 @@
                                 ]
                               },
                               "location": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "experiment"
-                                    ]
-                                  },
-                                  "eval_name": {
-                                    "type": "string"
-                                  },
-                                  "position": {
-                                    "anyOf": [
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "task"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "type"
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "experiment"
                                         ]
                                       },
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "scorer"
+                                      "eval_name": {
+                                        "type": "string"
+                                      },
+                                      "position": {
+                                        "anyOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "task"
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "type"
                                             ]
                                           },
-                                          "index": {
-                                            "type": "number"
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "scorer"
+                                                ]
+                                              },
+                                              "index": {
+                                                "type": "integer",
+                                                "minimum": 0
+                                              }
+                                            },
+                                            "required": [
+                                              "type",
+                                              "index"
+                                            ],
+                                            "title": "scorer"
                                           }
-                                        },
-                                        "required": [
-                                          "type",
-                                          "index"
-                                        ],
-                                        "title": "scorer"
+                                        ]
                                       }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "eval_name",
+                                      "position"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "function"
+                                        ]
+                                      },
+                                      "index": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "index"
                                     ]
                                   }
-                                },
-                                "required": [
-                                  "type",
-                                  "eval_name",
-                                  "position"
                                 ]
                               },
                               "bundle_id": {
@@ -17296,6 +17444,284 @@
                     "nullable": true,
                     "description": "Argument to the function, which can be any JSON serializable value"
                   },
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "content": {
+                              "type": "string",
+                              "default": ""
+                            },
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "system"
+                              ]
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "role"
+                          ],
+                          "title": "system"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "content": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "default": "",
+                                  "title": "text"
+                                },
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "text": {
+                                            "type": "string",
+                                            "default": ""
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "text"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "type"
+                                        ],
+                                        "title": "text"
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "image_url": {
+                                            "type": "object",
+                                            "properties": {
+                                              "url": {
+                                                "type": "string"
+                                              },
+                                              "detail": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "auto"
+                                                    ],
+                                                    "title": "auto"
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "low"
+                                                    ],
+                                                    "title": "low"
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "high"
+                                                    ],
+                                                    "title": "high"
+                                                  }
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "url"
+                                            ]
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "image_url"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "image_url",
+                                          "type"
+                                        ],
+                                        "title": "image_url"
+                                      }
+                                    ]
+                                  },
+                                  "title": "array"
+                                }
+                              ]
+                            },
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "user"
+                              ]
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "role"
+                          ],
+                          "title": "user"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "assistant"
+                              ]
+                            },
+                            "content": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "function_call": {
+                              "type": "object",
+                              "nullable": true,
+                              "properties": {
+                                "arguments": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "arguments",
+                                "name"
+                              ]
+                            },
+                            "name": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "tool_calls": {
+                              "type": "array",
+                              "nullable": true,
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "function": {
+                                    "type": "object",
+                                    "properties": {
+                                      "arguments": {
+                                        "type": "string"
+                                      },
+                                      "name": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "arguments",
+                                      "name"
+                                    ]
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "function"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "function",
+                                  "type"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "role"
+                          ],
+                          "title": "assistant"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "content": {
+                              "type": "string",
+                              "default": ""
+                            },
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "tool"
+                              ]
+                            },
+                            "tool_call_id": {
+                              "type": "string",
+                              "default": ""
+                            }
+                          },
+                          "required": [
+                            "role"
+                          ],
+                          "title": "tool"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "content": {
+                              "type": "string",
+                              "default": ""
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "function"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "role"
+                          ],
+                          "title": "function"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "enum": [
+                                "model"
+                              ]
+                            },
+                            "content": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          },
+                          "required": [
+                            "role"
+                          ],
+                          "title": "fallback"
+                        }
+                      ]
+                    },
+                    "description": "If the function is an LLM, additional messages to pass along to it"
+                  },
                   "parent": {
                     "anyOf": [
                       {
@@ -17360,7 +17786,18 @@
                   },
                   "stream": {
                     "type": "boolean",
+                    "nullable": true,
                     "description": "Whether to stream the response. If true, results will be returned in the Braintrust SSE format."
+                  },
+                  "mode": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "auto",
+                      "parallel",
+                      null
+                    ],
+                    "description": "The mode format of the returned value (defaults to 'auto')"
                   },
                   "version": {
                     "type": "string",
@@ -21615,6 +22052,11 @@
                           "code": {
                             "type": "string",
                             "description": "The inline code to execute"
+                          },
+                          "name": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "The name of the inline code function"
                           }
                         },
                         "required": [
@@ -21622,6 +22064,23 @@
                           "code"
                         ],
                         "description": "Inline code function"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "inline_prompt": {
+                            "$ref": "#/components/schemas/PromptData"
+                          },
+                          "name": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "The name of the inline prompt"
+                          }
+                        },
+                        "required": [
+                          "inline_prompt"
+                        ],
+                        "description": "Inline prompt definition"
                       }
                     ],
                     "description": "The function to evaluate"
@@ -21729,6 +22188,11 @@
                             "code": {
                               "type": "string",
                               "description": "The inline code to execute"
+                            },
+                            "name": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "The name of the inline code function"
                             }
                           },
                           "required": [
@@ -21736,6 +22200,23 @@
                             "code"
                           ],
                           "description": "Inline code function"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "inline_prompt": {
+                              "$ref": "#/components/schemas/PromptData"
+                            },
+                            "name": {
+                              "type": "string",
+                              "nullable": true,
+                              "description": "The name of the inline prompt"
+                            }
+                          },
+                          "required": [
+                            "inline_prompt"
+                          ],
+                          "description": "Inline prompt definition"
                         }
                       ],
                       "description": "Options for identifying a function"
