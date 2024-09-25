@@ -109,6 +109,11 @@
         "format": "uuid",
         "description": "AiSecret id"
       },
+      "EnvVarId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "EnvVar id"
+      },
       "ProjectIdQuery": {
         "type": "string",
         "format": "uuid",
@@ -165,6 +170,10 @@
       "AiSecretName": {
         "type": "string",
         "description": "Name of the ai_secret to search for"
+      },
+      "EnvVarName": {
+        "type": "string",
+        "description": "Name of the env_var to search for"
       },
       "OrgName": {
         "type": "string",
@@ -365,6 +374,20 @@
             }
           }
         ]
+      },
+      "EnvVarObjectType": {
+        "type": "string",
+        "enum": [
+          "organization",
+          "project",
+          "function"
+        ],
+        "description": "The type of the object the environment variable is scoped for"
+      },
+      "EnvVarObjectId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The id of the object the environment variable is scoped for"
       },
       "Project": {
         "type": "object",
@@ -6163,6 +6186,52 @@
           "name"
         ]
       },
+      "EnvVar": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the environment variable"
+          },
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "project",
+              "function"
+            ],
+            "description": "The type of the object the environment variable is scoped for"
+          },
+          "object_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The id of the object the environment variable is scoped for"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the environment variable"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of environment variable creation"
+          },
+          "used": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date the environment variable was last used"
+          }
+        },
+        "required": [
+          "id",
+          "object_type",
+          "object_id",
+          "name"
+        ]
+      },
       "CrossObjectInsertResponse": {
         "type": "object",
         "properties": {
@@ -6421,6 +6490,15 @@
         "name": "ai_secret_id",
         "in": "path"
       },
+      "EnvVarId": {
+        "schema": {
+          "$ref": "#/components/schemas/EnvVarId"
+        },
+        "required": true,
+        "description": "EnvVar id",
+        "name": "env_var_id",
+        "in": "path"
+      },
       "ProjectIdQuery": {
         "schema": {
           "$ref": "#/components/schemas/ProjectIdQuery"
@@ -6557,6 +6635,16 @@
         "required": false,
         "description": "Name of the ai_secret to search for",
         "name": "ai_secret_name",
+        "in": "query",
+        "allowReserved": true
+      },
+      "EnvVarName": {
+        "schema": {
+          "$ref": "#/components/schemas/EnvVarName"
+        },
+        "required": false,
+        "description": "Name of the env_var to search for",
+        "name": "env_var_name",
         "in": "query",
         "allowReserved": true
       },
@@ -6759,6 +6847,24 @@
         },
         "required": false,
         "name": "ai_secret_type",
+        "in": "query"
+      },
+      "EnvVarObjectType": {
+        "schema": {
+          "$ref": "#/components/schemas/EnvVarObjectType"
+        },
+        "required": false,
+        "description": "The type of the object the environment variable is scoped for",
+        "name": "object_type",
+        "in": "query"
+      },
+      "EnvVarObjectId": {
+        "schema": {
+          "$ref": "#/components/schemas/EnvVarObjectId"
+        },
+        "required": false,
+        "description": "The id of the object the environment variable is scoped for",
+        "name": "object_id",
         "in": "query"
       }
     }
@@ -21012,6 +21118,887 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/AiSecretId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/env_var": {
+      "post": {
+        "tags": [
+          "EnvVars"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "postEnvVar",
+        "description": "Create a new env_var. If there is an existing env_var with the same name as the one specified in the request, will return the existing env_var unmodified",
+        "summary": "Create env_var",
+        "requestBody": {
+          "description": "Any desired information about the new env_var object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "object_type": {
+                    "type": "string",
+                    "enum": [
+                      "organization",
+                      "project",
+                      "function"
+                    ],
+                    "description": "The type of the object the environment variable is scoped for"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The id of the object the environment variable is scoped for"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the environment variable"
+                  },
+                  "value": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The value of the environment variable. Will be encrypted at rest."
+                  }
+                },
+                "required": [
+                  "object_type",
+                  "object_id",
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new env_var object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvVar"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "EnvVars"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "putEnvVar",
+        "description": "Create or replace env_var. If there is an existing env_var with the same name as the one specified in the request, will replace the existing env_var with the provided fields",
+        "summary": "Create or replace env_var",
+        "requestBody": {
+          "description": "Any desired information about the new env_var object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "object_type": {
+                    "type": "string",
+                    "enum": [
+                      "organization",
+                      "project",
+                      "function"
+                    ],
+                    "description": "The type of the object the environment variable is scoped for"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The id of the object the environment variable is scoped for"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the environment variable"
+                  },
+                  "value": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The value of the environment variable. Will be encrypted at rest."
+                  }
+                },
+                "required": [
+                  "object_type",
+                  "object_id",
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new env_var object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvVar"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getEnvVar",
+        "tags": [
+          "EnvVars"
+        ],
+        "description": "List out all env_vars. The env_vars are sorted by creation date, with the most recently-created env_vars coming first",
+        "summary": "List env_vars",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
+          },
+          {
+            "$ref": "#/components/parameters/EnvVarName"
+          },
+          {
+            "$ref": "#/components/parameters/EnvVarObjectType"
+          },
+          {
+            "$ref": "#/components/parameters/EnvVarObjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of env_var objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EnvVar"
+                      },
+                      "description": "A list of env_var objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsEnvVar",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/env_var`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/env_var/{env_var_id}": {
+      "get": {
+        "operationId": "getEnvVarId",
+        "tags": [
+          "EnvVars"
+        ],
+        "description": "Get an env_var object by its id",
+        "summary": "Get env_var",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnvVarId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the env_var object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvVar"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchEnvVarId",
+        "tags": [
+          "EnvVars"
+        ],
+        "description": "Partially update an env_var object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "summary": "Partially update env_var",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnvVarId"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the environment variable"
+                  },
+                  "value": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The value of the environment variable. Will be encrypted at rest."
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the env_var object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvVar"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteEnvVarId",
+        "tags": [
+          "EnvVars"
+        ],
+        "description": "Delete an env_var object by its id",
+        "summary": "Delete env_var",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnvVarId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted env_var object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvVar"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsEnvVarId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/env_var/{env_var_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EnvVarId"
           }
         ],
         "responses": {
