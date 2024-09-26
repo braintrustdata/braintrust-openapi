@@ -157,10 +157,12 @@ components:
         a list of IDs, include the query param multiple times
     AppLimitParam:
       type: integer
+      nullable: true
       minimum: 0
       description: Limit the number of objects to return
     FetchLimitParam:
       type: integer
+      nullable: true
       minimum: 0
       description: >-
         limit the number of traces fetched
@@ -252,6 +254,7 @@ components:
         '81cd05ee665fdfb3').
     SummarizeScores:
       type: boolean
+      nullable: true
       description: Whether to summarize the scores and metrics. If false (or omitted),
         only the metadata will be returned.
     ComparisonExperimentId:
@@ -263,6 +266,7 @@ components:
         same project. Must pass `summarize_scores=true` for this id to be used
     SummarizeData:
       type: boolean
+      nullable: true
       description: Whether to summarize the data. If false (or omitted), only the
         metadata will be returned.
     Slug:
