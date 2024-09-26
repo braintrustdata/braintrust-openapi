@@ -2289,7 +2289,6 @@ components:
           description: Unique identifier for the dataset
         project_id:
           type: string
-          nullable: true
           format: uuid
           description: Unique identifier for the project that the dataset belongs under
         name:
@@ -2322,13 +2321,13 @@ components:
           description: User-controlled metadata about the dataset
       required:
         - id
+        - project_id
         - name
     CreateDataset:
       type: object
       properties:
         project_id:
           type: string
-          nullable: true
           format: uuid
           description: Unique identifier for the project that the dataset belongs under
         name:
@@ -2339,6 +2338,7 @@ components:
           nullable: true
           description: Textual description of the dataset
       required:
+        - project_id
         - name
     PatchDataset:
       type: object
@@ -2561,7 +2561,6 @@ components:
           description: The timestamp the dataset event was created
         project_id:
           type: string
-          nullable: true
           format: uuid
           description: Unique identifier for the project that the dataset belongs under
         dataset_id:
@@ -2606,6 +2605,7 @@ components:
         - id
         - _xact_id
         - created
+        - project_id
         - dataset_id
         - span_id
         - root_span_id
