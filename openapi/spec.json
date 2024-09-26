@@ -2263,7 +2263,6 @@
           },
           "project_id": {
             "type": "string",
-            "nullable": true,
             "format": "uuid",
             "description": "Unique identifier for the project that the dataset belongs under"
           },
@@ -2305,6 +2304,7 @@
         },
         "required": [
           "id",
+          "project_id",
           "name"
         ]
       },
@@ -2313,7 +2313,6 @@
         "properties": {
           "project_id": {
             "type": "string",
-            "nullable": true,
             "format": "uuid",
             "description": "Unique identifier for the project that the dataset belongs under"
           },
@@ -2328,6 +2327,7 @@
           }
         },
         "required": [
+          "project_id",
           "name"
         ]
       },
@@ -2523,7 +2523,6 @@
           },
           "project_id": {
             "type": "string",
-            "nullable": true,
             "format": "uuid",
             "description": "Unique identifier for the project that the dataset belongs under"
           },
@@ -2569,6 +2568,7 @@
           "id",
           "_xact_id",
           "created",
+          "project_id",
           "dataset_id",
           "span_id",
           "root_span_id"
