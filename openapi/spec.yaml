@@ -28,71 +28,71 @@ components:
         You can create an API key in the Braintrust [organization settings
         page](https://www.braintrustdata.com/app/settings?subroute=api-keys)."
   schemas:
-    ProjectId:
+    ProjectIdParam:
       type: string
       format: uuid
       description: Project id
-    ExperimentId:
+    ExperimentIdParam:
       type: string
       format: uuid
       description: Experiment id
-    DatasetId:
+    DatasetIdParam:
       type: string
       format: uuid
       description: Dataset id
-    PromptId:
+    PromptIdParam:
       type: string
       format: uuid
       description: Prompt id
-    PromptSessionId:
+    PromptSessionIdParam:
       type: string
       format: uuid
       description: PromptSession id
-    RoleId:
+    RoleIdParam:
       type: string
       format: uuid
       description: Role id
-    GroupId:
+    GroupIdParam:
       type: string
       format: uuid
       description: Group id
-    AclId:
+    AclIdParam:
       type: string
       format: uuid
       description: Acl id
-    UserId:
+    UserIdParam:
       type: string
       format: uuid
       description: User id
-    ProjectScoreId:
+    ProjectScoreIdParam:
       type: string
       format: uuid
       description: ProjectScore id
-    ProjectTagId:
+    ProjectTagIdParam:
       type: string
       format: uuid
       description: ProjectTag id
-    FunctionId:
+    FunctionIdParam:
       type: string
       format: uuid
       description: Function id
-    ViewId:
+    ViewIdParam:
       type: string
       format: uuid
       description: View id
-    OrganizationId:
+    OrganizationIdParam:
       type: string
       format: uuid
       description: Organization id
-    ApiKeyId:
+    ApiKeyIdParam:
       type: string
       format: uuid
       description: ApiKey id
-    AiSecretId:
+    AiSecretIdParam:
       type: string
       format: uuid
       description: AiSecret id
-    EnvVarId:
+    EnvVarIdParam:
       type: string
       format: uuid
       description: EnvVar id
@@ -5156,6 +5156,96 @@ components:
                 description: A list of project logs feedback items
           description: A mapping from project id to a set of log events and feedback items
             to insert
+    FunctionId:
+      anyOf:
+        - type: object
+          properties:
+            function_id:
+              type: string
+              description: The ID of the function
+            version:
+              type: string
+              description: The version of the function
+          required:
+            - function_id
+          description: Function id
+        - type: object
+          properties:
+            project_name:
+              type: string
+              description: The name of the project containing the function
+            slug:
+              type: string
+              description: The slug of the function
+            version:
+              type: string
+              description: The version of the function
+          required:
+            - project_name
+            - slug
+          description: Project name and slug
+        - type: object
+          properties:
+            global_function:
+              type: string
+              description: The name of the global function. Currently, the global namespace
+                includes the functions in autoevals
+          required:
+            - global_function
+          description: Global function name
+        - type: object
+          properties:
+            prompt_session_id:
+              type: string
+              description: The ID of the prompt session
+            prompt_session_function_id:
+              type: string
+              description: The ID of the function in the prompt session
+            version:
+              type: string
+              description: The version of the function
+          required:
+            - prompt_session_id
+            - prompt_session_function_id
+          description: Prompt session id
+        - type: object
+          properties:
+            inline_context:
+              type: object
+              properties:
+                runtime:
+                  type: string
+                  enum:
+                    - node
+                    - python
+                version:
+                  type: string
+              required:
+                - runtime
+                - version
+            code:
+              type: string
+              description: The inline code to execute
+            name:
+              type: string
+              nullable: true
+              description: The name of the inline code function
+          required:
+            - inline_context
+            - code
+          description: Inline code function
+        - type: object
+          properties:
+            inline_prompt:
+              $ref: "#/components/schemas/PromptData"
+            name:
+              type: string
+              nullable: true
+              description: The name of the inline prompt
+          required:
+            - inline_prompt
+          description: Inline prompt definition
+      description: The function to evaluate
     RunEval:
       type: object
       properties:
@@ -5183,191 +5273,13 @@ components:
               description: Project and dataset name
           description: The dataset to use
         task:
-          allOf:
-            - $ref: "#/components/schemas/FunctionId"
-            - anyOf:
-                - type: object
-                  properties:
-                    function_id:
-                      type: string
-                      description: The ID of the function
-                    version:
-                      type: string
-                      description: The version of the function
-                  required:
-                    - function_id
-                  description: Function id
-                - type: object
-                  properties:
-                    project_name:
-                      type: string
-                      description: The name of the project containing the function
-                    slug:
-                      type: string
-                      description: The slug of the function
-                    version:
-                      type: string
-                      description: The version of the function
-                  required:
-                    - project_name
-                    - slug
-                  description: Project name and slug
-                - type: object
-                  properties:
-                    global_function:
-                      type: string
-                      description: The name of the global function. Currently, the global namespace
-                        includes the functions in autoevals
-                  required:
-                    - global_function
-                  description: Global function name
-                - type: object
-                  properties:
-                    prompt_session_id:
-                      type: string
-                      description: The ID of the prompt session
-                    prompt_session_function_id:
-                      type: string
-                      description: The ID of the function in the prompt session
-                    version:
-                      type: string
-                      description: The version of the function
-                  required:
-                    - prompt_session_id
-                    - prompt_session_function_id
-                  description: Prompt session id
-                - type: object
-                  properties:
-                    inline_context:
-                      type: object
-                      properties:
-                        runtime:
-                          type: string
-                          enum:
-                            - node
-                            - python
-                        version:
-                          type: string
-                      required:
-                        - runtime
-                        - version
-                    code:
-                      type: string
-                      description: The inline code to execute
-                    name:
-                      type: string
-                      nullable: true
-                      description: The name of the inline code function
-                  required:
-                    - inline_context
-                    - code
-                  description: Inline code function
-                - type: object
-                  properties:
-                    inline_prompt:
-                      $ref: "#/components/schemas/PromptData"
-                    name:
-                      type: string
-                      nullable: true
-                      description: The name of the inline prompt
-                  required:
-                    - inline_prompt
-                  description: Inline prompt definition
-              description: The function to evaluate
+          $ref: "#/components/schemas/FunctionId"
         scores:
           type: array
           items:
             allOf:
               - $ref: "#/components/schemas/FunctionId"
-              - anyOf:
-                  - type: object
-                    properties:
-                      function_id:
-                        type: string
-                        description: The ID of the function
-                      version:
-                        type: string
-                        description: The version of the function
-                    required:
-                      - function_id
-                    description: Function id
-                  - type: object
-                    properties:
-                      project_name:
-                        type: string
-                        description: The name of the project containing the function
-                      slug:
-                        type: string
-                        description: The slug of the function
-                      version:
-                        type: string
-                        description: The version of the function
-                    required:
-                      - project_name
-                      - slug
-                    description: Project name and slug
-                  - type: object
-                    properties:
-                      global_function:
-                        type: string
-                        description: The name of the global function. Currently, the global namespace
-                          includes the functions in autoevals
-                    required:
-                      - global_function
-                    description: Global function name
-                  - type: object
-                    properties:
-                      prompt_session_id:
-                        type: string
-                        description: The ID of the prompt session
-                      prompt_session_function_id:
-                        type: string
-                        description: The ID of the function in the prompt session
-                      version:
-                        type: string
-                        description: The version of the function
-                    required:
-                      - prompt_session_id
-                      - prompt_session_function_id
-                    description: Prompt session id
-                  - type: object
-                    properties:
-                      inline_context:
-                        type: object
-                        properties:
-                          runtime:
-                            type: string
-                            enum:
-                              - node
-                              - python
-                          version:
-                            type: string
-                        required:
-                          - runtime
-                          - version
-                      code:
-                        type: string
-                        description: The inline code to execute
-                      name:
-                        type: string
-                        nullable: true
-                        description: The name of the inline code function
-                    required:
-                      - inline_context
-                      - code
-                    description: Inline code function
-                  - type: object
-                    properties:
-                      inline_prompt:
-                        $ref: "#/components/schemas/PromptData"
-                      name:
-                        type: string
-                        nullable: true
-                        description: The name of the inline prompt
-                    required:
-                      - inline_prompt
-                    description: Inline prompt definition
-                description: Options for identifying a function
+              - description: Options for identifying a function
           description: The functions to score the eval on
         experiment_name:
           type: string
@@ -5392,121 +5304,121 @@ components:
         - task
         - scores
   parameters:
-    ProjectId:
+    ProjectIdParam:
       schema:
-        $ref: "#/components/schemas/ProjectId"
+        $ref: "#/components/schemas/ProjectIdParam"
       required: true
       description: Project id
       name: project_id
       in: path
-    ExperimentId:
+    ExperimentIdParam:
       schema:
-        $ref: "#/components/schemas/ExperimentId"
+        $ref: "#/components/schemas/ExperimentIdParam"
       required: true
       description: Experiment id
       name: experiment_id
       in: path
-    DatasetId:
+    DatasetIdParam:
       schema:
-        $ref: "#/components/schemas/DatasetId"
+        $ref: "#/components/schemas/DatasetIdParam"
       required: true
       description: Dataset id
       name: dataset_id
       in: path
-    PromptId:
+    PromptIdParam:
       schema:
-        $ref: "#/components/schemas/PromptId"
+        $ref: "#/components/schemas/PromptIdParam"
       required: true
       description: Prompt id
       name: prompt_id
       in: path
-    PromptSessionId:
+    PromptSessionIdParam:
       schema:
-        $ref: "#/components/schemas/PromptSessionId"
+        $ref: "#/components/schemas/PromptSessionIdParam"
       required: true
       description: PromptSession id
       name: prompt_session_id
       in: path
-    RoleId:
+    RoleIdParam:
       schema:
-        $ref: "#/components/schemas/RoleId"
+        $ref: "#/components/schemas/RoleIdParam"
       required: true
       description: Role id
       name: role_id
       in: path
-    GroupId:
+    GroupIdParam:
       schema:
-        $ref: "#/components/schemas/GroupId"
+        $ref: "#/components/schemas/GroupIdParam"
       required: true
       description: Group id
       name: group_id
       in: path
-    AclId:
+    AclIdParam:
       schema:
-        $ref: "#/components/schemas/AclId"
+        $ref: "#/components/schemas/AclIdParam"
       required: true
       description: Acl id
       name: acl_id
       in: path
-    UserId:
+    UserIdParam:
       schema:
-        $ref: "#/components/schemas/UserId"
+        $ref: "#/components/schemas/UserIdParam"
       required: true
       description: User id
       name: user_id
       in: path
-    ProjectScoreId:
+    ProjectScoreIdParam:
       schema:
-        $ref: "#/components/schemas/ProjectScoreId"
+        $ref: "#/components/schemas/ProjectScoreIdParam"
       required: true
       description: ProjectScore id
       name: project_score_id
       in: path
-    ProjectTagId:
+    ProjectTagIdParam:
       schema:
-        $ref: "#/components/schemas/ProjectTagId"
+        $ref: "#/components/schemas/ProjectTagIdParam"
       required: true
       description: ProjectTag id
       name: project_tag_id
       in: path
-    FunctionId:
+    FunctionIdParam:
       schema:
-        $ref: "#/components/schemas/FunctionId"
+        $ref: "#/components/schemas/FunctionIdParam"
       required: true
       description: Function id
       name: function_id
       in: path
-    ViewId:
+    ViewIdParam:
       schema:
-        $ref: "#/components/schemas/ViewId"
+        $ref: "#/components/schemas/ViewIdParam"
       required: true
       description: View id
       name: view_id
       in: path
-    OrganizationId:
+    OrganizationIdParam:
       schema:
-        $ref: "#/components/schemas/OrganizationId"
+        $ref: "#/components/schemas/OrganizationIdParam"
       required: true
       description: Organization id
       name: organization_id
       in: path
-    ApiKeyId:
+    ApiKeyIdParam:
       schema:
-        $ref: "#/components/schemas/ApiKeyId"
+        $ref: "#/components/schemas/ApiKeyIdParam"
       required: true
       description: ApiKey id
       name: api_key_id
       in: path
-    AiSecretId:
+    AiSecretIdParam:
       schema:
-        $ref: "#/components/schemas/AiSecretId"
+        $ref: "#/components/schemas/AiSecretIdParam"
       required: true
       description: AiSecret id
       name: ai_secret_id
       in: path
-    EnvVarId:
+    EnvVarIdParam:
       schema:
-        $ref: "#/components/schemas/EnvVarId"
+        $ref: "#/components/schemas/EnvVarIdParam"
       required: true
       description: EnvVar id
       name: env_var_id
@@ -6086,7 +5998,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       responses:
         "200":
           description: Returns the project object
@@ -6154,7 +6066,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -6226,7 +6138,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       responses:
         "200":
           description: Returns the deleted project object
@@ -6289,7 +6201,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -6331,7 +6243,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
         description: An array of project logs events to insert
         required: false
@@ -6401,7 +6313,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -6445,7 +6357,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
         description: Filters for the fetch query
         required: false
@@ -6519,7 +6431,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
         - $ref: "#/components/parameters/FetchLimitParam"
         - $ref: "#/components/parameters/MaxXactId"
         - $ref: "#/components/parameters/MaxRootSpanId"
@@ -6586,7 +6498,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -6628,7 +6540,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
         description: An array of feedback objects
         required: false
@@ -6698,7 +6610,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ProjectId"
+        - $ref: "#/components/parameters/ProjectIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -6932,7 +6844,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
         "200":
           description: Returns the experiment object
@@ -7000,7 +6912,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -7072,7 +6984,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
         "200":
           description: Returns the deleted experiment object
@@ -7135,7 +7047,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -7177,7 +7089,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
         description: An array of experiment events to insert
         required: false
@@ -7247,7 +7159,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -7291,7 +7203,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
         description: Filters for the fetch query
         required: false
@@ -7365,7 +7277,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
         - $ref: "#/components/parameters/FetchLimitParam"
         - $ref: "#/components/parameters/MaxXactId"
         - $ref: "#/components/parameters/MaxRootSpanId"
@@ -7432,7 +7344,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -7474,7 +7386,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
         description: An array of feedback objects
         required: false
@@ -7544,7 +7456,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -7585,7 +7497,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
         - $ref: "#/components/parameters/SummarizeScores"
         - $ref: "#/components/parameters/ComparisonExperimentId"
       responses:
@@ -7650,7 +7562,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ExperimentId"
+        - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -7884,7 +7796,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       responses:
         "200":
           description: Returns the dataset object
@@ -7952,7 +7864,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -8024,7 +7936,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       responses:
         "200":
           description: Returns the deleted dataset object
@@ -8087,7 +7999,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -8129,7 +8041,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
         description: An array of dataset events to insert
         required: false
@@ -8199,7 +8111,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -8243,7 +8155,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
         description: Filters for the fetch query
         required: false
@@ -8317,7 +8229,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
         - $ref: "#/components/parameters/FetchLimitParam"
         - $ref: "#/components/parameters/MaxXactId"
         - $ref: "#/components/parameters/MaxRootSpanId"
@@ -8384,7 +8296,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -8426,7 +8338,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
         description: An array of feedback objects
         required: false
@@ -8496,7 +8408,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -8537,7 +8449,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
         - $ref: "#/components/parameters/SummarizeData"
       responses:
         "200":
@@ -8601,7 +8513,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/DatasetId"
+        - $ref: "#/components/parameters/DatasetIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -8909,7 +8821,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/PromptId"
+        - $ref: "#/components/parameters/PromptIdParam"
       responses:
         "200":
           description: Returns the prompt object
@@ -8977,7 +8889,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/PromptId"
+        - $ref: "#/components/parameters/PromptIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -9049,7 +8961,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/PromptId"
+        - $ref: "#/components/parameters/PromptIdParam"
       responses:
         "200":
           description: Returns the deleted prompt object
@@ -9112,7 +9024,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/PromptId"
+        - $ref: "#/components/parameters/PromptIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -9416,7 +9328,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/RoleId"
+        - $ref: "#/components/parameters/RoleIdParam"
       responses:
         "200":
           description: Returns the role object
@@ -9484,7 +9396,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/RoleId"
+        - $ref: "#/components/parameters/RoleIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -9556,7 +9468,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/RoleId"
+        - $ref: "#/components/parameters/RoleIdParam"
       responses:
         "200":
           description: Returns the deleted role object
@@ -9619,7 +9531,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/RoleId"
+        - $ref: "#/components/parameters/RoleIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -9923,7 +9835,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/GroupId"
+        - $ref: "#/components/parameters/GroupIdParam"
       responses:
         "200":
           description: Returns the group object
@@ -9991,7 +9903,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/GroupId"
+        - $ref: "#/components/parameters/GroupIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -10063,7 +9975,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/GroupId"
+        - $ref: "#/components/parameters/GroupIdParam"
       responses:
         "200":
           description: Returns the deleted group object
@@ -10126,7 +10038,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/GroupId"
+        - $ref: "#/components/parameters/GroupIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -10428,7 +10340,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/AclId"
+        - $ref: "#/components/parameters/AclIdParam"
       responses:
         "200":
           description: Returns the acl object
@@ -10493,7 +10405,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/AclId"
+        - $ref: "#/components/parameters/AclIdParam"
       responses:
         "200":
           description: Returns the deleted acl object
@@ -10556,7 +10468,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/AclId"
+        - $ref: "#/components/parameters/AclIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -10829,7 +10741,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/UserIdParam"
       responses:
         "200":
           description: Returns the user object
@@ -10892,7 +10804,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/UserId"
+        - $ref: "#/components/parameters/UserIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -11201,7 +11113,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectScoreId"
+        - $ref: "#/components/parameters/ProjectScoreIdParam"
       responses:
         "200":
           description: Returns the project_score object
@@ -11269,7 +11181,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectScoreId"
+        - $ref: "#/components/parameters/ProjectScoreIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -11341,7 +11253,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectScoreId"
+        - $ref: "#/components/parameters/ProjectScoreIdParam"
       responses:
         "200":
           description: Returns the deleted project_score object
@@ -11404,7 +11316,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ProjectScoreId"
+        - $ref: "#/components/parameters/ProjectScoreIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -11710,7 +11622,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectTagId"
+        - $ref: "#/components/parameters/ProjectTagIdParam"
       responses:
         "200":
           description: Returns the project_tag object
@@ -11778,7 +11690,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectTagId"
+        - $ref: "#/components/parameters/ProjectTagIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -11850,7 +11762,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ProjectTagId"
+        - $ref: "#/components/parameters/ProjectTagIdParam"
       responses:
         "200":
           description: Returns the deleted project_tag object
@@ -11913,7 +11825,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ProjectTagId"
+        - $ref: "#/components/parameters/ProjectTagIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -12221,7 +12133,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/FunctionId"
+        - $ref: "#/components/parameters/FunctionIdParam"
       responses:
         "200":
           description: Returns the function object
@@ -12289,7 +12201,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/FunctionId"
+        - $ref: "#/components/parameters/FunctionIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -12361,7 +12273,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/FunctionId"
+        - $ref: "#/components/parameters/FunctionIdParam"
       responses:
         "200":
           description: Returns the deleted function object
@@ -12424,7 +12336,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/FunctionId"
+        - $ref: "#/components/parameters/FunctionIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -12466,7 +12378,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/FunctionId"
+        - $ref: "#/components/parameters/FunctionIdParam"
       requestBody:
         description: Function invocation parameters
         content:
@@ -12488,7 +12400,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/FunctionId"
+        - $ref: "#/components/parameters/FunctionIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -12794,7 +12706,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ViewId"
+        - $ref: "#/components/parameters/ViewIdParam"
         - $ref: "#/components/parameters/AclObjectType"
         - $ref: "#/components/parameters/AclObjectId"
       responses:
@@ -12864,7 +12776,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ViewId"
+        - $ref: "#/components/parameters/ViewIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -12936,7 +12848,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ViewId"
+        - $ref: "#/components/parameters/ViewIdParam"
       requestBody:
         description: Additional parameters for the delete operation
         required: false
@@ -13006,7 +12918,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ViewId"
+        - $ref: "#/components/parameters/ViewIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -13165,7 +13077,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/OrganizationId"
+        - $ref: "#/components/parameters/OrganizationIdParam"
       responses:
         "200":
           description: Returns the organization object
@@ -13233,7 +13145,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/OrganizationId"
+        - $ref: "#/components/parameters/OrganizationIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -13305,7 +13217,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/OrganizationId"
+        - $ref: "#/components/parameters/OrganizationIdParam"
       responses:
         "200":
           description: Returns the deleted organization object
@@ -13368,7 +13280,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/OrganizationId"
+        - $ref: "#/components/parameters/OrganizationIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -13721,7 +13633,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ApiKeyId"
+        - $ref: "#/components/parameters/ApiKeyIdParam"
       responses:
         "200":
           description: Returns the api_key object
@@ -13786,7 +13698,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/ApiKeyId"
+        - $ref: "#/components/parameters/ApiKeyIdParam"
       responses:
         "200":
           description: Returns the deleted api_key object
@@ -13849,7 +13761,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/ApiKeyId"
+        - $ref: "#/components/parameters/ApiKeyIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -14224,7 +14136,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/AiSecretId"
+        - $ref: "#/components/parameters/AiSecretIdParam"
       responses:
         "200":
           description: Returns the ai_secret object
@@ -14292,7 +14204,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/AiSecretId"
+        - $ref: "#/components/parameters/AiSecretIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -14364,7 +14276,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/AiSecretId"
+        - $ref: "#/components/parameters/AiSecretIdParam"
       responses:
         "200":
           description: Returns the deleted ai_secret object
@@ -14427,7 +14339,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/AiSecretId"
+        - $ref: "#/components/parameters/AiSecretIdParam"
       responses:
         "200":
           description: Response for CORS method
@@ -14776,7 +14688,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/EnvVarId"
+        - $ref: "#/components/parameters/EnvVarIdParam"
       responses:
         "200":
           description: Returns the env_var object
@@ -14844,7 +14756,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/EnvVarId"
+        - $ref: "#/components/parameters/EnvVarIdParam"
       requestBody:
         description: Fields to update
         required: false
@@ -14926,7 +14838,7 @@ paths:
         - bearerAuth: []
         - {}
       parameters:
-        - $ref: "#/components/parameters/EnvVarId"
+        - $ref: "#/components/parameters/EnvVarIdParam"
       responses:
         "200":
           description: Returns the deleted env_var object
@@ -14989,7 +14901,7 @@ paths:
       tags:
         - CORS
       parameters:
-        - $ref: "#/components/parameters/EnvVarId"
+        - $ref: "#/components/parameters/EnvVarIdParam"
       responses:
         "200":
           description: Response for CORS method
