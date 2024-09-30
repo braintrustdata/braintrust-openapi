@@ -5169,6 +5169,7 @@ components:
           required:
             - function_id
           description: Function id
+          title: function_id
         - type: object
           properties:
             project_name:
@@ -5184,6 +5185,7 @@ components:
             - project_name
             - slug
           description: Project name and slug
+          title: project_slug
         - type: object
           properties:
             global_function:
@@ -5193,6 +5195,7 @@ components:
           required:
             - global_function
           description: Global function name
+          title: global_function
         - type: object
           properties:
             prompt_session_id:
@@ -5208,6 +5211,7 @@ components:
             - prompt_session_id
             - prompt_session_function_id
           description: Prompt session id
+          title: prompt_session_id
         - type: object
           properties:
             inline_context:
@@ -5234,6 +5238,7 @@ components:
             - inline_context
             - code
           description: Inline code function
+          title: inline_code
         - type: object
           properties:
             inline_prompt:
@@ -5245,6 +5250,7 @@ components:
           required:
             - inline_prompt
           description: Inline prompt definition
+          title: inline_prompt
       description: The function to evaluate
     RunEval:
       type: object
@@ -5261,6 +5267,7 @@ components:
               required:
                 - dataset_id
               description: Dataset id
+              title: dataset_id
             - type: object
               properties:
                 project_name:
@@ -5271,6 +5278,7 @@ components:
                 - project_name
                 - dataset_name
               description: Project and dataset name
+              title: project_dataset_name
           description: The dataset to use
         task:
           $ref: "#/components/schemas/FunctionId"
