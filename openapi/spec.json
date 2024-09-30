@@ -29,87 +29,87 @@
       }
     },
     "schemas": {
-      "ProjectId": {
+      "ProjectIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Project id"
       },
-      "ExperimentId": {
+      "ExperimentIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Experiment id"
       },
-      "DatasetId": {
+      "DatasetIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Dataset id"
       },
-      "PromptId": {
+      "PromptIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Prompt id"
       },
-      "PromptSessionId": {
+      "PromptSessionIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "PromptSession id"
       },
-      "RoleId": {
+      "RoleIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Role id"
       },
-      "GroupId": {
+      "GroupIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Group id"
       },
-      "AclId": {
+      "AclIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Acl id"
       },
-      "UserId": {
+      "UserIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "User id"
       },
-      "ProjectScoreId": {
+      "ProjectScoreIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "ProjectScore id"
       },
-      "ProjectTagId": {
+      "ProjectTagIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "ProjectTag id"
       },
-      "FunctionId": {
+      "FunctionIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Function id"
       },
-      "ViewId": {
+      "ViewIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "View id"
       },
-      "OrganizationId": {
+      "OrganizationIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "Organization id"
       },
-      "ApiKeyId": {
+      "ApiKeyIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "ApiKey id"
       },
-      "AiSecretId": {
+      "AiSecretIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "AiSecret id"
       },
-      "EnvVarId": {
+      "EnvVarIdParam": {
         "type": "string",
         "format": "uuid",
         "description": "EnvVar id"
@@ -322,8 +322,7 @@
           "role",
           "org_member",
           "project_log",
-          "org_project",
-          null
+          "org_project"
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -333,38 +332,16 @@
         "description": "The id of the object the ACL applies to"
       },
       "ProjectScoreType": {
-        "anyOf": [
-          {
-            "type": "string",
-            "enum": [
-              "slider",
-              "categorical",
-              "weighted",
-              "minimum",
-              "online",
-              null
-            ],
-            "description": "The type of the configured score",
-            "title": "project_score_type_single"
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "slider",
-                "categorical",
-                "weighted",
-                "minimum",
-                "online",
-                null
-              ],
-              "description": "The type of the configured score",
-              "title": "project_score_type"
-            },
-            "description": "The type of the configured score"
-          }
-        ]
+        "type": "string",
+        "enum": [
+          "slider",
+          "categorical",
+          "weighted",
+          "minimum",
+          "online"
+        ],
+        "description": "The type of the configured score",
+        "title": "project_score_type_single"
       },
       "AISecretType": {
         "anyOf": [
@@ -392,6 +369,17 @@
         "type": "string",
         "format": "uuid",
         "description": "The id of the object the environment variable is scoped for"
+      },
+      "ProjectSettings": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "comparison_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "The key used to join two experiments (defaults to `input`)."
+          }
+        }
       },
       "Project": {
         "type": "object",
@@ -429,15 +417,7 @@
             "description": "Identifies the user who created the project"
           },
           "settings": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "comparison_key": {
-                "type": "string",
-                "nullable": true,
-                "description": "The key used to join two experiments (defaults to `input`)."
-              }
-            }
+            "$ref": "#/components/schemas/ProjectSettings"
           }
         },
         "required": [
@@ -472,16 +452,14 @@
             "description": "Name of the project"
           },
           "settings": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "comparison_key": {
-                "type": "string",
-                "nullable": true,
-                "description": "The key used to join two experiments (defaults to `input`)."
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectSettings"
+              },
+              {
+                "description": "Project settings. Patch operations replace all settings, so make sure you include all settings you want to keep."
               }
-            },
-            "description": "Project settings. Patch operations replace all settings, so make sure you include all settings you want to keep."
+            ]
           }
         }
       },
@@ -1080,6 +1058,17 @@
           "events"
         ]
       },
+      "FetchLimit": {
+        "type": "integer",
+        "nullable": true,
+        "minimum": 0,
+        "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+      },
+      "FetchPaginationCursor": {
+        "type": "string",
+        "nullable": true,
+        "description": "An opaque string to be used as a cursor for the next page of results, in order from latest to earliest.\n\nThe string can be obtained directly from the `cursor` property of the previous fetch query"
+      },
       "PathLookupFilter": {
         "type": "object",
         "properties": {
@@ -1120,33 +1109,43 @@
         "type": "object",
         "properties": {
           "limit": {
-            "type": "integer",
-            "nullable": true,
-            "minimum": 0,
-            "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+            "$ref": "#/components/schemas/FetchLimit"
           },
           "cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "An opaque string to be used as a cursor for the next page of results, in order from latest to earliest.\n\nThe string can be obtained directly from the `cursor` property of the previous fetch query"
+            "$ref": "#/components/schemas/FetchPaginationCursor"
           },
           "max_xact_id": {
-            "type": "string",
-            "nullable": true,
-            "description": "DEPRECATION NOTICE: The manually-constructed pagination cursor is deprecated in favor of the explicit 'cursor' returned by object fetch requests. Please prefer the 'cursor' argument going forwards.\n\nTogether, `max_xact_id` and `max_root_span_id` form a pagination cursor\n\nSince a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries."
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MaxXactId"
+              },
+              {
+                "nullable": true
+              }
+            ]
           },
           "max_root_span_id": {
-            "type": "string",
-            "nullable": true,
-            "description": "DEPRECATION NOTICE: The manually-constructed pagination cursor is deprecated in favor of the explicit 'cursor' returned by object fetch requests. Please prefer the 'cursor' argument going forwards.\n\nTogether, `max_xact_id` and `max_root_span_id` form a pagination cursor\n\nSince a paginated fetch query returns results in order from latest to earliest, the cursor for the next page can be found as the row with the minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See the documentation of `limit` for an overview of paginating fetch queries."
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MaxRootSpanId"
+              },
+              {
+                "nullable": true
+              }
+            ]
           },
           "filters": {
             "$ref": "#/components/schemas/FetchEventsFilters"
           },
           "version": {
-            "type": "string",
-            "nullable": true,
-            "description": "Retrieve a snapshot of events from a past time\n\nThe version id is essentially a filter on the latest event transaction id. You can use the `max_xact_id` returned by a past fetch as the version to reproduce that exact fetch."
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Version"
+              },
+              {
+                "nullable": true
+              }
+            ]
           }
         }
       },
@@ -2697,6 +2696,545 @@
         ],
         "description": "Summary of a dataset"
       },
+      "ChatCompletionContentPartText": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "default": ""
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "text"
+      },
+      "ChatCompletionContentPartImage": {
+        "type": "object",
+        "properties": {
+          "image_url": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "detail": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "auto"
+                    ],
+                    "title": "auto"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "low"
+                    ],
+                    "title": "low"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "high"
+                    ],
+                    "title": "high"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "url"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ]
+          }
+        },
+        "required": [
+          "image_url",
+          "type"
+        ],
+        "title": "image_url"
+      },
+      "ChatCompletionContentPart": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/ChatCompletionContentPartText"
+          },
+          {
+            "$ref": "#/components/schemas/ChatCompletionContentPartImage"
+          }
+        ],
+        "title": "chat_completion_content_part"
+      },
+      "ChatCompletionContent": {
+        "anyOf": [
+          {
+            "type": "string",
+            "default": "",
+            "title": "text"
+          },
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionContentPart"
+            },
+            "title": "array"
+          }
+        ]
+      },
+      "ChatCompletionMessageToolCall": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "function": {
+            "type": "object",
+            "properties": {
+              "arguments": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "arguments",
+              "name"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "function",
+          "type"
+        ]
+      },
+      "ChatCompletionMessageParam": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "string",
+                "default": ""
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "system"
+                ]
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "role"
+            ],
+            "title": "system"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "content": {
+                "$ref": "#/components/schemas/ChatCompletionContent"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "user"
+                ]
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "role"
+            ],
+            "title": "user"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "assistant"
+                ]
+              },
+              "content": {
+                "type": "string",
+                "nullable": true
+              },
+              "function_call": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "arguments": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "arguments",
+                  "name"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "tool_calls": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionMessageToolCall"
+                }
+              }
+            },
+            "required": [
+              "role"
+            ],
+            "title": "assistant"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "string",
+                "default": ""
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "tool"
+                ]
+              },
+              "tool_call_id": {
+                "type": "string",
+                "default": ""
+              }
+            },
+            "required": [
+              "role"
+            ],
+            "title": "tool"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "string",
+                "default": ""
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "role"
+            ],
+            "title": "function"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "model"
+                ]
+              },
+              "content": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "role"
+            ],
+            "title": "fallback"
+          }
+        ]
+      },
+      "ModelParams": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "use_cache": {
+                "type": "boolean"
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "top_p": {
+                "type": "number"
+              },
+              "max_tokens": {
+                "type": "number"
+              },
+              "frequency_penalty": {
+                "type": "number"
+              },
+              "presence_penalty": {
+                "type": "number"
+              },
+              "response_format": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "json_object"
+                    ]
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              "tool_choice": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "auto"
+                    ],
+                    "title": "auto"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "none"
+                    ],
+                    "title": "none"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "function"
+                        ]
+                      },
+                      "function": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "function"
+                    ],
+                    "title": "function"
+                  }
+                ]
+              },
+              "function_call": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "auto"
+                    ],
+                    "title": "auto"
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "none"
+                    ],
+                    "title": "none"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "title": "function"
+                  }
+                ]
+              },
+              "n": {
+                "type": "number"
+              },
+              "stop": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "title": "OpenAIModelParams"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "use_cache": {
+                "type": "boolean"
+              },
+              "max_tokens": {
+                "type": "number"
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "top_p": {
+                "type": "number"
+              },
+              "top_k": {
+                "type": "number"
+              },
+              "stop_sequences": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "max_tokens_to_sample": {
+                "type": "number",
+                "description": "This is a legacy parameter that should not be used."
+              }
+            },
+            "required": [
+              "max_tokens",
+              "temperature"
+            ],
+            "title": "AnthropicModelParams"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "use_cache": {
+                "type": "boolean"
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "maxOutputTokens": {
+                "type": "number"
+              },
+              "topP": {
+                "type": "number"
+              },
+              "topK": {
+                "type": "number"
+              }
+            },
+            "title": "GoogleModelParams"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "use_cache": {
+                "type": "boolean"
+              },
+              "temperature": {
+                "type": "number"
+              },
+              "topK": {
+                "type": "number"
+              }
+            },
+            "title": "WindowAIModelParams"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "use_cache": {
+                "type": "boolean"
+              }
+            },
+            "title": "JsCompletionParams"
+          }
+        ]
+      },
+      "SavedFunctionId": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "title": "function"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "global"
+                ]
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "name"
+            ],
+            "title": "global"
+          }
+        ]
+      },
       "PromptData": {
         "type": "object",
         "nullable": true,
@@ -2734,279 +3272,7 @@
                   "messages": {
                     "type": "array",
                     "items": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "type": "string",
-                              "default": ""
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "system"
-                              ]
-                            },
-                            "name": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "system"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "anyOf": [
-                                {
-                                  "type": "string",
-                                  "default": "",
-                                  "title": "text"
-                                },
-                                {
-                                  "type": "array",
-                                  "items": {
-                                    "anyOf": [
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "text": {
-                                            "type": "string",
-                                            "default": ""
-                                          },
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "text"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "type"
-                                        ],
-                                        "title": "text"
-                                      },
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "image_url": {
-                                            "type": "object",
-                                            "properties": {
-                                              "url": {
-                                                "type": "string"
-                                              },
-                                              "detail": {
-                                                "anyOf": [
-                                                  {
-                                                    "type": "string",
-                                                    "enum": [
-                                                      "auto"
-                                                    ],
-                                                    "title": "auto"
-                                                  },
-                                                  {
-                                                    "type": "string",
-                                                    "enum": [
-                                                      "low"
-                                                    ],
-                                                    "title": "low"
-                                                  },
-                                                  {
-                                                    "type": "string",
-                                                    "enum": [
-                                                      "high"
-                                                    ],
-                                                    "title": "high"
-                                                  }
-                                                ]
-                                              }
-                                            },
-                                            "required": [
-                                              "url"
-                                            ]
-                                          },
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "image_url"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "image_url",
-                                          "type"
-                                        ],
-                                        "title": "image_url"
-                                      }
-                                    ],
-                                    "title": "chat_completion_content_part"
-                                  },
-                                  "title": "array"
-                                }
-                              ]
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "user"
-                              ]
-                            },
-                            "name": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "user"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "assistant"
-                              ]
-                            },
-                            "content": {
-                              "type": "string",
-                              "nullable": true
-                            },
-                            "function_call": {
-                              "type": "object",
-                              "nullable": true,
-                              "properties": {
-                                "arguments": {
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "arguments",
-                                "name"
-                              ]
-                            },
-                            "name": {
-                              "type": "string",
-                              "nullable": true
-                            },
-                            "tool_calls": {
-                              "type": "array",
-                              "nullable": true,
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "string"
-                                  },
-                                  "function": {
-                                    "type": "object",
-                                    "properties": {
-                                      "arguments": {
-                                        "type": "string"
-                                      },
-                                      "name": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "arguments",
-                                      "name"
-                                    ]
-                                  },
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "function"
-                                    ]
-                                  }
-                                },
-                                "required": [
-                                  "id",
-                                  "function",
-                                  "type"
-                                ]
-                              }
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "assistant"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "type": "string",
-                              "default": ""
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "tool"
-                              ]
-                            },
-                            "tool_call_id": {
-                              "type": "string",
-                              "default": ""
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "tool"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "type": "string",
-                              "default": ""
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "function"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "role"
-                          ],
-                          "title": "function"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "model"
-                              ]
-                            },
-                            "content": {
-                              "type": "string",
-                              "nullable": true
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "fallback"
-                        }
-                      ]
+                      "$ref": "#/components/schemas/ChatCompletionMessageParam"
                     }
                   },
                   "tools": {
@@ -3035,211 +3301,7 @@
                 "type": "string"
               },
               "params": {
-                "anyOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "use_cache": {
-                        "type": "boolean"
-                      },
-                      "temperature": {
-                        "type": "number"
-                      },
-                      "top_p": {
-                        "type": "number"
-                      },
-                      "max_tokens": {
-                        "type": "number"
-                      },
-                      "frequency_penalty": {
-                        "type": "number"
-                      },
-                      "presence_penalty": {
-                        "type": "number"
-                      },
-                      "response_format": {
-                        "type": "object",
-                        "nullable": true,
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "json_object"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "type"
-                        ]
-                      },
-                      "tool_choice": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                            "enum": [
-                              "auto"
-                            ],
-                            "title": "auto"
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              "none"
-                            ],
-                            "title": "none"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "function"
-                                ]
-                              },
-                              "function": {
-                                "type": "object",
-                                "properties": {
-                                  "name": {
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "name"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "function"
-                            ],
-                            "title": "function"
-                          }
-                        ]
-                      },
-                      "function_call": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                            "enum": [
-                              "auto"
-                            ],
-                            "title": "auto"
-                          },
-                          {
-                            "type": "string",
-                            "enum": [
-                              "none"
-                            ],
-                            "title": "none"
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "name"
-                            ],
-                            "title": "function"
-                          }
-                        ]
-                      },
-                      "n": {
-                        "type": "number"
-                      },
-                      "stop": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "title": "OpenAIModelParams"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "use_cache": {
-                        "type": "boolean"
-                      },
-                      "max_tokens": {
-                        "type": "number"
-                      },
-                      "temperature": {
-                        "type": "number"
-                      },
-                      "top_p": {
-                        "type": "number"
-                      },
-                      "top_k": {
-                        "type": "number"
-                      },
-                      "stop_sequences": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "max_tokens_to_sample": {
-                        "type": "number",
-                        "description": "This is a legacy parameter that should not be used."
-                      }
-                    },
-                    "required": [
-                      "max_tokens",
-                      "temperature"
-                    ],
-                    "title": "AnthropicModelParams"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "use_cache": {
-                        "type": "boolean"
-                      },
-                      "temperature": {
-                        "type": "number"
-                      },
-                      "maxOutputTokens": {
-                        "type": "number"
-                      },
-                      "topP": {
-                        "type": "number"
-                      },
-                      "topK": {
-                        "type": "number"
-                      }
-                    },
-                    "title": "GoogleModelParams"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "use_cache": {
-                        "type": "boolean"
-                      },
-                      "temperature": {
-                        "type": "number"
-                      },
-                      "topK": {
-                        "type": "number"
-                      }
-                    },
-                    "title": "WindowAIModelParams"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "use_cache": {
-                        "type": "boolean"
-                      }
-                    },
-                    "title": "JsCompletionParams"
-                  }
-                ]
+                "$ref": "#/components/schemas/ModelParams"
               },
               "position": {
                 "type": "string"
@@ -3278,46 +3340,7 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "anyOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "function"
-                      ]
-                    },
-                    "id": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "id"
-                  ],
-                  "title": "function"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "global"
-                      ]
-                    },
-                    "name": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "name"
-                  ],
-                  "title": "global"
-                }
-              ]
+              "$ref": "#/components/schemas/SavedFunctionId"
             }
           },
           "origin": {
@@ -3508,6 +3531,20 @@
           }
         }
       },
+      "Permission": {
+        "type": "string",
+        "enum": [
+          "create",
+          "read",
+          "update",
+          "delete",
+          "create_acls",
+          "read_acls",
+          "update_acls",
+          "delete_acls"
+        ],
+        "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
+      },
       "Role": {
         "type": "object",
         "properties": {
@@ -3556,38 +3593,17 @@
               "type": "object",
               "properties": {
                 "permission": {
-                  "type": "string",
-                  "enum": [
-                    "create",
-                    "read",
-                    "update",
-                    "delete",
-                    "create_acls",
-                    "read_acls",
-                    "update_acls",
-                    "delete_acls",
-                    null
-                  ],
-                  "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
+                  "$ref": "#/components/schemas/Permission"
                 },
                 "restrict_object_type": {
-                  "type": "string",
-                  "nullable": true,
-                  "enum": [
-                    "organization",
-                    "project",
-                    "experiment",
-                    "dataset",
-                    "prompt",
-                    "prompt_session",
-                    "group",
-                    "role",
-                    "org_member",
-                    "project_log",
-                    "org_project",
-                    null
-                  ],
-                  "description": "The object type that the ACL applies to"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AclObjectType"
+                    },
+                    {
+                      "nullable": true
+                    }
+                  ]
                 }
               },
               "required": [
@@ -3631,38 +3647,17 @@
               "type": "object",
               "properties": {
                 "permission": {
-                  "type": "string",
-                  "enum": [
-                    "create",
-                    "read",
-                    "update",
-                    "delete",
-                    "create_acls",
-                    "read_acls",
-                    "update_acls",
-                    "delete_acls",
-                    null
-                  ],
-                  "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
+                  "$ref": "#/components/schemas/Permission"
                 },
                 "restrict_object_type": {
-                  "type": "string",
-                  "nullable": true,
-                  "enum": [
-                    "organization",
-                    "project",
-                    "experiment",
-                    "dataset",
-                    "prompt",
-                    "prompt_session",
-                    "group",
-                    "role",
-                    "org_member",
-                    "project_log",
-                    "org_project",
-                    null
-                  ],
-                  "description": "The object type that the ACL applies to"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AclObjectType"
+                    },
+                    {
+                      "nullable": true
+                    }
+                  ]
                 }
               },
               "required": [
@@ -3710,38 +3705,17 @@
               "type": "object",
               "properties": {
                 "permission": {
-                  "type": "string",
-                  "enum": [
-                    "create",
-                    "read",
-                    "update",
-                    "delete",
-                    "create_acls",
-                    "read_acls",
-                    "update_acls",
-                    "delete_acls",
-                    null
-                  ],
-                  "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
+                  "$ref": "#/components/schemas/Permission"
                 },
                 "restrict_object_type": {
-                  "type": "string",
-                  "nullable": true,
-                  "enum": [
-                    "organization",
-                    "project",
-                    "experiment",
-                    "dataset",
-                    "prompt",
-                    "prompt_session",
-                    "group",
-                    "role",
-                    "org_member",
-                    "project_log",
-                    "org_project",
-                    null
-                  ],
-                  "description": "The object type that the ACL applies to"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AclObjectType"
+                    },
+                    {
+                      "nullable": true
+                    }
+                  ]
                 }
               },
               "required": [
@@ -3757,38 +3731,17 @@
               "type": "object",
               "properties": {
                 "permission": {
-                  "type": "string",
-                  "enum": [
-                    "create",
-                    "read",
-                    "update",
-                    "delete",
-                    "create_acls",
-                    "read_acls",
-                    "update_acls",
-                    "delete_acls",
-                    null
-                  ],
-                  "description": "Each permission permits a certain type of operation on an object in the system\n\nPermissions can be assigned to to objects on an individual basis, or grouped into roles"
+                  "$ref": "#/components/schemas/Permission"
                 },
                 "restrict_object_type": {
-                  "type": "string",
-                  "nullable": true,
-                  "enum": [
-                    "organization",
-                    "project",
-                    "experiment",
-                    "dataset",
-                    "prompt",
-                    "prompt_session",
-                    "group",
-                    "role",
-                    "org_member",
-                    "project_log",
-                    "org_project",
-                    null
-                  ],
-                  "description": "The object type that the ACL applies to"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/AclObjectType"
+                    },
+                    {
+                      "nullable": true
+                    }
+                  ]
                 }
               },
               "required": [
@@ -3983,22 +3936,7 @@
             "description": "Unique identifier for the acl"
           },
           "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "The object type that the ACL applies to"
+            "$ref": "#/components/schemas/AclObjectType"
           },
           "object_id": {
             "type": "string",
@@ -4018,39 +3956,26 @@
             "description": "Id of the group the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
           },
           "permission": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "create",
-              "read",
-              "update",
-              "delete",
-              "create_acls",
-              "read_acls",
-              "update_acls",
-              "delete_acls",
-              null
-            ],
-            "description": "Permission the ACL grants. Exactly one of `permission` and `role_id` will be provided"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Permission"
+              },
+              {
+                "nullable": true,
+                "description": "Permission the ACL grants. Exactly one of `permission` and `role_id` will be provided"
+              }
+            ]
           },
           "restrict_object_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "When setting a permission directly, optionally restricts the permission grant to just the specified object type. Cannot be set alongside a `role_id`."
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AclObjectType"
+              },
+              {
+                "nullable": true,
+                "description": "When setting a permission directly, optionally restricts the permission grant to just the specified object type. Cannot be set alongside a `role_id`."
+              }
+            ]
           },
           "role_id": {
             "type": "string",
@@ -4082,22 +4007,7 @@
         "type": "object",
         "properties": {
           "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "The object type that the ACL applies to"
+            "$ref": "#/components/schemas/AclObjectType"
           },
           "object_id": {
             "type": "string",
@@ -4117,39 +4027,26 @@
             "description": "Id of the group the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
           },
           "permission": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "create",
-              "read",
-              "update",
-              "delete",
-              "create_acls",
-              "read_acls",
-              "update_acls",
-              "delete_acls",
-              null
-            ],
-            "description": "Permission the ACL grants. Exactly one of `permission` and `role_id` will be provided"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Permission"
+              },
+              {
+                "nullable": true,
+                "description": "Permission the ACL grants. Exactly one of `permission` and `role_id` will be provided"
+              }
+            ]
           },
           "restrict_object_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "When setting a permission directly, optionally restricts the permission grant to just the specified object type. Cannot be set alongside a `role_id`."
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AclObjectType"
+              },
+              {
+                "nullable": true,
+                "description": "When setting a permission directly, optionally restricts the permission grant to just the specified object type. Cannot be set alongside a `role_id`."
+              }
+            ]
           },
           "role_id": {
             "type": "string",
@@ -4163,6 +4060,50 @@
           "object_id"
         ],
         "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
+      },
+      "AclBatchUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "added_acls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Acl"
+            },
+            "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
+          },
+          "removed_acls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Acl"
+            },
+            "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
+          }
+        },
+        "required": [
+          "added_acls",
+          "removed_acls"
+        ]
+      },
+      "AclBatchUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "add_acls": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AclItem"
+            },
+            "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
+          },
+          "remove_acls": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AclItem"
+            },
+            "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
+          }
+        }
       },
       "User": {
         "type": "object",
@@ -4271,46 +4212,7 @@
           "scorers": {
             "type": "array",
             "items": {
-              "anyOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "function"
-                      ]
-                    },
-                    "id": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "id"
-                  ],
-                  "title": "function"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "global"
-                      ]
-                    },
-                    "name": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "name"
-                  ],
-                  "title": "global"
-                }
-              ]
+              "$ref": "#/components/schemas/SavedFunctionId"
             },
             "description": "The list of scorers to use for online scoring"
           },
@@ -4387,16 +4289,7 @@
             "description": "Textual description of the project score"
           },
           "score_type": {
-            "type": "string",
-            "enum": [
-              "slider",
-              "categorical",
-              "weighted",
-              "minimum",
-              "online",
-              null
-            ],
-            "description": "The type of the configured score"
+            "$ref": "#/components/schemas/ProjectScoreType"
           },
           "categories": {
             "$ref": "#/components/schemas/ProjectScoreCategories"
@@ -4437,16 +4330,7 @@
             "description": "Textual description of the project score"
           },
           "score_type": {
-            "type": "string",
-            "enum": [
-              "slider",
-              "categorical",
-              "weighted",
-              "minimum",
-              "online",
-              null
-            ],
-            "description": "The type of the configured score"
+            "$ref": "#/components/schemas/ProjectScoreType"
           },
           "categories": {
             "$ref": "#/components/schemas/ProjectScoreCategories"
@@ -4476,17 +4360,14 @@
             "description": "Textual description of the project score"
           },
           "score_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "slider",
-              "categorical",
-              "weighted",
-              "minimum",
-              "online",
-              null
-            ],
-            "description": "The type of the configured score"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectScoreType"
+              },
+              {
+                "nullable": true
+              }
+            ]
           },
           "categories": {
             "$ref": "#/components/schemas/ProjectScoreCategories"
@@ -4591,6 +4472,244 @@
           }
         }
       },
+      "CodeBundle": {
+        "type": "object",
+        "properties": {
+          "runtime_context": {
+            "type": "object",
+            "properties": {
+              "runtime": {
+                "type": "string",
+                "enum": [
+                  "node",
+                  "python"
+                ]
+              },
+              "version": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "runtime",
+              "version"
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "experiment"
+                    ]
+                  },
+                  "eval_name": {
+                    "type": "string"
+                  },
+                  "position": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "task"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "scorer"
+                            ]
+                          },
+                          "index": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "index"
+                        ],
+                        "title": "scorer"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "eval_name",
+                  "position"
+                ],
+                "title": "experiment"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "function"
+                    ]
+                  },
+                  "index": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "type",
+                  "index"
+                ],
+                "title": "function"
+              }
+            ]
+          },
+          "bundle_id": {
+            "type": "string"
+          },
+          "preview": {
+            "type": "string",
+            "nullable": true,
+            "description": "A preview of the code"
+          }
+        },
+        "required": [
+          "runtime_context",
+          "location",
+          "bundle_id"
+        ]
+      },
+      "FunctionData": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "prompt"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "title": "prompt"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "code"
+                ]
+              },
+              "data": {
+                "anyOf": [
+                  {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "bundle"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/CodeBundle"
+                      }
+                    ],
+                    "title": "bundle"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "inline"
+                        ]
+                      },
+                      "runtime_context": {
+                        "type": "object",
+                        "properties": {
+                          "runtime": {
+                            "type": "string",
+                            "enum": [
+                              "node",
+                              "python"
+                            ]
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "runtime",
+                          "version"
+                        ]
+                      },
+                      "code": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "runtime_context",
+                      "code"
+                    ],
+                    "title": "inline"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "data"
+            ],
+            "title": "code"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "global"
+                ]
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "name"
+            ],
+            "title": "global"
+          }
+        ]
+      },
       "Function": {
         "type": "object",
         "properties": {
@@ -4670,261 +4789,14 @@
             ]
           },
           "function_data": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "prompt"
-                    ]
-                  }
-                },
-                "required": [
-                  "type"
-                ],
-                "title": "prompt"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "code"
-                    ]
-                  },
-                  "data": {
-                    "anyOf": [
-                      {
-                        "allOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "bundle"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "type"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "runtime_context": {
-                                "type": "object",
-                                "properties": {
-                                  "runtime": {
-                                    "type": "string",
-                                    "enum": [
-                                      "node",
-                                      "python"
-                                    ]
-                                  },
-                                  "version": {
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "runtime",
-                                  "version"
-                                ]
-                              },
-                              "location": {
-                                "anyOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "type": {
-                                        "type": "string",
-                                        "enum": [
-                                          "experiment"
-                                        ]
-                                      },
-                                      "eval_name": {
-                                        "type": "string"
-                                      },
-                                      "position": {
-                                        "anyOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "enum": [
-                                                  "task"
-                                                ]
-                                              }
-                                            },
-                                            "required": [
-                                              "type"
-                                            ]
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "enum": [
-                                                  "scorer"
-                                                ]
-                                              },
-                                              "index": {
-                                                "type": "integer",
-                                                "minimum": 0
-                                              }
-                                            },
-                                            "required": [
-                                              "type",
-                                              "index"
-                                            ],
-                                            "title": "scorer"
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "type",
-                                      "eval_name",
-                                      "position"
-                                    ],
-                                    "title": "experiment"
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "type": {
-                                        "type": "string",
-                                        "enum": [
-                                          "function"
-                                        ]
-                                      },
-                                      "index": {
-                                        "type": "integer",
-                                        "minimum": 0
-                                      }
-                                    },
-                                    "required": [
-                                      "type",
-                                      "index"
-                                    ],
-                                    "title": "function"
-                                  }
-                                ]
-                              },
-                              "bundle_id": {
-                                "type": "string"
-                              },
-                              "preview": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "A preview of the code"
-                              }
-                            },
-                            "required": [
-                              "runtime_context",
-                              "location",
-                              "bundle_id"
-                            ]
-                          }
-                        ],
-                        "title": "bundle"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "inline"
-                            ]
-                          },
-                          "runtime_context": {
-                            "type": "object",
-                            "properties": {
-                              "runtime": {
-                                "type": "string",
-                                "enum": [
-                                  "node",
-                                  "python"
-                                ]
-                              },
-                              "version": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "runtime",
-                              "version"
-                            ]
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "runtime_context",
-                          "code"
-                        ],
-                        "title": "inline"
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "type",
-                  "data"
-                ],
-                "title": "code"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "global"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "name"
-                ],
-                "title": "global"
-              }
-            ]
+            "$ref": "#/components/schemas/FunctionData"
           },
           "origin": {
             "type": "object",
             "nullable": true,
             "properties": {
               "object_type": {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "group",
-                  "role",
-                  "org_member",
-                  "project_log",
-                  "org_project",
-                  null
-                ],
-                "description": "The object type that the ACL applies to"
+                "$ref": "#/components/schemas/AclObjectType"
               },
               "object_id": {
                 "type": "string",
@@ -5011,261 +4883,14 @@
             ]
           },
           "function_data": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "prompt"
-                    ]
-                  }
-                },
-                "required": [
-                  "type"
-                ],
-                "title": "prompt"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "code"
-                    ]
-                  },
-                  "data": {
-                    "anyOf": [
-                      {
-                        "allOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "bundle"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "type"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "runtime_context": {
-                                "type": "object",
-                                "properties": {
-                                  "runtime": {
-                                    "type": "string",
-                                    "enum": [
-                                      "node",
-                                      "python"
-                                    ]
-                                  },
-                                  "version": {
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "runtime",
-                                  "version"
-                                ]
-                              },
-                              "location": {
-                                "anyOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "type": {
-                                        "type": "string",
-                                        "enum": [
-                                          "experiment"
-                                        ]
-                                      },
-                                      "eval_name": {
-                                        "type": "string"
-                                      },
-                                      "position": {
-                                        "anyOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "enum": [
-                                                  "task"
-                                                ]
-                                              }
-                                            },
-                                            "required": [
-                                              "type"
-                                            ]
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "enum": [
-                                                  "scorer"
-                                                ]
-                                              },
-                                              "index": {
-                                                "type": "integer",
-                                                "minimum": 0
-                                              }
-                                            },
-                                            "required": [
-                                              "type",
-                                              "index"
-                                            ],
-                                            "title": "scorer"
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "type",
-                                      "eval_name",
-                                      "position"
-                                    ],
-                                    "title": "experiment"
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "type": {
-                                        "type": "string",
-                                        "enum": [
-                                          "function"
-                                        ]
-                                      },
-                                      "index": {
-                                        "type": "integer",
-                                        "minimum": 0
-                                      }
-                                    },
-                                    "required": [
-                                      "type",
-                                      "index"
-                                    ],
-                                    "title": "function"
-                                  }
-                                ]
-                              },
-                              "bundle_id": {
-                                "type": "string"
-                              },
-                              "preview": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "A preview of the code"
-                              }
-                            },
-                            "required": [
-                              "runtime_context",
-                              "location",
-                              "bundle_id"
-                            ]
-                          }
-                        ],
-                        "title": "bundle"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "inline"
-                            ]
-                          },
-                          "runtime_context": {
-                            "type": "object",
-                            "properties": {
-                              "runtime": {
-                                "type": "string",
-                                "enum": [
-                                  "node",
-                                  "python"
-                                ]
-                              },
-                              "version": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "runtime",
-                              "version"
-                            ]
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "runtime_context",
-                          "code"
-                        ],
-                        "title": "inline"
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "type",
-                  "data"
-                ],
-                "title": "code"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "global"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "name"
-                ],
-                "title": "global"
-              }
-            ]
+            "$ref": "#/components/schemas/FunctionData"
           },
           "origin": {
             "type": "object",
             "nullable": true,
             "properties": {
               "object_type": {
-                "type": "string",
-                "enum": [
-                  "organization",
-                  "project",
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "prompt_session",
-                  "group",
-                  "role",
-                  "org_member",
-                  "project_log",
-                  "org_project",
-                  null
-                ],
-                "description": "The object type that the ACL applies to"
+                "$ref": "#/components/schemas/AclObjectType"
               },
               "object_id": {
                 "type": "string",
@@ -5304,6 +4929,131 @@
           "function_data"
         ]
       },
+      "FunctionDataNullish": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "prompt"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "title": "prompt"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "code"
+                ]
+              },
+              "data": {
+                "anyOf": [
+                  {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "bundle"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "$ref": "#/components/schemas/CodeBundle"
+                      }
+                    ],
+                    "title": "bundle"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "inline"
+                        ]
+                      },
+                      "runtime_context": {
+                        "type": "object",
+                        "properties": {
+                          "runtime": {
+                            "type": "string",
+                            "enum": [
+                              "node",
+                              "python"
+                            ]
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "runtime",
+                          "version"
+                        ]
+                      },
+                      "code": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "runtime_context",
+                      "code"
+                    ],
+                    "title": "inline"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "data"
+            ],
+            "title": "code"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "global"
+                ]
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "name"
+            ],
+            "title": "global"
+          },
+          {
+            "title": "nullableVariant",
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": false
+          }
+        ]
+      },
       "PatchFunction": {
         "type": "object",
         "properties": {
@@ -5321,245 +5071,7 @@
             "$ref": "#/components/schemas/PromptData"
           },
           "function_data": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "prompt"
-                    ]
-                  }
-                },
-                "required": [
-                  "type"
-                ],
-                "title": "prompt"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "code"
-                    ]
-                  },
-                  "data": {
-                    "anyOf": [
-                      {
-                        "allOf": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "bundle"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "type"
-                            ]
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "runtime_context": {
-                                "type": "object",
-                                "properties": {
-                                  "runtime": {
-                                    "type": "string",
-                                    "enum": [
-                                      "node",
-                                      "python"
-                                    ]
-                                  },
-                                  "version": {
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "runtime",
-                                  "version"
-                                ]
-                              },
-                              "location": {
-                                "anyOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "type": {
-                                        "type": "string",
-                                        "enum": [
-                                          "experiment"
-                                        ]
-                                      },
-                                      "eval_name": {
-                                        "type": "string"
-                                      },
-                                      "position": {
-                                        "anyOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "enum": [
-                                                  "task"
-                                                ]
-                                              }
-                                            },
-                                            "required": [
-                                              "type"
-                                            ]
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "enum": [
-                                                  "scorer"
-                                                ]
-                                              },
-                                              "index": {
-                                                "type": "integer",
-                                                "minimum": 0
-                                              }
-                                            },
-                                            "required": [
-                                              "type",
-                                              "index"
-                                            ],
-                                            "title": "scorer"
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "type",
-                                      "eval_name",
-                                      "position"
-                                    ],
-                                    "title": "experiment"
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "type": {
-                                        "type": "string",
-                                        "enum": [
-                                          "function"
-                                        ]
-                                      },
-                                      "index": {
-                                        "type": "integer",
-                                        "minimum": 0
-                                      }
-                                    },
-                                    "required": [
-                                      "type",
-                                      "index"
-                                    ],
-                                    "title": "function"
-                                  }
-                                ]
-                              },
-                              "bundle_id": {
-                                "type": "string"
-                              },
-                              "preview": {
-                                "type": "string",
-                                "nullable": true,
-                                "description": "A preview of the code"
-                              }
-                            },
-                            "required": [
-                              "runtime_context",
-                              "location",
-                              "bundle_id"
-                            ]
-                          }
-                        ],
-                        "title": "bundle"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "inline"
-                            ]
-                          },
-                          "runtime_context": {
-                            "type": "object",
-                            "properties": {
-                              "runtime": {
-                                "type": "string",
-                                "enum": [
-                                  "node",
-                                  "python"
-                                ]
-                              },
-                              "version": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "runtime",
-                              "version"
-                            ]
-                          },
-                          "code": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "runtime_context",
-                          "code"
-                        ],
-                        "title": "inline"
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "type",
-                  "data"
-                ],
-                "title": "code"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "global"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "name"
-                ],
-                "title": "global"
-              },
-              {
-                "title": "nullableVariant",
-                "type": "object",
-                "nullable": true,
-                "additionalProperties": false
-              }
-            ]
+            "$ref": "#/components/schemas/FunctionDataNullish"
           },
           "tags": {
             "type": "array",
@@ -5570,6 +5082,105 @@
             "description": "A list of tags for the prompt"
           }
         }
+      },
+      "InvokeApi": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "nullable": true,
+            "description": "Argument to the function, which can be any JSON serializable value"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionMessageParam"
+            },
+            "description": "If the function is an LLM, additional messages to pass along to it"
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "object_type": {
+                    "type": "string",
+                    "enum": [
+                      "project_logs",
+                      "experiment"
+                    ]
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "description": "The id of the container object you are logging to"
+                  },
+                  "row_ids": {
+                    "type": "object",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The id of the row"
+                      },
+                      "span_id": {
+                        "type": "string",
+                        "description": "The span_id of the row"
+                      },
+                      "root_span_id": {
+                        "type": "string",
+                        "description": "The root_span_id of the row"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "span_id",
+                      "root_span_id"
+                    ],
+                    "description": "Identifiers for the row to to log a subspan under"
+                  },
+                  "propagated_event": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Include these properties in every span created under this parent"
+                  }
+                },
+                "required": [
+                  "object_type",
+                  "object_id"
+                ],
+                "description": "Span parent properties",
+                "title": "span_parent_struct"
+              },
+              {
+                "type": "string",
+                "description": "The parent's span identifier, created by calling `.export()` on a span"
+              }
+            ],
+            "description": "Options for tracing the function call"
+          },
+          "stream": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether to stream the response. If true, results will be returned in the Braintrust SSE format."
+          },
+          "mode": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "auto",
+              "parallel",
+              null
+            ],
+            "description": "The mode format of the returned value (defaults to 'auto')"
+          },
+          "version": {
+            "type": "string",
+            "description": "The version of the function"
+          }
+        },
+        "description": "The request to invoke a function"
       },
       "ViewDataSearch": {
         "type": "object",
@@ -5652,22 +5263,7 @@
             "description": "Unique identifier for the view"
           },
           "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "The object type that the ACL applies to"
+            "$ref": "#/components/schemas/AclObjectType"
           },
           "object_id": {
             "type": "string",
@@ -5730,22 +5326,7 @@
         "type": "object",
         "properties": {
           "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "The object type that the ACL applies to"
+            "$ref": "#/components/schemas/AclObjectType"
           },
           "object_id": {
             "type": "string",
@@ -5801,22 +5382,7 @@
         "type": "object",
         "properties": {
           "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "The object type that the ACL applies to"
+            "$ref": "#/components/schemas/AclObjectType"
           },
           "object_id": {
             "type": "string",
@@ -5866,22 +5432,7 @@
         "type": "object",
         "properties": {
           "object_type": {
-            "type": "string",
-            "enum": [
-              "organization",
-              "project",
-              "experiment",
-              "dataset",
-              "prompt",
-              "prompt_session",
-              "group",
-              "role",
-              "org_member",
-              "project_log",
-              "org_project",
-              null
-            ],
-            "description": "The object type that the ACL applies to"
+            "$ref": "#/components/schemas/AclObjectType"
           },
           "object_id": {
             "type": "string",
@@ -5959,6 +5510,25 @@
             "nullable": true
           }
         }
+      },
+      "PatchOrganizationMembersOutput": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success"
+            ]
+          },
+          "send_email_error": {
+            "type": "string",
+            "nullable": true,
+            "description": "If invite emails failed to send for some reason, the patch operation will still complete, but we will return an error message here"
+          }
+        },
+        "required": [
+          "status"
+        ]
       },
       "PatchOrganizationMembers": {
         "type": "object",
@@ -6190,6 +5760,81 @@
           "name"
         ]
       },
+      "CreateAISecret": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the AI secret"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            }
+          },
+          "secret": {
+            "type": "string",
+            "nullable": true,
+            "description": "Secret value. If omitted in a PUT request, the existing secret value will be left intact, not replaced with null."
+          },
+          "org_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the AI Secret belongs in."
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "DeleteAISecret": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the AI secret"
+          },
+          "org_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the AI Secret belongs in."
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "PatchAISecret": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the AI secret"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            }
+          },
+          "secret": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "EnvVar": {
         "type": "object",
         "properties": {
@@ -6347,156 +5992,370 @@
             "description": "A mapping from project id to a set of log events and feedback items to insert"
           }
         }
+      },
+      "FunctionId": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "function_id": {
+                "type": "string",
+                "description": "The ID of the function"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
+              }
+            },
+            "required": [
+              "function_id"
+            ],
+            "description": "Function id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "project_name": {
+                "type": "string",
+                "description": "The name of the project containing the function"
+              },
+              "slug": {
+                "type": "string",
+                "description": "The slug of the function"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
+              }
+            },
+            "required": [
+              "project_name",
+              "slug"
+            ],
+            "description": "Project name and slug"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "global_function": {
+                "type": "string",
+                "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
+              }
+            },
+            "required": [
+              "global_function"
+            ],
+            "description": "Global function name"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "prompt_session_id": {
+                "type": "string",
+                "description": "The ID of the prompt session"
+              },
+              "prompt_session_function_id": {
+                "type": "string",
+                "description": "The ID of the function in the prompt session"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
+              }
+            },
+            "required": [
+              "prompt_session_id",
+              "prompt_session_function_id"
+            ],
+            "description": "Prompt session id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "inline_context": {
+                "type": "object",
+                "properties": {
+                  "runtime": {
+                    "type": "string",
+                    "enum": [
+                      "node",
+                      "python"
+                    ]
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "runtime",
+                  "version"
+                ]
+              },
+              "code": {
+                "type": "string",
+                "description": "The inline code to execute"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true,
+                "description": "The name of the inline code function"
+              }
+            },
+            "required": [
+              "inline_context",
+              "code"
+            ],
+            "description": "Inline code function"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "inline_prompt": {
+                "$ref": "#/components/schemas/PromptData"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true,
+                "description": "The name of the inline prompt"
+              }
+            },
+            "required": [
+              "inline_prompt"
+            ],
+            "description": "Inline prompt definition"
+          }
+        ],
+        "description": "The function to evaluate"
+      },
+      "RunEval": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "description": "Unique identifier for the project to run the eval in"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "dataset_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "dataset_id"
+                ],
+                "description": "Dataset id"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "project_name": {
+                    "type": "string"
+                  },
+                  "dataset_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "project_name",
+                  "dataset_name"
+                ],
+                "description": "Project and dataset name"
+              }
+            ],
+            "description": "The dataset to use"
+          },
+          "task": {
+            "$ref": "#/components/schemas/FunctionId"
+          },
+          "scores": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/FunctionId"
+                },
+                {
+                  "description": "Options for identifying a function"
+                }
+              ]
+            },
+            "description": "The functions to score the eval on"
+          },
+          "experiment_name": {
+            "type": "string",
+            "description": "An optional name for the experiment created by this eval. If it conflicts with an existing experiment, it will be suffixed with a unique identifier."
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Optional experiment-level metadata to store about the evaluation. You can later use this to slice & dice across experiments."
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to stream the results of the eval. If true, the request will return two events: one to indicate the experiment has started, and another upon completion. If false, the request will return the evaluation's summary upon completion."
+          }
+        },
+        "required": [
+          "project_id",
+          "data",
+          "task",
+          "scores"
+        ]
       }
     },
     "parameters": {
-      "ProjectId": {
+      "ProjectIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/ProjectId"
+          "$ref": "#/components/schemas/ProjectIdParam"
         },
         "required": true,
         "description": "Project id",
         "name": "project_id",
         "in": "path"
       },
-      "ExperimentId": {
+      "ExperimentIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/ExperimentId"
+          "$ref": "#/components/schemas/ExperimentIdParam"
         },
         "required": true,
         "description": "Experiment id",
         "name": "experiment_id",
         "in": "path"
       },
-      "DatasetId": {
+      "DatasetIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/DatasetId"
+          "$ref": "#/components/schemas/DatasetIdParam"
         },
         "required": true,
         "description": "Dataset id",
         "name": "dataset_id",
         "in": "path"
       },
-      "PromptId": {
+      "PromptIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/PromptId"
+          "$ref": "#/components/schemas/PromptIdParam"
         },
         "required": true,
         "description": "Prompt id",
         "name": "prompt_id",
         "in": "path"
       },
-      "PromptSessionId": {
+      "PromptSessionIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/PromptSessionId"
+          "$ref": "#/components/schemas/PromptSessionIdParam"
         },
         "required": true,
         "description": "PromptSession id",
         "name": "prompt_session_id",
         "in": "path"
       },
-      "RoleId": {
+      "RoleIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/RoleId"
+          "$ref": "#/components/schemas/RoleIdParam"
         },
         "required": true,
         "description": "Role id",
         "name": "role_id",
         "in": "path"
       },
-      "GroupId": {
+      "GroupIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/GroupId"
+          "$ref": "#/components/schemas/GroupIdParam"
         },
         "required": true,
         "description": "Group id",
         "name": "group_id",
         "in": "path"
       },
-      "AclId": {
+      "AclIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/AclId"
+          "$ref": "#/components/schemas/AclIdParam"
         },
         "required": true,
         "description": "Acl id",
         "name": "acl_id",
         "in": "path"
       },
-      "UserId": {
+      "UserIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/UserId"
+          "$ref": "#/components/schemas/UserIdParam"
         },
         "required": true,
         "description": "User id",
         "name": "user_id",
         "in": "path"
       },
-      "ProjectScoreId": {
+      "ProjectScoreIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/ProjectScoreId"
+          "$ref": "#/components/schemas/ProjectScoreIdParam"
         },
         "required": true,
         "description": "ProjectScore id",
         "name": "project_score_id",
         "in": "path"
       },
-      "ProjectTagId": {
+      "ProjectTagIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/ProjectTagId"
+          "$ref": "#/components/schemas/ProjectTagIdParam"
         },
         "required": true,
         "description": "ProjectTag id",
         "name": "project_tag_id",
         "in": "path"
       },
-      "FunctionId": {
+      "FunctionIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/FunctionId"
+          "$ref": "#/components/schemas/FunctionIdParam"
         },
         "required": true,
         "description": "Function id",
         "name": "function_id",
         "in": "path"
       },
-      "ViewId": {
+      "ViewIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/ViewId"
+          "$ref": "#/components/schemas/ViewIdParam"
         },
         "required": true,
         "description": "View id",
         "name": "view_id",
         "in": "path"
       },
-      "OrganizationId": {
+      "OrganizationIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/OrganizationId"
+          "$ref": "#/components/schemas/OrganizationIdParam"
         },
         "required": true,
         "description": "Organization id",
         "name": "organization_id",
         "in": "path"
       },
-      "ApiKeyId": {
+      "ApiKeyIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/ApiKeyId"
+          "$ref": "#/components/schemas/ApiKeyIdParam"
         },
         "required": true,
         "description": "ApiKey id",
         "name": "api_key_id",
         "in": "path"
       },
-      "AiSecretId": {
+      "AiSecretIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/AiSecretId"
+          "$ref": "#/components/schemas/AiSecretIdParam"
         },
         "required": true,
         "description": "AiSecret id",
         "name": "ai_secret_id",
         "in": "path"
       },
-      "EnvVarId": {
+      "EnvVarIdParam": {
         "schema": {
-          "$ref": "#/components/schemas/EnvVarId"
+          "$ref": "#/components/schemas/EnvVarIdParam"
         },
         "required": true,
         "description": "EnvVar id",
@@ -6839,7 +6698,25 @@
       },
       "ProjectScoreType": {
         "schema": {
-          "$ref": "#/components/schemas/ProjectScoreType"
+          "anyOf": [
+            {
+              "$ref": "#/components/schemas/ProjectScoreType"
+            },
+            {
+              "type": "array",
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ProjectScoreType"
+                  },
+                  {
+                    "title": "project_score_type"
+                  }
+                ]
+              },
+              "description": "The type of the configured score"
+            }
+          ]
         },
         "required": false,
         "name": "score_type",
@@ -7195,7 +7072,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "responses": {
@@ -7301,7 +7178,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "requestBody": {
@@ -7418,7 +7295,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "responses": {
@@ -7519,7 +7396,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "responses": {
@@ -7588,7 +7465,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "requestBody": {
@@ -7700,7 +7577,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "responses": {
@@ -7769,7 +7646,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "requestBody": {
@@ -7886,7 +7763,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           },
           {
             "$ref": "#/components/parameters/FetchLimitParam"
@@ -7999,7 +7876,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "responses": {
@@ -8068,7 +7945,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "requestBody": {
@@ -8180,7 +8057,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectId"
+            "$ref": "#/components/parameters/ProjectIdParam"
           }
         ],
         "responses": {
@@ -8560,7 +8437,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "responses": {
@@ -8666,7 +8543,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "requestBody": {
@@ -8783,7 +8660,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "responses": {
@@ -8884,7 +8761,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "responses": {
@@ -8953,7 +8830,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "requestBody": {
@@ -9065,7 +8942,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "responses": {
@@ -9134,7 +9011,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "requestBody": {
@@ -9251,7 +9128,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           },
           {
             "$ref": "#/components/parameters/FetchLimitParam"
@@ -9364,7 +9241,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "responses": {
@@ -9433,7 +9310,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "requestBody": {
@@ -9545,7 +9422,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "responses": {
@@ -9613,7 +9490,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           },
           {
             "$ref": "#/components/parameters/SummarizeScores"
@@ -9720,7 +9597,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ExperimentId"
+            "$ref": "#/components/parameters/ExperimentIdParam"
           }
         ],
         "responses": {
@@ -10100,7 +9977,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "responses": {
@@ -10206,7 +10083,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "requestBody": {
@@ -10323,7 +10200,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "responses": {
@@ -10424,7 +10301,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "responses": {
@@ -10493,7 +10370,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "requestBody": {
@@ -10605,7 +10482,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "responses": {
@@ -10674,7 +10551,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "requestBody": {
@@ -10791,7 +10668,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           },
           {
             "$ref": "#/components/parameters/FetchLimitParam"
@@ -10904,7 +10781,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "responses": {
@@ -10973,7 +10850,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "requestBody": {
@@ -11085,7 +10962,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "responses": {
@@ -11153,7 +11030,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           },
           {
             "$ref": "#/components/parameters/SummarizeData"
@@ -11257,7 +11134,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/DatasetId"
+            "$ref": "#/components/parameters/DatasetIdParam"
           }
         ],
         "responses": {
@@ -11755,7 +11632,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/PromptId"
+            "$ref": "#/components/parameters/PromptIdParam"
           }
         ],
         "responses": {
@@ -11861,7 +11738,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/PromptId"
+            "$ref": "#/components/parameters/PromptIdParam"
           }
         ],
         "requestBody": {
@@ -11978,7 +11855,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/PromptId"
+            "$ref": "#/components/parameters/PromptIdParam"
           }
         ],
         "responses": {
@@ -12079,7 +11956,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/PromptId"
+            "$ref": "#/components/parameters/PromptIdParam"
           }
         ],
         "responses": {
@@ -12565,7 +12442,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/RoleId"
+            "$ref": "#/components/parameters/RoleIdParam"
           }
         ],
         "responses": {
@@ -12671,7 +12548,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/RoleId"
+            "$ref": "#/components/parameters/RoleIdParam"
           }
         ],
         "requestBody": {
@@ -12788,7 +12665,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/RoleId"
+            "$ref": "#/components/parameters/RoleIdParam"
           }
         ],
         "responses": {
@@ -12889,7 +12766,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/RoleId"
+            "$ref": "#/components/parameters/RoleIdParam"
           }
         ],
         "responses": {
@@ -13375,7 +13252,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/GroupId"
+            "$ref": "#/components/parameters/GroupIdParam"
           }
         ],
         "responses": {
@@ -13481,7 +13358,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/GroupId"
+            "$ref": "#/components/parameters/GroupIdParam"
           }
         ],
         "requestBody": {
@@ -13598,7 +13475,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/GroupId"
+            "$ref": "#/components/parameters/GroupIdParam"
           }
         ],
         "responses": {
@@ -13699,7 +13576,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/GroupId"
+            "$ref": "#/components/parameters/GroupIdParam"
           }
         ],
         "responses": {
@@ -14185,7 +14062,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AclId"
+            "$ref": "#/components/parameters/AclIdParam"
           }
         ],
         "responses": {
@@ -14291,7 +14168,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AclId"
+            "$ref": "#/components/parameters/AclIdParam"
           }
         ],
         "responses": {
@@ -14392,7 +14269,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AclId"
+            "$ref": "#/components/parameters/AclIdParam"
           }
         ],
         "responses": {
@@ -14465,25 +14342,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "add_acls": {
-                    "type": "array",
-                    "nullable": true,
-                    "items": {
-                      "$ref": "#/components/schemas/AclItem"
-                    },
-                    "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
-                  },
-                  "remove_acls": {
-                    "type": "array",
-                    "nullable": true,
-                    "items": {
-                      "$ref": "#/components/schemas/AclItem"
-                    },
-                    "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
-                  }
-                }
+                "$ref": "#/components/schemas/AclBatchUpdateRequest"
               }
             }
           }
@@ -14494,27 +14353,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "added_acls": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Acl"
-                      },
-                      "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
-                    },
-                    "removed_acls": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Acl"
-                      },
-                      "description": "An ACL grants a certain permission or role to a certain user or group on an object.\n\nACLs are inherited across the object hierarchy. So for example, if a user has read permissions on a project, they will also have read permissions on any experiment, dataset, etc. created within that project.\n\nTo restrict a grant to a particular sub-object, you may specify `restrict_object_type` in the ACL, as part of a direct permission grant or as part of a role."
-                    }
-                  },
-                  "required": [
-                    "added_acls",
-                    "removed_acls"
-                  ]
+                  "$ref": "#/components/schemas/AclBatchUpdateResponse"
                 }
               }
             }
@@ -14871,7 +14710,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/UserId"
+            "$ref": "#/components/parameters/UserIdParam"
           }
         ],
         "responses": {
@@ -14972,7 +14811,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/UserId"
+            "$ref": "#/components/parameters/UserIdParam"
           }
         ],
         "responses": {
@@ -15467,7 +15306,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectScoreId"
+            "$ref": "#/components/parameters/ProjectScoreIdParam"
           }
         ],
         "responses": {
@@ -15573,7 +15412,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectScoreId"
+            "$ref": "#/components/parameters/ProjectScoreIdParam"
           }
         ],
         "requestBody": {
@@ -15690,7 +15529,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectScoreId"
+            "$ref": "#/components/parameters/ProjectScoreIdParam"
           }
         ],
         "responses": {
@@ -15791,7 +15630,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectScoreId"
+            "$ref": "#/components/parameters/ProjectScoreIdParam"
           }
         ],
         "responses": {
@@ -16283,7 +16122,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectTagId"
+            "$ref": "#/components/parameters/ProjectTagIdParam"
           }
         ],
         "responses": {
@@ -16389,7 +16228,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectTagId"
+            "$ref": "#/components/parameters/ProjectTagIdParam"
           }
         ],
         "requestBody": {
@@ -16506,7 +16345,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectTagId"
+            "$ref": "#/components/parameters/ProjectTagIdParam"
           }
         ],
         "responses": {
@@ -16607,7 +16446,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ProjectTagId"
+            "$ref": "#/components/parameters/ProjectTagIdParam"
           }
         ],
         "responses": {
@@ -17105,7 +16944,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/FunctionId"
+            "$ref": "#/components/parameters/FunctionIdParam"
           }
         ],
         "responses": {
@@ -17211,7 +17050,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/FunctionId"
+            "$ref": "#/components/parameters/FunctionIdParam"
           }
         ],
         "requestBody": {
@@ -17328,7 +17167,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/FunctionId"
+            "$ref": "#/components/parameters/FunctionIdParam"
           }
         ],
         "responses": {
@@ -17429,7 +17268,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/FunctionId"
+            "$ref": "#/components/parameters/FunctionIdParam"
           }
         ],
         "responses": {
@@ -17498,7 +17337,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/FunctionId"
+            "$ref": "#/components/parameters/FunctionIdParam"
           }
         ],
         "requestBody": {
@@ -17506,375 +17345,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "input": {
-                    "nullable": true,
-                    "description": "Argument to the function, which can be any JSON serializable value"
-                  },
-                  "messages": {
-                    "type": "array",
-                    "items": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "type": "string",
-                              "default": ""
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "system"
-                              ]
-                            },
-                            "name": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "system"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "anyOf": [
-                                {
-                                  "type": "string",
-                                  "default": "",
-                                  "title": "text"
-                                },
-                                {
-                                  "type": "array",
-                                  "items": {
-                                    "anyOf": [
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "text": {
-                                            "type": "string",
-                                            "default": ""
-                                          },
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "text"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "type"
-                                        ],
-                                        "title": "text"
-                                      },
-                                      {
-                                        "type": "object",
-                                        "properties": {
-                                          "image_url": {
-                                            "type": "object",
-                                            "properties": {
-                                              "url": {
-                                                "type": "string"
-                                              },
-                                              "detail": {
-                                                "anyOf": [
-                                                  {
-                                                    "type": "string",
-                                                    "enum": [
-                                                      "auto"
-                                                    ],
-                                                    "title": "auto"
-                                                  },
-                                                  {
-                                                    "type": "string",
-                                                    "enum": [
-                                                      "low"
-                                                    ],
-                                                    "title": "low"
-                                                  },
-                                                  {
-                                                    "type": "string",
-                                                    "enum": [
-                                                      "high"
-                                                    ],
-                                                    "title": "high"
-                                                  }
-                                                ]
-                                              }
-                                            },
-                                            "required": [
-                                              "url"
-                                            ]
-                                          },
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "image_url"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "image_url",
-                                          "type"
-                                        ],
-                                        "title": "image_url"
-                                      }
-                                    ],
-                                    "title": "chat_completion_content_part"
-                                  },
-                                  "title": "array"
-                                }
-                              ]
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "user"
-                              ]
-                            },
-                            "name": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "user"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "assistant"
-                              ]
-                            },
-                            "content": {
-                              "type": "string",
-                              "nullable": true
-                            },
-                            "function_call": {
-                              "type": "object",
-                              "nullable": true,
-                              "properties": {
-                                "arguments": {
-                                  "type": "string"
-                                },
-                                "name": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "arguments",
-                                "name"
-                              ]
-                            },
-                            "name": {
-                              "type": "string",
-                              "nullable": true
-                            },
-                            "tool_calls": {
-                              "type": "array",
-                              "nullable": true,
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "string"
-                                  },
-                                  "function": {
-                                    "type": "object",
-                                    "properties": {
-                                      "arguments": {
-                                        "type": "string"
-                                      },
-                                      "name": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "arguments",
-                                      "name"
-                                    ]
-                                  },
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "function"
-                                    ]
-                                  }
-                                },
-                                "required": [
-                                  "id",
-                                  "function",
-                                  "type"
-                                ]
-                              }
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "assistant"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "type": "string",
-                              "default": ""
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "tool"
-                              ]
-                            },
-                            "tool_call_id": {
-                              "type": "string",
-                              "default": ""
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "tool"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "content": {
-                              "type": "string",
-                              "default": ""
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "function"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "role"
-                          ],
-                          "title": "function"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "role": {
-                              "type": "string",
-                              "enum": [
-                                "model"
-                              ]
-                            },
-                            "content": {
-                              "type": "string",
-                              "nullable": true
-                            }
-                          },
-                          "required": [
-                            "role"
-                          ],
-                          "title": "fallback"
-                        }
-                      ]
-                    },
-                    "description": "If the function is an LLM, additional messages to pass along to it"
-                  },
-                  "parent": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "object_type": {
-                            "type": "string",
-                            "enum": [
-                              "project_logs",
-                              "experiment"
-                            ]
-                          },
-                          "object_id": {
-                            "type": "string",
-                            "description": "The id of the container object you are logging to"
-                          },
-                          "row_ids": {
-                            "type": "object",
-                            "nullable": true,
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "description": "The id of the row"
-                              },
-                              "span_id": {
-                                "type": "string",
-                                "description": "The span_id of the row"
-                              },
-                              "root_span_id": {
-                                "type": "string",
-                                "description": "The root_span_id of the row"
-                              }
-                            },
-                            "required": [
-                              "id",
-                              "span_id",
-                              "root_span_id"
-                            ],
-                            "description": "Identifiers for the row to to log a subspan under"
-                          },
-                          "propagated_event": {
-                            "type": "object",
-                            "nullable": true,
-                            "additionalProperties": {
-                              "nullable": true
-                            },
-                            "description": "Include these properties in every span created under this parent"
-                          }
-                        },
-                        "required": [
-                          "object_type",
-                          "object_id"
-                        ],
-                        "description": "Span parent properties",
-                        "title": "span_parent_struct"
-                      },
-                      {
-                        "type": "string",
-                        "description": "The parent's span identifier, created by calling `.export()` on a span"
-                      }
-                    ],
-                    "description": "Options for tracing the function call"
-                  },
-                  "stream": {
-                    "type": "boolean",
-                    "nullable": true,
-                    "description": "Whether to stream the response. If true, results will be returned in the Braintrust SSE format."
-                  },
-                  "mode": {
-                    "type": "string",
-                    "nullable": true,
-                    "enum": [
-                      "auto",
-                      "parallel",
-                      null
-                    ],
-                    "description": "The mode format of the returned value (defaults to 'auto')"
-                  },
-                  "version": {
-                    "type": "string",
-                    "description": "The version of the function"
-                  }
-                },
-                "description": "The request to invoke a function"
+                "$ref": "#/components/schemas/InvokeApi"
               }
             }
           }
@@ -17902,7 +17373,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/FunctionId"
+            "$ref": "#/components/parameters/FunctionIdParam"
           }
         ],
         "responses": {
@@ -18394,7 +17865,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ViewId"
+            "$ref": "#/components/parameters/ViewIdParam"
           },
           {
             "$ref": "#/components/parameters/AclObjectType"
@@ -18506,7 +17977,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ViewId"
+            "$ref": "#/components/parameters/ViewIdParam"
           }
         ],
         "requestBody": {
@@ -18623,7 +18094,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ViewId"
+            "$ref": "#/components/parameters/ViewIdParam"
           }
         ],
         "requestBody": {
@@ -18735,7 +18206,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ViewId"
+            "$ref": "#/components/parameters/ViewIdParam"
           }
         ],
         "responses": {
@@ -18994,7 +18465,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/OrganizationId"
+            "$ref": "#/components/parameters/OrganizationIdParam"
           }
         ],
         "responses": {
@@ -19100,7 +18571,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/OrganizationId"
+            "$ref": "#/components/parameters/OrganizationIdParam"
           }
         ],
         "requestBody": {
@@ -19217,7 +18688,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/OrganizationId"
+            "$ref": "#/components/parameters/OrganizationIdParam"
           }
         ],
         "responses": {
@@ -19318,7 +18789,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/OrganizationId"
+            "$ref": "#/components/parameters/OrganizationIdParam"
           }
         ],
         "responses": {
@@ -19402,23 +18873,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "success"
-                      ]
-                    },
-                    "send_email_error": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "If invite emails failed to send for some reason, the patch operation will still complete, but we will return an error message here"
-                    }
-                  },
-                  "required": [
-                    "status"
-                  ]
+                  "$ref": "#/components/schemas/PatchOrganizationMembersOutput"
                 }
               }
             }
@@ -19893,7 +19348,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ApiKeyId"
+            "$ref": "#/components/parameters/ApiKeyIdParam"
           }
         ],
         "responses": {
@@ -19999,7 +19454,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ApiKeyId"
+            "$ref": "#/components/parameters/ApiKeyIdParam"
           }
         ],
         "responses": {
@@ -20100,7 +19555,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/ApiKeyId"
+            "$ref": "#/components/parameters/ApiKeyIdParam"
           }
         ],
         "responses": {
@@ -20173,37 +19628,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the AI secret"
-                  },
-                  "type": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": {
-                      "nullable": true
-                    }
-                  },
-                  "secret": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "Secret value. If omitted in a PUT request, the existing secret value will be left intact, not replaced with null."
-                  },
-                  "org_name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the AI Secret belongs in."
-                  }
-                },
-                "required": [
-                  "name"
-                ]
+                "$ref": "#/components/schemas/CreateAISecret"
               }
             }
           }
@@ -20315,37 +19740,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the AI secret"
-                  },
-                  "type": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": {
-                      "nullable": true
-                    }
-                  },
-                  "secret": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "Secret value. If omitted in a PUT request, the existing secret value will be left intact, not replaced with null."
-                  },
-                  "org_name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the AI Secret belongs in."
-                  }
-                },
-                "required": [
-                  "name"
-                ]
+                "$ref": "#/components/schemas/CreateAISecret"
               }
             }
           }
@@ -20457,21 +19852,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the AI secret"
-                  },
-                  "org_name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the AI Secret belongs in."
-                  }
-                },
-                "required": [
-                  "name"
-                ]
+                "$ref": "#/components/schemas/DeleteAISecret"
               }
             }
           }
@@ -20775,7 +20156,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AiSecretId"
+            "$ref": "#/components/parameters/AiSecretIdParam"
           }
         ],
         "responses": {
@@ -20881,7 +20262,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AiSecretId"
+            "$ref": "#/components/parameters/AiSecretIdParam"
           }
         ],
         "requestBody": {
@@ -20890,29 +20271,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "Name of the AI secret"
-                  },
-                  "type": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": {
-                      "nullable": true
-                    }
-                  },
-                  "secret": {
-                    "type": "string",
-                    "nullable": true
-                  }
-                }
+                "$ref": "#/components/schemas/PatchAISecret"
               }
             }
           }
@@ -21020,7 +20379,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AiSecretId"
+            "$ref": "#/components/parameters/AiSecretIdParam"
           }
         ],
         "responses": {
@@ -21121,7 +20480,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AiSecretId"
+            "$ref": "#/components/parameters/AiSecretIdParam"
           }
         ],
         "responses": {
@@ -21664,7 +21023,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/EnvVarId"
+            "$ref": "#/components/parameters/EnvVarIdParam"
           }
         ],
         "responses": {
@@ -21770,7 +21129,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/EnvVarId"
+            "$ref": "#/components/parameters/EnvVarIdParam"
           }
         ],
         "requestBody": {
@@ -21901,7 +21260,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/EnvVarId"
+            "$ref": "#/components/parameters/EnvVarIdParam"
           }
         ],
         "responses": {
@@ -22002,7 +21361,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/EnvVarId"
+            "$ref": "#/components/parameters/EnvVarIdParam"
           }
         ],
         "responses": {
@@ -22863,339 +22222,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "project_id": {
-                    "type": "string",
-                    "description": "Unique identifier for the project to run the eval in"
-                  },
-                  "data": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "dataset_id": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "dataset_id"
-                        ],
-                        "description": "Dataset id"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "project_name": {
-                            "type": "string"
-                          },
-                          "dataset_name": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "project_name",
-                          "dataset_name"
-                        ],
-                        "description": "Project and dataset name"
-                      }
-                    ],
-                    "description": "The dataset to use"
-                  },
-                  "task": {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "function_id": {
-                            "type": "string",
-                            "description": "The ID of the function"
-                          },
-                          "version": {
-                            "type": "string",
-                            "description": "The version of the function"
-                          }
-                        },
-                        "required": [
-                          "function_id"
-                        ],
-                        "description": "Function id"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "project_name": {
-                            "type": "string",
-                            "description": "The name of the project containing the function"
-                          },
-                          "slug": {
-                            "type": "string",
-                            "description": "The slug of the function"
-                          },
-                          "version": {
-                            "type": "string",
-                            "description": "The version of the function"
-                          }
-                        },
-                        "required": [
-                          "project_name",
-                          "slug"
-                        ],
-                        "description": "Project name and slug"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "global_function": {
-                            "type": "string",
-                            "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
-                          }
-                        },
-                        "required": [
-                          "global_function"
-                        ],
-                        "description": "Global function name"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "prompt_session_id": {
-                            "type": "string",
-                            "description": "The ID of the prompt session"
-                          },
-                          "prompt_session_function_id": {
-                            "type": "string",
-                            "description": "The ID of the function in the prompt session"
-                          },
-                          "version": {
-                            "type": "string",
-                            "description": "The version of the function"
-                          }
-                        },
-                        "required": [
-                          "prompt_session_id",
-                          "prompt_session_function_id"
-                        ],
-                        "description": "Prompt session id"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "inline_context": {
-                            "type": "object",
-                            "properties": {
-                              "runtime": {
-                                "type": "string",
-                                "enum": [
-                                  "node",
-                                  "python"
-                                ]
-                              },
-                              "version": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "runtime",
-                              "version"
-                            ]
-                          },
-                          "code": {
-                            "type": "string",
-                            "description": "The inline code to execute"
-                          },
-                          "name": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "The name of the inline code function"
-                          }
-                        },
-                        "required": [
-                          "inline_context",
-                          "code"
-                        ],
-                        "description": "Inline code function"
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "inline_prompt": {
-                            "$ref": "#/components/schemas/PromptData"
-                          },
-                          "name": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "The name of the inline prompt"
-                          }
-                        },
-                        "required": [
-                          "inline_prompt"
-                        ],
-                        "description": "Inline prompt definition"
-                      }
-                    ],
-                    "description": "The function to evaluate"
-                  },
-                  "scores": {
-                    "type": "array",
-                    "items": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "function_id": {
-                              "type": "string",
-                              "description": "The ID of the function"
-                            },
-                            "version": {
-                              "type": "string",
-                              "description": "The version of the function"
-                            }
-                          },
-                          "required": [
-                            "function_id"
-                          ],
-                          "description": "Function id"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "project_name": {
-                              "type": "string",
-                              "description": "The name of the project containing the function"
-                            },
-                            "slug": {
-                              "type": "string",
-                              "description": "The slug of the function"
-                            },
-                            "version": {
-                              "type": "string",
-                              "description": "The version of the function"
-                            }
-                          },
-                          "required": [
-                            "project_name",
-                            "slug"
-                          ],
-                          "description": "Project name and slug"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "global_function": {
-                              "type": "string",
-                              "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
-                            }
-                          },
-                          "required": [
-                            "global_function"
-                          ],
-                          "description": "Global function name"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "prompt_session_id": {
-                              "type": "string",
-                              "description": "The ID of the prompt session"
-                            },
-                            "prompt_session_function_id": {
-                              "type": "string",
-                              "description": "The ID of the function in the prompt session"
-                            },
-                            "version": {
-                              "type": "string",
-                              "description": "The version of the function"
-                            }
-                          },
-                          "required": [
-                            "prompt_session_id",
-                            "prompt_session_function_id"
-                          ],
-                          "description": "Prompt session id"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "inline_context": {
-                              "type": "object",
-                              "properties": {
-                                "runtime": {
-                                  "type": "string",
-                                  "enum": [
-                                    "node",
-                                    "python"
-                                  ]
-                                },
-                                "version": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "runtime",
-                                "version"
-                              ]
-                            },
-                            "code": {
-                              "type": "string",
-                              "description": "The inline code to execute"
-                            },
-                            "name": {
-                              "type": "string",
-                              "nullable": true,
-                              "description": "The name of the inline code function"
-                            }
-                          },
-                          "required": [
-                            "inline_context",
-                            "code"
-                          ],
-                          "description": "Inline code function"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "inline_prompt": {
-                              "$ref": "#/components/schemas/PromptData"
-                            },
-                            "name": {
-                              "type": "string",
-                              "nullable": true,
-                              "description": "The name of the inline prompt"
-                            }
-                          },
-                          "required": [
-                            "inline_prompt"
-                          ],
-                          "description": "Inline prompt definition"
-                        }
-                      ],
-                      "description": "Options for identifying a function"
-                    },
-                    "description": "The functions to score the eval on"
-                  },
-                  "experiment_name": {
-                    "type": "string",
-                    "description": "An optional name for the experiment created by this eval. If it conflicts with an existing experiment, it will be suffixed with a unique identifier."
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "nullable": true
-                    },
-                    "description": "Optional experiment-level metadata to store about the evaluation. You can later use this to slice & dice across experiments."
-                  },
-                  "stream": {
-                    "type": "boolean",
-                    "description": "Whether to stream the results of the eval. If true, the request will return two events: one to indicate the experiment has started, and another upon completion. If false, the request will return the evaluation's summary upon completion."
-                  }
-                },
-                "required": [
-                  "project_id",
-                  "data",
-                  "task",
-                  "scores"
-                ]
+                "$ref": "#/components/schemas/RunEval"
               }
             }
           }
