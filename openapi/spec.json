@@ -4547,12 +4547,6 @@
             "format": "uuid",
             "description": "Unique identifier for the project that the span iframe belongs under"
           },
-          "user_id": {
-            "type": "string",
-            "nullable": true,
-            "format": "uuid",
-            "description": "Identifies the user who created the span iframe"
-          },
           "name": {
             "type": "string",
             "description": "Name of the span iframe"
