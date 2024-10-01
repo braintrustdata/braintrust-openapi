@@ -1059,12 +1059,17 @@
               "id": {
                 "type": "string",
                 "description": "ID of the original event."
+              },
+              "_xact_id": {
+                "type": "string",
+                "description": "Transaction ID of the original event."
               }
             },
             "required": [
               "object_type",
               "object_id",
-              "id"
+              "id",
+              "_xact_id"
             ],
             "description": "Indicates the event was copied from another object."
           }
@@ -2641,12 +2646,17 @@
               "id": {
                 "type": "string",
                 "description": "ID of the original event."
+              },
+              "_xact_id": {
+                "type": "string",
+                "description": "Transaction ID of the original event."
               }
             },
             "required": [
               "object_type",
               "object_id",
-              "id"
+              "id",
+              "_xact_id"
             ],
             "description": "Indicates the event was copied from another object."
           }
