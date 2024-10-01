@@ -417,6 +417,7 @@ components:
       properties:
         name:
           type: string
+          minLength: 1
           description: Name of the project
         org_name:
           type: string
@@ -1395,6 +1396,7 @@ components:
         name:
           type: string
           nullable: true
+          minLength: 1
           description: Name of the experiment. Within a project, experiment names are unique
         description:
           type: string
@@ -2336,6 +2338,7 @@ components:
           description: Unique identifier for the project that the dataset belongs under
         name:
           type: string
+          minLength: 1
           description: Name of the dataset. Within a project, dataset names are unique
         description:
           type: string
@@ -3195,9 +3198,11 @@ components:
           description: Unique identifier for the project that the prompt belongs under
         name:
           type: string
+          minLength: 1
           description: Name of the prompt
         slug:
           type: string
+          minLength: 1
           description: Unique identifier for the prompt
         description:
           type: string
@@ -3361,6 +3366,7 @@ components:
       properties:
         name:
           type: string
+          minLength: 1
           description: Name of the role
         description:
           type: string
@@ -3441,6 +3447,7 @@ components:
         name:
           type: string
           nullable: true
+          minLength: 1
           description: Name of the role
         add_member_permissions:
           type: array
@@ -3616,6 +3623,7 @@ components:
       properties:
         name:
           type: string
+          minLength: 1
           description: Name of the group
         description:
           type: string
@@ -3658,6 +3666,7 @@ components:
         name:
           type: string
           nullable: true
+          minLength: 1
           description: Name of the group
         add_member_users:
           type: array
@@ -4478,9 +4487,11 @@ components:
           description: Unique identifier for the project that the prompt belongs under
         name:
           type: string
+          minLength: 1
           description: Name of the prompt
         slug:
           type: string
+          minLength: 1
           description: Unique identifier for the prompt
         description:
           type: string
