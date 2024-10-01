@@ -347,6 +347,7 @@
           "categorical",
           "weighted",
           "minimum",
+          "maximum",
           "online"
         ],
         "description": "The type of the configured score",
