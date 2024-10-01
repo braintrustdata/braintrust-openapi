@@ -1030,21 +1030,42 @@
             "type": "object",
             "properties": {
               "object_type": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "experiment",
+                      "dataset",
+                      "prompt",
+                      "function",
+                      "prompt_session"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "project_logs"
+                    ]
+                  }
+                ],
+                "description": "Type of the object the event is originating from."
               },
               "object_id": {
                 "type": "string",
-                "format": "uuid"
+                "format": "uuid",
+                "description": "ID of the object the event is originating from."
               },
               "id": {
-                "type": "string"
+                "type": "string",
+                "description": "ID of the original event."
               }
             },
             "required": [
               "object_type",
               "object_id",
               "id"
-            ]
+            ],
+            "description": "Indicates the event was copied from another object."
           }
         },
         "required": [
@@ -2590,21 +2611,42 @@
             "type": "object",
             "properties": {
               "object_type": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "experiment",
+                      "dataset",
+                      "prompt",
+                      "function",
+                      "prompt_session"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "project_logs"
+                    ]
+                  }
+                ],
+                "description": "Type of the object the event is originating from."
               },
               "object_id": {
                 "type": "string",
-                "format": "uuid"
+                "format": "uuid",
+                "description": "ID of the object the event is originating from."
               },
               "id": {
-                "type": "string"
+                "type": "string",
+                "description": "ID of the original event."
               }
             },
             "required": [
               "object_type",
               "object_id",
               "id"
-            ]
+            ],
+            "description": "Indicates the event was copied from another object."
           }
         },
         "required": [
