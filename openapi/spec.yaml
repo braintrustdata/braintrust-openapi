@@ -342,6 +342,7 @@ components:
         - categorical
         - weighted
         - minimum
+        - maximum
         - online
       description: The type of the configured score
       title: project_score_type_single
