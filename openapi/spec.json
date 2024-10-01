@@ -1025,6 +1025,26 @@
               "nullable": true
             },
             "description": "Human-identifying attributes of the span, such as name, type, etc."
+          },
+          "origin": {
+            "type": "object",
+            "properties": {
+              "object_type": {
+                "type": "string"
+              },
+              "object_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "object_type",
+              "object_id",
+              "id"
+            ]
           }
         },
         "required": [
@@ -2565,6 +2585,26 @@
           "root_span_id": {
             "type": "string",
             "description": "The `span_id` of the root of the trace this dataset event belongs to"
+          },
+          "origin": {
+            "type": "object",
+            "properties": {
+              "object_type": {
+                "type": "string"
+              },
+              "object_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "object_type",
+              "object_id",
+              "id"
+            ]
           }
         },
         "required": [
