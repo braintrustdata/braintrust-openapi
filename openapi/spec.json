@@ -1028,6 +1028,7 @@
           },
           "origin": {
             "type": "object",
+            "nullable": true,
             "properties": {
               "object_type": {
                 "anyOf": [
@@ -2609,6 +2610,7 @@
           },
           "origin": {
             "type": "object",
+            "nullable": true,
             "properties": {
               "object_type": {
                 "anyOf": [
