@@ -1008,6 +1008,11 @@
             "type": "string",
             "description": "The `span_id` of the root of the trace this project logs event belongs to"
           },
+          "is_root": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether this span is a root span"
+          },
           "span_attributes": {
             "type": "object",
             "nullable": true,
@@ -2042,6 +2047,11 @@
               "nullable": true
             },
             "description": "Human-identifying attributes of the span, such as name, type, etc."
+          },
+          "is_root": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether this span is a root span"
           }
         },
         "required": [
@@ -2578,6 +2588,11 @@
           "root_span_id": {
             "type": "string",
             "description": "The `span_id` of the root of the trace this dataset event belongs to"
+          },
+          "is_root": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether this span is a root span"
           }
         },
         "required": [
