@@ -441,6 +441,7 @@
         "properties": {
           "name": {
             "type": "string",
+            "minLength": 1,
             "description": "Name of the project"
           },
           "org_name": {
@@ -1387,6 +1388,7 @@
           "name": {
             "type": "string",
             "nullable": true,
+            "minLength": 1,
             "description": "Name of the experiment. Within a project, experiment names are unique"
           },
           "description": {
@@ -2331,6 +2333,7 @@
           },
           "name": {
             "type": "string",
+            "minLength": 1,
             "description": "Name of the dataset. Within a project, dataset names are unique"
           },
           "description": {
@@ -3470,10 +3473,12 @@
           },
           "name": {
             "type": "string",
+            "minLength": 1,
             "description": "Name of the prompt"
           },
           "slug": {
             "type": "string",
+            "minLength": 1,
             "description": "Unique identifier for the prompt"
           },
           "description": {
@@ -3643,6 +3648,7 @@
         "properties": {
           "name": {
             "type": "string",
+            "minLength": 1,
             "description": "Name of the role"
           },
           "description": {
@@ -3706,6 +3712,7 @@
           "name": {
             "type": "string",
             "nullable": true,
+            "minLength": 1,
             "description": "Name of the role"
           },
           "add_member_permissions": {
@@ -3851,6 +3858,7 @@
         "properties": {
           "name": {
             "type": "string",
+            "minLength": 1,
             "description": "Name of the group"
           },
           "description": {
@@ -3897,6 +3905,7 @@
           "name": {
             "type": "string",
             "nullable": true,
+            "minLength": 1,
             "description": "Name of the group"
           },
           "add_member_users": {
@@ -4969,10 +4978,12 @@
           },
           "name": {
             "type": "string",
+            "minLength": 1,
             "description": "Name of the prompt"
           },
           "slug": {
             "type": "string",
+            "minLength": 1,
             "description": "Unique identifier for the prompt"
           },
           "description": {
