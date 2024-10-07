@@ -1041,6 +1041,53 @@
               "nullable": true
             },
             "description": "Human-identifying attributes of the span, such as name, type, etc."
+          },
+          "origin": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "object_type": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "experiment",
+                      "dataset",
+                      "prompt",
+                      "function",
+                      "prompt_session"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "project_logs"
+                    ]
+                  }
+                ],
+                "description": "Type of the object the event is originating from."
+              },
+              "object_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "ID of the object the event is originating from."
+              },
+              "id": {
+                "type": "string",
+                "description": "ID of the original event."
+              },
+              "_xact_id": {
+                "type": "string",
+                "description": "Transaction ID of the original event."
+              }
+            },
+            "required": [
+              "object_type",
+              "object_id",
+              "id",
+              "_xact_id"
+            ],
+            "description": "Indicates the event was copied from another object."
           }
         },
         "required": [
@@ -2593,6 +2640,53 @@
             "type": "boolean",
             "nullable": true,
             "description": "Whether this span is a root span"
+          },
+          "origin": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "object_type": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "experiment",
+                      "dataset",
+                      "prompt",
+                      "function",
+                      "prompt_session"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "project_logs"
+                    ]
+                  }
+                ],
+                "description": "Type of the object the event is originating from."
+              },
+              "object_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "ID of the object the event is originating from."
+              },
+              "id": {
+                "type": "string",
+                "description": "ID of the original event."
+              },
+              "_xact_id": {
+                "type": "string",
+                "description": "Transaction ID of the original event."
+              }
+            },
+            "required": [
+              "object_type",
+              "object_id",
+              "id",
+              "_xact_id"
+            ],
+            "description": "Indicates the event was copied from another object."
           }
         },
         "required": [
