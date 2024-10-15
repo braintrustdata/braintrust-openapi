@@ -1015,6 +1015,10 @@ components:
           type: string
           description: The `span_id` of the root of the trace this project logs event
             belongs to
+        is_root:
+          type: boolean
+          nullable: true
+          description: Whether this span is a root span
         span_attributes:
           type: object
           nullable: true
@@ -1038,6 +1042,39 @@ components:
           additionalProperties:
             nullable: true
           description: Human-identifying attributes of the span, such as name, type, etc.
+        origin:
+          type: object
+          nullable: true
+          properties:
+            object_type:
+              anyOf:
+                - type: string
+                  enum:
+                    - experiment
+                    - dataset
+                    - prompt
+                    - function
+                    - prompt_session
+                - type: string
+                  enum:
+                    - project_logs
+              description: Type of the object the event is originating from.
+            object_id:
+              type: string
+              format: uuid
+              description: ID of the object the event is originating from.
+            id:
+              type: string
+              description: ID of the original event.
+            _xact_id:
+              type: string
+              description: Transaction ID of the original event.
+          required:
+            - object_type
+            - object_id
+            - id
+            - _xact_id
+          description: Indicates the event was copied from another object.
       required:
         - id
         - _xact_id
@@ -2062,6 +2099,10 @@ components:
           additionalProperties:
             nullable: true
           description: Human-identifying attributes of the span, such as name, type, etc.
+        is_root:
+          type: boolean
+          nullable: true
+          description: Whether this span is a root span
       required:
         - id
         - _xact_id
@@ -2567,6 +2608,43 @@ components:
         root_span_id:
           type: string
           description: The `span_id` of the root of the trace this dataset event belongs to
+        is_root:
+          type: boolean
+          nullable: true
+          description: Whether this span is a root span
+        origin:
+          type: object
+          nullable: true
+          properties:
+            object_type:
+              anyOf:
+                - type: string
+                  enum:
+                    - experiment
+                    - dataset
+                    - prompt
+                    - function
+                    - prompt_session
+                - type: string
+                  enum:
+                    - project_logs
+              description: Type of the object the event is originating from.
+            object_id:
+              type: string
+              format: uuid
+              description: ID of the object the event is originating from.
+            id:
+              type: string
+              description: ID of the original event.
+            _xact_id:
+              type: string
+              description: Transaction ID of the original event.
+          required:
+            - object_type
+            - object_id
+            - id
+            - _xact_id
+          description: Indicates the event was copied from another object.
       required:
         - id
         - _xact_id
@@ -5417,6 +5495,11 @@ components:
             will return two events: one to indicate the experiment has started,
             and another upon completion. If false, the request will return the
             evaluation's summary upon completion."
+        max_concurrency:
+          type: number
+          nullable: true
+          description: The maximum number of concurrent evaluations to run. This is useful
+            to avoid hitting LLM rate limits.
       required:
         - project_id
         - data

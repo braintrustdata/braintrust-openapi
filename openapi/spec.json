@@ -6446,6 +6446,11 @@
           "stream": {
             "type": "boolean",
             "description": "Whether to stream the results of the eval. If true, the request will return two events: one to indicate the experiment has started, and another upon completion. If false, the request will return the evaluation's summary upon completion."
+          },
+          "max_concurrency": {
+            "type": "number",
+            "nullable": true,
+            "description": "The maximum number of concurrent evaluations to run. This is useful to avoid hitting LLM rate limits."
           }
         },
         "required": [
