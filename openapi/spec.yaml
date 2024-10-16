@@ -2344,6 +2344,12 @@ components:
           type: string
           nullable: true
           description: Textual description of the dataset
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties:
+            nullable: true
+          description: User-controlled metadata about the dataset
       required:
         - project_id
         - name
