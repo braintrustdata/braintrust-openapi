@@ -5532,6 +5532,40 @@ components:
           nullable: true
           description: An optional experiment id to use as a base. If specified, the new
             experiment will be summarized and compared to this experiment.
+        git_metadata_settings:
+          type: object
+          nullable: true
+          properties:
+            collect:
+              type: string
+              enum:
+                - all
+                - none
+                - some
+            fields:
+              type: array
+              items:
+                type: string
+                enum:
+                  - commit
+                  - branch
+                  - tag
+                  - dirty
+                  - author_name
+                  - author_email
+                  - commit_message
+                  - commit_time
+                  - git_diff
+          required:
+            - collect
+          additionalProperties: false
+          description: Optional settings for collecting git metadata. By default, will
+            collect all git metadata fields allowed in org-level settings.
+        repo_info:
+          allOf:
+            - $ref: "#/components/schemas/RepoInfo"
+            - description: Optionally explicitly specify the git metadata for this experiment.
+                This takes precedence over `gitMetadataSettings` if specified.
       required:
         - project_id
         - data
