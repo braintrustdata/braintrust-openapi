@@ -22986,7 +22986,7 @@
           {}
         ],
         "requestBody": {
-          "description": "See the [openai docs](https://platform.openai.com/docs/api-reference/chat/create) for details",
+          "description": "See the [OpenAI docs](https://platform.openai.com/docs/api-reference/chat/create) for details.",
           "required": true,
           "content": {
             "application/json": {
@@ -23082,7 +23082,7 @@
           {}
         ],
         "requestBody": {
-          "description": "See the [openai docs](https://platform.openai.com/docs/api-reference/completions/create) for details",
+          "description": "See the [OpenAI docs](https://platform.openai.com/docs/api-reference/completions/create) for details.",
           "required": true,
           "content": {
             "application/json": {
@@ -23274,7 +23274,7 @@
           {}
         ],
         "requestBody": {
-          "description": "See the [openai docs](https://platform.openai.com/docs/api-reference/embeddings/create) for details",
+          "description": "See the [OpenAI docs](https://platform.openai.com/docs/api-reference/embeddings/create) for details.",
           "required": true,
           "content": {
             "application/json": {
@@ -23301,6 +23301,151 @@
         "operationId": "optionsProxyproxyembeddings",
         "description": "Enable CORS",
         "summary": "Enable CORS (`/v1/proxy/embeddings`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/proxy/credentials": {
+      "post": {
+        "operationId": "proxycredentials",
+        "tags": [
+          "Proxy"
+        ],
+        "description": "Create a temporary credential which can access the proxy for a limited time. The temporary credential will be allowed to make requests on behalf of the Braintrust API key (or model provider API key) provided in the `Authorization` header. See [docs](/docs/guides/proxy#temporary-credentials-for-end-user-access) for code examples.",
+        "summary": "Create temporary credential",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "requestBody": {
+          "description": "The temporary credential will be restricted according to the request body.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Granted model name. Null/undefined to grant usage of all models."
+                  },
+                  "ttl_seconds": {
+                    "type": "number",
+                    "maximum": 86400,
+                    "default": 600,
+                    "description": "TTL of the temporary credential. 10 minutes by default."
+                  },
+                  "logging": {
+                    "type": "object",
+                    "nullable": true,
+                    "properties": {
+                      "project_name": {
+                        "type": "string"
+                      },
+                      "compress_audio": {
+                        "type": "boolean",
+                        "default": true
+                      }
+                    },
+                    "required": [
+                      "project_name"
+                    ],
+                    "description": "If present, proxy will log requests to the given Braintrust project name."
+                  }
+                },
+                "description": "Payload for requesting temporary credentials."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully created temporary credential",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "key"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsProxyproxycredentials",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/proxy/credentials`)",
         "security": [],
         "tags": [
           "CORS"
