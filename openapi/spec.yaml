@@ -1189,19 +1189,16 @@ components:
         cursor:
           $ref: "#/components/schemas/FetchPaginationCursor"
         max_xact_id:
-          allOf:
-            - $ref: "#/components/schemas/MaxXactId"
-            - nullable: true
+          $ref: "#/components/schemas/MaxXactId"
+          nullable: true
         max_root_span_id:
-          allOf:
-            - $ref: "#/components/schemas/MaxRootSpanId"
-            - nullable: true
+          $ref: "#/components/schemas/MaxRootSpanId"
+          nullable: true
         filters:
           $ref: "#/components/schemas/FetchEventsFilters"
         version:
-          allOf:
-            - $ref: "#/components/schemas/Version"
-            - nullable: true
+          $ref: "#/components/schemas/Version"
+          nullable: true
     FeedbackResponseSchema:
       type: object
       properties:
@@ -3454,9 +3451,8 @@ components:
               permission:
                 $ref: "#/components/schemas/Permission"
               restrict_object_type:
-                allOf:
-                  - $ref: "#/components/schemas/AclObjectType"
-                  - nullable: true
+                $ref: "#/components/schemas/AclObjectType"
+                nullable: true
             required:
               - permission
           description: (permission, restrict_object_type) tuples which belong to this role
@@ -3502,9 +3498,8 @@ components:
               permission:
                 $ref: "#/components/schemas/Permission"
               restrict_object_type:
-                allOf:
-                  - $ref: "#/components/schemas/AclObjectType"
-                  - nullable: true
+                $ref: "#/components/schemas/AclObjectType"
+                nullable: true
             required:
               - permission
           description: (permission, restrict_object_type) tuples which belong to this role
@@ -3549,9 +3544,8 @@ components:
               permission:
                 $ref: "#/components/schemas/Permission"
               restrict_object_type:
-                allOf:
-                  - $ref: "#/components/schemas/AclObjectType"
-                  - nullable: true
+                $ref: "#/components/schemas/AclObjectType"
+                nullable: true
             required:
               - permission
           description: A list of permissions to add to the role
@@ -3564,9 +3558,8 @@ components:
               permission:
                 $ref: "#/components/schemas/Permission"
               restrict_object_type:
-                allOf:
-                  - $ref: "#/components/schemas/AclObjectType"
-                  - nullable: true
+                $ref: "#/components/schemas/AclObjectType"
+                nullable: true
             required:
               - permission
           description: A list of permissions to remove from the role
@@ -3753,18 +3746,16 @@ components:
           description: Id of the group the ACL applies to. Exactly one of `user_id` and
             `group_id` will be provided
         permission:
-          allOf:
-            - $ref: "#/components/schemas/Permission"
-            - nullable: true
-              description: Permission the ACL grants. Exactly one of `permission` and
-                `role_id` will be provided
+          $ref: "#/components/schemas/Permission"
+          nullable: true
+          description: Permission the ACL grants. Exactly one of `permission` and
+            `role_id` will be provided
         restrict_object_type:
-          allOf:
-            - $ref: "#/components/schemas/AclObjectType"
-            - nullable: true
-              description: When setting a permission directly, optionally restricts the
-                permission grant to just the specified object type. Cannot be
-                set alongside a `role_id`.
+          $ref: "#/components/schemas/AclObjectType"
+          nullable: true
+          description: When setting a permission directly, optionally restricts the
+            permission grant to just the specified object type. Cannot be set
+            alongside a `role_id`.
         role_id:
           type: string
           nullable: true
@@ -3821,18 +3812,16 @@ components:
           description: Id of the group the ACL applies to. Exactly one of `user_id` and
             `group_id` will be provided
         permission:
-          allOf:
-            - $ref: "#/components/schemas/Permission"
-            - nullable: true
-              description: Permission the ACL grants. Exactly one of `permission` and
-                `role_id` will be provided
+          $ref: "#/components/schemas/Permission"
+          nullable: true
+          description: Permission the ACL grants. Exactly one of `permission` and
+            `role_id` will be provided
         restrict_object_type:
-          allOf:
-            - $ref: "#/components/schemas/AclObjectType"
-            - nullable: true
-              description: When setting a permission directly, optionally restricts the
-                permission grant to just the specified object type. Cannot be
-                set alongside a `role_id`.
+          $ref: "#/components/schemas/AclObjectType"
+          nullable: true
+          description: When setting a permission directly, optionally restricts the
+            permission grant to just the specified object type. Cannot be set
+            alongside a `role_id`.
         role_id:
           type: string
           nullable: true
@@ -4132,9 +4121,8 @@ components:
           nullable: true
           description: Textual description of the project score
         score_type:
-          allOf:
-            - $ref: "#/components/schemas/ProjectScoreType"
-            - nullable: true
+          $ref: "#/components/schemas/ProjectScoreType"
+          nullable: true
         categories:
           $ref: "#/components/schemas/ProjectScoreCategories"
         config:
