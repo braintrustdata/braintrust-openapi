@@ -444,6 +444,20 @@ components:
             the rows provided as input
       required:
         - row_ids
+    InsertEventsWithSpanSlugsResponse:
+      allOf:
+        - $ref: "#/components/schemas/InsertEventsResponse"
+        - type: object
+          properties:
+            serialized_span_slugs:
+              type: array
+              items:
+                type: string
+              description: String slugs which line up 1-1 with the row_ids. These slugs can be
+                used as the 'parent' specifier to attach spans underneath the
+                row
+          required:
+            - serialized_span_slugs
     InsertProjectLogsEventReplace:
       type: object
       properties:
@@ -6656,7 +6670,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InsertEventsResponse"
+                $ref: "#/components/schemas/InsertEventsWithSpanSlugsResponse"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
@@ -7502,7 +7516,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InsertEventsResponse"
+                $ref: "#/components/schemas/InsertEventsWithSpanSlugsResponse"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
