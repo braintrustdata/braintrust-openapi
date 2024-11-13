@@ -3366,6 +3366,21 @@
           }
         ]
       },
+      "PromptOptions": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "params": {
+            "$ref": "#/components/schemas/ModelParams"
+          },
+          "position": {
+            "type": "string"
+          }
+        }
+      },
       "SavedFunctionId": {
         "anyOf": [
           {
@@ -3467,19 +3482,7 @@
             ]
           },
           "options": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "model": {
-                "type": "string"
-              },
-              "params": {
-                "$ref": "#/components/schemas/ModelParams"
-              },
-              "position": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/components/schemas/PromptOptions"
           },
           "parser": {
             "type": "object",

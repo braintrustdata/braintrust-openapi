@@ -3088,6 +3088,16 @@ components:
             use_cache:
               type: boolean
           title: JsCompletionParams
+    PromptOptions:
+      type: object
+      nullable: true
+      properties:
+        model:
+          type: string
+        params:
+          $ref: "#/components/schemas/ModelParams"
+        position:
+          type: string
     SavedFunctionId:
       anyOf:
         - type: object
@@ -3153,15 +3163,7 @@ components:
               nullable: true
               additionalProperties: false
         options:
-          type: object
-          nullable: true
-          properties:
-            model:
-              type: string
-            params:
-              $ref: "#/components/schemas/ModelParams"
-            position:
-              type: string
+          $ref: "#/components/schemas/PromptOptions"
         parser:
           type: object
           nullable: true
