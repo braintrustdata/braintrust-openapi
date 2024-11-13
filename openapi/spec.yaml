@@ -557,8 +557,17 @@ components:
               nullable: true
               description: The total number of tokens in the input and output of the project
                 logs event.
+            caller_functionname:
+              nullable: true
+              description: This metric is deprecated
+            caller_filename:
+              nullable: true
+              description: This metric is deprecated
+            caller_lineno:
+              nullable: true
+              description: This metric is deprecated
           additionalProperties:
-            nullable: true
+            type: number
           description: Metrics are numerical measurements tracking the execution of the
             code that produced the project logs event. Use "start" and "end" to
             track the time span over which the project logs event was produced
@@ -731,8 +740,17 @@ components:
               nullable: true
               description: The total number of tokens in the input and output of the project
                 logs event.
+            caller_functionname:
+              nullable: true
+              description: This metric is deprecated
+            caller_filename:
+              nullable: true
+              description: This metric is deprecated
+            caller_lineno:
+              nullable: true
+              description: This metric is deprecated
           additionalProperties:
-            nullable: true
+            type: number
           description: Metrics are numerical measurements tracking the execution of the
             code that produced the project logs event. Use "start" and "end" to
             track the time span over which the project logs event was produced
@@ -951,8 +969,17 @@ components:
               nullable: true
               description: The total number of tokens in the input and output of the project
                 logs event.
+            caller_functionname:
+              nullable: true
+              description: This metric is deprecated
+            caller_filename:
+              nullable: true
+              description: This metric is deprecated
+            caller_lineno:
+              nullable: true
+              description: This metric is deprecated
           additionalProperties:
-            nullable: true
+            type: number
           description: Metrics are numerical measurements tracking the execution of the
             code that produced the project logs event. Use "start" and "end" to
             track the time span over which the project logs event was produced
@@ -1532,8 +1559,17 @@ components:
               nullable: true
               description: The total number of tokens in the input and output of the
                 experiment event.
+            caller_functionname:
+              nullable: true
+              description: This metric is deprecated
+            caller_filename:
+              nullable: true
+              description: This metric is deprecated
+            caller_lineno:
+              nullable: true
+              description: This metric is deprecated
           additionalProperties:
-            nullable: true
+            type: number
           description: Metrics are numerical measurements tracking the execution of the
             code that produced the experiment event. Use "start" and "end" to
             track the time span over which the experiment event was produced
@@ -1716,8 +1752,17 @@ components:
               nullable: true
               description: The total number of tokens in the input and output of the
                 experiment event.
+            caller_functionname:
+              nullable: true
+              description: This metric is deprecated
+            caller_filename:
+              nullable: true
+              description: This metric is deprecated
+            caller_lineno:
+              nullable: true
+              description: This metric is deprecated
           additionalProperties:
-            nullable: true
+            type: number
           description: Metrics are numerical measurements tracking the execution of the
             code that produced the experiment event. Use "start" and "end" to
             track the time span over which the experiment event was produced
@@ -1946,8 +1991,17 @@ components:
               nullable: true
               description: The total number of tokens in the input and output of the
                 experiment event.
+            caller_functionname:
+              nullable: true
+              description: This metric is deprecated
+            caller_filename:
+              nullable: true
+              description: This metric is deprecated
+            caller_lineno:
+              nullable: true
+              description: This metric is deprecated
           additionalProperties:
-            nullable: true
+            type: number
           description: Metrics are numerical measurements tracking the execution of the
             code that produced the experiment event. Use "start" and "end" to
             track the time span over which the experiment event was produced
