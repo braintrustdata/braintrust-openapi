@@ -458,6 +458,18 @@ components:
                 row
           required:
             - serialized_span_slugs
+    SpanType:
+      type: string
+      nullable: true
+      enum:
+        - llm
+        - score
+        - function
+        - eval
+        - task
+        - tool
+        - null
+      description: Type of the span, for display purposes only
     SpanAttributes:
       type: object
       nullable: true
@@ -467,17 +479,7 @@ components:
           nullable: true
           description: Name of the span, for display purposes only
         type:
-          type: string
-          nullable: true
-          enum:
-            - llm
-            - score
-            - function
-            - eval
-            - task
-            - tool
-            - null
-          description: Type of the span, for display purposes only
+          $ref: "#/components/schemas/SpanType"
       additionalProperties:
         nullable: true
       description: Human-identifying attributes of the span, such as name, type, etc.
