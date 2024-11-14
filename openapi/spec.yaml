@@ -458,6 +458,29 @@ components:
                 row
           required:
             - serialized_span_slugs
+    SpanAttributes:
+      type: object
+      nullable: true
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Name of the span, for display purposes only
+        type:
+          type: string
+          nullable: true
+          enum:
+            - llm
+            - score
+            - function
+            - eval
+            - task
+            - tool
+            - null
+          description: Type of the span, for display purposes only
+      additionalProperties:
+        nullable: true
+      description: Human-identifying attributes of the span, such as name, type, etc.
     InsertProjectLogsEventReplace:
       type: object
       properties:
@@ -585,28 +608,7 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the project logs event
         span_attributes:
-          type: object
-          nullable: true
-          properties:
-            name:
-              type: string
-              nullable: true
-              description: Name of the span, for display purposes only
-            type:
-              type: string
-              nullable: true
-              enum:
-                - llm
-                - score
-                - function
-                - eval
-                - task
-                - tool
-                - null
-              description: Type of the span, for display purposes only
-          additionalProperties:
-            nullable: true
-          description: Human-identifying attributes of the span, such as name, type, etc.
+          $ref: "#/components/schemas/SpanAttributes"
         id:
           type: string
           nullable: true
@@ -789,28 +791,7 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the project logs event
         span_attributes:
-          type: object
-          nullable: true
-          properties:
-            name:
-              type: string
-              nullable: true
-              description: Name of the span, for display purposes only
-            type:
-              type: string
-              nullable: true
-              enum:
-                - llm
-                - score
-                - function
-                - eval
-                - task
-                - tool
-                - null
-              description: Type of the span, for display purposes only
-          additionalProperties:
-            nullable: true
-          description: Human-identifying attributes of the span, such as name, type, etc.
+          $ref: "#/components/schemas/SpanAttributes"
         id:
           type: string
           nullable: true
@@ -1061,28 +1042,7 @@ components:
           nullable: true
           description: Whether this span is a root span
         span_attributes:
-          type: object
-          nullable: true
-          properties:
-            name:
-              type: string
-              nullable: true
-              description: Name of the span, for display purposes only
-            type:
-              type: string
-              nullable: true
-              enum:
-                - llm
-                - score
-                - function
-                - eval
-                - task
-                - tool
-                - null
-              description: Type of the span, for display purposes only
-          additionalProperties:
-            nullable: true
-          description: Human-identifying attributes of the span, such as name, type, etc.
+          $ref: "#/components/schemas/SpanAttributes"
         origin:
           type: object
           nullable: true
@@ -1650,28 +1610,7 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the experiment event
         span_attributes:
-          type: object
-          nullable: true
-          properties:
-            name:
-              type: string
-              nullable: true
-              description: Name of the span, for display purposes only
-            type:
-              type: string
-              nullable: true
-              enum:
-                - llm
-                - score
-                - function
-                - eval
-                - task
-                - tool
-                - null
-              description: Type of the span, for display purposes only
-          additionalProperties:
-            nullable: true
-          description: Human-identifying attributes of the span, such as name, type, etc.
+          $ref: "#/components/schemas/SpanAttributes"
         id:
           type: string
           nullable: true
@@ -1864,28 +1803,7 @@ components:
             `metrics`. Use the `caller_*` attributes to track the location in
             code which produced the experiment event
         span_attributes:
-          type: object
-          nullable: true
-          properties:
-            name:
-              type: string
-              nullable: true
-              description: Name of the span, for display purposes only
-            type:
-              type: string
-              nullable: true
-              enum:
-                - llm
-                - score
-                - function
-                - eval
-                - task
-                - tool
-                - null
-              description: Type of the span, for display purposes only
-          additionalProperties:
-            nullable: true
-          description: Human-identifying attributes of the span, such as name, type, etc.
+          $ref: "#/components/schemas/SpanAttributes"
         id:
           type: string
           nullable: true
@@ -2142,28 +2060,7 @@ components:
           description: The `span_id` of the root of the trace this experiment event
             belongs to
         span_attributes:
-          type: object
-          nullable: true
-          properties:
-            name:
-              type: string
-              nullable: true
-              description: Name of the span, for display purposes only
-            type:
-              type: string
-              nullable: true
-              enum:
-                - llm
-                - score
-                - function
-                - eval
-                - task
-                - tool
-                - null
-              description: Type of the span, for display purposes only
-          additionalProperties:
-            nullable: true
-          description: Human-identifying attributes of the span, such as name, type, etc.
+          $ref: "#/components/schemas/SpanAttributes"
         is_root:
           type: boolean
           nullable: true
@@ -3205,6 +3102,16 @@ components:
             use_cache:
               type: boolean
           title: JsCompletionParams
+    PromptOptions:
+      type: object
+      nullable: true
+      properties:
+        model:
+          type: string
+        params:
+          $ref: "#/components/schemas/ModelParams"
+        position:
+          type: string
     SavedFunctionId:
       anyOf:
         - type: object
@@ -3270,15 +3177,7 @@ components:
               nullable: true
               additionalProperties: false
         options:
-          type: object
-          nullable: true
-          properties:
-            model:
-              type: string
-            params:
-              $ref: "#/components/schemas/ModelParams"
-            position:
-              type: string
+          $ref: "#/components/schemas/PromptOptions"
         parser:
           type: object
           nullable: true

@@ -511,6 +511,35 @@
           }
         ]
       },
+      "SpanAttributes": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the span, for display purposes only"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "llm",
+              "score",
+              "function",
+              "eval",
+              "task",
+              "tool",
+              null
+            ],
+            "description": "Type of the span, for display purposes only"
+          }
+        },
+        "additionalProperties": {
+          "nullable": true
+        },
+        "description": "Human-identifying attributes of the span, such as name, type, etc."
+      },
       "InsertProjectLogsEventReplace": {
         "type": "object",
         "properties": {
@@ -630,33 +659,7 @@
             "description": "Context is additional information about the code that produced the project logs event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the project logs event"
           },
           "span_attributes": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "Name of the span, for display purposes only"
-              },
-              "type": {
-                "type": "string",
-                "nullable": true,
-                "enum": [
-                  "llm",
-                  "score",
-                  "function",
-                  "eval",
-                  "task",
-                  "tool",
-                  null
-                ],
-                "description": "Type of the span, for display purposes only"
-              }
-            },
-            "additionalProperties": {
-              "nullable": true
-            },
-            "description": "Human-identifying attributes of the span, such as name, type, etc."
+            "$ref": "#/components/schemas/SpanAttributes"
           },
           "id": {
             "type": "string",
@@ -809,33 +812,7 @@
             "description": "Context is additional information about the code that produced the project logs event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the project logs event"
           },
           "span_attributes": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "Name of the span, for display purposes only"
-              },
-              "type": {
-                "type": "string",
-                "nullable": true,
-                "enum": [
-                  "llm",
-                  "score",
-                  "function",
-                  "eval",
-                  "task",
-                  "tool",
-                  null
-                ],
-                "description": "Type of the span, for display purposes only"
-              }
-            },
-            "additionalProperties": {
-              "nullable": true
-            },
-            "description": "Human-identifying attributes of the span, such as name, type, etc."
+            "$ref": "#/components/schemas/SpanAttributes"
           },
           "id": {
             "type": "string",
@@ -1072,33 +1049,7 @@
             "description": "Whether this span is a root span"
           },
           "span_attributes": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "Name of the span, for display purposes only"
-              },
-              "type": {
-                "type": "string",
-                "nullable": true,
-                "enum": [
-                  "llm",
-                  "score",
-                  "function",
-                  "eval",
-                  "task",
-                  "tool",
-                  null
-                ],
-                "description": "Type of the span, for display purposes only"
-              }
-            },
-            "additionalProperties": {
-              "nullable": true
-            },
-            "description": "Human-identifying attributes of the span, such as name, type, etc."
+            "$ref": "#/components/schemas/SpanAttributes"
           },
           "origin": {
             "type": "object",
@@ -1698,33 +1649,7 @@
             "description": "Context is additional information about the code that produced the experiment event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the experiment event"
           },
           "span_attributes": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "Name of the span, for display purposes only"
-              },
-              "type": {
-                "type": "string",
-                "nullable": true,
-                "enum": [
-                  "llm",
-                  "score",
-                  "function",
-                  "eval",
-                  "task",
-                  "tool",
-                  null
-                ],
-                "description": "Type of the span, for display purposes only"
-              }
-            },
-            "additionalProperties": {
-              "nullable": true
-            },
-            "description": "Human-identifying attributes of the span, such as name, type, etc."
+            "$ref": "#/components/schemas/SpanAttributes"
           },
           "id": {
             "type": "string",
@@ -1882,33 +1807,7 @@
             "description": "Context is additional information about the code that produced the experiment event. It is essentially the textual counterpart to `metrics`. Use the `caller_*` attributes to track the location in code which produced the experiment event"
           },
           "span_attributes": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "Name of the span, for display purposes only"
-              },
-              "type": {
-                "type": "string",
-                "nullable": true,
-                "enum": [
-                  "llm",
-                  "score",
-                  "function",
-                  "eval",
-                  "task",
-                  "tool",
-                  null
-                ],
-                "description": "Type of the span, for display purposes only"
-              }
-            },
-            "additionalProperties": {
-              "nullable": true
-            },
-            "description": "Human-identifying attributes of the span, such as name, type, etc."
+            "$ref": "#/components/schemas/SpanAttributes"
           },
           "id": {
             "type": "string",
@@ -2143,33 +2042,7 @@
             "description": "The `span_id` of the root of the trace this experiment event belongs to"
           },
           "span_attributes": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "Name of the span, for display purposes only"
-              },
-              "type": {
-                "type": "string",
-                "nullable": true,
-                "enum": [
-                  "llm",
-                  "score",
-                  "function",
-                  "eval",
-                  "task",
-                  "tool",
-                  null
-                ],
-                "description": "Type of the span, for display purposes only"
-              }
-            },
-            "additionalProperties": {
-              "nullable": true
-            },
-            "description": "Human-identifying attributes of the span, such as name, type, etc."
+            "$ref": "#/components/schemas/SpanAttributes"
           },
           "is_root": {
             "type": "boolean",
@@ -3515,6 +3388,21 @@
           }
         ]
       },
+      "PromptOptions": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "params": {
+            "$ref": "#/components/schemas/ModelParams"
+          },
+          "position": {
+            "type": "string"
+          }
+        }
+      },
       "SavedFunctionId": {
         "anyOf": [
           {
@@ -3616,19 +3504,7 @@
             ]
           },
           "options": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "model": {
-                "type": "string"
-              },
-              "params": {
-                "$ref": "#/components/schemas/ModelParams"
-              },
-              "position": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/components/schemas/PromptOptions"
           },
           "parser": {
             "type": "object",
