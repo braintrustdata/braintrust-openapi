@@ -511,6 +511,20 @@
           }
         ]
       },
+      "SpanType": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "llm",
+          "score",
+          "function",
+          "eval",
+          "task",
+          "tool",
+          null
+        ],
+        "description": "Type of the span, for display purposes only"
+      },
       "SpanAttributes": {
         "type": "object",
         "nullable": true,
@@ -521,18 +535,7 @@
             "description": "Name of the span, for display purposes only"
           },
           "type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "llm",
-              "score",
-              "function",
-              "eval",
-              "task",
-              "tool",
-              null
-            ],
-            "description": "Type of the span, for display purposes only"
+            "$ref": "#/components/schemas/SpanType"
           }
         },
         "additionalProperties": {
