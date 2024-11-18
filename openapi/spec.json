@@ -5439,6 +5439,10 @@
               "success"
             ]
           },
+          "org_id": {
+            "type": "string",
+            "description": "The id of the org that was modified."
+          },
           "send_email_error": {
             "type": "string",
             "nullable": true,
@@ -5446,7 +5450,8 @@
           }
         },
         "required": [
-          "status"
+          "status",
+          "org_id"
         ]
       },
       "PatchOrganizationMembers": {
