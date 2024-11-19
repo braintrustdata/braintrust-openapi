@@ -489,28 +489,6 @@
           "row_ids"
         ]
       },
-      "InsertEventsWithSpanSlugsResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/InsertEventsResponse"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "serialized_span_slugs": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "String slugs which line up 1-1 with the row_ids. These slugs can be used as the 'parent' specifier to attach spans underneath the row"
-              }
-            },
-            "required": [
-              "serialized_span_slugs"
-            ]
-          }
-        ]
-      },
       "SpanType": {
         "type": "string",
         "nullable": true,
@@ -7497,7 +7475,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InsertEventsWithSpanSlugsResponse"
+                  "$ref": "#/components/schemas/InsertEventsResponse"
                 }
               }
             }
@@ -8862,7 +8840,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InsertEventsWithSpanSlugsResponse"
+                  "$ref": "#/components/schemas/InsertEventsResponse"
                 }
               }
             }
