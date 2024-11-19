@@ -1053,51 +1053,6 @@ components:
 
         The string can be obtained directly from the `cursor` property of the
         previous fetch query
-    PathLookupFilter:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - path_lookup
-          description: Denotes the type of filter as a path-lookup filter
-        path:
-          type: array
-          items:
-            type: string
-          description: 'List of fields describing the path to the value to be checked
-            against. For instance, if you wish to filter on the value of `c` in
-            `{"input": {"a": {"b": {"c": "hello"}}}}`, pass `path=["input", "a",
-            "b", "c"]`'
-        value:
-          nullable: true
-          description: 'The value to compare equality-wise against the event value at the
-            specified `path`. The value must be a "primitive", that is, any
-            JSON-serializable object except for objects and arrays. For
-            instance, if you wish to filter on the value of "input.a.b.c" in the
-            object `{"input": {"a": {"b": {"c": "hello"}}}}`, pass
-            `value="hello"`'
-      required:
-        - type
-        - path
-      description: 'A path-lookup filter describes an equality comparison against a
-        specific sub-field in the event row. For instance, if you wish to filter
-        on the value of `c` in `{"input": {"a": {"b": {"c": "hello"}}}}`, pass
-        `path=["input", "a", "b", "c"]` and `value="hello"`'
-    FetchEventsFilters:
-      type: array
-      nullable: true
-      items:
-        $ref: "#/components/schemas/PathLookupFilter"
-      description: >-
-        NOTE: This parameter is deprecated and will be removed in a future
-        revision. Consider using the `/btql` endpoint
-        (https://www.braintrust.dev/docs/reference/btql) for more advanced
-        filtering.
-
-
-        A list of filters on the events to fetch. Currently, only path-lookup
-        type filters are supported.
     FetchEventsRequest:
       type: object
       properties:
@@ -1111,8 +1066,6 @@ components:
         max_root_span_id:
           $ref: "#/components/schemas/MaxRootSpanId"
           nullable: true
-        filters:
-          $ref: "#/components/schemas/FetchEventsFilters"
         version:
           $ref: "#/components/schemas/Version"
           nullable: true
@@ -1159,6 +1112,8 @@ components:
             nullable: true
           description: A dictionary with additional data about the feedback. If you have a
             `user_id`, you can log it here and access it in the Braintrust UI.
+            Note, this metadata does not correspond to the main event itself,
+            but rather the audit log attached to the event.
         source:
           type: string
           nullable: true
@@ -1169,6 +1124,12 @@ components:
             - null
           description: The source of the feedback. Must be one of "external" (default),
             "app", or "api"
+        tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: A list of tags to log
       required:
         - id
     FeedbackProjectLogsEventRequest:
@@ -1980,6 +1941,8 @@ components:
             nullable: true
           description: A dictionary with additional data about the feedback. If you have a
             `user_id`, you can log it here and access it in the Braintrust UI.
+            Note, this metadata does not correspond to the main event itself,
+            but rather the audit log attached to the event.
         source:
           type: string
           nullable: true
@@ -1990,6 +1953,12 @@ components:
             - null
           description: The source of the feedback. Must be one of "external" (default),
             "app", or "api"
+        tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: A list of tags to log
       required:
         - id
     FeedbackExperimentEventRequest:
@@ -2527,6 +2496,8 @@ components:
             nullable: true
           description: A dictionary with additional data about the feedback. If you have a
             `user_id`, you can log it here and access it in the Braintrust UI.
+            Note, this metadata does not correspond to the main event itself,
+            but rather the audit log attached to the event.
         source:
           type: string
           nullable: true
@@ -2537,6 +2508,12 @@ components:
             - null
           description: The source of the feedback. Must be one of "external" (default),
             "app", or "api"
+        tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: A list of tags to log
       required:
         - id
     FeedbackDatasetEventRequest:
@@ -6502,7 +6479,8 @@ paths:
         - Logs
       description: Fetch the events in a project logs. Equivalent to the GET form of
         the same path, but with the parameters in the request body rather than
-        in the URL query
+        in the URL query. For more complex queries, use the `POST /btql`
+        endpoint.
       summary: Fetch project logs (POST form)
       security:
         - bearerAuth: []
@@ -6576,7 +6554,8 @@ paths:
         - Logs
       description: Fetch the events in a project logs. Equivalent to the POST form of
         the same path, but with the parameters in the URL query rather than in
-        the request body
+        the request body. For more complex queries, use the `POST /btql`
+        endpoint.
       summary: Fetch project logs (GET form)
       security:
         - bearerAuth: []
@@ -7348,7 +7327,8 @@ paths:
         - Experiments
       description: Fetch the events in an experiment. Equivalent to the GET form of
         the same path, but with the parameters in the request body rather than
-        in the URL query
+        in the URL query. For more complex queries, use the `POST /btql`
+        endpoint.
       summary: Fetch experiment (POST form)
       security:
         - bearerAuth: []
@@ -7422,7 +7402,8 @@ paths:
         - Experiments
       description: Fetch the events in an experiment. Equivalent to the POST form of
         the same path, but with the parameters in the URL query rather than in
-        the request body
+        the request body. For more complex queries, use the `POST /btql`
+        endpoint.
       summary: Fetch experiment (GET form)
       security:
         - bearerAuth: []
@@ -8300,7 +8281,7 @@ paths:
         - Datasets
       description: Fetch the events in a dataset. Equivalent to the GET form of the
         same path, but with the parameters in the request body rather than in
-        the URL query
+        the URL query. For more complex queries, use the `POST /btql` endpoint.
       summary: Fetch dataset (POST form)
       security:
         - bearerAuth: []
@@ -8374,7 +8355,7 @@ paths:
         - Datasets
       description: Fetch the events in a dataset. Equivalent to the POST form of the
         same path, but with the parameters in the URL query rather than in the
-        request body
+        request body. For more complex queries, use the `POST /btql` endpoint.
       summary: Fetch dataset (GET form)
       security:
         - bearerAuth: []
