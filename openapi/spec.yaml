@@ -2758,6 +2758,7 @@ components:
                         - json_object
                   required:
                     - type
+                  title: json_object
                 - type: object
                   properties:
                     type:
@@ -2783,6 +2784,7 @@ components:
                   required:
                     - type
                     - json_schema
+                  title: json_schema
                 - type: object
                   properties:
                     type:
@@ -2791,6 +2793,7 @@ components:
                         - text
                   required:
                     - type
+                  title: text
                 - title: nullableVariant
                   type: object
                   nullable: true
@@ -2808,7 +2811,7 @@ components:
                 - type: string
                   enum:
                     - required
-                  title: none
+                  title: required
                 - type: object
                   properties:
                     type:

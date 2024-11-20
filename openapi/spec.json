@@ -2769,7 +2769,8 @@
                     },
                     "required": [
                       "type"
-                    ]
+                    ],
+                    "title": "json_object"
                   },
                   {
                     "type": "object",
@@ -2808,7 +2809,8 @@
                     "required": [
                       "type",
                       "json_schema"
-                    ]
+                    ],
+                    "title": "json_schema"
                   },
                   {
                     "type": "object",
@@ -2822,7 +2824,8 @@
                     },
                     "required": [
                       "type"
-                    ]
+                    ],
+                    "title": "text"
                   },
                   {
                     "title": "nullableVariant",
@@ -2853,7 +2856,7 @@
                     "enum": [
                       "required"
                     ],
-                    "title": "none"
+                    "title": "required"
                   },
                   {
                     "type": "object",
