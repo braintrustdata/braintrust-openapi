@@ -1479,11 +1479,6 @@ components:
           nullable: true
           description: A unique identifier for the experiment event. If you don't provide
             one, BrainTrust will generate one for you
-        dataset_record_id:
-          type: string
-          nullable: true
-          description: If the experiment is associated to a dataset, this is the
-            event-level dataset id this experiment event is tied to
         created:
           type: string
           nullable: true
@@ -1658,11 +1653,6 @@ components:
           type: string
           description: A unique identifier for the experiment event. If you don't provide
             one, BrainTrust will generate one for you
-        dataset_record_id:
-          type: string
-          nullable: true
-          description: If the experiment is associated to a dataset, this is the
-            event-level dataset id this experiment event is tied to
         _xact_id:
           type: string
           description: The transaction id of an event is unique to the network operation
