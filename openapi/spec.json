@@ -2818,10 +2818,7 @@
                     "title": "text"
                   },
                   {
-                    "title": "nullableVariant",
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": false
+                    "type": "null"
                   }
                 ]
               },
@@ -3109,10 +3106,7 @@
                 "title": "chat"
               },
               {
-                "title": "nullableVariant",
-                "type": "object",
-                "nullable": true,
-                "additionalProperties": false
+                "type": "null"
               }
             ]
           },
@@ -3961,10 +3955,7 @@
             "title": "minimum"
           },
           {
-            "title": "nullableVariant",
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": false
+            "type": "null"
           }
         ]
       },
@@ -4922,10 +4913,7 @@
             "title": "global"
           },
           {
-            "title": "nullableVariant",
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": false
+            "type": "null"
           }
         ]
       },
