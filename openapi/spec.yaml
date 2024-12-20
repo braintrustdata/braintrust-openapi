@@ -2734,6 +2734,9 @@ components:
               type: number
             max_tokens:
               type: number
+            max_completion_tokens:
+              type: number
+              description: The successor to max_tokens
             frequency_penalty:
               type: number
             presence_penalty:
@@ -2839,6 +2842,12 @@ components:
               type: array
               items:
                 type: string
+            reasoning_effort:
+              type: string
+              enum:
+                - low
+                - medium
+                - high
           title: OpenAIModelParams
         - type: object
           properties:
