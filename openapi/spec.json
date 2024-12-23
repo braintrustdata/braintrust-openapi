@@ -5609,6 +5609,12 @@
             "format": "date-time",
             "description": "Date of AI secret creation"
           },
+          "updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of last AI secret update"
+          },
           "org_id": {
             "type": "string",
             "format": "uuid",
