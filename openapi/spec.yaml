@@ -4473,6 +4473,15 @@ components:
         input:
           nullable: true
           description: Argument to the function, which can be any JSON serializable value
+        expected:
+          nullable: true
+          description: The expected output of the function
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties:
+            nullable: true
+          description: Any relevant metadata
         messages:
           type: array
           items:
@@ -4487,6 +4496,7 @@ components:
                   enum:
                     - project_logs
                     - experiment
+                    - prompt_session
                 object_id:
                   type: string
                   description: The id of the container object you are logging to
@@ -5321,6 +5331,52 @@ components:
             nullable: true
           description: Optional experiment-level metadata to store about the evaluation.
             You can later use this to slice & dice across experiments.
+        parent:
+          anyOf:
+            - type: object
+              properties:
+                object_type:
+                  type: string
+                  enum:
+                    - project_logs
+                    - experiment
+                    - prompt_session
+                object_id:
+                  type: string
+                  description: The id of the container object you are logging to
+                row_ids:
+                  type: object
+                  nullable: true
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the row
+                    span_id:
+                      type: string
+                      description: The span_id of the row
+                    root_span_id:
+                      type: string
+                      description: The root_span_id of the row
+                  required:
+                    - id
+                    - span_id
+                    - root_span_id
+                  description: Identifiers for the row to to log a subspan under
+                propagated_event:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    nullable: true
+                  description: Include these properties in every span created under this parent
+              required:
+                - object_type
+                - object_id
+              description: Span parent properties
+              title: span_parent_struct
+            - type: string
+              description: The parent's span identifier, created by calling `.export()` on a
+                span
+          description: Options for tracing the evaluation
         stream:
           type: boolean
           description: "Whether to stream the results of the eval. If true, the request
