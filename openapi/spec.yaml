@@ -4496,7 +4496,7 @@ components:
                   enum:
                     - project_logs
                     - experiment
-                    - prompt_session
+                    - playground_logs
                 object_id:
                   type: string
                   description: The id of the container object you are logging to
@@ -5340,7 +5340,7 @@ components:
                   enum:
                     - project_logs
                     - experiment
-                    - prompt_session
+                    - playground_logs
                 object_id:
                   type: string
                   description: The id of the container object you are logging to

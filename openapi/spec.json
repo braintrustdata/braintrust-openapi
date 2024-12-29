@@ -4994,7 +4994,7 @@
                     "enum": [
                       "project_logs",
                       "experiment",
-                      "prompt_session"
+                      "playground_logs"
                     ]
                   },
                   "object_id": {
@@ -6112,7 +6112,7 @@
                     "enum": [
                       "project_logs",
                       "experiment",
-                      "prompt_session"
+                      "playground_logs"
                     ]
                   },
                   "object_id": {
