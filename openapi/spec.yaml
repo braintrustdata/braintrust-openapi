@@ -344,6 +344,7 @@ components:
         - minimum
         - maximum
         - online
+        - free-form
       description: The type of the configured score
       title: project_score_type_single
     AISecretType:
@@ -3789,9 +3790,6 @@ components:
         destination:
           type: string
           nullable: true
-          enum:
-            - expected
-            - null
         online:
           $ref: "#/components/schemas/OnlineScoreConfig"
     ProjectScore:
