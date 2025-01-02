@@ -6070,6 +6070,22 @@
                 ],
                 "description": "Project and dataset name",
                 "title": "project_dataset_name"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "nullable": true
+                    }
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "description": "Dataset rows",
+                "title": "dataset_rows"
               }
             ],
             "description": "The dataset to use"
