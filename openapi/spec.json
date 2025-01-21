@@ -389,6 +389,12 @@
             "type": "string",
             "nullable": true,
             "description": "The key used to join two experiments (defaults to `input`)."
+          },
+          "baseline_experiment_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "The id of the experiment to use as the default baseline for comparisons"
           }
         }
       },
