@@ -371,13 +371,39 @@ components:
         comparison_key:
           type: string
           nullable: true
-          description: The key used to join two experiments (defaults to `input`).
+          description: The key used to join two experiments (defaults to `input`)
         baseline_experiment_id:
           type: string
           nullable: true
           format: uuid
           description: The id of the experiment to use as the default baseline for
             comparisons
+        spanFieldOrder:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              object_type:
+                type: string
+              column_id:
+                type: string
+              position:
+                type: string
+              layout:
+                anyOf:
+                  - type: string
+                    enum:
+                      - full
+                  - type: string
+                    enum:
+                      - two_column
+                  - type: "null"
+            required:
+              - object_type
+              - column_id
+              - position
+          description: The order of the fields to display in the trace view
     Project:
       type: object
       properties:
