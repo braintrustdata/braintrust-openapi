@@ -410,6 +410,25 @@
                 },
                 "position": {
                   "type": "string"
+                },
+                "layout": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "full"
+                      ]
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "two_column"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
