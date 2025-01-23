@@ -604,6 +604,13 @@
           "metadata": {
             "type": "object",
             "nullable": true,
+            "properties": {
+              "model": {
+                "type": "string",
+                "nullable": true,
+                "description": "The model used for this example"
+              }
+            },
             "additionalProperties": {
               "nullable": true
             },
@@ -828,6 +835,13 @@
           "metadata": {
             "type": "object",
             "nullable": true,
+            "properties": {
+              "model": {
+                "type": "string",
+                "nullable": true,
+                "description": "The model used for this example"
+              }
+            },
             "additionalProperties": {
               "nullable": true
             },
@@ -1418,6 +1432,13 @@
           "metadata": {
             "type": "object",
             "nullable": true,
+            "properties": {
+              "model": {
+                "type": "string",
+                "nullable": true,
+                "description": "The model used for this example"
+              }
+            },
             "additionalProperties": {
               "nullable": true
             },
@@ -1635,6 +1656,13 @@
           "metadata": {
             "type": "object",
             "nullable": true,
+            "properties": {
+              "model": {
+                "type": "string",
+                "nullable": true,
+                "description": "The model used for this example"
+              }
+            },
             "additionalProperties": {
               "nullable": true
             },
@@ -2148,6 +2176,13 @@
           "metadata": {
             "type": "object",
             "nullable": true,
+            "properties": {
+              "model": {
+                "type": "string",
+                "nullable": true,
+                "description": "The model used for this example"
+              }
+            },
             "additionalProperties": {
               "nullable": true
             },
@@ -2271,6 +2306,13 @@
           "metadata": {
             "type": "object",
             "nullable": true,
+            "properties": {
+              "model": {
+                "type": "string",
+                "nullable": true,
+                "description": "The model used for this example"
+              }
+            },
             "additionalProperties": {
               "nullable": true
             },
