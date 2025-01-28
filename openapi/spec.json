@@ -2877,10 +2877,20 @@
                             "type": "string"
                           },
                           "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                              "nullable": true
-                            }
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "nullable": true
+                                },
+                                "x-stainless-skip": [
+                                  "go"
+                                ]
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
                           },
                           "strict": {
                             "type": "boolean",
