@@ -4433,6 +4433,11 @@
             "type": "boolean",
             "nullable": true,
             "description": "Whether to post messages to the iframe containing the span's data. This is useful when you want to render more data than fits in the URL."
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the span iframe"
           }
         }
       },
