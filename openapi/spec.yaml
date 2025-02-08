@@ -10746,7 +10746,7 @@ paths:
             application/json:
               schema:
                 nullable: true
-  /v1/acl/batch-update:
+  /v1/acl/batch_update:
     post:
       operationId: aclBatchUpdate
       tags:
