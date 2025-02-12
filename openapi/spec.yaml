@@ -4668,6 +4668,15 @@ components:
           nullable: true
           additionalProperties:
             type: number
+        grouping:
+          type: string
+          nullable: true
+        rowHeight:
+          type: string
+          nullable: true
+        layout:
+          type: string
+          nullable: true
       description: Options for the view in the app
     View:
       type: object
