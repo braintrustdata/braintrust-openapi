@@ -265,13 +265,16 @@
         "type": "string",
         "enum": [
           "projects",
-          "logs",
           "experiments",
-          "datasets",
-          "prompts",
-          "playgrounds",
           "experiment",
+          "playgrounds",
+          "playground",
+          "datasets",
           "dataset",
+          "prompts",
+          "tools",
+          "scorers",
+          "logs",
           null
         ],
         "description": "Type of table that the view corresponds to."
@@ -5277,13 +5280,16 @@
             "type": "string",
             "enum": [
               "projects",
-              "logs",
               "experiments",
-              "datasets",
-              "prompts",
-              "playgrounds",
               "experiment",
+              "playgrounds",
+              "playground",
+              "datasets",
               "dataset",
+              "prompts",
+              "tools",
+              "scorers",
+              "logs",
               null
             ],
             "description": "Type of table that the view corresponds to."
@@ -5340,13 +5346,16 @@
             "type": "string",
             "enum": [
               "projects",
-              "logs",
               "experiments",
-              "datasets",
-              "prompts",
-              "playgrounds",
               "experiment",
+              "playgrounds",
+              "playground",
+              "datasets",
               "dataset",
+              "prompts",
+              "tools",
+              "scorers",
+              "logs",
               null
             ],
             "description": "Type of table that the view corresponds to."
@@ -5397,13 +5406,16 @@
             "nullable": true,
             "enum": [
               "projects",
-              "logs",
               "experiments",
-              "datasets",
-              "prompts",
-              "playgrounds",
               "experiment",
+              "playgrounds",
+              "playground",
+              "datasets",
               "dataset",
+              "prompts",
+              "tools",
+              "scorers",
+              "logs",
               null
             ],
             "description": "Type of table that the view corresponds to."
