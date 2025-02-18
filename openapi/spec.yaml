@@ -14,7 +14,7 @@ info:
     name: Apache 2.0
 servers:
   - url: https://api.braintrust.dev
-security: &a9
+security:
   - bearerAuth: []
   - {}
 components:
@@ -281,7 +281,7 @@ components:
       description: Retrieve prompt with a specific slug
     ViewType:
       type: string
-      enum: &a6
+      enum:
         - projects
         - experiments
         - experiment
@@ -358,7 +358,7 @@ components:
             type: string
     EnvVarObjectType:
       type: string
-      enum: &a7
+      enum:
         - organization
         - project
         - function
@@ -998,14 +998,14 @@ components:
             object_type:
               anyOf:
                 - type: string
-                  enum: &a1
+                  enum:
                     - experiment
                     - dataset
                     - prompt
                     - function
                     - prompt_session
                 - type: string
-                  enum: &a2
+                  enum:
                     - project_logs
               description: Type of the object the event is originating from.
             object_id:
@@ -1149,7 +1149,7 @@ components:
         source:
           type: string
           nullable: true
-          enum: &a3
+          enum:
             - app
             - api
             - external
@@ -1885,9 +1885,15 @@ components:
             object_type:
               anyOf:
                 - type: string
-                  enum: *a1
+                  enum:
+                    - experiment
+                    - dataset
+                    - prompt
+                    - function
+                    - prompt_session
                 - type: string
-                  enum: *a2
+                  enum:
+                    - project_logs
               description: Type of the object the event is originating from.
             object_id:
               type: string
@@ -1972,7 +1978,11 @@ components:
         source:
           type: string
           nullable: true
-          enum: *a3
+          enum:
+            - app
+            - api
+            - external
+            - null
           description: The source of the feedback. Must be one of "external" (default),
             "app", or "api"
         tags:
@@ -2456,9 +2466,15 @@ components:
             object_type:
               anyOf:
                 - type: string
-                  enum: *a1
+                  enum:
+                    - experiment
+                    - dataset
+                    - prompt
+                    - function
+                    - prompt_session
                 - type: string
-                  enum: *a2
+                  enum:
+                    - project_logs
               description: Type of the object the event is originating from.
             object_id:
               type: string
@@ -2527,7 +2543,11 @@ components:
         source:
           type: string
           nullable: true
-          enum: *a3
+          enum:
+            - app
+            - api
+            - external
+            - null
           description: The source of the feedback. Must be one of "external" (default),
             "app", or "api"
         tags:
@@ -3116,7 +3136,7 @@ components:
         function_type:
           type: string
           nullable: true
-          enum: &a4
+          enum:
             - llm
             - scorer
             - task
@@ -3160,7 +3180,12 @@ components:
         function_type:
           type: string
           nullable: true
-          enum: *a4
+          enum:
+            - llm
+            - scorer
+            - task
+            - tool
+            - null
       required:
         - project_id
         - name
@@ -4106,7 +4131,7 @@ components:
           properties:
             runtime:
               type: string
-              enum: &a5
+              enum:
                 - node
                 - python
             version:
@@ -4216,7 +4241,9 @@ components:
                       properties:
                         runtime:
                           type: string
-                          enum: *a5
+                          enum:
+                            - node
+                            - python
                         version:
                           type: string
                       required:
@@ -4303,7 +4330,12 @@ components:
         function_type:
           type: string
           nullable: true
-          enum: *a4
+          enum:
+            - llm
+            - scorer
+            - task
+            - tool
+            - null
         function_data:
           $ref: "#/components/schemas/FunctionData"
         origin:
@@ -4372,7 +4404,12 @@ components:
         function_type:
           type: string
           nullable: true
-          enum: *a4
+          enum:
+            - llm
+            - scorer
+            - task
+            - tool
+            - null
         function_data:
           $ref: "#/components/schemas/FunctionData"
         origin:
@@ -4448,7 +4485,9 @@ components:
                       properties:
                         runtime:
                           type: string
-                          enum: *a5
+                          enum:
+                            - node
+                            - python
                         version:
                           type: string
                       required:
@@ -4525,7 +4564,7 @@ components:
               properties:
                 object_type:
                   type: string
-                  enum: &a8
+                  enum:
                     - project_logs
                     - experiment
                     - playground_logs
@@ -4657,7 +4696,19 @@ components:
           description: The id of the object the view applies to
         view_type:
           type: string
-          enum: *a6
+          enum:
+            - projects
+            - experiments
+            - experiment
+            - playgrounds
+            - playground
+            - datasets
+            - dataset
+            - prompts
+            - tools
+            - scorers
+            - logs
+            - null
           description: Type of table that the view corresponds to.
         name:
           type: string
@@ -4698,7 +4749,19 @@ components:
           description: The id of the object the view applies to
         view_type:
           type: string
-          enum: *a6
+          enum:
+            - projects
+            - experiments
+            - experiment
+            - playgrounds
+            - playground
+            - datasets
+            - dataset
+            - prompts
+            - tools
+            - scorers
+            - logs
+            - null
           description: Type of table that the view corresponds to.
         name:
           type: string
@@ -4734,7 +4797,19 @@ components:
         view_type:
           type: string
           nullable: true
-          enum: *a6
+          enum:
+            - projects
+            - experiments
+            - experiment
+            - playgrounds
+            - playground
+            - datasets
+            - dataset
+            - prompts
+            - tools
+            - scorers
+            - logs
+            - null
           description: Type of table that the view corresponds to.
         name:
           type: string
@@ -5090,7 +5165,10 @@ components:
           description: Unique identifier for the environment variable
         object_type:
           type: string
-          enum: *a7
+          enum:
+            - organization
+            - project
+            - function
           description: The type of the object the environment variable is scoped for
         object_id:
           type: string
@@ -5261,7 +5339,9 @@ components:
               properties:
                 runtime:
                   type: string
-                  enum: *a5
+                  enum:
+                    - node
+                    - python
                 version:
                   type: string
               required:
@@ -5366,7 +5446,10 @@ components:
               properties:
                 object_type:
                   type: string
-                  enum: *a8
+                  enum:
+                    - project_logs
+                    - experiment
+                    - playground_logs
                 object_id:
                   type: string
                   description: The id of the container object you are logging to
@@ -5990,9 +6073,11 @@ components:
 paths:
   /v1/project:
     post:
-      tags: &a10
+      tags:
         - Projects
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postProject
       description: Create a new project. If there is an existing project with the same
         name as the one specified in the request, will return the existing
@@ -6061,11 +6146,14 @@ paths:
                 nullable: true
     get:
       operationId: getProject
-      tags: *a10
+      tags:
+        - Projects
       description: List out all projects. The projects are sorted by creation date,
         with the most recently-created projects coming first
       summary: List projects
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -6147,13 +6235,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a11
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a11
-            Access-Control-Allow-Methods: *a11
-            Access-Control-Allow-Origin: *a11
-            Access-Control-Max-Age: *a11
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -6168,10 +6264,13 @@ paths:
   /v1/project/{project_id}:
     get:
       operationId: getProjectId
-      tags: *a10
+      tags:
+        - Projects
       description: Get a project object by its id
       summary: Get project
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectIdParam"
       responses:
@@ -6230,13 +6329,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchProjectId
-      tags: *a10
+      tags:
+        - Projects
       description: Partially update a project object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update project
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
@@ -6302,10 +6404,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteProjectId
-      tags: *a10
+      tags:
+        - Projects
       description: Delete a project object by its id
       summary: Delete project
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectIdParam"
       responses:
@@ -6375,13 +6480,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a12
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a12
-            Access-Control-Allow-Methods: *a12
-            Access-Control-Allow-Origin: *a12
-            Access-Control-Max-Age: *a12
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -6396,11 +6509,13 @@ paths:
   /v1/project_logs/{project_id}/insert:
     post:
       operationId: postProjectLogsIdInsert
-      tags: &a14
+      tags:
         - Logs
       description: Insert a set of events into the project logs
       summary: Insert project logs events
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
@@ -6477,13 +6592,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a13
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a13
-            Access-Control-Allow-Methods: *a13
-            Access-Control-Allow-Origin: *a13
-            Access-Control-Max-Age: *a13
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -6498,13 +6621,16 @@ paths:
   /v1/project_logs/{project_id}/fetch:
     post:
       operationId: postProjectLogsIdFetch
-      tags: *a14
+      tags:
+        - Logs
       description: Fetch the events in a project logs. Equivalent to the GET form of
         the same path, but with the parameters in the request body rather than
         in the URL query. For more complex queries, use the `POST /btql`
         endpoint.
       summary: Fetch project logs (POST form)
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
@@ -6570,13 +6696,16 @@ paths:
                 nullable: true
     get:
       operationId: getProjectLogsIdFetch
-      tags: *a14
+      tags:
+        - Logs
       description: Fetch the events in a project logs. Equivalent to the POST form of
         the same path, but with the parameters in the URL query rather than in
         the request body. For more complex queries, use the `POST /btql`
         endpoint.
       summary: Fetch project logs (GET form)
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectIdParam"
         - $ref: "#/components/parameters/FetchLimitParam"
@@ -6650,13 +6779,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a15
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a15
-            Access-Control-Allow-Methods: *a15
-            Access-Control-Allow-Origin: *a15
-            Access-Control-Max-Age: *a15
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -6671,10 +6808,13 @@ paths:
   /v1/project_logs/{project_id}/feedback:
     post:
       operationId: postProjectLogsIdFeedback
-      tags: *a14
+      tags:
+        - Logs
       description: Log feedback for a set of project logs events
       summary: Feedback for project logs events
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectIdParam"
       requestBody:
@@ -6751,13 +6891,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a16
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a16
-            Access-Control-Allow-Methods: *a16
-            Access-Control-Allow-Origin: *a16
-            Access-Control-Max-Age: *a16
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -6771,9 +6919,11 @@ paths:
                 nullable: true
   /v1/experiment:
     post:
-      tags: &a17
+      tags:
         - Experiments
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postExperiment
       description: Create a new experiment. If there is an existing experiment in the
         project with the same name as the one specified in the request, will
@@ -6842,11 +6992,14 @@ paths:
                 nullable: true
     get:
       operationId: getExperiment
-      tags: *a17
+      tags:
+        - Experiments
       description: List out all experiments. The experiments are sorted by creation
         date, with the most recently-created experiments coming first
       summary: List experiments
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -6930,13 +7083,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a18
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a18
-            Access-Control-Allow-Methods: *a18
-            Access-Control-Allow-Origin: *a18
-            Access-Control-Max-Age: *a18
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -6951,10 +7112,13 @@ paths:
   /v1/experiment/{experiment_id}:
     get:
       operationId: getExperimentId
-      tags: *a17
+      tags:
+        - Experiments
       description: Get an experiment object by its id
       summary: Get experiment
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
@@ -7013,13 +7177,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchExperimentId
-      tags: *a17
+      tags:
+        - Experiments
       description: Partially update an experiment object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update experiment
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
@@ -7085,10 +7252,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteExperimentId
-      tags: *a17
+      tags:
+        - Experiments
       description: Delete an experiment object by its id
       summary: Delete experiment
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ExperimentIdParam"
       responses:
@@ -7158,13 +7328,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a19
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a19
-            Access-Control-Allow-Methods: *a19
-            Access-Control-Allow-Origin: *a19
-            Access-Control-Max-Age: *a19
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -7179,10 +7357,13 @@ paths:
   /v1/experiment/{experiment_id}/insert:
     post:
       operationId: postExperimentIdInsert
-      tags: *a17
+      tags:
+        - Experiments
       description: Insert a set of events into the experiment
       summary: Insert experiment events
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
@@ -7259,13 +7440,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a20
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a20
-            Access-Control-Allow-Methods: *a20
-            Access-Control-Allow-Origin: *a20
-            Access-Control-Max-Age: *a20
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -7280,13 +7469,16 @@ paths:
   /v1/experiment/{experiment_id}/fetch:
     post:
       operationId: postExperimentIdFetch
-      tags: *a17
+      tags:
+        - Experiments
       description: Fetch the events in an experiment. Equivalent to the GET form of
         the same path, but with the parameters in the request body rather than
         in the URL query. For more complex queries, use the `POST /btql`
         endpoint.
       summary: Fetch experiment (POST form)
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
@@ -7352,13 +7544,16 @@ paths:
                 nullable: true
     get:
       operationId: getExperimentIdFetch
-      tags: *a17
+      tags:
+        - Experiments
       description: Fetch the events in an experiment. Equivalent to the POST form of
         the same path, but with the parameters in the URL query rather than in
         the request body. For more complex queries, use the `POST /btql`
         endpoint.
       summary: Fetch experiment (GET form)
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ExperimentIdParam"
         - $ref: "#/components/parameters/FetchLimitParam"
@@ -7432,13 +7627,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a21
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a21
-            Access-Control-Allow-Methods: *a21
-            Access-Control-Allow-Origin: *a21
-            Access-Control-Max-Age: *a21
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -7453,10 +7656,13 @@ paths:
   /v1/experiment/{experiment_id}/feedback:
     post:
       operationId: postExperimentIdFeedback
-      tags: *a17
+      tags:
+        - Experiments
       description: Log feedback for a set of experiment events
       summary: Feedback for experiment events
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ExperimentIdParam"
       requestBody:
@@ -7533,13 +7739,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a22
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a22
-            Access-Control-Allow-Methods: *a22
-            Access-Control-Allow-Origin: *a22
-            Access-Control-Max-Age: *a22
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -7554,7 +7768,8 @@ paths:
   /v1/experiment/{experiment_id}/summarize:
     get:
       operationId: getExperimentIdSummarize
-      tags: *a17
+      tags:
+        - Experiments
       description: Summarize experiment
       summary: Summarize experiment
       security:
@@ -7630,13 +7845,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a23
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a23
-            Access-Control-Allow-Methods: *a23
-            Access-Control-Allow-Origin: *a23
-            Access-Control-Max-Age: *a23
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -7650,9 +7873,11 @@ paths:
                 nullable: true
   /v1/dataset:
     post:
-      tags: &a24
+      tags:
         - Datasets
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postDataset
       description: Create a new dataset. If there is an existing dataset in the
         project with the same name as the one specified in the request, will
@@ -7721,11 +7946,14 @@ paths:
                 nullable: true
     get:
       operationId: getDataset
-      tags: *a24
+      tags:
+        - Datasets
       description: List out all datasets. The datasets are sorted by creation date,
         with the most recently-created datasets coming first
       summary: List datasets
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -7809,13 +8037,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a25
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a25
-            Access-Control-Allow-Methods: *a25
-            Access-Control-Allow-Origin: *a25
-            Access-Control-Max-Age: *a25
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -7830,10 +8066,13 @@ paths:
   /v1/dataset/{dataset_id}:
     get:
       operationId: getDatasetId
-      tags: *a24
+      tags:
+        - Datasets
       description: Get a dataset object by its id
       summary: Get dataset
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
       responses:
@@ -7892,13 +8131,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchDatasetId
-      tags: *a24
+      tags:
+        - Datasets
       description: Partially update a dataset object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update dataset
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
@@ -7964,10 +8206,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteDatasetId
-      tags: *a24
+      tags:
+        - Datasets
       description: Delete a dataset object by its id
       summary: Delete dataset
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
       responses:
@@ -8037,13 +8282,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a26
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a26
-            Access-Control-Allow-Methods: *a26
-            Access-Control-Allow-Origin: *a26
-            Access-Control-Max-Age: *a26
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -8058,10 +8311,13 @@ paths:
   /v1/dataset/{dataset_id}/insert:
     post:
       operationId: postDatasetIdInsert
-      tags: *a24
+      tags:
+        - Datasets
       description: Insert a set of events into the dataset
       summary: Insert dataset events
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
@@ -8138,13 +8394,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a27
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a27
-            Access-Control-Allow-Methods: *a27
-            Access-Control-Allow-Origin: *a27
-            Access-Control-Max-Age: *a27
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -8159,12 +8423,15 @@ paths:
   /v1/dataset/{dataset_id}/fetch:
     post:
       operationId: postDatasetIdFetch
-      tags: *a24
+      tags:
+        - Datasets
       description: Fetch the events in a dataset. Equivalent to the GET form of the
         same path, but with the parameters in the request body rather than in
         the URL query. For more complex queries, use the `POST /btql` endpoint.
       summary: Fetch dataset (POST form)
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
@@ -8230,12 +8497,15 @@ paths:
                 nullable: true
     get:
       operationId: getDatasetIdFetch
-      tags: *a24
+      tags:
+        - Datasets
       description: Fetch the events in a dataset. Equivalent to the POST form of the
         same path, but with the parameters in the URL query rather than in the
         request body. For more complex queries, use the `POST /btql` endpoint.
       summary: Fetch dataset (GET form)
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
         - $ref: "#/components/parameters/FetchLimitParam"
@@ -8309,13 +8579,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a28
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a28
-            Access-Control-Allow-Methods: *a28
-            Access-Control-Allow-Origin: *a28
-            Access-Control-Max-Age: *a28
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -8330,10 +8608,13 @@ paths:
   /v1/dataset/{dataset_id}/feedback:
     post:
       operationId: postDatasetIdFeedback
-      tags: *a24
+      tags:
+        - Datasets
       description: Log feedback for a set of dataset events
       summary: Feedback for dataset events
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
       requestBody:
@@ -8410,13 +8691,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a29
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a29
-            Access-Control-Allow-Methods: *a29
-            Access-Control-Allow-Origin: *a29
-            Access-Control-Max-Age: *a29
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -8431,7 +8720,8 @@ paths:
   /v1/dataset/{dataset_id}/summarize:
     get:
       operationId: getDatasetIdSummarize
-      tags: *a24
+      tags:
+        - Datasets
       description: Summarize dataset
       summary: Summarize dataset
       security:
@@ -8506,13 +8796,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a30
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a30
-            Access-Control-Allow-Methods: *a30
-            Access-Control-Allow-Origin: *a30
-            Access-Control-Max-Age: *a30
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -8526,9 +8824,11 @@ paths:
                 nullable: true
   /v1/prompt:
     post:
-      tags: &a31
+      tags:
         - Prompts
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postPrompt
       description: Create a new prompt. If there is an existing prompt in the project
         with the same slug as the one specified in the request, will return the
@@ -8596,8 +8896,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a31
-      security: *a9
+      tags:
+        - Prompts
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putPrompt
       description: Create or replace prompt. If there is an existing prompt in the
         project with the same slug as the one specified in the request, will
@@ -8666,11 +8969,14 @@ paths:
                 nullable: true
     get:
       operationId: getPrompt
-      tags: *a31
+      tags:
+        - Prompts
       description: List out all prompts. The prompts are sorted by creation date, with
         the most recently-created prompts coming first
       summary: List prompts
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -8756,13 +9062,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a32
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a32
-            Access-Control-Allow-Methods: *a32
-            Access-Control-Allow-Origin: *a32
-            Access-Control-Max-Age: *a32
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -8777,10 +9091,13 @@ paths:
   /v1/prompt/{prompt_id}:
     get:
       operationId: getPromptId
-      tags: *a31
+      tags:
+        - Prompts
       description: Get a prompt object by its id
       summary: Get prompt
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/PromptIdParam"
       responses:
@@ -8839,13 +9156,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchPromptId
-      tags: *a31
+      tags:
+        - Prompts
       description: Partially update a prompt object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update prompt
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/PromptIdParam"
       requestBody:
@@ -8911,10 +9231,13 @@ paths:
                 nullable: true
     delete:
       operationId: deletePromptId
-      tags: *a31
+      tags:
+        - Prompts
       description: Delete a prompt object by its id
       summary: Delete prompt
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/PromptIdParam"
       responses:
@@ -8984,13 +9307,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a33
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a33
-            Access-Control-Allow-Methods: *a33
-            Access-Control-Allow-Origin: *a33
-            Access-Control-Max-Age: *a33
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -9004,9 +9335,11 @@ paths:
                 nullable: true
   /v1/role:
     post:
-      tags: &a34
+      tags:
         - Roles
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postRole
       description: Create a new role. If there is an existing role with the same name
         as the one specified in the request, will return the existing role
@@ -9074,8 +9407,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a34
-      security: *a9
+      tags:
+        - Roles
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putRole
       description: Create or replace role. If there is an existing role with the same
         name as the one specified in the request, will replace the existing role
@@ -9144,11 +9480,14 @@ paths:
                 nullable: true
     get:
       operationId: getRole
-      tags: *a34
+      tags:
+        - Roles
       description: List out all roles. The roles are sorted by creation date, with the
         most recently-created roles coming first
       summary: List roles
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -9230,13 +9569,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a35
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a35
-            Access-Control-Allow-Methods: *a35
-            Access-Control-Allow-Origin: *a35
-            Access-Control-Max-Age: *a35
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -9251,10 +9598,13 @@ paths:
   /v1/role/{role_id}:
     get:
       operationId: getRoleId
-      tags: *a34
+      tags:
+        - Roles
       description: Get a role object by its id
       summary: Get role
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/RoleIdParam"
       responses:
@@ -9313,13 +9663,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchRoleId
-      tags: *a34
+      tags:
+        - Roles
       description: Partially update a role object. Specify the fields to update in the
         payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update role
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/RoleIdParam"
       requestBody:
@@ -9385,10 +9738,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteRoleId
-      tags: *a34
+      tags:
+        - Roles
       description: Delete a role object by its id
       summary: Delete role
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/RoleIdParam"
       responses:
@@ -9458,13 +9814,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a36
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a36
-            Access-Control-Allow-Methods: *a36
-            Access-Control-Allow-Origin: *a36
-            Access-Control-Max-Age: *a36
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -9478,9 +9842,11 @@ paths:
                 nullable: true
   /v1/group:
     post:
-      tags: &a37
+      tags:
         - Groups
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postGroup
       description: Create a new group. If there is an existing group with the same
         name as the one specified in the request, will return the existing group
@@ -9548,8 +9914,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a37
-      security: *a9
+      tags:
+        - Groups
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putGroup
       description: Create or replace group. If there is an existing group with the
         same name as the one specified in the request, will replace the existing
@@ -9618,11 +9987,14 @@ paths:
                 nullable: true
     get:
       operationId: getGroup
-      tags: *a37
+      tags:
+        - Groups
       description: List out all groups. The groups are sorted by creation date, with
         the most recently-created groups coming first
       summary: List groups
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -9704,13 +10076,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a38
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a38
-            Access-Control-Allow-Methods: *a38
-            Access-Control-Allow-Origin: *a38
-            Access-Control-Max-Age: *a38
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -9725,10 +10105,13 @@ paths:
   /v1/group/{group_id}:
     get:
       operationId: getGroupId
-      tags: *a37
+      tags:
+        - Groups
       description: Get a group object by its id
       summary: Get group
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/GroupIdParam"
       responses:
@@ -9787,13 +10170,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchGroupId
-      tags: *a37
+      tags:
+        - Groups
       description: Partially update a group object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update group
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/GroupIdParam"
       requestBody:
@@ -9859,10 +10245,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteGroupId
-      tags: *a37
+      tags:
+        - Groups
       description: Delete a group object by its id
       summary: Delete group
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/GroupIdParam"
       responses:
@@ -9932,13 +10321,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a39
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a39
-            Access-Control-Allow-Methods: *a39
-            Access-Control-Allow-Origin: *a39
-            Access-Control-Max-Age: *a39
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -9952,9 +10349,11 @@ paths:
                 nullable: true
   /v1/acl:
     post:
-      tags: &a40
+      tags:
         - Acls
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postAcl
       description: Create a new acl. If there is an existing acl with the same
         contents as the one specified in the request, will return the existing
@@ -10023,10 +10422,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteAcl
-      tags: *a40
+      tags:
+        - Acls
       description: Delete a single acl
       summary: Delete single acl
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: Parameters which uniquely specify the acl to delete
         required: false
@@ -10090,11 +10492,14 @@ paths:
                 nullable: true
     get:
       operationId: getAcl
-      tags: *a40
+      tags:
+        - Acls
       description: List out all acls. The acls are sorted by creation date, with the
         most recently-created acls coming first
       summary: List acls
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -10176,13 +10581,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a41
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a41
-            Access-Control-Allow-Methods: *a41
-            Access-Control-Allow-Origin: *a41
-            Access-Control-Max-Age: *a41
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -10197,10 +10610,13 @@ paths:
   /v1/acl/{acl_id}:
     get:
       operationId: getAclId
-      tags: *a40
+      tags:
+        - Acls
       description: Get an acl object by its id
       summary: Get acl
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AclIdParam"
       responses:
@@ -10259,10 +10675,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteAclId
-      tags: *a40
+      tags:
+        - Acls
       description: Delete an acl object by its id
       summary: Delete acl
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AclIdParam"
       responses:
@@ -10332,13 +10751,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a42
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a42
-            Access-Control-Allow-Methods: *a42
-            Access-Control-Allow-Origin: *a42
-            Access-Control-Max-Age: *a42
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -10353,12 +10780,15 @@ paths:
   /v1/acl/batch_update:
     post:
       operationId: aclBatchUpdate
-      tags: *a40
+      tags:
+        - Acls
       description: Batch update acls. This operation is idempotent, so adding acls
         which already exist will have no effect, and removing acls which do not
         exist will have no effect.
       summary: Batch update acls
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: Acls to add/remove.
         required: false
@@ -10432,13 +10862,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a43
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a43
-            Access-Control-Allow-Methods: *a43
-            Access-Control-Allow-Origin: *a43
-            Access-Control-Max-Age: *a43
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -10453,12 +10891,14 @@ paths:
   /v1/user:
     get:
       operationId: getUser
-      tags: &a45
+      tags:
         - Users
       description: List out all users. The users are sorted by creation date, with the
         most recently-created users coming first
       summary: List users
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -10542,13 +10982,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a44
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a44
-            Access-Control-Allow-Methods: *a44
-            Access-Control-Allow-Origin: *a44
-            Access-Control-Max-Age: *a44
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -10563,10 +11011,13 @@ paths:
   /v1/user/{user_id}:
     get:
       operationId: getUserId
-      tags: *a45
+      tags:
+        - Users
       description: Get a user object by its id
       summary: Get user
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/UserIdParam"
       responses:
@@ -10636,13 +11087,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a46
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a46
-            Access-Control-Allow-Methods: *a46
-            Access-Control-Allow-Origin: *a46
-            Access-Control-Max-Age: *a46
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -10656,9 +11115,11 @@ paths:
                 nullable: true
   /v1/project_score:
     post:
-      tags: &a47
+      tags:
         - ProjectScores
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postProjectScore
       description: Create a new project_score. If there is an existing project_score
         in the project with the same name as the one specified in the request,
@@ -10726,8 +11187,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a47
-      security: *a9
+      tags:
+        - ProjectScores
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putProjectScore
       description: Create or replace project_score. If there is an existing
         project_score in the project with the same name as the one specified in
@@ -10797,12 +11261,15 @@ paths:
                 nullable: true
     get:
       operationId: getProjectScore
-      tags: *a47
+      tags:
+        - ProjectScores
       description: List out all project_scores. The project_scores are sorted by
         creation date, with the most recently-created project_scores coming
         first
       summary: List project_scores
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -10887,13 +11354,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a48
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a48
-            Access-Control-Allow-Methods: *a48
-            Access-Control-Allow-Origin: *a48
-            Access-Control-Max-Age: *a48
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -10908,10 +11383,13 @@ paths:
   /v1/project_score/{project_score_id}:
     get:
       operationId: getProjectScoreId
-      tags: *a47
+      tags:
+        - ProjectScores
       description: Get a project_score object by its id
       summary: Get project_score
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectScoreIdParam"
       responses:
@@ -10970,13 +11448,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchProjectScoreId
-      tags: *a47
+      tags:
+        - ProjectScores
       description: Partially update a project_score object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
       summary: Partially update project_score
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectScoreIdParam"
       requestBody:
@@ -11042,10 +11523,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteProjectScoreId
-      tags: *a47
+      tags:
+        - ProjectScores
       description: Delete a project_score object by its id
       summary: Delete project_score
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectScoreIdParam"
       responses:
@@ -11115,13 +11599,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a49
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a49
-            Access-Control-Allow-Methods: *a49
-            Access-Control-Allow-Origin: *a49
-            Access-Control-Max-Age: *a49
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -11135,9 +11627,11 @@ paths:
                 nullable: true
   /v1/project_tag:
     post:
-      tags: &a50
+      tags:
         - ProjectTags
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postProjectTag
       description: Create a new project_tag. If there is an existing project_tag in
         the project with the same name as the one specified in the request, will
@@ -11205,8 +11699,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a50
-      security: *a9
+      tags:
+        - ProjectTags
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putProjectTag
       description: Create or replace project_tag. If there is an existing project_tag
         in the project with the same name as the one specified in the request,
@@ -11275,11 +11772,14 @@ paths:
                 nullable: true
     get:
       operationId: getProjectTag
-      tags: *a50
+      tags:
+        - ProjectTags
       description: List out all project_tags. The project_tags are sorted by creation
         date, with the most recently-created project_tags coming first
       summary: List project_tags
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -11363,13 +11863,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a51
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a51
-            Access-Control-Allow-Methods: *a51
-            Access-Control-Allow-Origin: *a51
-            Access-Control-Max-Age: *a51
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -11384,10 +11892,13 @@ paths:
   /v1/project_tag/{project_tag_id}:
     get:
       operationId: getProjectTagId
-      tags: *a50
+      tags:
+        - ProjectTags
       description: Get a project_tag object by its id
       summary: Get project_tag
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectTagIdParam"
       responses:
@@ -11446,13 +11957,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchProjectTagId
-      tags: *a50
+      tags:
+        - ProjectTags
       description: Partially update a project_tag object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update project_tag
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectTagIdParam"
       requestBody:
@@ -11518,10 +12032,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteProjectTagId
-      tags: *a50
+      tags:
+        - ProjectTags
       description: Delete a project_tag object by its id
       summary: Delete project_tag
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ProjectTagIdParam"
       responses:
@@ -11591,13 +12108,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a52
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a52
-            Access-Control-Allow-Methods: *a52
-            Access-Control-Allow-Origin: *a52
-            Access-Control-Max-Age: *a52
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -11611,9 +12136,11 @@ paths:
                 nullable: true
   /v1/span_iframe:
     post:
-      tags: &a53
+      tags:
         - SpanIframes
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postSpanIframe
       description: Create a new span_iframe. If there is an existing span_iframe with
         the same name as the one specified in the request, will return the
@@ -11681,8 +12208,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a53
-      security: *a9
+      tags:
+        - SpanIframes
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putSpanIframe
       description: Create or replace span_iframe. If there is an existing span_iframe
         with the same name as the one specified in the request, will replace the
@@ -11751,11 +12281,14 @@ paths:
                 nullable: true
     get:
       operationId: getSpanIframe
-      tags: *a53
+      tags:
+        - SpanIframes
       description: List out all span_iframes. The span_iframes are sorted by creation
         date, with the most recently-created span_iframes coming first
       summary: List span_iframes
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -11837,13 +12370,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a54
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a54
-            Access-Control-Allow-Methods: *a54
-            Access-Control-Allow-Origin: *a54
-            Access-Control-Max-Age: *a54
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -11858,10 +12399,13 @@ paths:
   /v1/span_iframe/{span_iframe_id}:
     get:
       operationId: getSpanIframeId
-      tags: *a53
+      tags:
+        - SpanIframes
       description: Get a span_iframe object by its id
       summary: Get span_iframe
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/SpanIframeIdParam"
       responses:
@@ -11920,13 +12464,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchSpanIframeId
-      tags: *a53
+      tags:
+        - SpanIframes
       description: Partially update a span_iframe object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update span_iframe
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/SpanIframeIdParam"
       requestBody:
@@ -11992,10 +12539,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteSpanIframeId
-      tags: *a53
+      tags:
+        - SpanIframes
       description: Delete a span_iframe object by its id
       summary: Delete span_iframe
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/SpanIframeIdParam"
       responses:
@@ -12065,13 +12615,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a55
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a55
-            Access-Control-Allow-Methods: *a55
-            Access-Control-Allow-Origin: *a55
-            Access-Control-Max-Age: *a55
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -12085,9 +12643,11 @@ paths:
                 nullable: true
   /v1/function:
     post:
-      tags: &a56
+      tags:
         - Functions
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postFunction
       description: Create a new function. If there is an existing function in the
         project with the same slug as the one specified in the request, will
@@ -12155,8 +12715,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a56
-      security: *a9
+      tags:
+        - Functions
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putFunction
       description: Create or replace function. If there is an existing function in the
         project with the same slug as the one specified in the request, will
@@ -12225,11 +12788,14 @@ paths:
                 nullable: true
     get:
       operationId: getFunction
-      tags: *a56
+      tags:
+        - Functions
       description: List out all functions. The functions are sorted by creation date,
         with the most recently-created functions coming first
       summary: List functions
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -12315,13 +12881,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a57
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a57
-            Access-Control-Allow-Methods: *a57
-            Access-Control-Allow-Origin: *a57
-            Access-Control-Max-Age: *a57
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -12336,10 +12910,13 @@ paths:
   /v1/function/{function_id}:
     get:
       operationId: getFunctionId
-      tags: *a56
+      tags:
+        - Functions
       description: Get a function object by its id
       summary: Get function
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/FunctionIdParam"
       responses:
@@ -12398,13 +12975,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchFunctionId
-      tags: *a56
+      tags:
+        - Functions
       description: Partially update a function object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update function
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/FunctionIdParam"
       requestBody:
@@ -12470,10 +13050,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteFunctionId
-      tags: *a56
+      tags:
+        - Functions
       description: Delete a function object by its id
       summary: Delete function
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/FunctionIdParam"
       responses:
@@ -12543,13 +13126,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a58
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a58
-            Access-Control-Allow-Methods: *a58
-            Access-Control-Allow-Origin: *a58
-            Access-Control-Max-Age: *a58
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -12564,10 +13155,13 @@ paths:
   /v1/function/{function_id}/invoke:
     post:
       operationId: postFunctionIdInvoke
-      tags: *a56
+      tags:
+        - Functions
       description: Invoke a function.
       summary: Invoke function
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/FunctionIdParam"
       requestBody:
@@ -12596,13 +13190,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a59
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a59
-            Access-Control-Allow-Methods: *a59
-            Access-Control-Allow-Origin: *a59
-            Access-Control-Max-Age: *a59
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -12616,9 +13218,11 @@ paths:
                 nullable: true
   /v1/view:
     post:
-      tags: &a60
+      tags:
         - Views
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postView
       description: Create a new view. If there is an existing view with the same name
         as the one specified in the request, will return the existing view
@@ -12686,8 +13290,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a60
-      security: *a9
+      tags:
+        - Views
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putView
       description: Create or replace view. If there is an existing view with the same
         name as the one specified in the request, will replace the existing view
@@ -12756,11 +13363,14 @@ paths:
                 nullable: true
     get:
       operationId: getView
-      tags: *a60
+      tags:
+        - Views
       description: List out all views. The views are sorted by creation date, with the
         most recently-created views coming first
       summary: List views
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -12844,13 +13454,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a61
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a61
-            Access-Control-Allow-Methods: *a61
-            Access-Control-Allow-Origin: *a61
-            Access-Control-Max-Age: *a61
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -12865,10 +13483,13 @@ paths:
   /v1/view/{view_id}:
     get:
       operationId: getViewId
-      tags: *a60
+      tags:
+        - Views
       description: Get a view object by its id
       summary: Get view
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ViewIdParam"
         - $ref: "#/components/parameters/AclObjectType"
@@ -12929,13 +13550,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchViewId
-      tags: *a60
+      tags:
+        - Views
       description: Partially update a view object. Specify the fields to update in the
         payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update view
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ViewIdParam"
       requestBody:
@@ -13001,10 +13625,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteViewId
-      tags: *a60
+      tags:
+        - Views
       description: Delete a view object by its id
       summary: Delete view
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ViewIdParam"
       requestBody:
@@ -13081,13 +13708,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a62
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a62
-            Access-Control-Allow-Methods: *a62
-            Access-Control-Allow-Origin: *a62
-            Access-Control-Max-Age: *a62
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -13102,12 +13737,14 @@ paths:
   /v1/organization:
     get:
       operationId: getOrganization
-      tags: &a64
+      tags:
         - Organizations
       description: List out all organizations. The organizations are sorted by
         creation date, with the most recently-created organizations coming first
       summary: List organizations
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -13188,13 +13825,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a63
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a63
-            Access-Control-Allow-Methods: *a63
-            Access-Control-Allow-Origin: *a63
-            Access-Control-Max-Age: *a63
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -13209,10 +13854,13 @@ paths:
   /v1/organization/{organization_id}:
     get:
       operationId: getOrganizationId
-      tags: *a64
+      tags:
+        - Organizations
       description: Get an organization object by its id
       summary: Get organization
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/OrganizationIdParam"
       responses:
@@ -13271,13 +13919,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchOrganizationId
-      tags: *a64
+      tags:
+        - Organizations
       description: Partially update an organization object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
       summary: Partially update organization
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/OrganizationIdParam"
       requestBody:
@@ -13343,10 +13994,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteOrganizationId
-      tags: *a64
+      tags:
+        - Organizations
       description: Delete an organization object by its id
       summary: Delete organization
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/OrganizationIdParam"
       responses:
@@ -13416,13 +14070,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a65
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a65
-            Access-Control-Allow-Methods: *a65
-            Access-Control-Allow-Origin: *a65
-            Access-Control-Max-Age: *a65
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -13437,10 +14099,13 @@ paths:
   /v1/organization/members:
     patch:
       operationId: patchOrganizationMembers
-      tags: *a64
+      tags:
+        - Organizations
       description: Modify organization membership
       summary: Modify organization membership
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: Members to add/remove
         required: false
@@ -13513,13 +14178,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a66
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a66
-            Access-Control-Allow-Methods: *a66
-            Access-Control-Allow-Origin: *a66
-            Access-Control-Max-Age: *a66
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -13533,9 +14206,11 @@ paths:
                 nullable: true
   /v1/api_key:
     post:
-      tags: &a67
+      tags:
         - ApiKeys
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postApiKey
       description: Create a new api_key. It is possible to have multiple API keys with
         the same name. There is no de-duplication
@@ -13617,11 +14292,14 @@ paths:
                 nullable: true
     get:
       operationId: getApiKey
-      tags: *a67
+      tags:
+        - ApiKeys
       description: List out all api_keys. The api_keys are sorted by creation date,
         with the most recently-created api_keys coming first
       summary: List api_keys
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -13703,13 +14381,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a68
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a68
-            Access-Control-Allow-Methods: *a68
-            Access-Control-Allow-Origin: *a68
-            Access-Control-Max-Age: *a68
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -13724,10 +14410,13 @@ paths:
   /v1/api_key/{api_key_id}:
     get:
       operationId: getApiKeyId
-      tags: *a67
+      tags:
+        - ApiKeys
       description: Get an api_key object by its id
       summary: Get api_key
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ApiKeyIdParam"
       responses:
@@ -13786,10 +14475,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteApiKeyId
-      tags: *a67
+      tags:
+        - ApiKeys
       description: Delete an api_key object by its id
       summary: Delete api_key
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/ApiKeyIdParam"
       responses:
@@ -13859,13 +14551,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a69
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a69
-            Access-Control-Allow-Methods: *a69
-            Access-Control-Allow-Origin: *a69
-            Access-Control-Max-Age: *a69
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -13879,9 +14579,11 @@ paths:
                 nullable: true
   /v1/ai_secret:
     post:
-      tags: &a70
+      tags:
         - AiSecrets
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postAiSecret
       description: Create a new ai_secret. If there is an existing ai_secret with the
         same name as the one specified in the request, will return the existing
@@ -13949,8 +14651,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a70
-      security: *a9
+      tags:
+        - AiSecrets
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putAiSecret
       description: Create or replace ai_secret. If there is an existing ai_secret with
         the same name as the one specified in the request, will replace the
@@ -14019,10 +14724,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteAiSecret
-      tags: *a70
+      tags:
+        - AiSecrets
       description: Delete a single ai_secret
       summary: Delete single ai_secret
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: Parameters which uniquely specify the ai_secret to delete
         required: false
@@ -14086,11 +14794,14 @@ paths:
                 nullable: true
     get:
       operationId: getAiSecret
-      tags: *a70
+      tags:
+        - AiSecrets
       description: List out all ai_secrets. The ai_secrets are sorted by creation
         date, with the most recently-created ai_secrets coming first
       summary: List ai_secrets
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/StartingAfter"
@@ -14173,13 +14884,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a71
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a71
-            Access-Control-Allow-Methods: *a71
-            Access-Control-Allow-Origin: *a71
-            Access-Control-Max-Age: *a71
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -14194,10 +14913,13 @@ paths:
   /v1/ai_secret/{ai_secret_id}:
     get:
       operationId: getAiSecretId
-      tags: *a70
+      tags:
+        - AiSecrets
       description: Get an ai_secret object by its id
       summary: Get ai_secret
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AiSecretIdParam"
       responses:
@@ -14256,13 +14978,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchAiSecretId
-      tags: *a70
+      tags:
+        - AiSecrets
       description: Partially update an ai_secret object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update ai_secret
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AiSecretIdParam"
       requestBody:
@@ -14328,10 +15053,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteAiSecretId
-      tags: *a70
+      tags:
+        - AiSecrets
       description: Delete an ai_secret object by its id
       summary: Delete ai_secret
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AiSecretIdParam"
       responses:
@@ -14401,13 +15129,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a72
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a72
-            Access-Control-Allow-Methods: *a72
-            Access-Control-Allow-Origin: *a72
-            Access-Control-Max-Age: *a72
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -14421,9 +15157,11 @@ paths:
                 nullable: true
   /v1/env_var:
     post:
-      tags: &a73
+      tags:
         - EnvVars
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       operationId: postEnvVar
       description: Create a new env_var. If there is an existing env_var with the same
         name as the one specified in the request, will return the existing
@@ -14439,7 +15177,10 @@ paths:
               properties:
                 object_type:
                   type: string
-                  enum: *a7
+                  enum:
+                    - organization
+                    - project
+                    - function
                   description: The type of the object the environment variable is scoped for
                 object_id:
                   type: string
@@ -14511,8 +15252,11 @@ paths:
               schema:
                 nullable: true
     put:
-      tags: *a73
-      security: *a9
+      tags:
+        - EnvVars
+      security:
+        - bearerAuth: []
+        - {}
       operationId: putEnvVar
       description: Create or replace env_var. If there is an existing env_var with the
         same name as the one specified in the request, will replace the existing
@@ -14528,7 +15272,10 @@ paths:
               properties:
                 object_type:
                   type: string
-                  enum: *a7
+                  enum:
+                    - organization
+                    - project
+                    - function
                   description: The type of the object the environment variable is scoped for
                 object_id:
                   type: string
@@ -14601,11 +15348,14 @@ paths:
                 nullable: true
     get:
       operationId: getEnvVar
-      tags: *a73
+      tags:
+        - EnvVars
       description: List out all env_vars. The env_vars are sorted by creation date,
         with the most recently-created env_vars coming first
       summary: List env_vars
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/AppLimitParam"
         - $ref: "#/components/parameters/Ids"
@@ -14686,13 +15436,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a74
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a74
-            Access-Control-Allow-Methods: *a74
-            Access-Control-Allow-Origin: *a74
-            Access-Control-Max-Age: *a74
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -14707,10 +15465,13 @@ paths:
   /v1/env_var/{env_var_id}:
     get:
       operationId: getEnvVarId
-      tags: *a73
+      tags:
+        - EnvVars
       description: Get an env_var object by its id
       summary: Get env_var
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/EnvVarIdParam"
       responses:
@@ -14769,13 +15530,16 @@ paths:
                 nullable: true
     patch:
       operationId: patchEnvVarId
-      tags: *a73
+      tags:
+        - EnvVars
       description: Partially update an env_var object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
       summary: Partially update env_var
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/EnvVarIdParam"
       requestBody:
@@ -14851,10 +15615,13 @@ paths:
                 nullable: true
     delete:
       operationId: deleteEnvVarId
-      tags: *a73
+      tags:
+        - EnvVars
       description: Delete an env_var object by its id
       summary: Delete env_var
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/EnvVarIdParam"
       responses:
@@ -14924,13 +15691,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a75
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a75
-            Access-Control-Allow-Methods: *a75
-            Access-Control-Allow-Origin: *a75
-            Access-Control-Max-Age: *a75
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -14988,13 +15763,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a76
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a76
-            Access-Control-Allow-Methods: *a76
-            Access-Control-Allow-Origin: *a76
-            Access-Control-Max-Age: *a76
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15087,13 +15870,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a77
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a77
-            Access-Control-Allow-Methods: *a77
-            Access-Control-Allow-Origin: *a77
-            Access-Control-Max-Age: *a77
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15113,7 +15904,9 @@ paths:
       description: Proxy a chat/completions request to the specified model, converting
         its format as needed. Will cache if temperature=0 or seed is set.
       summary: Proxy chat/completions
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: See the [OpenAI
           docs](https://platform.openai.com/docs/api-reference/chat/create) for
@@ -15141,13 +15934,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a78
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a78
-            Access-Control-Allow-Methods: *a78
-            Access-Control-Allow-Origin: *a78
-            Access-Control-Max-Age: *a78
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15167,7 +15968,9 @@ paths:
       description: Proxy a completions request to the specified model, converting its
         format as needed. Will cache if temperature=0 or seed is set.
       summary: Proxy completions
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: See the [OpenAI
           docs](https://platform.openai.com/docs/api-reference/completions/create)
@@ -15195,13 +15998,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a79
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a79
-            Access-Control-Allow-Methods: *a79
-            Access-Control-Allow-Origin: *a79
-            Access-Control-Max-Age: *a79
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15222,7 +16033,9 @@ paths:
         automatically based on the model. Will cache if temperature=0 or seed is
         set.
       summary: Proxy a model to chat/completions or completions automatically
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: The chat/completions or completions payload (depending on the model)
         required: true
@@ -15248,13 +16061,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a80
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a80
-            Access-Control-Allow-Methods: *a80
-            Access-Control-Allow-Origin: *a80
-            Access-Control-Max-Age: *a80
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15274,7 +16095,9 @@ paths:
       description: Proxy an embeddings request to the specified model, converting its
         format as needed. Will cache automatically.
       summary: Proxy embeddings
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: See the [OpenAI
           docs](https://platform.openai.com/docs/api-reference/embeddings/create)
@@ -15302,13 +16125,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a81
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a81
-            Access-Control-Allow-Methods: *a81
-            Access-Control-Allow-Origin: *a81
-            Access-Control-Max-Age: *a81
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15332,7 +16163,9 @@ paths:
         [docs](/docs/guides/proxy#temporary-credentials-for-end-user-access) for
         code examples.
       summary: Create temporary credential
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: The temporary credential will be restricted according to the
           request body.
@@ -15395,13 +16228,21 @@ paths:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a82
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a82
-            Access-Control-Allow-Methods: *a82
-            Access-Control-Allow-Origin: *a82
-            Access-Control-Max-Age: *a82
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15421,7 +16262,7 @@ paths:
       description: Any requests which do not match the above paths will be proxied
         directly to the OpenAI API.
       summary: Proxy any OpenAI request (fallback)
-      parameters: &a83
+      parameters:
         - name: path+
           in: path
           required: true
@@ -15430,7 +16271,9 @@ paths:
             items:
               type: string
           description: The path to proxy
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: The request body
         required: true
@@ -15452,18 +16295,34 @@ paths:
       security: []
       tags:
         - CORS
-      parameters: *a83
+      parameters:
+        - name: path+
+          in: path
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          description: The path to proxy
       responses:
         "200":
           description: Response for CORS method
           headers:
-            Access-Control-Allow-Credentials: &a84
+            Access-Control-Allow-Credentials:
               schema:
                 type: string
-            Access-Control-Allow-Headers: *a84
-            Access-Control-Allow-Methods: *a84
-            Access-Control-Allow-Origin: *a84
-            Access-Control-Max-Age: *a84
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
           content: {}
         "400":
           description: The request was unacceptable, often due to missing a required
@@ -15487,7 +16346,9 @@ paths:
         results along with a link to the experiment. To learn more about evals,
         see the [Evals guide](https://www.braintrust.dev/docs/guides/evals).
       summary: Launch an eval
-      security: *a9
+      security:
+        - bearerAuth: []
+        - {}
       requestBody:
         description: Eval launch parameters
         required: true
