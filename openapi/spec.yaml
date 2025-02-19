@@ -5384,6 +5384,11 @@ components:
               properties:
                 dataset_id:
                   type: string
+                _internal_btql:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    nullable: true
               required:
                 - dataset_id
               description: Dataset id
@@ -5394,6 +5399,11 @@ components:
                   type: string
                 dataset_name:
                   type: string
+                _internal_btql:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    nullable: true
               required:
                 - project_name
                 - dataset_name

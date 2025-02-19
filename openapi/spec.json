@@ -6173,6 +6173,13 @@
                 "properties": {
                   "dataset_id": {
                     "type": "string"
+                  },
+                  "_internal_btql": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    }
                   }
                 },
                 "required": [
@@ -6189,6 +6196,13 @@
                   },
                   "dataset_name": {
                     "type": "string"
+                  },
+                  "_internal_btql": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    }
                   }
                 },
                 "required": [
