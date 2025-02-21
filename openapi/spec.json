@@ -991,6 +991,11 @@
               "_xact_id": {
                 "type": "string",
                 "description": "Transaction ID of the original event."
+              },
+              "created": {
+                "type": "string",
+                "nullable": true,
+                "description": "Created timestamp of the original event. Used to help sort in the UI"
               }
             },
             "required": [
@@ -1812,6 +1817,11 @@
               "_xact_id": {
                 "type": "string",
                 "description": "Transaction ID of the original event."
+              },
+              "created": {
+                "type": "string",
+                "nullable": true,
+                "description": "Created timestamp of the original event. Used to help sort in the UI"
               }
             },
             "required": [
@@ -2379,6 +2389,11 @@
               "_xact_id": {
                 "type": "string",
                 "description": "Transaction ID of the original event."
+              },
+              "created": {
+                "type": "string",
+                "nullable": true,
+                "description": "Created timestamp of the original event. Used to help sort in the UI"
               }
             },
             "required": [
