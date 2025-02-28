@@ -700,6 +700,12 @@ components:
           type: string
           nullable: true
           description: >-
+            DEPRECATED: The `_parent_id` field is deprecated and should not be
+            used. Support for `_parent_id` will be dropped in a future version
+            of Braintrust. Log `span_id`, `root_span_id`, and `span_parents`
+            explicitly instead.
+
+
             Use the `_parent_id` field to create this row as a subspan of an
             existing row. Tracking hierarchical relationships are important for
             tracing (see the
@@ -723,10 +729,10 @@ components:
           type: string
           nullable: true
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -749,10 +755,10 @@ components:
           type: string
           nullable: true
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -777,10 +783,10 @@ components:
           items:
             type: string
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -1592,6 +1598,12 @@ components:
           type: string
           nullable: true
           description: >-
+            DEPRECATED: The `_parent_id` field is deprecated and should not be
+            used. Support for `_parent_id` will be dropped in a future version
+            of Braintrust. Log `span_id`, `root_span_id`, and `span_parents`
+            explicitly instead.
+
+
             Use the `_parent_id` field to create this row as a subspan of an
             existing row. Tracking hierarchical relationships are important for
             tracing (see the
@@ -1615,10 +1627,10 @@ components:
           type: string
           nullable: true
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -1641,10 +1653,10 @@ components:
           type: string
           nullable: true
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -1669,10 +1681,10 @@ components:
           items:
             type: string
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -2291,6 +2303,12 @@ components:
           type: string
           nullable: true
           description: >-
+            DEPRECATED: The `_parent_id` field is deprecated and should not be
+            used. Support for `_parent_id` will be dropped in a future version
+            of Braintrust. Log `span_id`, `root_span_id`, and `span_parents`
+            explicitly instead.
+
+
             Use the `_parent_id` field to create this row as a subspan of an
             existing row. Tracking hierarchical relationships are important for
             tracing (see the
@@ -2314,10 +2332,10 @@ components:
           type: string
           nullable: true
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -2340,10 +2358,10 @@ components:
           type: string
           nullable: true
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
@@ -2368,10 +2386,10 @@ components:
           items:
             type: string
           description: >-
-            Use span_id, root_span_id, and span_parents as a more explicit
-            alternative to _parent_id. The span_id is a unique identifier
-            describing the row's place in the a trace, and the root_span_id is a
-            unique identifier for the whole trace. See the
+            Use `span_id`, `root_span_id`, and `span_parents` instead of
+            `_parent_id`, which is now deprecated. The span_id is a unique
+            identifier describing the row's place in the a trace, and the
+            root_span_id is a unique identifier for the whole trace. See the
             [guide](https://www.braintrust.dev/docs/guides/tracing) for full
             details.
 
