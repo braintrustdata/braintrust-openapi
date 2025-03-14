@@ -505,6 +505,43 @@ components:
       additionalProperties:
         nullable: true
       description: Human-identifying attributes of the span, such as name, type, etc.
+    ObjectReference:
+      type: object
+      nullable: true
+      properties:
+        object_type:
+          anyOf:
+            - type: string
+              enum:
+                - experiment
+                - dataset
+                - prompt
+                - function
+                - prompt_session
+            - type: string
+              enum:
+                - project_logs
+          description: Type of the object the event is originating from.
+        object_id:
+          type: string
+          format: uuid
+          description: ID of the object the event is originating from.
+        id:
+          type: string
+          description: ID of the original event.
+        _xact_id:
+          type: string
+          description: Transaction ID of the original event.
+        created:
+          type: string
+          nullable: true
+          description: Created timestamp of the original event. Used to help sort in the UI
+      required:
+        - object_type
+        - object_id
+        - id
+        - _xact_id
+      description: Indicates the event was copied from another object.
     InsertProjectLogsEvent:
       type: object
       properties:
@@ -648,6 +685,8 @@ components:
           nullable: true
           format: date-time
           description: The timestamp the project logs event was created
+        origin:
+          $ref: "#/components/schemas/ObjectReference"
         _object_delete:
           type: boolean
           nullable: true
@@ -998,43 +1037,7 @@ components:
         span_attributes:
           $ref: "#/components/schemas/SpanAttributes"
         origin:
-          type: object
-          nullable: true
-          properties:
-            object_type:
-              anyOf:
-                - type: string
-                  enum:
-                    - experiment
-                    - dataset
-                    - prompt
-                    - function
-                    - prompt_session
-                - type: string
-                  enum:
-                    - project_logs
-              description: Type of the object the event is originating from.
-            object_id:
-              type: string
-              format: uuid
-              description: ID of the object the event is originating from.
-            id:
-              type: string
-              description: ID of the original event.
-            _xact_id:
-              type: string
-              description: Transaction ID of the original event.
-            created:
-              type: string
-              nullable: true
-              description: Created timestamp of the original event. Used to help sort in the
-                UI
-          required:
-            - object_type
-            - object_id
-            - id
-            - _xact_id
-          description: Indicates the event was copied from another object.
+          $ref: "#/components/schemas/ObjectReference"
       required:
         - id
         - _xact_id
@@ -1546,6 +1549,8 @@ components:
           nullable: true
           format: date-time
           description: The timestamp the experiment event was created
+        origin:
+          $ref: "#/components/schemas/ObjectReference"
         _object_delete:
           type: boolean
           nullable: true
@@ -1896,43 +1901,7 @@ components:
           nullable: true
           description: Whether this span is a root span
         origin:
-          type: object
-          nullable: true
-          properties:
-            object_type:
-              anyOf:
-                - type: string
-                  enum:
-                    - experiment
-                    - dataset
-                    - prompt
-                    - function
-                    - prompt_session
-                - type: string
-                  enum:
-                    - project_logs
-              description: Type of the object the event is originating from.
-            object_id:
-              type: string
-              format: uuid
-              description: ID of the object the event is originating from.
-            id:
-              type: string
-              description: ID of the original event.
-            _xact_id:
-              type: string
-              description: Transaction ID of the original event.
-            created:
-              type: string
-              nullable: true
-              description: Created timestamp of the original event. Used to help sort in the
-                UI
-          required:
-            - object_type
-            - object_id
-            - id
-            - _xact_id
-          description: Indicates the event was copied from another object.
+          $ref: "#/components/schemas/ObjectReference"
       required:
         - id
         - _xact_id
@@ -2251,6 +2220,8 @@ components:
           nullable: true
           format: date-time
           description: The timestamp the dataset event was created
+        origin:
+          $ref: "#/components/schemas/ObjectReference"
         _object_delete:
           type: boolean
           nullable: true
@@ -2488,43 +2459,7 @@ components:
           nullable: true
           description: Whether this span is a root span
         origin:
-          type: object
-          nullable: true
-          properties:
-            object_type:
-              anyOf:
-                - type: string
-                  enum:
-                    - experiment
-                    - dataset
-                    - prompt
-                    - function
-                    - prompt_session
-                - type: string
-                  enum:
-                    - project_logs
-              description: Type of the object the event is originating from.
-            object_id:
-              type: string
-              format: uuid
-              description: ID of the object the event is originating from.
-            id:
-              type: string
-              description: ID of the original event.
-            _xact_id:
-              type: string
-              description: Transaction ID of the original event.
-            created:
-              type: string
-              nullable: true
-              description: Created timestamp of the original event. Used to help sort in the
-                UI
-          required:
-            - object_type
-            - object_id
-            - id
-            - _xact_id
-          description: Indicates the event was copied from another object.
+          $ref: "#/components/schemas/ObjectReference"
       required:
         - id
         - _xact_id
