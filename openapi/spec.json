@@ -2815,12 +2815,14 @@
                                 "additionalProperties": {
                                   "nullable": true
                                 },
+                                "title": "object",
                                 "x-stainless-skip": [
                                   "go"
                                 ]
                               },
                               {
-                                "type": "string"
+                                "type": "string",
+                                "title": "string"
                               }
                             ]
                           },

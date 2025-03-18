@@ -2804,9 +2804,11 @@ components:
                             - type: object
                               additionalProperties:
                                 nullable: true
+                              title: object
                               x-stainless-skip:
                                 - go
                             - type: string
+                              title: string
                         strict:
                           type: boolean
                           nullable: true
