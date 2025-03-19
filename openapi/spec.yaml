@@ -9070,6 +9070,7 @@ paths:
         - {}
       parameters:
         - $ref: "#/components/parameters/PromptIdParam"
+        - $ref: "#/components/parameters/PromptVersion"
       responses:
         "200":
           description: Returns the prompt object
@@ -12889,6 +12890,7 @@ paths:
         - {}
       parameters:
         - $ref: "#/components/parameters/FunctionIdParam"
+        - $ref: "#/components/parameters/PromptVersion"
       responses:
         "200":
           description: Returns the function object
