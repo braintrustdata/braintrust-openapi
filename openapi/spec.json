@@ -5035,6 +5035,7 @@
               "nodes",
               "edges"
             ],
+            "description": "This feature is preliminary and unsupported.",
             "title": "graph"
           },
           {
@@ -5669,6 +5670,7 @@
               "nodes",
               "edges"
             ],
+            "description": "This feature is preliminary and unsupported.",
             "title": "graph"
           },
           {

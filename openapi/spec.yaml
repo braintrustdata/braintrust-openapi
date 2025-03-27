@@ -4529,6 +4529,7 @@ components:
             - type
             - nodes
             - edges
+          description: This feature is preliminary and unsupported.
           title: graph
         - type: object
           properties:
@@ -4976,6 +4977,7 @@ components:
             - type
             - nodes
             - edges
+          description: This feature is preliminary and unsupported.
           title: graph
         - type: object
           properties:
