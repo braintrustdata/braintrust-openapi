@@ -5894,7 +5894,8 @@ components:
           type: number
           nullable: true
           description: The maximum number of tasks/scorers that will be run concurrently.
-            Defaults to undefined, in which case there is no max concurrency.
+            Defaults to 10. If null is provided, no max concurrency will be
+            used.
         base_experiment_name:
           type: string
           nullable: true
