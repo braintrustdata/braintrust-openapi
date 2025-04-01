@@ -5538,6 +5538,10 @@ components:
           nullable: true
           description: If true, throw an error if one of the variables in the prompt is
             not present in the input
+        stop_token:
+          type: string
+          nullable: true
+          description: The token to stop the run
       required:
         - project_id
         - data
