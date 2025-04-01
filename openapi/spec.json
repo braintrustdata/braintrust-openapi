@@ -5831,6 +5831,11 @@
             ],
             "description": "The mode format of the returned value (defaults to 'auto')"
           },
+          "strict": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "If true, throw an error if one of the variables in the prompt is not present in the input"
+          },
           "version": {
             "type": "string",
             "description": "The version of the function"
@@ -6927,6 +6932,11 @@
                 "description": "Optionally explicitly specify the git metadata for this experiment. This takes precedence over `gitMetadataSettings` if specified."
               }
             ]
+          },
+          "strict": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "If true, throw an error if one of the variables in the prompt is not present in the input"
           }
         },
         "required": [
