@@ -5950,6 +5950,10 @@ components:
           nullable: true
           description: If true, throw an error if one of the variables in the prompt is
             not present in the input
+        stop_token:
+          type: string
+          nullable: true
+          description: The token to stop the run
       required:
         - project_id
         - data
@@ -14336,71 +14340,6 @@ paths:
       responses:
         "200":
           description: Returns the organization object
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Organization"
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "401":
-          description: No valid API key provided
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "403":
-          description: The API key doesn’t have permissions to perform the request
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "429":
-          description: Too many requests hit the API too quickly. We recommend an
-            exponential backoff of your requests
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-        "500":
-          description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    delete:
-      operationId: deleteOrganizationId
-      tags:
-        - Organizations
-      description: Delete an organization object by its id
-      summary: Delete organization
-      security:
-        - bearerAuth: []
-        - {}
-      parameters:
-        - $ref: "#/components/parameters/OrganizationIdParam"
-      responses:
-        "200":
-          description: Returns the deleted organization object
           content:
             application/json:
               schema:
