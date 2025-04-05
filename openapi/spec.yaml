@@ -5346,6 +5346,20 @@ components:
             - inline_prompt
           description: Inline prompt definition
           title: inline_prompt
+        - type: object
+          properties:
+            inline_prompt:
+              $ref: "#/components/schemas/PromptData"
+            inline_function:
+              $ref: "#/components/schemas/FunctionData"
+            name:
+              type: string
+              nullable: true
+              description: The name of the inline function
+          required:
+            - inline_function
+          description: Inline function definition
+          title: inline_function
       description: The function to evaluate
     RunEval:
       type: object
