@@ -6369,6 +6369,10 @@
             "type": "string",
             "nullable": true,
             "description": "The token to stop the run"
+          },
+          "extra_messages": {
+            "type": "string",
+            "description": "A template path of extra messages to append to the conversion. These messages will be appended to the end of the conversation, after the last message."
           }
         },
         "required": [
