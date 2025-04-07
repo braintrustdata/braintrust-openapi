@@ -4506,143 +4506,8 @@
         ]
       },
       "FunctionId": {
-        "anyOf": [
-          {
-            "type": "object",
-            "properties": {
-              "function_id": {
-                "type": "string",
-                "description": "The ID of the function"
-              },
-              "version": {
-                "type": "string",
-                "description": "The version of the function"
-              }
-            },
-            "required": [
-              "function_id"
-            ],
-            "description": "Function id",
-            "title": "function_id"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "project_name": {
-                "type": "string",
-                "description": "The name of the project containing the function"
-              },
-              "slug": {
-                "type": "string",
-                "description": "The slug of the function"
-              },
-              "version": {
-                "type": "string",
-                "description": "The version of the function"
-              }
-            },
-            "required": [
-              "project_name",
-              "slug"
-            ],
-            "description": "Project name and slug",
-            "title": "project_slug"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "global_function": {
-                "type": "string",
-                "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
-              }
-            },
-            "required": [
-              "global_function"
-            ],
-            "description": "Global function name",
-            "title": "global_function"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "prompt_session_id": {
-                "type": "string",
-                "description": "The ID of the prompt session"
-              },
-              "prompt_session_function_id": {
-                "type": "string",
-                "description": "The ID of the function in the prompt session"
-              },
-              "version": {
-                "type": "string",
-                "description": "The version of the function"
-              }
-            },
-            "required": [
-              "prompt_session_id",
-              "prompt_session_function_id"
-            ],
-            "description": "Prompt session id",
-            "title": "prompt_session_id"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "inline_context": {
-                "type": "object",
-                "properties": {
-                  "runtime": {
-                    "type": "string",
-                    "enum": [
-                      "node",
-                      "python"
-                    ]
-                  },
-                  "version": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "runtime",
-                  "version"
-                ]
-              },
-              "code": {
-                "type": "string",
-                "description": "The inline code to execute"
-              },
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "The name of the inline code function"
-              }
-            },
-            "required": [
-              "inline_context",
-              "code"
-            ],
-            "description": "Inline code function",
-            "title": "inline_code"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "inline_prompt": {
-                "$ref": "#/components/schemas/PromptData"
-              },
-              "name": {
-                "type": "string",
-                "nullable": true,
-                "description": "The name of the inline prompt"
-              }
-            },
-            "required": [
-              "inline_prompt"
-            ],
-            "description": "Inline prompt definition",
-            "title": "inline_prompt"
-          }
-        ],
+        "type": "object",
+        "properties": {},
         "description": "Options for identifying a function"
       },
       "FunctionData": {
@@ -4998,6 +4863,44 @@
                       "required": [
                         "type"
                       ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "The description of the node"
+                        },
+                        "position": {
+                          "type": "object",
+                          "nullable": true,
+                          "properties": {
+                            "x": {
+                              "type": "number",
+                              "description": "The x position of the node"
+                            },
+                            "y": {
+                              "type": "number",
+                              "description": "The y position of the node"
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y"
+                          ],
+                          "description": "The position of the node"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "gate"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ]
                     }
                   ]
                 }
@@ -5008,24 +4911,52 @@
                   "type": "object",
                   "properties": {
                     "source": {
-                      "type": "string",
-                      "maxLength": 1024,
-                      "description": "The id of the node in the graph"
+                      "type": "object",
+                      "properties": {
+                        "node": {
+                          "type": "string",
+                          "maxLength": 1024,
+                          "description": "The id of the node in the graph"
+                        },
+                        "variable": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "node",
+                        "variable"
+                      ]
                     },
                     "target": {
-                      "type": "string",
-                      "maxLength": 1024,
-                      "description": "The id of the node in the graph"
+                      "type": "object",
+                      "properties": {
+                        "node": {
+                          "type": "string",
+                          "maxLength": 1024,
+                          "description": "The id of the node in the graph"
+                        },
+                        "variable": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "node",
+                        "variable"
+                      ]
                     },
-                    "variable": {
+                    "purpose": {
                       "type": "string",
-                      "description": "The variable name for the edge"
+                      "enum": [
+                        "control",
+                        "data"
+                      ],
+                      "description": "The purpose of the edge"
                     }
                   },
                   "required": [
                     "source",
                     "target",
-                    "variable"
+                    "purpose"
                   ]
                 }
               }
@@ -5633,6 +5564,44 @@
                       "required": [
                         "type"
                       ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "The description of the node"
+                        },
+                        "position": {
+                          "type": "object",
+                          "nullable": true,
+                          "properties": {
+                            "x": {
+                              "type": "number",
+                              "description": "The x position of the node"
+                            },
+                            "y": {
+                              "type": "number",
+                              "description": "The y position of the node"
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y"
+                          ],
+                          "description": "The position of the node"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "gate"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ]
                     }
                   ]
                 }
@@ -5643,24 +5612,52 @@
                   "type": "object",
                   "properties": {
                     "source": {
-                      "type": "string",
-                      "maxLength": 1024,
-                      "description": "The id of the node in the graph"
+                      "type": "object",
+                      "properties": {
+                        "node": {
+                          "type": "string",
+                          "maxLength": 1024,
+                          "description": "The id of the node in the graph"
+                        },
+                        "variable": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "node",
+                        "variable"
+                      ]
                     },
                     "target": {
-                      "type": "string",
-                      "maxLength": 1024,
-                      "description": "The id of the node in the graph"
+                      "type": "object",
+                      "properties": {
+                        "node": {
+                          "type": "string",
+                          "maxLength": 1024,
+                          "description": "The id of the node in the graph"
+                        },
+                        "variable": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "node",
+                        "variable"
+                      ]
                     },
-                    "variable": {
+                    "purpose": {
                       "type": "string",
-                      "description": "The variable name for the edge"
+                      "enum": [
+                        "control",
+                        "data"
+                      ],
+                      "description": "The purpose of the edge"
                     }
                   },
                   "required": [
                     "source",
                     "target",
-                    "variable"
+                    "purpose"
                   ]
                 }
               }
@@ -6762,19 +6759,330 @@
             "description": "The dataset to use"
           },
           "task": {
-            "allOf": [
+            "anyOf": [
               {
-                "$ref": "#/components/schemas/FunctionId"
+                "type": "object",
+                "properties": {
+                  "function_id": {
+                    "type": "string",
+                    "description": "The ID of the function"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "The version of the function"
+                  }
+                },
+                "required": [
+                  "function_id"
+                ],
+                "description": "Function id",
+                "title": "function_id"
               },
               {
-                "description": "The function to evaluate"
+                "type": "object",
+                "properties": {
+                  "project_name": {
+                    "type": "string",
+                    "description": "The name of the project containing the function"
+                  },
+                  "slug": {
+                    "type": "string",
+                    "description": "The slug of the function"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "The version of the function"
+                  }
+                },
+                "required": [
+                  "project_name",
+                  "slug"
+                ],
+                "description": "Project name and slug",
+                "title": "project_slug"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "global_function": {
+                    "type": "string",
+                    "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
+                  }
+                },
+                "required": [
+                  "global_function"
+                ],
+                "description": "Global function name",
+                "title": "global_function"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "prompt_session_id": {
+                    "type": "string",
+                    "description": "The ID of the prompt session"
+                  },
+                  "prompt_session_function_id": {
+                    "type": "string",
+                    "description": "The ID of the function in the prompt session"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "The version of the function"
+                  }
+                },
+                "required": [
+                  "prompt_session_id",
+                  "prompt_session_function_id"
+                ],
+                "description": "Prompt session id",
+                "title": "prompt_session_id"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "inline_context": {
+                    "type": "object",
+                    "properties": {
+                      "runtime": {
+                        "type": "string",
+                        "enum": [
+                          "node",
+                          "python"
+                        ]
+                      },
+                      "version": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "runtime",
+                      "version"
+                    ]
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "The inline code to execute"
+                  },
+                  "name": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The name of the inline code function"
+                  }
+                },
+                "required": [
+                  "inline_context",
+                  "code"
+                ],
+                "description": "Inline code function",
+                "title": "inline_code"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "inline_prompt": {
+                    "$ref": "#/components/schemas/PromptData"
+                  },
+                  "name": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The name of the inline prompt"
+                  }
+                },
+                "required": [
+                  "inline_prompt"
+                ],
+                "description": "Inline prompt definition",
+                "title": "inline_prompt"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "inline_prompt": {
+                    "$ref": "#/components/schemas/PromptData"
+                  },
+                  "inline_function": {
+                    "$ref": "#/components/schemas/FunctionData"
+                  },
+                  "name": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The name of the inline function"
+                  }
+                },
+                "required": [
+                  "inline_function"
+                ],
+                "description": "Inline function definition",
+                "title": "inline_function"
               }
-            ]
+            ],
+            "description": "Options for identifying a function",
+            "title": "FunctionId"
           },
           "scores": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FunctionId"
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "function_id": {
+                      "type": "string",
+                      "description": "The ID of the function"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "The version of the function"
+                    }
+                  },
+                  "required": [
+                    "function_id"
+                  ],
+                  "description": "Function id",
+                  "title": "function_id"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "project_name": {
+                      "type": "string",
+                      "description": "The name of the project containing the function"
+                    },
+                    "slug": {
+                      "type": "string",
+                      "description": "The slug of the function"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "The version of the function"
+                    }
+                  },
+                  "required": [
+                    "project_name",
+                    "slug"
+                  ],
+                  "description": "Project name and slug",
+                  "title": "project_slug"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "global_function": {
+                      "type": "string",
+                      "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
+                    }
+                  },
+                  "required": [
+                    "global_function"
+                  ],
+                  "description": "Global function name",
+                  "title": "global_function"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "prompt_session_id": {
+                      "type": "string",
+                      "description": "The ID of the prompt session"
+                    },
+                    "prompt_session_function_id": {
+                      "type": "string",
+                      "description": "The ID of the function in the prompt session"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "The version of the function"
+                    }
+                  },
+                  "required": [
+                    "prompt_session_id",
+                    "prompt_session_function_id"
+                  ],
+                  "description": "Prompt session id",
+                  "title": "prompt_session_id"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "inline_context": {
+                      "type": "object",
+                      "properties": {
+                        "runtime": {
+                          "type": "string",
+                          "enum": [
+                            "node",
+                            "python"
+                          ]
+                        },
+                        "version": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "runtime",
+                        "version"
+                      ]
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "The inline code to execute"
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "The name of the inline code function"
+                    }
+                  },
+                  "required": [
+                    "inline_context",
+                    "code"
+                  ],
+                  "description": "Inline code function",
+                  "title": "inline_code"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "inline_prompt": {
+                      "$ref": "#/components/schemas/PromptData"
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "The name of the inline prompt"
+                    }
+                  },
+                  "required": [
+                    "inline_prompt"
+                  ],
+                  "description": "Inline prompt definition",
+                  "title": "inline_prompt"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "inline_prompt": {
+                      "$ref": "#/components/schemas/PromptData"
+                    },
+                    "inline_function": {
+                      "$ref": "#/components/schemas/FunctionData"
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "The name of the inline function"
+                    }
+                  },
+                  "required": [
+                    "inline_function"
+                  ],
+                  "description": "Inline function definition",
+                  "title": "inline_function"
+                }
+              ],
+              "description": "Options for identifying a function",
+              "title": "FunctionId"
             },
             "description": "The functions to score the eval on"
           },
