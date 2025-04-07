@@ -3816,6 +3816,10 @@ components:
           items:
             type: string
           description: Trigger online scoring on any spans with a name in this list
+        skip_logging:
+          type: boolean
+          nullable: true
+          description: Whether to skip adding scorer spans when computing scores
       required:
         - sampling_rate
         - scorers
