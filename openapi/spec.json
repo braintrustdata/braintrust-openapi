@@ -4036,6 +4036,11 @@
               "type": "string"
             },
             "description": "Trigger online scoring on any spans with a name in this list"
+          },
+          "skip_logging": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether to skip adding scorer spans when computing scores"
           }
         },
         "required": [
@@ -6369,6 +6374,10 @@
             "type": "string",
             "nullable": true,
             "description": "The token to stop the run"
+          },
+          "extra_messages": {
+            "type": "string",
+            "description": "A template path of extra messages to append to the conversion. These messages will be appended to the end of the conversation, after the last message."
           }
         },
         "required": [
