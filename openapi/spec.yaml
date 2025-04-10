@@ -6038,18 +6038,6 @@ components:
               properties:
                 inline_prompt:
                   $ref: "#/components/schemas/PromptData"
-                name:
-                  type: string
-                  nullable: true
-                  description: The name of the inline prompt
-              required:
-                - inline_prompt
-              description: Inline prompt definition
-              title: inline_prompt
-            - type: object
-              properties:
-                inline_prompt:
-                  $ref: "#/components/schemas/PromptData"
                 inline_function:
                   type: object
                   additionalProperties:
@@ -6062,6 +6050,18 @@ components:
                 - inline_function
               description: Inline function definition
               title: inline_function
+            - type: object
+              properties:
+                inline_prompt:
+                  $ref: "#/components/schemas/PromptData"
+                name:
+                  type: string
+                  nullable: true
+                  description: The name of the inline prompt
+              required:
+                - inline_prompt
+              description: Inline prompt definition
+              title: inline_prompt
           description: Options for identifying a function
           title: FunctionId
         scores:
@@ -6153,18 +6153,6 @@ components:
                 properties:
                   inline_prompt:
                     $ref: "#/components/schemas/PromptData"
-                  name:
-                    type: string
-                    nullable: true
-                    description: The name of the inline prompt
-                required:
-                  - inline_prompt
-                description: Inline prompt definition
-                title: inline_prompt
-              - type: object
-                properties:
-                  inline_prompt:
-                    $ref: "#/components/schemas/PromptData"
                   inline_function:
                     type: object
                     additionalProperties:
@@ -6177,6 +6165,18 @@ components:
                   - inline_function
                 description: Inline function definition
                 title: inline_function
+              - type: object
+                properties:
+                  inline_prompt:
+                    $ref: "#/components/schemas/PromptData"
+                  name:
+                    type: string
+                    nullable: true
+                    description: The name of the inline prompt
+                required:
+                  - inline_prompt
+                description: Inline prompt definition
+                title: inline_prompt
             description: Options for identifying a function
             title: FunctionId
           description: The functions to score the eval on
