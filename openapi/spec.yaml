@@ -4432,7 +4432,11 @@ components:
                       type:
                         type: string
                         enum:
-                          - if
+                          - gate
+                      condition:
+                        type: string
+                        nullable: true
+                        description: A BTQL expression to be evaluated
                     required:
                       - type
                   - type: object
@@ -4458,9 +4462,66 @@ components:
                       type:
                         type: string
                         enum:
-                          - gate
+                          - aggregator
                     required:
                       - type
+                  - type: object
+                    properties:
+                      description:
+                        type: string
+                        nullable: true
+                        description: The description of the node
+                      position:
+                        type: object
+                        nullable: true
+                        properties:
+                          x:
+                            type: number
+                            description: The x position of the node
+                          y:
+                            type: number
+                            description: The y position of the node
+                        required:
+                          - x
+                          - y
+                        description: The position of the node
+                      type:
+                        type: string
+                        enum:
+                          - prompt_template
+                      prompt:
+                        anyOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                enum:
+                                  - completion
+                              content:
+                                type: string
+                            required:
+                              - type
+                              - content
+                            title: completion
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                enum:
+                                  - chat
+                              messages:
+                                type: array
+                                items:
+                                  $ref: "#/components/schemas/ChatCompletionMessageParam"
+                              tools:
+                                type: string
+                            required:
+                              - type
+                              - messages
+                            title: chat
+                    required:
+                      - type
+                      - prompt
             edges:
               type: object
               additionalProperties:
@@ -4495,6 +4556,7 @@ components:
                     enum:
                       - control
                       - data
+                      - messages
                     description: The purpose of the edge
                 required:
                   - source
@@ -4925,7 +4987,11 @@ components:
                       type:
                         type: string
                         enum:
-                          - if
+                          - gate
+                      condition:
+                        type: string
+                        nullable: true
+                        description: A BTQL expression to be evaluated
                     required:
                       - type
                   - type: object
@@ -4951,9 +5017,66 @@ components:
                       type:
                         type: string
                         enum:
-                          - gate
+                          - aggregator
                     required:
                       - type
+                  - type: object
+                    properties:
+                      description:
+                        type: string
+                        nullable: true
+                        description: The description of the node
+                      position:
+                        type: object
+                        nullable: true
+                        properties:
+                          x:
+                            type: number
+                            description: The x position of the node
+                          y:
+                            type: number
+                            description: The y position of the node
+                        required:
+                          - x
+                          - y
+                        description: The position of the node
+                      type:
+                        type: string
+                        enum:
+                          - prompt_template
+                      prompt:
+                        anyOf:
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                enum:
+                                  - completion
+                              content:
+                                type: string
+                            required:
+                              - type
+                              - content
+                            title: completion
+                          - type: object
+                            properties:
+                              type:
+                                type: string
+                                enum:
+                                  - chat
+                              messages:
+                                type: array
+                                items:
+                                  $ref: "#/components/schemas/ChatCompletionMessageParam"
+                              tools:
+                                type: string
+                            required:
+                              - type
+                              - messages
+                            title: chat
+                    required:
+                      - type
+                      - prompt
             edges:
               type: object
               additionalProperties:
@@ -4988,6 +5111,7 @@ components:
                     enum:
                       - control
                       - data
+                      - messages
                     description: The purpose of the edge
                 required:
                   - source
@@ -5927,7 +6051,9 @@ components:
                 inline_prompt:
                   $ref: "#/components/schemas/PromptData"
                 inline_function:
-                  $ref: "#/components/schemas/FunctionData"
+                  type: object
+                  additionalProperties:
+                    nullable: true
                 name:
                   type: string
                   nullable: true
@@ -6040,7 +6166,9 @@ components:
                   inline_prompt:
                     $ref: "#/components/schemas/PromptData"
                   inline_function:
-                    $ref: "#/components/schemas/FunctionData"
+                    type: object
+                    additionalProperties:
+                      nullable: true
                   name:
                     type: string
                     nullable: true
