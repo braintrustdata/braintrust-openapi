@@ -5173,9 +5173,10 @@ components:
                 - project_logs
                 - experiment
                 - playground_logs
+              description: The type of the object you are logging to
             object_id:
               type: string
-              description: The id of the container object you are logging to
+              description: The id of the object you are logging to
             row_id:
               type: string
               description: The row id to fetch
