@@ -5163,6 +5163,34 @@ components:
         input:
           nullable: true
           description: Argument to the function, which can be any JSON serializable value
+        fetch_row_fields:
+          type: object
+          nullable: true
+          properties:
+            object_type:
+              type: string
+              enum:
+                - project_logs
+                - experiment
+                - playground_logs
+              description: The type of the object you are logging to
+            object_id:
+              type: string
+              description: The id of the object you are logging to
+            row_id:
+              type: string
+              description: The row id to fetch
+            fields:
+              type: array
+              items:
+                type: string
+              description: The fields to fetch
+          required:
+            - object_type
+            - object_id
+            - row_id
+            - fields
+          description: If provided, the row id and fields to fetch before invoke
         expected:
           nullable: true
           description: The expected output of the function
