@@ -64,6 +64,10 @@ components:
       type: string
       format: uuid
       description: User id
+    ProjectAutomationIdParam:
+      type: string
+      format: uuid
+      description: ProjectAutomation id
     ProjectScoreIdParam:
       type: string
       format: uuid
@@ -125,6 +129,9 @@ components:
     GroupName:
       type: string
       description: Name of the group to search for
+    ProjectAutomationName:
+      type: string
+      description: Name of the project_automation to search for
     ProjectScoreName:
       type: string
       description: Name of the project_score to search for
@@ -3778,6 +3785,185 @@ components:
           description: Date of user creation
       required:
         - id
+    ProjectAutomation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project automation
+        project_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project that the project automation
+            belongs under
+        user_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: Identifies the user who created the project automation
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of project automation creation
+        name:
+          type: string
+          description: Name of the project automation
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project automation
+        config:
+          type: object
+          properties:
+            event_type:
+              type: string
+              enum:
+                - logs
+              description: The event which starts the automation execution
+            btql_filter:
+              type: string
+              description: BTQL filter to identify rows for the automation rule
+            interval_seconds:
+              type: number
+              minimum: 1
+              maximum: 2592000
+              description: Perform the triggered action at most once in this interval of
+                seconds
+            action:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - webhook
+                  description: The type of action to take when the automation rule is triggered
+                url:
+                  type: string
+                  description: The webhook URL to send the request to
+              required:
+                - type
+                - url
+              description: The action to take when the automation rule is triggered
+          required:
+            - event_type
+            - btql_filter
+            - interval_seconds
+            - action
+          description: The configuration for the automation rule
+      required:
+        - id
+        - project_id
+        - name
+        - config
+    CreateProjectAutomation:
+      type: object
+      properties:
+        project_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project that the project automation
+            belongs under
+        name:
+          type: string
+          description: Name of the project automation
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project automation
+        config:
+          type: object
+          properties:
+            event_type:
+              type: string
+              enum:
+                - logs
+              description: The event which starts the automation execution
+            btql_filter:
+              type: string
+              description: BTQL filter to identify rows for the automation rule
+            interval_seconds:
+              type: number
+              minimum: 1
+              maximum: 2592000
+              description: Perform the triggered action at most once in this interval of
+                seconds
+            action:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - webhook
+                  description: The type of action to take when the automation rule is triggered
+                url:
+                  type: string
+                  description: The webhook URL to send the request to
+              required:
+                - type
+                - url
+              description: The action to take when the automation rule is triggered
+          required:
+            - event_type
+            - btql_filter
+            - interval_seconds
+            - action
+          description: The configuration for the automation rule
+      required:
+        - project_id
+        - name
+        - config
+    PatchProjectAutomation:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Name of the project automation
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the project automation
+        config:
+          type: object
+          nullable: true
+          properties:
+            event_type:
+              type: string
+              enum:
+                - logs
+              description: The event which starts the automation execution
+            btql_filter:
+              type: string
+              description: BTQL filter to identify rows for the automation rule
+            interval_seconds:
+              type: number
+              minimum: 1
+              maximum: 2592000
+              description: Perform the triggered action at most once in this interval of
+                seconds
+            action:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - webhook
+                  description: The type of action to take when the automation rule is triggered
+                url:
+                  type: string
+                  description: The webhook URL to send the request to
+              required:
+                - type
+                - url
+              description: The action to take when the automation rule is triggered
+          required:
+            - event_type
+            - btql_filter
+            - interval_seconds
+            - action
+          description: The configuration for the automation rule
     ProjectScoreCategory:
       type: object
       properties:
@@ -6420,6 +6606,13 @@ components:
       description: User id
       name: user_id
       in: path
+    ProjectAutomationIdParam:
+      schema:
+        $ref: "#/components/schemas/ProjectAutomationIdParam"
+      required: true
+      description: ProjectAutomation id
+      name: project_automation_id
+      in: path
     ProjectScoreIdParam:
       schema:
         $ref: "#/components/schemas/ProjectScoreIdParam"
@@ -6544,6 +6737,14 @@ components:
       required: false
       description: Name of the group to search for
       name: group_name
+      in: query
+      allowReserved: true
+    ProjectAutomationName:
+      schema:
+        $ref: "#/components/schemas/ProjectAutomationName"
+      required: false
+      description: Name of the project_automation to search for
+      name: project_automation_name
       in: query
       allowReserved: true
     ProjectScoreName:
@@ -11878,6 +12079,515 @@ paths:
         - CORS
       parameters:
         - $ref: "#/components/parameters/UserIdParam"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/project_automation:
+    post:
+      tags:
+        - ProjectAutomations
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: postProjectAutomation
+      description: Create a new project_automation. If there is an existing
+        project_automation with the same name as the one specified in the
+        request, will return the existing project_automation unmodified
+      summary: Create project_automation
+      requestBody:
+        description: Any desired information about the new project_automation object
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectAutomation"
+      responses:
+        "200":
+          description: Returns the new project_automation object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectAutomation"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    put:
+      tags:
+        - ProjectAutomations
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: putProjectAutomation
+      description: Create or replace project_automation. If there is an existing
+        project_automation with the same name as the one specified in the
+        request, will replace the existing project_automation with the provided
+        fields
+      summary: Create or replace project_automation
+      requestBody:
+        description: Any desired information about the new project_automation object
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectAutomation"
+      responses:
+        "200":
+          description: Returns the new project_automation object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectAutomation"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    get:
+      operationId: getProjectAutomation
+      tags:
+        - ProjectAutomations
+      description: List out all project_automations. The project_automations are
+        sorted by creation date, with the most recently-created
+        project_automations coming first
+      summary: List project_automations
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/ProjectAutomationName"
+        - $ref: "#/components/parameters/OrgName"
+      responses:
+        "200":
+          description: Returns a list of project_automation objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProjectAutomation"
+                    description: A list of project_automation objects
+                required:
+                  - objects
+                additionalProperties: false
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsProjectAutomation
+      description: Enable CORS
+      summary: Enable CORS (`/v1/project_automation`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/project_automation/{project_automation_id}:
+    get:
+      operationId: getProjectAutomationId
+      tags:
+        - ProjectAutomations
+      description: Get a project_automation object by its id
+      summary: Get project_automation
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectAutomationIdParam"
+      responses:
+        "200":
+          description: Returns the project_automation object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectAutomation"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    patch:
+      operationId: patchProjectAutomationId
+      tags:
+        - ProjectAutomations
+      description: Partially update a project_automation object. Specify the fields to
+        update in the payload. Any object-type fields will be deep-merged with
+        existing content. Currently we do not support removing fields or setting
+        them to null.
+      summary: Partially update project_automation
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectAutomationIdParam"
+      requestBody:
+        description: Fields to update
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchProjectAutomation"
+      responses:
+        "200":
+          description: Returns the project_automation object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectAutomation"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteProjectAutomationId
+      tags:
+        - ProjectAutomations
+      description: Delete a project_automation object by its id
+      summary: Delete project_automation
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ProjectAutomationIdParam"
+      responses:
+        "200":
+          description: Returns the deleted project_automation object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectAutomation"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsProjectAutomationId
+      description: Enable CORS
+      summary: Enable CORS (`/v1/project_automation/{project_automation_id}`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/ProjectAutomationIdParam"
       responses:
         "200":
           description: Response for CORS method
