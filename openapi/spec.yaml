@@ -2680,6 +2680,17 @@ components:
         - id
         - function
         - type
+    ChatCompletionMessageReasoning:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+      description: "Note: This is not part of the OpenAI API spec, but we added it for
+        interoperability with multiple reasoning models."
     ChatCompletionMessageParam:
       anyOf:
         - type: object
@@ -2737,6 +2748,11 @@ components:
               nullable: true
               items:
                 $ref: "#/components/schemas/ChatCompletionMessageToolCall"
+            reasoning:
+              type: array
+              nullable: true
+              items:
+                $ref: "#/components/schemas/ChatCompletionMessageReasoning"
           required:
             - role
           title: assistant
