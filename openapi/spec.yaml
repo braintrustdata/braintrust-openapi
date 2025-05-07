@@ -415,6 +415,23 @@ components:
               - column_id
               - position
           description: The order of the fields to display in the trace view
+        remote_eval_sources:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              name:
+                type: string
+              description:
+                type: string
+                nullable: true
+            required:
+              - url
+              - name
+          description: The remote eval sources to use for the project
     Project:
       type: object
       properties:
