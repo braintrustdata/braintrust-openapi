@@ -3818,6 +3818,13 @@ components:
           description: Date of user creation
       required:
         - id
+    RetentionObjectType:
+      type: string
+      enum:
+        - project_log
+        - experiment
+        - dataset
+      description: The object type that the retention policy applies to
     ProjectAutomation:
       type: object
       properties:
@@ -3848,42 +3855,68 @@ components:
           nullable: true
           description: Textual description of the project automation
         config:
-          type: object
-          properties:
-            event_type:
-              type: string
-              enum:
-                - logs
-              description: The event which starts the automation execution
-            btql_filter:
-              type: string
-              description: BTQL filter to identify rows for the automation rule
-            interval_seconds:
-              type: number
-              minimum: 1
-              maximum: 2592000
-              description: Perform the triggered action at most once in this interval of
-                seconds
-            action:
-              type: object
+          anyOf:
+            - type: object
               properties:
-                type:
+                event_type:
                   type: string
                   enum:
-                    - webhook
-                  description: The type of action to take when the automation rule is triggered
-                url:
+                    - logs
+                  description: The event which starts the automation execution
+                btql_filter:
                   type: string
-                  description: The webhook URL to send the request to
+                  description: BTQL filter to identify rows for the automation rule
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                action:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - webhook
+                          description: The type of action to take
+                        url:
+                          type: string
+                          description: The webhook URL to send the request to
+                      required:
+                        - type
+                        - url
+                  description: The action to take when the automation rule is triggered
               required:
-                - type
-                - url
-              description: The action to take when the automation rule is triggered
-          required:
-            - event_type
-            - btql_filter
-            - interval_seconds
-            - action
+                - event_type
+                - btql_filter
+                - interval_seconds
+                - action
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - retention
+                  description: The event which starts the automation execution
+                object_type:
+                  $ref: "#/components/schemas/RetentionObjectType"
+                object_id:
+                  type: string
+                  nullable: true
+                  format: uuid
+                  description: The object id that the retention policy applies to
+                retention_days:
+                  type: number
+                  minimum: 1
+                  maximum: 365
+                  description: The number of days to retain the object
+              required:
+                - event_type
+                - object_type
+                - object_id
+                - retention_days
           description: The configuration for the automation rule
       required:
         - id
@@ -3906,42 +3939,68 @@ components:
           nullable: true
           description: Textual description of the project automation
         config:
-          type: object
-          properties:
-            event_type:
-              type: string
-              enum:
-                - logs
-              description: The event which starts the automation execution
-            btql_filter:
-              type: string
-              description: BTQL filter to identify rows for the automation rule
-            interval_seconds:
-              type: number
-              minimum: 1
-              maximum: 2592000
-              description: Perform the triggered action at most once in this interval of
-                seconds
-            action:
-              type: object
+          anyOf:
+            - type: object
               properties:
-                type:
+                event_type:
                   type: string
                   enum:
-                    - webhook
-                  description: The type of action to take when the automation rule is triggered
-                url:
+                    - logs
+                  description: The event which starts the automation execution
+                btql_filter:
                   type: string
-                  description: The webhook URL to send the request to
+                  description: BTQL filter to identify rows for the automation rule
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                action:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - webhook
+                          description: The type of action to take
+                        url:
+                          type: string
+                          description: The webhook URL to send the request to
+                      required:
+                        - type
+                        - url
+                  description: The action to take when the automation rule is triggered
               required:
-                - type
-                - url
-              description: The action to take when the automation rule is triggered
-          required:
-            - event_type
-            - btql_filter
-            - interval_seconds
-            - action
+                - event_type
+                - btql_filter
+                - interval_seconds
+                - action
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - retention
+                  description: The event which starts the automation execution
+                object_type:
+                  $ref: "#/components/schemas/RetentionObjectType"
+                object_id:
+                  type: string
+                  nullable: true
+                  format: uuid
+                  description: The object id that the retention policy applies to
+                retention_days:
+                  type: number
+                  minimum: 1
+                  maximum: 365
+                  description: The number of days to retain the object
+              required:
+                - event_type
+                - object_type
+                - object_id
+                - retention_days
           description: The configuration for the automation rule
       required:
         - project_id
@@ -3959,43 +4018,69 @@ components:
           nullable: true
           description: Textual description of the project automation
         config:
-          type: object
-          nullable: true
-          properties:
-            event_type:
-              type: string
-              enum:
-                - logs
-              description: The event which starts the automation execution
-            btql_filter:
-              type: string
-              description: BTQL filter to identify rows for the automation rule
-            interval_seconds:
-              type: number
-              minimum: 1
-              maximum: 2592000
-              description: Perform the triggered action at most once in this interval of
-                seconds
-            action:
-              type: object
+          anyOf:
+            - type: object
               properties:
-                type:
+                event_type:
                   type: string
                   enum:
-                    - webhook
-                  description: The type of action to take when the automation rule is triggered
-                url:
+                    - logs
+                  description: The event which starts the automation execution
+                btql_filter:
                   type: string
-                  description: The webhook URL to send the request to
+                  description: BTQL filter to identify rows for the automation rule
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                action:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - webhook
+                          description: The type of action to take
+                        url:
+                          type: string
+                          description: The webhook URL to send the request to
+                      required:
+                        - type
+                        - url
+                  description: The action to take when the automation rule is triggered
               required:
-                - type
-                - url
-              description: The action to take when the automation rule is triggered
-          required:
-            - event_type
-            - btql_filter
-            - interval_seconds
-            - action
+                - event_type
+                - btql_filter
+                - interval_seconds
+                - action
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - retention
+                  description: The event which starts the automation execution
+                object_type:
+                  $ref: "#/components/schemas/RetentionObjectType"
+                object_id:
+                  type: string
+                  nullable: true
+                  format: uuid
+                  description: The object id that the retention policy applies to
+                retention_days:
+                  type: number
+                  minimum: 1
+                  maximum: 365
+                  description: The number of days to retain the object
+              required:
+                - event_type
+                - object_type
+                - object_id
+                - retention_days
+            - type: "null"
           description: The configuration for the automation rule
     ProjectScoreCategory:
       type: object
