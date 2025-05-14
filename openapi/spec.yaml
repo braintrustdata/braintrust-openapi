@@ -3821,7 +3821,7 @@ components:
     RetentionObjectType:
       type: string
       enum:
-        - project_log
+        - project_logs
         - experiment
         - dataset
       description: The object type that the retention policy applies to

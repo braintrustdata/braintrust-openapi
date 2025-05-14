@@ -4028,7 +4028,7 @@
       "RetentionObjectType": {
         "type": "string",
         "enum": [
-          "project_log",
+          "project_logs",
           "experiment",
           "dataset"
         ],
