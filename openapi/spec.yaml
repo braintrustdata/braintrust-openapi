@@ -2625,9 +2625,17 @@ components:
           type: string
           enum:
             - text
+        cache_control:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - ephemeral
+          required:
+            - type
       required:
         - type
-      title: text
     ChatCompletionContentPartImage:
       type: object
       properties:
@@ -2662,7 +2670,9 @@ components:
       title: image_url
     ChatCompletionContentPart:
       anyOf:
-        - $ref: "#/components/schemas/ChatCompletionContentPartText"
+        - allOf:
+            - $ref: "#/components/schemas/ChatCompletionContentPartText"
+            - title: text
         - $ref: "#/components/schemas/ChatCompletionContentPartImage"
       title: chat_completion_content_part
     ChatCompletionContent:
@@ -2713,8 +2723,12 @@ components:
         - type: object
           properties:
             content:
-              type: string
-              default: ""
+              anyOf:
+                - type: string
+                  default: ""
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/ChatCompletionContentPartText"
             role:
               type: string
               enum:
@@ -2744,8 +2758,12 @@ components:
               enum:
                 - assistant
             content:
-              type: string
-              nullable: true
+              anyOf:
+                - type: string
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/ChatCompletionContentPartText"
+                - type: "null"
             function_call:
               type: object
               nullable: true
@@ -2792,7 +2810,7 @@ components:
           properties:
             content:
               type: string
-              default: ""
+              nullable: true
             name:
               type: string
             role:
@@ -2800,6 +2818,7 @@ components:
               enum:
                 - function
           required:
+            - content
             - name
             - role
           title: function
