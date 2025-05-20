@@ -644,6 +644,7 @@
           },
           "_xact_id": {
             "type": "string",
+            "nullable": true,
             "description": "Transaction ID of the original event."
           },
           "created": {
@@ -655,8 +656,7 @@
         "required": [
           "object_type",
           "object_id",
-          "id",
-          "_xact_id"
+          "id"
         ],
         "description": "Indicates the event was copied from another object."
       },
@@ -2517,12 +2517,25 @@
             "enum": [
               "text"
             ]
+          },
+          "cache_control": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ephemeral"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
           }
         },
         "required": [
           "type"
-        ],
-        "title": "text"
+        ]
       },
       "ChatCompletionContentPartImage": {
         "type": "object",
@@ -2579,7 +2592,14 @@
       "ChatCompletionContentPart": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/ChatCompletionContentPartText"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChatCompletionContentPartText"
+              },
+              {
+                "title": "text"
+              }
+            ]
           },
           {
             "$ref": "#/components/schemas/ChatCompletionContentPartImage"
@@ -2657,8 +2677,18 @@
             "type": "object",
             "properties": {
               "content": {
-                "type": "string",
-                "default": ""
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "default": ""
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartText"
+                    }
+                  }
+                ]
               },
               "role": {
                 "type": "string",
@@ -2706,8 +2736,20 @@
                 ]
               },
               "content": {
-                "type": "string",
-                "nullable": true
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartText"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "function_call": {
                 "type": "object",
@@ -2777,7 +2819,7 @@
             "properties": {
               "content": {
                 "type": "string",
-                "default": ""
+                "nullable": true
               },
               "name": {
                 "type": "string"
@@ -2790,6 +2832,7 @@
               }
             },
             "required": [
+              "content",
               "name",
               "role"
             ],
