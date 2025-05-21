@@ -556,6 +556,7 @@ components:
           description: ID of the original event.
         _xact_id:
           type: string
+          nullable: true
           description: Transaction ID of the original event.
         created:
           type: string
@@ -565,7 +566,6 @@ components:
         - object_type
         - object_id
         - id
-        - _xact_id
       description: Indicates the event was copied from another object.
     InsertProjectLogsEvent:
       type: object

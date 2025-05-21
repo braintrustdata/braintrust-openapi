@@ -644,6 +644,7 @@
           },
           "_xact_id": {
             "type": "string",
+            "nullable": true,
             "description": "Transaction ID of the original event."
           },
           "created": {
@@ -655,8 +656,7 @@
         "required": [
           "object_type",
           "object_id",
-          "id",
-          "_xact_id"
+          "id"
         ],
         "description": "Indicates the event was copied from another object."
       },
