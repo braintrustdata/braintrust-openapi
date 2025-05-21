@@ -6978,6 +6978,21 @@
             "format": "uuid",
             "description": "Unique identifier for the user"
           },
+          "user_email": {
+            "type": "string",
+            "nullable": true,
+            "description": "The user's email"
+          },
+          "user_given_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Given name of the user"
+          },
+          "user_family_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Family name of the user"
+          },
           "org_id": {
             "type": "string",
             "nullable": true,
@@ -7022,6 +7037,21 @@
             "nullable": true,
             "format": "uuid",
             "description": "Unique identifier for the user"
+          },
+          "user_email": {
+            "type": "string",
+            "nullable": true,
+            "description": "The user's email"
+          },
+          "user_given_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Given name of the user"
+          },
+          "user_family_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Family name of the user"
           },
           "org_id": {
             "type": "string",
