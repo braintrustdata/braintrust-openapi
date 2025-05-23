@@ -2726,9 +2726,11 @@ components:
               anyOf:
                 - type: string
                   default: ""
+                  title: text
                 - type: array
                   items:
                     $ref: "#/components/schemas/ChatCompletionContentPartText"
+                  title: array
             role:
               type: string
               enum:
@@ -2797,9 +2799,11 @@ components:
               anyOf:
                 - type: string
                   default: ""
+                  title: text
                 - type: array
                   items:
                     $ref: "#/components/schemas/ChatCompletionContentPartText"
+                  title: array
             role:
               type: string
               enum:

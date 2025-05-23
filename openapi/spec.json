@@ -2680,13 +2680,15 @@
                 "anyOf": [
                   {
                     "type": "string",
-                    "default": ""
+                    "default": "",
+                    "title": "text"
                   },
                   {
                     "type": "array",
                     "items": {
                       "$ref": "#/components/schemas/ChatCompletionContentPartText"
-                    }
+                    },
+                    "title": "array"
                   }
                 ]
               },
@@ -2798,13 +2800,15 @@
                 "anyOf": [
                   {
                     "type": "string",
-                    "default": ""
+                    "default": "",
+                    "title": "text"
                   },
                   {
                     "type": "array",
                     "items": {
                       "$ref": "#/components/schemas/ChatCompletionContentPartText"
-                    }
+                    },
+                    "title": "array"
                   }
                 ]
               },
