@@ -2726,9 +2726,11 @@ components:
               anyOf:
                 - type: string
                   default: ""
+                  title: text
                 - type: array
                   items:
                     $ref: "#/components/schemas/ChatCompletionContentPartText"
+                  title: array
             role:
               type: string
               enum:
@@ -2794,8 +2796,14 @@ components:
         - type: object
           properties:
             content:
-              type: string
-              default: ""
+              anyOf:
+                - type: string
+                  default: ""
+                  title: text
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/ChatCompletionContentPartText"
+                  title: array
             role:
               type: string
               enum:
@@ -6032,6 +6040,18 @@ components:
           nullable: true
           format: uuid
           description: Unique identifier for the user
+        user_email:
+          type: string
+          nullable: true
+          description: The user's email
+        user_given_name:
+          type: string
+          nullable: true
+          description: Given name of the user
+        user_family_name:
+          type: string
+          nullable: true
+          description: Family name of the user
         org_id:
           type: string
           nullable: true
@@ -6067,6 +6087,18 @@ components:
           nullable: true
           format: uuid
           description: Unique identifier for the user
+        user_email:
+          type: string
+          nullable: true
+          description: The user's email
+        user_given_name:
+          type: string
+          nullable: true
+          description: Given name of the user
+        user_family_name:
+          type: string
+          nullable: true
+          description: Family name of the user
         org_id:
           type: string
           nullable: true
