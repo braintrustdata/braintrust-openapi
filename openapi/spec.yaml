@@ -2794,8 +2794,12 @@ components:
         - type: object
           properties:
             content:
-              type: string
-              default: ""
+              anyOf:
+                - type: string
+                  default: ""
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/ChatCompletionContentPartText"
             role:
               type: string
               enum:
