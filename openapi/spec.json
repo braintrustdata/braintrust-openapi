@@ -377,11 +377,13 @@
       },
       "AclListUserId": {
         "type": "string",
-        "format": "uuid"
+        "format": "uuid",
+        "description": "Id of the user the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
       },
       "AclListGroupId": {
         "type": "string",
-        "format": "uuid"
+        "format": "uuid",
+        "description": "Id of the group the ACL applies to. Exactly one of `user_id` and `group_id` will be provided"
       },
       "AclListPermission": {
         "type": "string",
@@ -416,7 +418,8 @@
       },
       "AclListRoleId": {
         "type": "string",
-        "format": "uuid"
+        "format": "uuid",
+        "description": "Id of the role the ACL grants. Exactly one of `permission` and `role_id` will be provided"
       },
       "ProjectScoreType": {
         "type": "string",
@@ -8562,6 +8565,7 @@
           "$ref": "#/components/schemas/AclListUserId"
         },
         "required": false,
+        "description": "Id of the user the ACL applies to. Exactly one of `user_id` and `group_id` will be provided",
         "name": "user_id",
         "in": "query"
       },
@@ -8570,6 +8574,7 @@
           "$ref": "#/components/schemas/AclListGroupId"
         },
         "required": false,
+        "description": "Id of the group the ACL applies to. Exactly one of `user_id` and `group_id` will be provided",
         "name": "group_id",
         "in": "query"
       },
@@ -8596,6 +8601,7 @@
           "$ref": "#/components/schemas/AclListRoleId"
         },
         "required": false,
+        "description": "Id of the role the ACL grants. Exactly one of `permission` and `role_id` will be provided",
         "name": "role_id",
         "in": "query"
       },
