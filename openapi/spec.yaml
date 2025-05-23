@@ -346,6 +346,67 @@ components:
       type: string
       format: uuid
       description: The id of the object the ACL applies to
+    AclListOrgObjectType:
+      type: string
+      enum:
+        - organization
+        - project
+        - experiment
+        - dataset
+        - prompt
+        - prompt_session
+        - group
+        - role
+        - org_member
+        - project_log
+        - org_project
+      description: The object type that the ACL applies to
+    AclListOrgObjectId:
+      type: string
+      format: uuid
+      description: The id of the object the ACL applies to
+    AclListUserId:
+      type: string
+      format: uuid
+    AclListGroupId:
+      type: string
+      format: uuid
+    AclListPermission:
+      type: string
+      enum:
+        - create
+        - read
+        - update
+        - delete
+        - create_acls
+        - read_acls
+        - update_acls
+        - delete_acls
+      description: >-
+        Each permission permits a certain type of operation on an object in the
+        system
+
+
+        Permissions can be assigned to to objects on an individual basis, or
+        grouped into roles
+    AclListRestrictObjectType:
+      type: string
+      enum:
+        - organization
+        - project
+        - experiment
+        - dataset
+        - prompt
+        - prompt_session
+        - group
+        - role
+        - org_member
+        - project_log
+        - org_project
+      description: The object type that the ACL applies to
+    AclListRoleId:
+      type: string
+      format: uuid
     ProjectScoreType:
       type: string
       enum:
@@ -7158,6 +7219,58 @@ components:
       description: The id of the object the ACL applies to
       name: object_id
       in: query
+    AclListOrgObjectType:
+      schema:
+        $ref: "#/components/schemas/AclListOrgObjectType"
+      required: false
+      description: The object type that the ACL applies to
+      name: object_type
+      in: query
+    AclListOrgObjectId:
+      schema:
+        $ref: "#/components/schemas/AclListOrgObjectId"
+      required: false
+      description: The id of the object the ACL applies to
+      name: object_id
+      in: query
+    AclListUserId:
+      schema:
+        $ref: "#/components/schemas/AclListUserId"
+      required: false
+      name: user_id
+      in: query
+    AclListGroupId:
+      schema:
+        $ref: "#/components/schemas/AclListGroupId"
+      required: false
+      name: group_id
+      in: query
+    AclListPermission:
+      schema:
+        $ref: "#/components/schemas/AclListPermission"
+      required: false
+      description: >-
+        Each permission permits a certain type of operation on an object in the
+        system
+
+
+        Permissions can be assigned to to objects on an individual basis, or
+        grouped into roles
+      name: permission
+      in: query
+    AclListRestrictObjectType:
+      schema:
+        $ref: "#/components/schemas/AclListRestrictObjectType"
+      required: false
+      description: The object type that the ACL applies to
+      name: restrict_object_type
+      in: query
+    AclListRoleId:
+      schema:
+        $ref: "#/components/schemas/AclListRoleId"
+      required: false
+      name: role_id
+      in: query
     ProjectScoreType:
       schema:
         anyOf:
@@ -11629,6 +11742,11 @@ paths:
         - $ref: "#/components/parameters/Ids"
         - $ref: "#/components/parameters/AclObjectType"
         - $ref: "#/components/parameters/AclObjectId"
+        - $ref: "#/components/parameters/AclListUserId"
+        - $ref: "#/components/parameters/AclListGroupId"
+        - $ref: "#/components/parameters/AclListPermission"
+        - $ref: "#/components/parameters/AclListRestrictObjectType"
+        - $ref: "#/components/parameters/AclListRoleId"
       responses:
         "200":
           description: Returns a list of acl objects
@@ -11965,6 +12083,137 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/acl/list_org:
+    get:
+      operationId: aclListOrg
+      tags:
+        - Acls
+      description: List all acls in the org. This query requires the caller to have
+        `read_acls` permission at the organization level
+      summary: List org acls
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/AclListOrgObjectType"
+        - $ref: "#/components/parameters/AclListOrgObjectId"
+        - $ref: "#/components/parameters/AclListUserId"
+        - $ref: "#/components/parameters/AclListGroupId"
+        - $ref: "#/components/parameters/AclListPermission"
+        - $ref: "#/components/parameters/AclListRestrictObjectType"
+        - $ref: "#/components/parameters/AclListRoleId"
+        - $ref: "#/components/parameters/OrgName"
+      responses:
+        "200":
+          description: A list of acls
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Acl"
+                description: >-
+                  An ACL grants a certain permission or role to a certain user
+                  or group on an object.
+
+
+                  ACLs are inherited across the object hierarchy. So for
+                  example, if a user has read permissions on a project, they
+                  will also have read permissions on any experiment, dataset,
+                  etc. created within that project.
+
+
+                  To restrict a grant to a particular sub-object, you may
+                  specify `restrict_object_type` in the ACL, as part of a direct
+                  permission grant or as part of a role.
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsAclListOrg
+      description: Enable CORS
+      summary: Enable CORS (`/v1/acl/list_org`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
           content:
             text/plain:
               schema:
