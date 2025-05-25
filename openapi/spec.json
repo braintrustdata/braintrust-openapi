@@ -6456,7 +6456,15 @@
             "additionalProperties": {
               "nullable": true
             },
-            "description": "Any relevant metadata"
+            "description": "Any relevant metadata. This will be logged and available as the `metadata` argument."
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Any relevant tags to log on the span."
           },
           "messages": {
             "type": "array",
