@@ -301,6 +301,7 @@ components:
         - scorers
         - logs
         - agents
+        - monitor
         - null
       description: Type of table that the view corresponds to.
     UserGivenName:
@@ -5723,6 +5724,7 @@ components:
             - scorers
             - logs
             - agents
+            - monitor
             - null
           description: Type of table that the view corresponds to.
         name:
@@ -5777,6 +5779,7 @@ components:
             - scorers
             - logs
             - agents
+            - monitor
             - null
           description: Type of table that the view corresponds to.
         name:
@@ -5826,6 +5829,7 @@ components:
             - scorers
             - logs
             - agents
+            - monitor
             - null
           description: Type of table that the view corresponds to.
         name:

@@ -285,6 +285,7 @@
           "scorers",
           "logs",
           "agents",
+          "monitor",
           null
         ],
         "description": "Type of table that the view corresponds to."
@@ -6679,6 +6680,7 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
             "description": "Type of table that the view corresponds to."
@@ -6746,6 +6748,7 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
             "description": "Type of table that the view corresponds to."
@@ -6807,6 +6810,7 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
             "description": "Type of table that the view corresponds to."
