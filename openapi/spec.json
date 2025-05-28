@@ -6614,45 +6614,6 @@
           {
             "type": "object",
             "properties": {
-              "columnVisibility": {
-                "type": "object",
-                "nullable": true,
-                "additionalProperties": {
-                  "type": "boolean"
-                }
-              },
-              "columnOrder": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "type": "string"
-                }
-              },
-              "columnSizing": {
-                "type": "object",
-                "nullable": true,
-                "additionalProperties": {
-                  "type": "number"
-                }
-              },
-              "grouping": {
-                "type": "string",
-                "nullable": true
-              },
-              "rowHeight": {
-                "type": "string",
-                "nullable": true
-              },
-              "layout": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "title": "TableViewOptions"
-          },
-          {
-            "type": "object",
-            "properties": {
               "viewType": {
                 "type": "string",
                 "enum": [
@@ -6711,6 +6672,45 @@
               "options"
             ],
             "title": "MonitorViewOptions"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "columnVisibility": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "boolean"
+                }
+              },
+              "columnOrder": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "columnSizing": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "grouping": {
+                "type": "string",
+                "nullable": true
+              },
+              "rowHeight": {
+                "type": "string",
+                "nullable": true
+              },
+              "layout": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "title": "TableViewOptions"
           },
           {
             "type": "null"
