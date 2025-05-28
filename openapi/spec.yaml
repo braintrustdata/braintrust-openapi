@@ -303,7 +303,7 @@ components:
         - agents
         - monitor
         - null
-      description: Type of table that the view corresponds to.
+      description: Type of object that the view corresponds to.
     UserGivenName:
       anyOf:
         - type: string
@@ -5704,30 +5704,37 @@ components:
             options:
               type: object
               properties:
-                columnVisibility:
+                spanType:
+                  type: string
+                  nullable: true
+                  enum:
+                    - range
+                    - frame
+                    - null
+                rangeValue:
+                  type: string
+                  nullable: true
+                frameStart:
+                  type: string
+                  nullable: true
+                frameEnd:
+                  type: string
+                  nullable: true
+                chartVisibility:
                   type: object
                   nullable: true
                   additionalProperties:
                     type: boolean
-                columnOrder:
-                  type: array
-                  nullable: true
-                  items:
-                    type: string
-                columnSizing:
-                  type: object
-                  nullable: true
-                  additionalProperties:
-                    type: number
-                grouping:
+                projectId:
                   type: string
                   nullable: true
-                rowHeight:
+                type:
                   type: string
                   nullable: true
-                layout:
-                  type: string
-                  nullable: true
+                  enum:
+                    - project
+                    - experiment
+                    - null
           required:
             - viewType
             - options
@@ -5763,7 +5770,7 @@ components:
             - agents
             - monitor
             - null
-          description: Type of table that the view corresponds to.
+          description: Type of object that the view corresponds to.
         name:
           type: string
           description: Name of the view
@@ -5818,7 +5825,7 @@ components:
             - agents
             - monitor
             - null
-          description: Type of table that the view corresponds to.
+          description: Type of object that the view corresponds to.
         name:
           type: string
           description: Name of the view
@@ -5868,7 +5875,7 @@ components:
             - agents
             - monitor
             - null
-          description: Type of table that the view corresponds to.
+          description: Type of object that the view corresponds to.
         name:
           type: string
           nullable: true
@@ -7229,7 +7236,7 @@ components:
       schema:
         $ref: "#/components/schemas/ViewType"
       required: false
-      description: Type of table that the view corresponds to.
+      description: Type of object that the view corresponds to.
       name: view_type
       in: query
     UserGivenName:

@@ -288,7 +288,7 @@
           "monitor",
           null
         ],
-        "description": "Type of table that the view corresponds to."
+        "description": "Type of object that the view corresponds to."
       },
       "UserGivenName": {
         "anyOf": [
@@ -6661,38 +6661,46 @@
               "options": {
                 "type": "object",
                 "properties": {
-                  "columnVisibility": {
+                  "spanType": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "range",
+                      "frame",
+                      null
+                    ]
+                  },
+                  "rangeValue": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameStart": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameEnd": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "chartVisibility": {
                     "type": "object",
                     "nullable": true,
                     "additionalProperties": {
                       "type": "boolean"
                     }
                   },
-                  "columnOrder": {
-                    "type": "array",
+                  "projectId": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "type": {
+                    "type": "string",
                     "nullable": true,
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "columnSizing": {
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": {
-                      "type": "number"
-                    }
-                  },
-                  "grouping": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "rowHeight": {
-                    "type": "string",
-                    "nullable": true
-                  },
-                  "layout": {
-                    "type": "string",
-                    "nullable": true
+                    "enum": [
+                      "project",
+                      "experiment",
+                      null
+                    ]
                   }
                 }
               }
@@ -6742,7 +6750,7 @@
               "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -6810,7 +6818,7 @@
               "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -6872,7 +6880,7 @@
               "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -8561,7 +8569,7 @@
           "$ref": "#/components/schemas/ViewType"
         },
         "required": false,
-        "description": "Type of table that the view corresponds to.",
+        "description": "Type of object that the view corresponds to.",
         "name": "view_type",
         "in": "query"
       },
