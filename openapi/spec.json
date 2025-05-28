@@ -6609,94 +6609,46 @@
         },
         "description": "The view definition"
       },
-      "TableViewOptions": {
-        "type": "object",
-        "properties": {
-          "columnVisibility": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "boolean"
-            }
-          },
-          "columnOrder": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
-          },
-          "columnSizing": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "number"
-            }
-          },
-          "grouping": {
-            "type": "string",
-            "nullable": true
-          },
-          "rowHeight": {
-            "type": "string",
-            "nullable": true
-          },
-          "layout": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "MonitorViewOptions": {
-        "type": "object",
-        "properties": {
-          "spanType": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "range",
-              "frame",
-              null
-            ]
-          },
-          "rangeValue": {
-            "type": "string",
-            "nullable": true
-          },
-          "frameStart": {
-            "type": "string",
-            "nullable": true
-          },
-          "frameEnd": {
-            "type": "string",
-            "nullable": true
-          },
-          "chartVisibility": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "boolean"
-            }
-          },
-          "projectId": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "project",
-              "experiment",
-              null
-            ]
-          }
-        }
-      },
       "ViewOptions": {
         "anyOf": [
           {
-            "$ref": "#/components/schemas/TableViewOptions"
+            "type": "object",
+            "properties": {
+              "columnVisibility": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "boolean"
+                }
+              },
+              "columnOrder": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "columnSizing": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "grouping": {
+                "type": "string",
+                "nullable": true
+              },
+              "rowHeight": {
+                "type": "string",
+                "nullable": true
+              },
+              "layout": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "title": "TableViewOptions"
           },
           {
             "type": "object",
@@ -6708,7 +6660,51 @@
                 ]
               },
               "options": {
-                "$ref": "#/components/schemas/MonitorViewOptions"
+                "type": "object",
+                "properties": {
+                  "spanType": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "range",
+                      "frame",
+                      null
+                    ]
+                  },
+                  "rangeValue": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameStart": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameEnd": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "chartVisibility": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "type": "boolean"
+                    }
+                  },
+                  "projectId": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "project",
+                      "experiment",
+                      null
+                    ]
+                  }
+                },
+                "title": "MonitorViewOptions"
               }
             },
             "required": [
