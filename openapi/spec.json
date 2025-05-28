@@ -6610,43 +6610,102 @@
         "description": "The view definition"
       },
       "ViewOptions": {
-        "type": "object",
-        "nullable": true,
-        "properties": {
-          "columnVisibility": {
+        "anyOf": [
+          {
             "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "boolean"
+            "properties": {
+              "columnVisibility": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "boolean"
+                }
+              },
+              "columnOrder": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "columnSizing": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "grouping": {
+                "type": "string",
+                "nullable": true
+              },
+              "rowHeight": {
+                "type": "string",
+                "nullable": true
+              },
+              "layout": {
+                "type": "string",
+                "nullable": true
+              }
             }
           },
-          "columnOrder": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
-          },
-          "columnSizing": {
+          {
             "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "number"
-            }
+            "properties": {
+              "viewType": {
+                "type": "string",
+                "enum": [
+                  "monitor"
+                ]
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "columnVisibility": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "type": "boolean"
+                    }
+                  },
+                  "columnOrder": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "columnSizing": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "type": "number"
+                    }
+                  },
+                  "grouping": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "rowHeight": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "layout": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            },
+            "required": [
+              "viewType",
+              "options"
+            ]
           },
-          "grouping": {
-            "type": "string",
-            "nullable": true
-          },
-          "rowHeight": {
-            "type": "string",
-            "nullable": true
-          },
-          "layout": {
-            "type": "string",
-            "nullable": true
+          {
+            "type": "null"
           }
-        },
+        ],
         "description": "Options for the view in the app"
       },
       "View": {

@@ -5668,33 +5668,70 @@ components:
           $ref: "#/components/schemas/ViewDataSearch"
       description: The view definition
     ViewOptions:
-      type: object
-      nullable: true
-      properties:
-        columnVisibility:
-          type: object
-          nullable: true
-          additionalProperties:
-            type: boolean
-        columnOrder:
-          type: array
-          nullable: true
-          items:
-            type: string
-        columnSizing:
-          type: object
-          nullable: true
-          additionalProperties:
-            type: number
-        grouping:
-          type: string
-          nullable: true
-        rowHeight:
-          type: string
-          nullable: true
-        layout:
-          type: string
-          nullable: true
+      anyOf:
+        - type: object
+          properties:
+            columnVisibility:
+              type: object
+              nullable: true
+              additionalProperties:
+                type: boolean
+            columnOrder:
+              type: array
+              nullable: true
+              items:
+                type: string
+            columnSizing:
+              type: object
+              nullable: true
+              additionalProperties:
+                type: number
+            grouping:
+              type: string
+              nullable: true
+            rowHeight:
+              type: string
+              nullable: true
+            layout:
+              type: string
+              nullable: true
+        - type: object
+          properties:
+            viewType:
+              type: string
+              enum:
+                - monitor
+            options:
+              type: object
+              properties:
+                columnVisibility:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    type: boolean
+                columnOrder:
+                  type: array
+                  nullable: true
+                  items:
+                    type: string
+                columnSizing:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    type: number
+                grouping:
+                  type: string
+                  nullable: true
+                rowHeight:
+                  type: string
+                  nullable: true
+                layout:
+                  type: string
+                  nullable: true
+          required:
+            - viewType
+            - options
+        - type: "null"
       description: Options for the view in the app
     View:
       type: object
