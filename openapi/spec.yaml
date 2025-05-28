@@ -5736,10 +5736,10 @@ components:
                     - project
                     - experiment
                     - null
-              title: MonitorViewOptions
           required:
             - viewType
             - options
+          title: MonitorViewOptions
         - type: "null"
       description: Options for the view in the app
     View:

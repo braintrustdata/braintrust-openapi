@@ -6703,14 +6703,14 @@
                       null
                     ]
                   }
-                },
-                "title": "MonitorViewOptions"
+                }
               }
             },
             "required": [
               "viewType",
               "options"
-            ]
+            ],
+            "title": "MonitorViewOptions"
           },
           {
             "type": "null"
