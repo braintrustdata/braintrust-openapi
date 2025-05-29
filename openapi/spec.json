@@ -285,9 +285,10 @@
           "scorers",
           "logs",
           "agents",
+          "monitor",
           null
         ],
-        "description": "Type of table that the view corresponds to."
+        "description": "Type of object that the view corresponds to."
       },
       "UserGivenName": {
         "anyOf": [
@@ -6609,43 +6610,112 @@
         "description": "The view definition"
       },
       "ViewOptions": {
-        "type": "object",
-        "nullable": true,
-        "properties": {
-          "columnVisibility": {
+        "anyOf": [
+          {
             "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "boolean"
-            }
+            "properties": {
+              "viewType": {
+                "type": "string",
+                "enum": [
+                  "monitor"
+                ]
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "spanType": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "range",
+                      "frame",
+                      null
+                    ]
+                  },
+                  "rangeValue": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameStart": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameEnd": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "chartVisibility": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "type": "boolean"
+                    }
+                  },
+                  "projectId": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "project",
+                      "experiment",
+                      null
+                    ]
+                  }
+                }
+              }
+            },
+            "required": [
+              "viewType",
+              "options"
+            ],
+            "title": "MonitorViewOptions"
           },
-          "columnOrder": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
-          },
-          "columnSizing": {
+          {
             "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "number"
-            }
+            "properties": {
+              "columnVisibility": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "boolean"
+                }
+              },
+              "columnOrder": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "columnSizing": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "grouping": {
+                "type": "string",
+                "nullable": true
+              },
+              "rowHeight": {
+                "type": "string",
+                "nullable": true
+              },
+              "layout": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "title": "TableViewOptions"
           },
-          "grouping": {
-            "type": "string",
-            "nullable": true
-          },
-          "rowHeight": {
-            "type": "string",
-            "nullable": true
-          },
-          "layout": {
-            "type": "string",
-            "nullable": true
+          {
+            "type": "null"
           }
-        },
+        ],
         "description": "Options for the view in the app"
       },
       "View": {
@@ -6679,9 +6749,10 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -6746,9 +6817,10 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -6807,9 +6879,10 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -8498,7 +8571,7 @@
           "$ref": "#/components/schemas/ViewType"
         },
         "required": false,
-        "description": "Type of table that the view corresponds to.",
+        "description": "Type of object that the view corresponds to.",
         "name": "view_type",
         "in": "query"
       },
