@@ -301,8 +301,9 @@ components:
         - scorers
         - logs
         - agents
+        - monitor
         - null
-      description: Type of table that the view corresponds to.
+      description: Type of object that the view corresponds to.
     UserGivenName:
       anyOf:
         - type: string
@@ -4011,6 +4012,38 @@ components:
                 - object_type
                 - object_id
                 - retention_days
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - btql_export
+                  description: The event which starts the automation execution
+                btql_query:
+                  type: string
+                  description: XXX the query
+                bucket_name:
+                  type: string
+                  description: The S3 bucket to export the results to
+                key_prefix:
+                  type: string
+                  description: The S3 prefix to use for result files
+                format:
+                  type: string
+                  enum:
+                    - jsonl
+                    - parquet
+                  description: The format to export the results in
+                batch_size:
+                  type: number
+                  description: The number of rows to export in each batch
+              required:
+                - event_type
+                - btql_query
+                - bucket_name
+                - key_prefix
+                - format
+                - batch_size
           description: The configuration for the automation rule
       required:
         - id
@@ -4095,6 +4128,38 @@ components:
                 - object_type
                 - object_id
                 - retention_days
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - btql_export
+                  description: The event which starts the automation execution
+                btql_query:
+                  type: string
+                  description: XXX the query
+                bucket_name:
+                  type: string
+                  description: The S3 bucket to export the results to
+                key_prefix:
+                  type: string
+                  description: The S3 prefix to use for result files
+                format:
+                  type: string
+                  enum:
+                    - jsonl
+                    - parquet
+                  description: The format to export the results in
+                batch_size:
+                  type: number
+                  description: The number of rows to export in each batch
+              required:
+                - event_type
+                - btql_query
+                - bucket_name
+                - key_prefix
+                - format
+                - batch_size
           description: The configuration for the automation rule
       required:
         - project_id
@@ -4174,6 +4239,38 @@ components:
                 - object_type
                 - object_id
                 - retention_days
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - btql_export
+                  description: The event which starts the automation execution
+                btql_query:
+                  type: string
+                  description: XXX the query
+                bucket_name:
+                  type: string
+                  description: The S3 bucket to export the results to
+                key_prefix:
+                  type: string
+                  description: The S3 prefix to use for result files
+                format:
+                  type: string
+                  enum:
+                    - jsonl
+                    - parquet
+                  description: The format to export the results in
+                batch_size:
+                  type: number
+                  description: The number of rows to export in each batch
+              required:
+                - event_type
+                - btql_query
+                - bucket_name
+                - key_prefix
+                - format
+                - batch_size
             - type: "null"
           description: The configuration for the automation rule
     ProjectScoreCategory:
@@ -5752,33 +5849,79 @@ components:
           $ref: "#/components/schemas/ViewDataSearch"
       description: The view definition
     ViewOptions:
-      type: object
-      nullable: true
-      properties:
-        columnVisibility:
-          type: object
-          nullable: true
-          additionalProperties:
-            type: boolean
-        columnOrder:
-          type: array
-          nullable: true
-          items:
-            type: string
-        columnSizing:
-          type: object
-          nullable: true
-          additionalProperties:
-            type: number
-        grouping:
-          type: string
-          nullable: true
-        rowHeight:
-          type: string
-          nullable: true
-        layout:
-          type: string
-          nullable: true
+      anyOf:
+        - type: object
+          properties:
+            viewType:
+              type: string
+              enum:
+                - monitor
+            options:
+              type: object
+              properties:
+                spanType:
+                  type: string
+                  nullable: true
+                  enum:
+                    - range
+                    - frame
+                    - null
+                rangeValue:
+                  type: string
+                  nullable: true
+                frameStart:
+                  type: string
+                  nullable: true
+                frameEnd:
+                  type: string
+                  nullable: true
+                chartVisibility:
+                  type: object
+                  nullable: true
+                  additionalProperties:
+                    type: boolean
+                projectId:
+                  type: string
+                  nullable: true
+                type:
+                  type: string
+                  nullable: true
+                  enum:
+                    - project
+                    - experiment
+                    - null
+          required:
+            - viewType
+            - options
+          title: MonitorViewOptions
+        - type: object
+          properties:
+            columnVisibility:
+              type: object
+              nullable: true
+              additionalProperties:
+                type: boolean
+            columnOrder:
+              type: array
+              nullable: true
+              items:
+                type: string
+            columnSizing:
+              type: object
+              nullable: true
+              additionalProperties:
+                type: number
+            grouping:
+              type: string
+              nullable: true
+            rowHeight:
+              type: string
+              nullable: true
+            layout:
+              type: string
+              nullable: true
+          title: TableViewOptions
+        - type: "null"
       description: Options for the view in the app
     View:
       type: object
@@ -5808,8 +5951,9 @@ components:
             - scorers
             - logs
             - agents
+            - monitor
             - null
-          description: Type of table that the view corresponds to.
+          description: Type of object that the view corresponds to.
         name:
           type: string
           description: Name of the view
@@ -5862,8 +6006,9 @@ components:
             - scorers
             - logs
             - agents
+            - monitor
             - null
-          description: Type of table that the view corresponds to.
+          description: Type of object that the view corresponds to.
         name:
           type: string
           description: Name of the view
@@ -5911,8 +6056,9 @@ components:
             - scorers
             - logs
             - agents
+            - monitor
             - null
-          description: Type of table that the view corresponds to.
+          description: Type of object that the view corresponds to.
         name:
           type: string
           nullable: true
@@ -7273,7 +7419,7 @@ components:
       schema:
         $ref: "#/components/schemas/ViewType"
       required: false
-      description: Type of table that the view corresponds to.
+      description: Type of object that the view corresponds to.
       name: view_type
       in: query
     UserGivenName:
