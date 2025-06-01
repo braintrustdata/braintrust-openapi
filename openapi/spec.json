@@ -4151,15 +4151,6 @@
           "id"
         ]
       },
-      "RetentionObjectType": {
-        "type": "string",
-        "enum": [
-          "project_logs",
-          "experiment",
-          "dataset"
-        ],
-        "description": "The object type that the retention policy applies to"
-      },
       "ProjectAutomation": {
         "type": "object",
         "properties": {
@@ -4204,7 +4195,7 @@
                     "enum": [
                       "logs"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
                   "btql_filter": {
                     "type": "string",
@@ -4255,54 +4246,65 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
-                      "retention"
-                    ],
-                    "description": "The event which starts the automation execution"
-                  },
-                  "object_type": {
-                    "$ref": "#/components/schemas/RetentionObjectType"
-                  },
-                  "object_id": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
-                  },
-                  "retention_days": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 365,
-                    "description": "The number of days to retain the object"
-                  }
-                },
-                "required": [
-                  "event_type",
-                  "object_type",
-                  "object_id",
-                  "retention_days"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "event_type": {
-                    "type": "string",
-                    "enum": [
                       "btql_export"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
-                  "btql_query": {
-                    "type": "string",
-                    "description": "XXX the query"
+                  "export_definition": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_traces"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_spans"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "btql_query"
+                            ]
+                          },
+                          "btql_query": {
+                            "type": "string",
+                            "description": "The BTQL query to export"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "btql_query"
+                        ]
+                      }
+                    ],
+                    "description": "The definition of what to export"
                   },
-                  "bucket_name": {
+                  "export_path": {
                     "type": "string",
-                    "description": "The S3 bucket to export the results to"
-                  },
-                  "key_prefix": {
-                    "type": "string",
-                    "description": "The S3 prefix to use for result files"
+                    "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
                   },
                   "format": {
                     "type": "string",
@@ -4312,18 +4314,53 @@
                     ],
                     "description": "The format to export the results in"
                   },
+                  "interval_seconds": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 2592000,
+                    "description": "Perform the triggered action at most once in this interval of seconds"
+                  },
+                  "credentials": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "aws_iam"
+                            ]
+                          },
+                          "role_arn": {
+                            "type": "string",
+                            "description": "The ARN of the IAM role to use"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "default": "braintrust-b591bdfd-743c-4786-8e61-65dd4241b484",
+                            "description": "The external ID to use"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "role_arn"
+                        ]
+                      }
+                    ]
+                  },
                   "batch_size": {
                     "type": "number",
+                    "nullable": true,
                     "description": "The number of rows to export in each batch"
                   }
                 },
                 "required": [
                   "event_type",
-                  "btql_query",
-                  "bucket_name",
-                  "key_prefix",
+                  "export_definition",
+                  "export_path",
                   "format",
-                  "batch_size"
+                  "interval_seconds",
+                  "credentials"
                 ]
               }
             ],
@@ -4364,7 +4401,7 @@
                     "enum": [
                       "logs"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
                   "btql_filter": {
                     "type": "string",
@@ -4415,54 +4452,65 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
-                      "retention"
-                    ],
-                    "description": "The event which starts the automation execution"
-                  },
-                  "object_type": {
-                    "$ref": "#/components/schemas/RetentionObjectType"
-                  },
-                  "object_id": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
-                  },
-                  "retention_days": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 365,
-                    "description": "The number of days to retain the object"
-                  }
-                },
-                "required": [
-                  "event_type",
-                  "object_type",
-                  "object_id",
-                  "retention_days"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "event_type": {
-                    "type": "string",
-                    "enum": [
                       "btql_export"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
-                  "btql_query": {
-                    "type": "string",
-                    "description": "XXX the query"
+                  "export_definition": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_traces"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_spans"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "btql_query"
+                            ]
+                          },
+                          "btql_query": {
+                            "type": "string",
+                            "description": "The BTQL query to export"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "btql_query"
+                        ]
+                      }
+                    ],
+                    "description": "The definition of what to export"
                   },
-                  "bucket_name": {
+                  "export_path": {
                     "type": "string",
-                    "description": "The S3 bucket to export the results to"
-                  },
-                  "key_prefix": {
-                    "type": "string",
-                    "description": "The S3 prefix to use for result files"
+                    "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
                   },
                   "format": {
                     "type": "string",
@@ -4472,18 +4520,53 @@
                     ],
                     "description": "The format to export the results in"
                   },
+                  "interval_seconds": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 2592000,
+                    "description": "Perform the triggered action at most once in this interval of seconds"
+                  },
+                  "credentials": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "aws_iam"
+                            ]
+                          },
+                          "role_arn": {
+                            "type": "string",
+                            "description": "The ARN of the IAM role to use"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "default": "braintrust-7190f431-c4cd-4613-8a1d-b076991439d8",
+                            "description": "The external ID to use"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "role_arn"
+                        ]
+                      }
+                    ]
+                  },
                   "batch_size": {
                     "type": "number",
+                    "nullable": true,
                     "description": "The number of rows to export in each batch"
                   }
                 },
                 "required": [
                   "event_type",
-                  "btql_query",
-                  "bucket_name",
-                  "key_prefix",
+                  "export_definition",
+                  "export_path",
                   "format",
-                  "batch_size"
+                  "interval_seconds",
+                  "credentials"
                 ]
               }
             ],
@@ -4519,7 +4602,7 @@
                     "enum": [
                       "logs"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
                   "btql_filter": {
                     "type": "string",
@@ -4570,54 +4653,65 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
-                      "retention"
-                    ],
-                    "description": "The event which starts the automation execution"
-                  },
-                  "object_type": {
-                    "$ref": "#/components/schemas/RetentionObjectType"
-                  },
-                  "object_id": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
-                  },
-                  "retention_days": {
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 365,
-                    "description": "The number of days to retain the object"
-                  }
-                },
-                "required": [
-                  "event_type",
-                  "object_type",
-                  "object_id",
-                  "retention_days"
-                ]
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "event_type": {
-                    "type": "string",
-                    "enum": [
                       "btql_export"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
-                  "btql_query": {
-                    "type": "string",
-                    "description": "XXX the query"
+                  "export_definition": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_traces"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_spans"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "btql_query"
+                            ]
+                          },
+                          "btql_query": {
+                            "type": "string",
+                            "description": "The BTQL query to export"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "btql_query"
+                        ]
+                      }
+                    ],
+                    "description": "The definition of what to export"
                   },
-                  "bucket_name": {
+                  "export_path": {
                     "type": "string",
-                    "description": "The S3 bucket to export the results to"
-                  },
-                  "key_prefix": {
-                    "type": "string",
-                    "description": "The S3 prefix to use for result files"
+                    "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
                   },
                   "format": {
                     "type": "string",
@@ -4627,18 +4721,53 @@
                     ],
                     "description": "The format to export the results in"
                   },
+                  "interval_seconds": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 2592000,
+                    "description": "Perform the triggered action at most once in this interval of seconds"
+                  },
+                  "credentials": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "aws_iam"
+                            ]
+                          },
+                          "role_arn": {
+                            "type": "string",
+                            "description": "The ARN of the IAM role to use"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "default": "braintrust-8bd24867-90fa-4837-ab3c-288f8c429ab7",
+                            "description": "The external ID to use"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "role_arn"
+                        ]
+                      }
+                    ]
+                  },
                   "batch_size": {
                     "type": "number",
+                    "nullable": true,
                     "description": "The number of rows to export in each batch"
                   }
                 },
                 "required": [
                   "event_type",
-                  "btql_query",
-                  "bucket_name",
-                  "key_prefix",
+                  "export_definition",
+                  "export_path",
                   "format",
-                  "batch_size"
+                  "interval_seconds",
+                  "credentials"
                 ]
               },
               {
@@ -17472,7 +17601,210 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProjectAutomation"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateProjectAutomation"
+                  },
+                  {
+                    "properties": {
+                      "project_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Unique identifier for the project that the project automation belongs under"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the project automation"
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Textual description of the project automation"
+                      },
+                      "config": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "event_type": {
+                                "type": "string",
+                                "enum": [
+                                  "logs"
+                                ],
+                                "description": "The type of automation."
+                              },
+                              "btql_filter": {
+                                "type": "string",
+                                "description": "BTQL filter to identify rows for the automation rule"
+                              },
+                              "interval_seconds": {
+                                "type": "number",
+                                "minimum": 1,
+                                "maximum": 2592000,
+                                "description": "Perform the triggered action at most once in this interval of seconds"
+                              },
+                              "action": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "webhook"
+                                        ],
+                                        "description": "The type of action to take"
+                                      },
+                                      "url": {
+                                        "type": "string",
+                                        "description": "The webhook URL to send the request to"
+                                      }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "url"
+                                    ]
+                                  }
+                                ],
+                                "description": "The action to take when the automation rule is triggered"
+                              }
+                            },
+                            "required": [
+                              "event_type",
+                              "btql_filter",
+                              "interval_seconds",
+                              "action"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "event_type": {
+                                "type": "string",
+                                "enum": [
+                                  "btql_export"
+                                ],
+                                "description": "The type of automation."
+                              },
+                              "export_definition": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "log_traces"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "type"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "log_spans"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "type"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "btql_query"
+                                        ]
+                                      },
+                                      "btql_query": {
+                                        "type": "string",
+                                        "description": "The BTQL query to export"
+                                      }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "btql_query"
+                                    ]
+                                  }
+                                ],
+                                "description": "The definition of what to export"
+                              },
+                              "export_path": {
+                                "type": "string",
+                                "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
+                              },
+                              "format": {
+                                "type": "string",
+                                "enum": [
+                                  "jsonl",
+                                  "parquet"
+                                ],
+                                "description": "The format to export the results in"
+                              },
+                              "interval_seconds": {
+                                "type": "number",
+                                "minimum": 1,
+                                "maximum": 2592000,
+                                "description": "Perform the triggered action at most once in this interval of seconds"
+                              },
+                              "credentials": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "aws_iam"
+                                        ]
+                                      },
+                                      "role_arn": {
+                                        "type": "string",
+                                        "description": "The ARN of the IAM role to use"
+                                      },
+                                      "external_id": {
+                                        "type": "string",
+                                        "default": "braintrust-e77b81bd-80bd-4e6d-9a14-6b37daf7e8bc",
+                                        "description": "The external ID to use"
+                                      }
+                                    },
+                                    "required": [
+                                      "type",
+                                      "role_arn"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "batch_size": {
+                                "type": "number",
+                                "nullable": true,
+                                "description": "The number of rows to export in each batch"
+                              }
+                            },
+                            "required": [
+                              "event_type",
+                              "export_definition",
+                              "export_path",
+                              "format",
+                              "interval_seconds",
+                              "credentials"
+                            ]
+                          }
+                        ],
+                        "description": "The configuration for the automation rule"
+                      }
+                    }
+                  }
+                ]
               }
             }
           }
@@ -17483,7 +17815,227 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectAutomation"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ProjectAutomation"
+                    },
+                    {
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project automation"
+                        },
+                        "project_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project that the project automation belongs under"
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uuid",
+                          "description": "Identifies the user who created the project automation"
+                        },
+                        "created": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time",
+                          "description": "Date of project automation creation"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the project automation"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Textual description of the project automation"
+                        },
+                        "config": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "logs"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "btql_filter": {
+                                  "type": "string",
+                                  "description": "BTQL filter to identify rows for the automation rule"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "action": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "webhook"
+                                          ],
+                                          "description": "The type of action to take"
+                                        },
+                                        "url": {
+                                          "type": "string",
+                                          "description": "The webhook URL to send the request to"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "url"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The action to take when the automation rule is triggered"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "btql_filter",
+                                "interval_seconds",
+                                "action"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "btql_export"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "export_definition": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_traces"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_spans"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "btql_query"
+                                          ]
+                                        },
+                                        "btql_query": {
+                                          "type": "string",
+                                          "description": "The BTQL query to export"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "btql_query"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The definition of what to export"
+                                },
+                                "export_path": {
+                                  "type": "string",
+                                  "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
+                                },
+                                "format": {
+                                  "type": "string",
+                                  "enum": [
+                                    "jsonl",
+                                    "parquet"
+                                  ],
+                                  "description": "The format to export the results in"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "credentials": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "aws_iam"
+                                          ]
+                                        },
+                                        "role_arn": {
+                                          "type": "string",
+                                          "description": "The ARN of the IAM role to use"
+                                        },
+                                        "external_id": {
+                                          "type": "string",
+                                          "default": "braintrust-d8179fba-fcd6-452f-b17f-83cd5a48b965",
+                                          "description": "The external ID to use"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "role_arn"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "batch_size": {
+                                  "type": "number",
+                                  "nullable": true,
+                                  "description": "The number of rows to export in each batch"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "export_definition",
+                                "export_path",
+                                "format",
+                                "interval_seconds",
+                                "credentials"
+                              ]
+                            }
+                          ],
+                          "description": "The configuration for the automation rule"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -17609,7 +18161,227 @@
                     "objects": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/ProjectAutomation"
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/ProjectAutomation"
+                          },
+                          {
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "Unique identifier for the project automation"
+                              },
+                              "project_id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "Unique identifier for the project that the project automation belongs under"
+                              },
+                              "user_id": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "uuid",
+                                "description": "Identifies the user who created the project automation"
+                              },
+                              "created": {
+                                "type": "string",
+                                "nullable": true,
+                                "format": "date-time",
+                                "description": "Date of project automation creation"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the project automation"
+                              },
+                              "description": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Textual description of the project automation"
+                              },
+                              "config": {
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "event_type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "logs"
+                                        ],
+                                        "description": "The type of automation."
+                                      },
+                                      "btql_filter": {
+                                        "type": "string",
+                                        "description": "BTQL filter to identify rows for the automation rule"
+                                      },
+                                      "interval_seconds": {
+                                        "type": "number",
+                                        "minimum": 1,
+                                        "maximum": 2592000,
+                                        "description": "Perform the triggered action at most once in this interval of seconds"
+                                      },
+                                      "action": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "webhook"
+                                                ],
+                                                "description": "The type of action to take"
+                                              },
+                                              "url": {
+                                                "type": "string",
+                                                "description": "The webhook URL to send the request to"
+                                              }
+                                            },
+                                            "required": [
+                                              "type",
+                                              "url"
+                                            ]
+                                          }
+                                        ],
+                                        "description": "The action to take when the automation rule is triggered"
+                                      }
+                                    },
+                                    "required": [
+                                      "event_type",
+                                      "btql_filter",
+                                      "interval_seconds",
+                                      "action"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "event_type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "btql_export"
+                                        ],
+                                        "description": "The type of automation."
+                                      },
+                                      "export_definition": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "log_traces"
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "type"
+                                            ]
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "log_spans"
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "type"
+                                            ]
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "btql_query"
+                                                ]
+                                              },
+                                              "btql_query": {
+                                                "type": "string",
+                                                "description": "The BTQL query to export"
+                                              }
+                                            },
+                                            "required": [
+                                              "type",
+                                              "btql_query"
+                                            ]
+                                          }
+                                        ],
+                                        "description": "The definition of what to export"
+                                      },
+                                      "export_path": {
+                                        "type": "string",
+                                        "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
+                                      },
+                                      "format": {
+                                        "type": "string",
+                                        "enum": [
+                                          "jsonl",
+                                          "parquet"
+                                        ],
+                                        "description": "The format to export the results in"
+                                      },
+                                      "interval_seconds": {
+                                        "type": "number",
+                                        "minimum": 1,
+                                        "maximum": 2592000,
+                                        "description": "Perform the triggered action at most once in this interval of seconds"
+                                      },
+                                      "credentials": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "aws_iam"
+                                                ]
+                                              },
+                                              "role_arn": {
+                                                "type": "string",
+                                                "description": "The ARN of the IAM role to use"
+                                              },
+                                              "external_id": {
+                                                "type": "string",
+                                                "default": "braintrust-a6ac0931-377b-49e0-98ba-a3bc9dc1242a",
+                                                "description": "The external ID to use"
+                                              }
+                                            },
+                                            "required": [
+                                              "type",
+                                              "role_arn"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "batch_size": {
+                                        "type": "number",
+                                        "nullable": true,
+                                        "description": "The number of rows to export in each batch"
+                                      }
+                                    },
+                                    "required": [
+                                      "event_type",
+                                      "export_definition",
+                                      "export_path",
+                                      "format",
+                                      "interval_seconds",
+                                      "credentials"
+                                    ]
+                                  }
+                                ],
+                                "description": "The configuration for the automation rule"
+                              }
+                            }
+                          }
+                        ]
                       },
                       "description": "A list of project_automation objects"
                     }
@@ -17782,7 +18554,227 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectAutomation"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ProjectAutomation"
+                    },
+                    {
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project automation"
+                        },
+                        "project_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project that the project automation belongs under"
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uuid",
+                          "description": "Identifies the user who created the project automation"
+                        },
+                        "created": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time",
+                          "description": "Date of project automation creation"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the project automation"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Textual description of the project automation"
+                        },
+                        "config": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "logs"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "btql_filter": {
+                                  "type": "string",
+                                  "description": "BTQL filter to identify rows for the automation rule"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "action": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "webhook"
+                                          ],
+                                          "description": "The type of action to take"
+                                        },
+                                        "url": {
+                                          "type": "string",
+                                          "description": "The webhook URL to send the request to"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "url"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The action to take when the automation rule is triggered"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "btql_filter",
+                                "interval_seconds",
+                                "action"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "btql_export"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "export_definition": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_traces"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_spans"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "btql_query"
+                                          ]
+                                        },
+                                        "btql_query": {
+                                          "type": "string",
+                                          "description": "The BTQL query to export"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "btql_query"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The definition of what to export"
+                                },
+                                "export_path": {
+                                  "type": "string",
+                                  "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
+                                },
+                                "format": {
+                                  "type": "string",
+                                  "enum": [
+                                    "jsonl",
+                                    "parquet"
+                                  ],
+                                  "description": "The format to export the results in"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "credentials": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "aws_iam"
+                                          ]
+                                        },
+                                        "role_arn": {
+                                          "type": "string",
+                                          "description": "The ARN of the IAM role to use"
+                                        },
+                                        "external_id": {
+                                          "type": "string",
+                                          "default": "braintrust-cee76312-5552-4718-83ce-c010d2d78b0c",
+                                          "description": "The external ID to use"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "role_arn"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "batch_size": {
+                                  "type": "number",
+                                  "nullable": true,
+                                  "description": "The number of rows to export in each batch"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "export_definition",
+                                "export_path",
+                                "format",
+                                "interval_seconds",
+                                "credentials"
+                              ]
+                            }
+                          ],
+                          "description": "The configuration for the automation rule"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -17899,7 +18891,227 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectAutomation"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ProjectAutomation"
+                    },
+                    {
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project automation"
+                        },
+                        "project_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project that the project automation belongs under"
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uuid",
+                          "description": "Identifies the user who created the project automation"
+                        },
+                        "created": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time",
+                          "description": "Date of project automation creation"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the project automation"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Textual description of the project automation"
+                        },
+                        "config": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "logs"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "btql_filter": {
+                                  "type": "string",
+                                  "description": "BTQL filter to identify rows for the automation rule"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "action": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "webhook"
+                                          ],
+                                          "description": "The type of action to take"
+                                        },
+                                        "url": {
+                                          "type": "string",
+                                          "description": "The webhook URL to send the request to"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "url"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The action to take when the automation rule is triggered"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "btql_filter",
+                                "interval_seconds",
+                                "action"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "btql_export"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "export_definition": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_traces"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_spans"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "btql_query"
+                                          ]
+                                        },
+                                        "btql_query": {
+                                          "type": "string",
+                                          "description": "The BTQL query to export"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "btql_query"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The definition of what to export"
+                                },
+                                "export_path": {
+                                  "type": "string",
+                                  "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
+                                },
+                                "format": {
+                                  "type": "string",
+                                  "enum": [
+                                    "jsonl",
+                                    "parquet"
+                                  ],
+                                  "description": "The format to export the results in"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "credentials": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "aws_iam"
+                                          ]
+                                        },
+                                        "role_arn": {
+                                          "type": "string",
+                                          "description": "The ARN of the IAM role to use"
+                                        },
+                                        "external_id": {
+                                          "type": "string",
+                                          "default": "braintrust-d9837afe-f587-4965-9a98-749953fcba87",
+                                          "description": "The external ID to use"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "role_arn"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "batch_size": {
+                                  "type": "number",
+                                  "nullable": true,
+                                  "description": "The number of rows to export in each batch"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "export_definition",
+                                "export_path",
+                                "format",
+                                "interval_seconds",
+                                "credentials"
+                              ]
+                            }
+                          ],
+                          "description": "The configuration for the automation rule"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -18005,7 +19217,227 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectAutomation"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ProjectAutomation"
+                    },
+                    {
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project automation"
+                        },
+                        "project_id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Unique identifier for the project that the project automation belongs under"
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "uuid",
+                          "description": "Identifies the user who created the project automation"
+                        },
+                        "created": {
+                          "type": "string",
+                          "nullable": true,
+                          "format": "date-time",
+                          "description": "Date of project automation creation"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the project automation"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Textual description of the project automation"
+                        },
+                        "config": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "logs"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "btql_filter": {
+                                  "type": "string",
+                                  "description": "BTQL filter to identify rows for the automation rule"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "action": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "webhook"
+                                          ],
+                                          "description": "The type of action to take"
+                                        },
+                                        "url": {
+                                          "type": "string",
+                                          "description": "The webhook URL to send the request to"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "url"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The action to take when the automation rule is triggered"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "btql_filter",
+                                "interval_seconds",
+                                "action"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "event_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "btql_export"
+                                  ],
+                                  "description": "The type of automation."
+                                },
+                                "export_definition": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_traces"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "log_spans"
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "type"
+                                      ]
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "btql_query"
+                                          ]
+                                        },
+                                        "btql_query": {
+                                          "type": "string",
+                                          "description": "The BTQL query to export"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "btql_query"
+                                      ]
+                                    }
+                                  ],
+                                  "description": "The definition of what to export"
+                                },
+                                "export_path": {
+                                  "type": "string",
+                                  "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
+                                },
+                                "format": {
+                                  "type": "string",
+                                  "enum": [
+                                    "jsonl",
+                                    "parquet"
+                                  ],
+                                  "description": "The format to export the results in"
+                                },
+                                "interval_seconds": {
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 2592000,
+                                  "description": "Perform the triggered action at most once in this interval of seconds"
+                                },
+                                "credentials": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string",
+                                          "enum": [
+                                            "aws_iam"
+                                          ]
+                                        },
+                                        "role_arn": {
+                                          "type": "string",
+                                          "description": "The ARN of the IAM role to use"
+                                        },
+                                        "external_id": {
+                                          "type": "string",
+                                          "default": "braintrust-7c245ed6-63d2-4020-beb5-3165377bd0fd",
+                                          "description": "The external ID to use"
+                                        }
+                                      },
+                                      "required": [
+                                        "type",
+                                        "role_arn"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "batch_size": {
+                                  "type": "number",
+                                  "nullable": true,
+                                  "description": "The number of rows to export in each batch"
+                                }
+                              },
+                              "required": [
+                                "event_type",
+                                "export_definition",
+                                "export_path",
+                                "format",
+                                "interval_seconds",
+                                "credentials"
+                              ]
+                            }
+                          ],
+                          "description": "The configuration for the automation rule"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
