@@ -5709,6 +5709,9 @@ components:
                     - project
                     - experiment
                     - null
+                groupBy:
+                  type: string
+                  nullable: true
           required:
             - viewType
             - options
