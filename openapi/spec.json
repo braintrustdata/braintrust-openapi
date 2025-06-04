@@ -6663,6 +6663,10 @@
                       "experiment",
                       null
                     ]
+                  },
+                  "groupBy": {
+                    "type": "string",
+                    "nullable": true
                   }
                 }
               }
