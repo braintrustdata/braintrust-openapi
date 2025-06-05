@@ -5742,6 +5742,9 @@ components:
             layout:
               type: string
               nullable: true
+            chartHeight:
+              type: number
+              nullable: true
           title: TableViewOptions
         - type: "null"
       description: Options for the view in the app
