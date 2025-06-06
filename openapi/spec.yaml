@@ -5739,6 +5739,9 @@ components:
             rowHeight:
               type: string
               nullable: true
+            tallGroupRows:
+              type: boolean
+              nullable: true
             layout:
               type: string
               nullable: true
