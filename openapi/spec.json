@@ -285,9 +285,10 @@
           "scorers",
           "logs",
           "agents",
+          "monitor",
           null
         ],
-        "description": "Type of table that the view corresponds to."
+        "description": "Type of object that the view corresponds to."
       },
       "UserGivenName": {
         "anyOf": [
@@ -4150,15 +4151,6 @@
           "id"
         ]
       },
-      "RetentionObjectType": {
-        "type": "string",
-        "enum": [
-          "project_logs",
-          "experiment",
-          "dataset"
-        ],
-        "description": "The object type that the retention policy applies to"
-      },
       "ProjectAutomation": {
         "type": "object",
         "properties": {
@@ -4203,7 +4195,7 @@
                     "enum": [
                       "logs"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
                   "btql_filter": {
                     "type": "string",
@@ -4254,31 +4246,121 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
-                      "retention"
+                      "btql_export"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
-                  "object_type": {
-                    "$ref": "#/components/schemas/RetentionObjectType"
+                  "export_definition": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_traces"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_spans"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "btql_query"
+                            ]
+                          },
+                          "btql_query": {
+                            "type": "string",
+                            "description": "The BTQL query to export"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "btql_query"
+                        ]
+                      }
+                    ],
+                    "description": "The definition of what to export"
                   },
-                  "object_id": {
+                  "export_path": {
                     "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
+                    "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
                   },
-                  "retention_days": {
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "jsonl",
+                      "parquet"
+                    ],
+                    "description": "The format to export the results in"
+                  },
+                  "interval_seconds": {
                     "type": "number",
                     "minimum": 1,
-                    "maximum": 365,
-                    "description": "The number of days to retain the object"
+                    "maximum": 2592000,
+                    "description": "Perform the triggered action at most once in this interval of seconds"
+                  },
+                  "credentials": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "aws_iam"
+                            ]
+                          },
+                          "role_arn": {
+                            "type": "string",
+                            "description": "The ARN of the IAM role to use"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "description": "The automation-specific external id component (auto-generated by default)"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "role_arn",
+                          "external_id"
+                        ]
+                      }
+                    ]
+                  },
+                  "batch_size": {
+                    "type": "number",
+                    "nullable": true,
+                    "description": "The number of rows to export in each batch"
                   }
                 },
                 "required": [
                   "event_type",
-                  "object_type",
-                  "object_id",
-                  "retention_days"
+                  "export_definition",
+                  "export_path",
+                  "format",
+                  "interval_seconds",
+                  "credentials"
                 ]
               }
             ],
@@ -4319,7 +4401,7 @@
                     "enum": [
                       "logs"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
                   "btql_filter": {
                     "type": "string",
@@ -4370,31 +4452,121 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
-                      "retention"
+                      "btql_export"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
-                  "object_type": {
-                    "$ref": "#/components/schemas/RetentionObjectType"
+                  "export_definition": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_traces"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_spans"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "btql_query"
+                            ]
+                          },
+                          "btql_query": {
+                            "type": "string",
+                            "description": "The BTQL query to export"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "btql_query"
+                        ]
+                      }
+                    ],
+                    "description": "The definition of what to export"
                   },
-                  "object_id": {
+                  "export_path": {
                     "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
+                    "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
                   },
-                  "retention_days": {
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "jsonl",
+                      "parquet"
+                    ],
+                    "description": "The format to export the results in"
+                  },
+                  "interval_seconds": {
                     "type": "number",
                     "minimum": 1,
-                    "maximum": 365,
-                    "description": "The number of days to retain the object"
+                    "maximum": 2592000,
+                    "description": "Perform the triggered action at most once in this interval of seconds"
+                  },
+                  "credentials": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "aws_iam"
+                            ]
+                          },
+                          "role_arn": {
+                            "type": "string",
+                            "description": "The ARN of the IAM role to use"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "description": "The automation-specific external id component (auto-generated by default)"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "role_arn",
+                          "external_id"
+                        ]
+                      }
+                    ]
+                  },
+                  "batch_size": {
+                    "type": "number",
+                    "nullable": true,
+                    "description": "The number of rows to export in each batch"
                   }
                 },
                 "required": [
                   "event_type",
-                  "object_type",
-                  "object_id",
-                  "retention_days"
+                  "export_definition",
+                  "export_path",
+                  "format",
+                  "interval_seconds",
+                  "credentials"
                 ]
               }
             ],
@@ -4430,7 +4602,7 @@
                     "enum": [
                       "logs"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
                   "btql_filter": {
                     "type": "string",
@@ -4481,31 +4653,121 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
-                      "retention"
+                      "btql_export"
                     ],
-                    "description": "The event which starts the automation execution"
+                    "description": "The type of automation."
                   },
-                  "object_type": {
-                    "$ref": "#/components/schemas/RetentionObjectType"
+                  "export_definition": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_traces"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "log_spans"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "btql_query"
+                            ]
+                          },
+                          "btql_query": {
+                            "type": "string",
+                            "description": "The BTQL query to export"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "btql_query"
+                        ]
+                      }
+                    ],
+                    "description": "The definition of what to export"
                   },
-                  "object_id": {
+                  "export_path": {
                     "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
+                    "description": "The path to export the results to. It should include the storage protocol and prefix, e.g. s3://bucket-name/path/to/export"
                   },
-                  "retention_days": {
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "jsonl",
+                      "parquet"
+                    ],
+                    "description": "The format to export the results in"
+                  },
+                  "interval_seconds": {
                     "type": "number",
                     "minimum": 1,
-                    "maximum": 365,
-                    "description": "The number of days to retain the object"
+                    "maximum": 2592000,
+                    "description": "Perform the triggered action at most once in this interval of seconds"
+                  },
+                  "credentials": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "aws_iam"
+                            ]
+                          },
+                          "role_arn": {
+                            "type": "string",
+                            "description": "The ARN of the IAM role to use"
+                          },
+                          "external_id": {
+                            "type": "string",
+                            "description": "The automation-specific external id component (auto-generated by default)"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "role_arn",
+                          "external_id"
+                        ]
+                      }
+                    ]
+                  },
+                  "batch_size": {
+                    "type": "number",
+                    "nullable": true,
+                    "description": "The number of rows to export in each batch"
                   }
                 },
                 "required": [
                   "event_type",
-                  "object_type",
-                  "object_id",
-                  "retention_days"
+                  "export_definition",
+                  "export_path",
+                  "format",
+                  "interval_seconds",
+                  "credentials"
                 ]
               },
               {
@@ -6743,43 +7005,120 @@
         "description": "The view definition"
       },
       "ViewOptions": {
-        "type": "object",
-        "nullable": true,
-        "properties": {
-          "columnVisibility": {
+        "anyOf": [
+          {
             "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "boolean"
-            }
+            "properties": {
+              "viewType": {
+                "type": "string",
+                "enum": [
+                  "monitor"
+                ]
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "spanType": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "range",
+                      "frame",
+                      null
+                    ]
+                  },
+                  "rangeValue": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameStart": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "frameEnd": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "chartVisibility": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "type": "boolean"
+                    }
+                  },
+                  "projectId": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "type": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "project",
+                      "experiment",
+                      null
+                    ]
+                  },
+                  "groupBy": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            },
+            "required": [
+              "viewType",
+              "options"
+            ],
+            "title": "MonitorViewOptions"
           },
-          "columnOrder": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
-          },
-          "columnSizing": {
+          {
             "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "number"
-            }
+            "properties": {
+              "columnVisibility": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "boolean"
+                }
+              },
+              "columnOrder": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "columnSizing": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "grouping": {
+                "type": "string",
+                "nullable": true
+              },
+              "rowHeight": {
+                "type": "string",
+                "nullable": true
+              },
+              "layout": {
+                "type": "string",
+                "nullable": true
+              },
+              "chartHeight": {
+                "type": "number",
+                "nullable": true
+              }
+            },
+            "title": "TableViewOptions"
           },
-          "grouping": {
-            "type": "string",
-            "nullable": true
-          },
-          "rowHeight": {
-            "type": "string",
-            "nullable": true
-          },
-          "layout": {
-            "type": "string",
-            "nullable": true
+          {
+            "type": "null"
           }
-        },
+        ],
         "description": "Options for the view in the app"
       },
       "View": {
@@ -6813,9 +7152,10 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -6880,9 +7220,10 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -6941,9 +7282,10 @@
               "scorers",
               "logs",
               "agents",
+              "monitor",
               null
             ],
-            "description": "Type of table that the view corresponds to."
+            "description": "Type of object that the view corresponds to."
           },
           "name": {
             "type": "string",
@@ -8632,7 +8974,7 @@
           "$ref": "#/components/schemas/ViewType"
         },
         "required": false,
-        "description": "Type of table that the view corresponds to.",
+        "description": "Type of object that the view corresponds to.",
         "name": "view_type",
         "in": "query"
       },
