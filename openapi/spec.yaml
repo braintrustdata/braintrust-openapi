@@ -5653,6 +5653,9 @@ components:
                     - project
                     - experiment
                     - null
+                groupBy:
+                  type: string
+                  nullable: true
           required:
             - viewType
             - options
@@ -5682,6 +5685,9 @@ components:
               nullable: true
             layout:
               type: string
+              nullable: true
+            chartHeight:
+              type: number
               nullable: true
           title: TableViewOptions
         - type: "null"

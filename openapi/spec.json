@@ -6659,6 +6659,10 @@
                       "experiment",
                       null
                     ]
+                  },
+                  "groupBy": {
+                    "type": "string",
+                    "nullable": true
                   }
                 }
               }
@@ -6703,6 +6707,10 @@
               },
               "layout": {
                 "type": "string",
+                "nullable": true
+              },
+              "chartHeight": {
+                "type": "number",
                 "nullable": true
               }
             },
