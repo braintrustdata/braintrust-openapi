@@ -3887,42 +3887,128 @@ components:
           nullable: true
           description: Textual description of the project automation
         config:
-          type: object
-          properties:
-            event_type:
-              type: string
-              enum:
-                - logs
-              description: The event which starts the automation execution
-            btql_filter:
-              type: string
-              description: BTQL filter to identify rows for the automation rule
-            interval_seconds:
-              type: number
-              minimum: 1
-              maximum: 2592000
-              description: Perform the triggered action at most once in this interval of
-                seconds
-            action:
-              type: object
+          anyOf:
+            - type: object
               properties:
-                type:
+                event_type:
                   type: string
                   enum:
-                    - webhook
-                  description: The type of action to take when the automation rule is triggered
-                url:
+                    - logs
+                  description: The type of automation.
+                btql_filter:
                   type: string
-                  description: The webhook URL to send the request to
+                  description: BTQL filter to identify rows for the automation rule
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                action:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - webhook
+                          description: The type of action to take
+                        url:
+                          type: string
+                          description: The webhook URL to send the request to
+                      required:
+                        - type
+                        - url
+                  description: The action to take when the automation rule is triggered
               required:
-                - type
-                - url
-              description: The action to take when the automation rule is triggered
-          required:
-            - event_type
-            - btql_filter
-            - interval_seconds
-            - action
+                - event_type
+                - btql_filter
+                - interval_seconds
+                - action
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - btql_export
+                  description: The type of automation.
+                export_definition:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - log_traces
+                      required:
+                        - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - log_spans
+                      required:
+                        - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - btql_query
+                        btql_query:
+                          type: string
+                          description: The BTQL query to export
+                      required:
+                        - type
+                        - btql_query
+                  description: The definition of what to export
+                export_path:
+                  type: string
+                  description: The path to export the results to. It should include the storage
+                    protocol and prefix, e.g. s3://bucket-name/path/to/export
+                format:
+                  type: string
+                  enum:
+                    - jsonl
+                    - parquet
+                  description: The format to export the results in
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                credentials:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - aws_iam
+                        role_arn:
+                          type: string
+                          description: The ARN of the IAM role to use
+                        external_id:
+                          type: string
+                          description: The automation-specific external id component (auto-generated by
+                            default)
+                      required:
+                        - type
+                        - role_arn
+                        - external_id
+                batch_size:
+                  type: number
+                  nullable: true
+                  description: The number of rows to export in each batch
+              required:
+                - event_type
+                - export_definition
+                - export_path
+                - format
+                - interval_seconds
+                - credentials
           description: The configuration for the automation rule
       required:
         - id
@@ -3945,42 +4031,128 @@ components:
           nullable: true
           description: Textual description of the project automation
         config:
-          type: object
-          properties:
-            event_type:
-              type: string
-              enum:
-                - logs
-              description: The event which starts the automation execution
-            btql_filter:
-              type: string
-              description: BTQL filter to identify rows for the automation rule
-            interval_seconds:
-              type: number
-              minimum: 1
-              maximum: 2592000
-              description: Perform the triggered action at most once in this interval of
-                seconds
-            action:
-              type: object
+          anyOf:
+            - type: object
               properties:
-                type:
+                event_type:
                   type: string
                   enum:
-                    - webhook
-                  description: The type of action to take when the automation rule is triggered
-                url:
+                    - logs
+                  description: The type of automation.
+                btql_filter:
                   type: string
-                  description: The webhook URL to send the request to
+                  description: BTQL filter to identify rows for the automation rule
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                action:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - webhook
+                          description: The type of action to take
+                        url:
+                          type: string
+                          description: The webhook URL to send the request to
+                      required:
+                        - type
+                        - url
+                  description: The action to take when the automation rule is triggered
               required:
-                - type
-                - url
-              description: The action to take when the automation rule is triggered
-          required:
-            - event_type
-            - btql_filter
-            - interval_seconds
-            - action
+                - event_type
+                - btql_filter
+                - interval_seconds
+                - action
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - btql_export
+                  description: The type of automation.
+                export_definition:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - log_traces
+                      required:
+                        - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - log_spans
+                      required:
+                        - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - btql_query
+                        btql_query:
+                          type: string
+                          description: The BTQL query to export
+                      required:
+                        - type
+                        - btql_query
+                  description: The definition of what to export
+                export_path:
+                  type: string
+                  description: The path to export the results to. It should include the storage
+                    protocol and prefix, e.g. s3://bucket-name/path/to/export
+                format:
+                  type: string
+                  enum:
+                    - jsonl
+                    - parquet
+                  description: The format to export the results in
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                credentials:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - aws_iam
+                        role_arn:
+                          type: string
+                          description: The ARN of the IAM role to use
+                        external_id:
+                          type: string
+                          description: The automation-specific external id component (auto-generated by
+                            default)
+                      required:
+                        - type
+                        - role_arn
+                        - external_id
+                batch_size:
+                  type: number
+                  nullable: true
+                  description: The number of rows to export in each batch
+              required:
+                - event_type
+                - export_definition
+                - export_path
+                - format
+                - interval_seconds
+                - credentials
           description: The configuration for the automation rule
       required:
         - project_id
@@ -3998,43 +4170,129 @@ components:
           nullable: true
           description: Textual description of the project automation
         config:
-          type: object
-          nullable: true
-          properties:
-            event_type:
-              type: string
-              enum:
-                - logs
-              description: The event which starts the automation execution
-            btql_filter:
-              type: string
-              description: BTQL filter to identify rows for the automation rule
-            interval_seconds:
-              type: number
-              minimum: 1
-              maximum: 2592000
-              description: Perform the triggered action at most once in this interval of
-                seconds
-            action:
-              type: object
+          anyOf:
+            - type: object
               properties:
-                type:
+                event_type:
                   type: string
                   enum:
-                    - webhook
-                  description: The type of action to take when the automation rule is triggered
-                url:
+                    - logs
+                  description: The type of automation.
+                btql_filter:
                   type: string
-                  description: The webhook URL to send the request to
+                  description: BTQL filter to identify rows for the automation rule
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                action:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - webhook
+                          description: The type of action to take
+                        url:
+                          type: string
+                          description: The webhook URL to send the request to
+                      required:
+                        - type
+                        - url
+                  description: The action to take when the automation rule is triggered
               required:
-                - type
-                - url
-              description: The action to take when the automation rule is triggered
-          required:
-            - event_type
-            - btql_filter
-            - interval_seconds
-            - action
+                - event_type
+                - btql_filter
+                - interval_seconds
+                - action
+            - type: object
+              properties:
+                event_type:
+                  type: string
+                  enum:
+                    - btql_export
+                  description: The type of automation.
+                export_definition:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - log_traces
+                      required:
+                        - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - log_spans
+                      required:
+                        - type
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - btql_query
+                        btql_query:
+                          type: string
+                          description: The BTQL query to export
+                      required:
+                        - type
+                        - btql_query
+                  description: The definition of what to export
+                export_path:
+                  type: string
+                  description: The path to export the results to. It should include the storage
+                    protocol and prefix, e.g. s3://bucket-name/path/to/export
+                format:
+                  type: string
+                  enum:
+                    - jsonl
+                    - parquet
+                  description: The format to export the results in
+                interval_seconds:
+                  type: number
+                  minimum: 1
+                  maximum: 2592000
+                  description: Perform the triggered action at most once in this interval of
+                    seconds
+                credentials:
+                  oneOf:
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - aws_iam
+                        role_arn:
+                          type: string
+                          description: The ARN of the IAM role to use
+                        external_id:
+                          type: string
+                          description: The automation-specific external id component (auto-generated by
+                            default)
+                      required:
+                        - type
+                        - role_arn
+                        - external_id
+                batch_size:
+                  type: number
+                  nullable: true
+                  description: The number of rows to export in each batch
+              required:
+                - event_type
+                - export_definition
+                - export_path
+                - format
+                - interval_seconds
+                - credentials
+            - type: "null"
           description: The configuration for the automation rule
     ProjectScoreCategory:
       type: object
