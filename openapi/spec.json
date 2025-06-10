@@ -5040,6 +5040,11 @@
             "type": "string",
             "nullable": true,
             "description": "Color of the tag for the UI"
+          },
+          "position": {
+            "type": "string",
+            "nullable": true,
+            "description": "An optional LexoRank-based string that sets the sort position for the tag in the UI"
           }
         },
         "required": [
