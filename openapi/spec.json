@@ -4151,6 +4151,15 @@
           "id"
         ]
       },
+      "RetentionObjectType": {
+        "type": "string",
+        "enum": [
+          "project_logs",
+          "experiment",
+          "dataset"
+        ],
+        "description": "The object type that the retention policy applies to"
+      },
       "ProjectAutomation": {
         "type": "object",
         "properties": {
@@ -4362,6 +4371,39 @@
                   "interval_seconds",
                   "credentials"
                 ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
+                      "retention"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "object_type": {
+                    "$ref": "#/components/schemas/RetentionObjectType"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uuid",
+                    "description": "The object id that the retention policy applies to"
+                  },
+                  "retention_days": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 365,
+                    "description": "The number of days to retain the object"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "object_type",
+                  "object_id",
+                  "retention_days"
+                ]
               }
             ],
             "description": "The configuration for the automation rule"
@@ -4568,6 +4610,39 @@
                   "interval_seconds",
                   "credentials"
                 ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
+                      "retention"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "object_type": {
+                    "$ref": "#/components/schemas/RetentionObjectType"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uuid",
+                    "description": "The object id that the retention policy applies to"
+                  },
+                  "retention_days": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 365,
+                    "description": "The number of days to retain the object"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "object_type",
+                  "object_id",
+                  "retention_days"
+                ]
               }
             ],
             "description": "The configuration for the automation rule"
@@ -4768,6 +4843,39 @@
                   "format",
                   "interval_seconds",
                   "credentials"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
+                      "retention"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "object_type": {
+                    "$ref": "#/components/schemas/RetentionObjectType"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uuid",
+                    "description": "The object id that the retention policy applies to"
+                  },
+                  "retention_days": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 365,
+                    "description": "The number of days to retain the object"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "object_type",
+                  "object_id",
+                  "retention_days"
                 ]
               },
               {
