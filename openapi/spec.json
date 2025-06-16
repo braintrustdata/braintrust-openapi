@@ -1402,6 +1402,14 @@
               "nullable": true
             },
             "description": "User-controlled metadata about the experiment"
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags for the experiment"
           }
         },
         "required": [
