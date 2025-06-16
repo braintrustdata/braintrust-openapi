@@ -2704,6 +2704,32 @@ components:
             - type
       required:
         - type
+    BraintrustAttachmentReference:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - braintrust_attachment
+          description: An identifier to help disambiguate parsing.
+        filename:
+          type: string
+          minLength: 1
+          description: Human-readable filename for user interfaces. Not related to
+            attachment storage.
+        content_type:
+          type: string
+          minLength: 1
+          description: MIME type of this file.
+        key:
+          type: string
+          minLength: 1
+          description: Key in the object store bucket for this attachment.
+      required:
+        - type
+        - filename
+        - content_type
+        - key
     ChatCompletionContentPartImage:
       type: object
       properties:
@@ -2711,7 +2737,9 @@ components:
           type: object
           properties:
             url:
-              type: string
+              anyOf:
+                - type: string
+                - $ref: "#/components/schemas/BraintrustAttachmentReference"
             detail:
               anyOf:
                 - type: string
