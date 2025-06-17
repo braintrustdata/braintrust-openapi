@@ -1402,6 +1402,14 @@
               "nullable": true
             },
             "description": "User-controlled metadata about the experiment"
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags for the experiment"
           }
         },
         "required": [
@@ -1463,6 +1471,14 @@
             },
             "description": "User-controlled metadata about the experiment"
           },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags for the experiment"
+          },
           "ensure_new": {
             "type": "boolean",
             "nullable": true,
@@ -1518,6 +1534,14 @@
               "nullable": true
             },
             "description": "User-controlled metadata about the experiment"
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of tags for the experiment"
           }
         }
       },
@@ -8580,6 +8604,13 @@
           "extra_messages": {
             "type": "string",
             "description": "A template path of extra messages to append to the conversion. These messages will be appended to the end of the conversation, after the last message."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional tags that will be added to the experiment."
           }
         },
         "required": [
