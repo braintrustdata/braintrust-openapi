@@ -7560,6 +7560,14 @@
                 },
                 "description": "Emails of users to invite"
               },
+              "service_principals": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Service principals to create"
+              },
               "send_invite_emails": {
                 "type": "boolean",
                 "nullable": true,
