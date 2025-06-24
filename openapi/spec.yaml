@@ -6346,11 +6346,17 @@ components:
               items:
                 type: string
               description: Emails of users to invite
-            service_principals:
-              type: array
+            service_principal:
+              type: object
               nullable: true
-              items:
-                type: string
+              properties:
+                name:
+                  type: string
+                token_name:
+                  type: string
+                  nullable: true
+              required:
+                - name
               description: Service principals to create
             send_invite_emails:
               type: boolean
