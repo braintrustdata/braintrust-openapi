@@ -6346,7 +6346,7 @@ components:
               items:
                 type: string
               description: Emails of users to invite
-            service_principal:
+            service_account:
               type: object
               nullable: true
               properties:
@@ -6357,7 +6357,7 @@ components:
                   nullable: true
               required:
                 - name
-              description: Service principals to create
+              description: Service account to create
             send_invite_emails:
               type: boolean
               nullable: true
