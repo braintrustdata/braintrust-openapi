@@ -104,6 +104,14 @@ components:
       type: string
       format: uuid
       description: EnvVar id
+    EnvironmentIdParam:
+      type: string
+      format: uuid
+      description: Environment id
+    EnvironmentObjectIdParam:
+      type: string
+      format: uuid
+      description: EnvironmentObject id
     ProjectIdQuery:
       type: string
       format: uuid
@@ -156,6 +164,12 @@ components:
     EnvVarName:
       type: string
       description: Name of the env_var to search for
+    EnvironmentName:
+      type: string
+      description: Name of the environment to search for
+    EnvironmentObjectName:
+      type: string
+      description: Name of the environment_object to search for
     OrgName:
       type: string
       description: Filter search results to within a particular organization
@@ -342,6 +356,7 @@ components:
         - org_member
         - project_log
         - org_project
+        - environment
       description: The object type that the ACL applies to
     AclObjectId:
       type: string
@@ -361,6 +376,7 @@ components:
         - org_member
         - project_log
         - org_project
+        - environment
       description: The object type that the ACL applies to
     AclListOrgObjectId:
       type: string
@@ -408,6 +424,7 @@ components:
         - org_member
         - project_log
         - org_project
+        - environment
       description: The object type that the ACL applies to
     AclListRoleId:
       type: string
@@ -6634,6 +6651,169 @@ components:
         - object_type
         - object_id
         - name
+    Environment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the environment
+        org_id:
+          type: string
+          format: uuid
+          description: Unique id for the organization that the environment belongs under
+        name:
+          type: string
+          description: Name of the environment
+        slug:
+          type: string
+          description: A url-friendly, unique identifier for the environment within an
+            organization
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the environment
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of environment creation
+        deleted_at:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of environment deletion, or null if the environment is still
+            active
+      required:
+        - id
+        - org_id
+        - name
+        - slug
+      description: An environment is a user-configured deployment target (e.g., dev,
+        staging, prod) for tracking object versions across different stages
+    CreateEnvironment:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: Name of the environment
+        slug:
+          type: string
+          minLength: 1
+          pattern: ^[a-z0-9-]+$
+          description: A url-friendly, unique identifier for the environment within an
+            organization
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the environment
+        org_name:
+          type: string
+          nullable: true
+          description: For nearly all users, this parameter should be unnecessary. But in
+            the rare case that your API key belongs to multiple organizations,
+            you may specify the name of the organization the environment belongs
+            in.
+      required:
+        - name
+        - slug
+    PatchEnvironment:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Name of the environment
+        slug:
+          type: string
+          nullable: true
+          pattern: ^[a-z0-9-]+$
+        description:
+          type: string
+          nullable: true
+          description: Textual description of the environment
+    EnvironmentObject:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the environment object
+        org_id:
+          type: string
+          format: uuid
+          description: Unique id for the organization that the environment object belongs
+            under
+        object_type:
+          type: string
+          description: The type of object (e.g., 'project', 'experiment', 'dataset')
+        object_id:
+          type: string
+          format: uuid
+          description: The unique id of the object
+        object_version:
+          type: string
+          description: The version of the object (transaction ID as string)
+        environment_id:
+          type: string
+          format: uuid
+          description: The environment this object version is assigned to
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of environment object creation
+      required:
+        - id
+        - org_id
+        - object_type
+        - object_id
+        - object_version
+        - environment_id
+      description: An environment object links a specific version of a business object
+        to an environment
+    CreateEnvironmentObject:
+      type: object
+      properties:
+        object_type:
+          type: string
+          description: The type of object (e.g., 'project', 'experiment', 'dataset')
+        object_id:
+          type: string
+          format: uuid
+          description: The unique id of the object
+        object_version:
+          type: string
+          description: The version of the object (transaction ID as string)
+        environment_id:
+          type: string
+          format: uuid
+          description: The environment this object version is assigned to
+        org_name:
+          type: string
+          nullable: true
+          description: For nearly all users, this parameter should be unnecessary. But in
+            the rare case that your API key belongs to multiple organizations,
+            you may specify the name of the organization the environment object
+            belongs in.
+      required:
+        - object_type
+        - object_id
+        - object_version
+        - environment_id
+    PatchEnvironmentObject:
+      type: object
+      properties:
+        object_version:
+          type: string
+          nullable: true
+          description: The version of the object (transaction ID as string)
+        environment_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: The environment this object version is assigned to
     CrossObjectInsertResponse:
       type: object
       properties:
@@ -7282,6 +7462,20 @@ components:
       description: EnvVar id
       name: env_var_id
       in: path
+    EnvironmentIdParam:
+      schema:
+        $ref: "#/components/schemas/EnvironmentIdParam"
+      required: true
+      description: Environment id
+      name: environment_id
+      in: path
+    EnvironmentObjectIdParam:
+      schema:
+        $ref: "#/components/schemas/EnvironmentObjectIdParam"
+      required: true
+      description: EnvironmentObject id
+      name: environment_object_id
+      in: path
     ProjectIdQuery:
       schema:
         $ref: "#/components/schemas/ProjectIdQuery"
@@ -7415,6 +7609,22 @@ components:
       required: false
       description: Name of the env_var to search for
       name: env_var_name
+      in: query
+      allowReserved: true
+    EnvironmentName:
+      schema:
+        $ref: "#/components/schemas/EnvironmentName"
+      required: false
+      description: Name of the environment to search for
+      name: environment_name
+      in: query
+      allowReserved: true
+    EnvironmentObjectName:
+      schema:
+        $ref: "#/components/schemas/EnvironmentObjectName"
+      required: false
+      description: Name of the environment_object to search for
+      name: environment_object_name
       in: query
       allowReserved: true
     OrgName:
@@ -17928,6 +18138,1022 @@ paths:
         - CORS
       parameters:
         - $ref: "#/components/parameters/EnvVarIdParam"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/environment:
+    post:
+      tags:
+        - Environments
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: postEnvironment
+      description: Create a new environment. If there is an existing environment with
+        the same name as the one specified in the request, will return the
+        existing environment unmodified
+      summary: Create environment
+      requestBody:
+        description: Any desired information about the new environment object
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnvironment"
+      responses:
+        "200":
+          description: Returns the new environment object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    put:
+      tags:
+        - Environments
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: putEnvironment
+      description: Create or replace environment. If there is an existing environment
+        with the same name as the one specified in the request, will replace the
+        existing environment with the provided fields
+      summary: Create or replace environment
+      requestBody:
+        description: Any desired information about the new environment object
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnvironment"
+      responses:
+        "200":
+          description: Returns the new environment object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    get:
+      operationId: getEnvironment
+      tags:
+        - Environments
+      description: List out all environments. The environments are sorted by creation
+        date, with the most recently-created environments coming first
+      summary: List environments
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/EnvironmentName"
+        - $ref: "#/components/parameters/OrgName"
+      responses:
+        "200":
+          description: Returns a list of environment objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Environment"
+                    description: A list of environment objects
+                required:
+                  - objects
+                additionalProperties: false
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsEnvironment
+      description: Enable CORS
+      summary: Enable CORS (`/v1/environment`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/environment/{environment_id}:
+    get:
+      operationId: getEnvironmentId
+      tags:
+        - Environments
+      description: Get a environment object by its id
+      summary: Get environment
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentIdParam"
+      responses:
+        "200":
+          description: Returns the environment object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    patch:
+      operationId: patchEnvironmentId
+      tags:
+        - Environments
+      description: Partially update a environment object. Specify the fields to update
+        in the payload. Any object-type fields will be deep-merged with existing
+        content. Currently we do not support removing fields or setting them to
+        null.
+      summary: Partially update environment
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentIdParam"
+      requestBody:
+        description: Fields to update
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchEnvironment"
+      responses:
+        "200":
+          description: Returns the environment object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteEnvironmentId
+      tags:
+        - Environments
+      description: Delete a environment object by its id
+      summary: Delete environment
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentIdParam"
+      responses:
+        "200":
+          description: Returns the deleted environment object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsEnvironmentId
+      description: Enable CORS
+      summary: Enable CORS (`/v1/environment/{environment_id}`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentIdParam"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/environment_object:
+    post:
+      tags:
+        - EnvironmentObjects
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: postEnvironmentObject
+      description: Create a new environment_object. If there is an existing
+        environment_object with the same name as the one specified in the
+        request, will return the existing environment_object unmodified
+      summary: Create environment_object
+      requestBody:
+        description: Any desired information about the new environment_object object
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnvironmentObject"
+      responses:
+        "200":
+          description: Returns the new environment_object object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentObject"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    put:
+      tags:
+        - EnvironmentObjects
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: putEnvironmentObject
+      description: Create or replace environment_object. If there is an existing
+        environment_object with the same name as the one specified in the
+        request, will replace the existing environment_object with the provided
+        fields
+      summary: Create or replace environment_object
+      requestBody:
+        description: Any desired information about the new environment_object object
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnvironmentObject"
+      responses:
+        "200":
+          description: Returns the new environment_object object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentObject"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    get:
+      operationId: getEnvironmentObject
+      tags:
+        - EnvironmentObjects
+      description: List out all environment_objects. The environment_objects are
+        sorted by creation date, with the most recently-created
+        environment_objects coming first
+      summary: List environment_objects
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/EnvironmentObjectName"
+        - $ref: "#/components/parameters/OrgName"
+      responses:
+        "200":
+          description: Returns a list of environment_object objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EnvironmentObject"
+                    description: A list of environment_object objects
+                required:
+                  - objects
+                additionalProperties: false
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsEnvironmentObject
+      description: Enable CORS
+      summary: Enable CORS (`/v1/environment_object`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/environment_object/{environment_object_id}:
+    get:
+      operationId: getEnvironmentObjectId
+      tags:
+        - EnvironmentObjects
+      description: Get a environment_object object by its id
+      summary: Get environment_object
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentObjectIdParam"
+      responses:
+        "200":
+          description: Returns the environment_object object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentObject"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    patch:
+      operationId: patchEnvironmentObjectId
+      tags:
+        - EnvironmentObjects
+      description: Partially update a environment_object object. Specify the fields to
+        update in the payload. Any object-type fields will be deep-merged with
+        existing content. Currently we do not support removing fields or setting
+        them to null.
+      summary: Partially update environment_object
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentObjectIdParam"
+      requestBody:
+        description: Fields to update
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchEnvironmentObject"
+      responses:
+        "200":
+          description: Returns the environment_object object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentObject"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteEnvironmentObjectId
+      tags:
+        - EnvironmentObjects
+      description: Delete a environment_object object by its id
+      summary: Delete environment_object
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentObjectIdParam"
+      responses:
+        "200":
+          description: Returns the deleted environment_object object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentObject"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsEnvironmentObjectId
+      description: Enable CORS
+      summary: Enable CORS (`/v1/environment_object/{environment_object_id}`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/EnvironmentObjectIdParam"
       responses:
         "200":
           description: Response for CORS method
