@@ -3825,38 +3825,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Acl"
-          description: >-
-            An ACL grants a certain permission or role to a certain user or
-            group on an object.
-
-
-            ACLs are inherited across the object hierarchy. So for example, if a
-            user has read permissions on a project, they will also have read
-            permissions on any experiment, dataset, etc. created within that
-            project.
-
-
-            To restrict a grant to a particular sub-object, you may specify
-            `restrict_object_type` in the ACL, as part of a direct permission
-            grant or as part of a role.
         removed_acls:
           type: array
           items:
             $ref: "#/components/schemas/Acl"
-          description: >-
-            An ACL grants a certain permission or role to a certain user or
-            group on an object.
-
-
-            ACLs are inherited across the object hierarchy. So for example, if a
-            user has read permissions on a project, they will also have read
-            permissions on any experiment, dataset, etc. created within that
-            project.
-
-
-            To restrict a grant to a particular sub-object, you may specify
-            `restrict_object_type` in the ACL, as part of a direct permission
-            grant or as part of a role.
       required:
         - added_acls
         - removed_acls
@@ -3868,39 +3840,11 @@ components:
           nullable: true
           items:
             $ref: "#/components/schemas/AclItem"
-          description: >-
-            An ACL grants a certain permission or role to a certain user or
-            group on an object.
-
-
-            ACLs are inherited across the object hierarchy. So for example, if a
-            user has read permissions on a project, they will also have read
-            permissions on any experiment, dataset, etc. created within that
-            project.
-
-
-            To restrict a grant to a particular sub-object, you may specify
-            `restrict_object_type` in the ACL, as part of a direct permission
-            grant or as part of a role.
         remove_acls:
           type: array
           nullable: true
           items:
             $ref: "#/components/schemas/AclItem"
-          description: >-
-            An ACL grants a certain permission or role to a certain user or
-            group on an object.
-
-
-            ACLs are inherited across the object hierarchy. So for example, if a
-            user has read permissions on a project, they will also have read
-            permissions on any experiment, dataset, etc. created within that
-            project.
-
-
-            To restrict a grant to a particular sub-object, you may specify
-            `restrict_object_type` in the ACL, as part of a direct permission
-            grant or as part of a role.
     User:
       type: object
       properties:
@@ -7705,7 +7649,6 @@ components:
               allOf:
                 - $ref: "#/components/schemas/ProjectScoreType"
                 - title: project_score_type
-            description: The type of the configured score
       required: false
       name: score_type
       in: query
@@ -12548,20 +12491,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Acl"
-                description: >-
-                  An ACL grants a certain permission or role to a certain user
-                  or group on an object.
-
-
-                  ACLs are inherited across the object hierarchy. So for
-                  example, if a user has read permissions on a project, they
-                  will also have read permissions on any experiment, dataset,
-                  etc. created within that project.
-
-
-                  To restrict a grant to a particular sub-object, you may
-                  specify `restrict_object_type` in the ACL, as part of a direct
-                  permission grant or as part of a role.
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
