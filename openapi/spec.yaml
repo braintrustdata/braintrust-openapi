@@ -4359,6 +4359,10 @@ components:
           items:
             $ref: "#/components/schemas/SavedFunctionId"
           description: The list of scorers to use for online scoring
+        btql_filter:
+          type: string
+          nullable: true
+          description: Filter logs using BTQL
         apply_to_root_span:
           type: boolean
           nullable: true
