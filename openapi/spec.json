@@ -4867,6 +4867,11 @@
             },
             "description": "The list of scorers to use for online scoring"
           },
+          "btql_filter": {
+            "type": "string",
+            "nullable": true,
+            "description": "Filter logs using BTQL"
+          },
           "apply_to_root_span": {
             "type": "boolean",
             "nullable": true,
@@ -7225,6 +7230,31 @@
                     "text"
                   ]
                 }
+              },
+              "timeRangeFilter": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "from": {
+                        "type": "string"
+                      },
+                      "to": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "from",
+                      "to"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "title": "TableViewOptions"

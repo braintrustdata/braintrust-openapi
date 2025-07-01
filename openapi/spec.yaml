@@ -4359,6 +4359,10 @@ components:
           items:
             $ref: "#/components/schemas/SavedFunctionId"
           description: The list of scorers to use for online scoring
+        btql_filter:
+          type: string
+          nullable: true
+          description: Filter logs using BTQL
         apply_to_root_span:
           type: boolean
           nullable: true
@@ -6034,6 +6038,19 @@ components:
                 required:
                   - id
                   - text
+            timeRangeFilter:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    from:
+                      type: string
+                    to:
+                      type: string
+                  required:
+                    - from
+                    - to
+                - type: "null"
           title: TableViewOptions
         - type: "null"
       description: Options for the view in the app
