@@ -6038,6 +6038,19 @@ components:
                 required:
                   - id
                   - text
+            timeRangeFilter:
+              anyOf:
+                - type: string
+                - type: object
+                  properties:
+                    from:
+                      type: string
+                    to:
+                      type: string
+                  required:
+                    - from
+                    - to
+                - type: "null"
           title: TableViewOptions
         - type: "null"
       description: Options for the view in the app
