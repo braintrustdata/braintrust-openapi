@@ -7586,22 +7586,25 @@
                 },
                 "description": "Emails of users to invite"
               },
-              "service_account": {
-                "type": "object",
+              "service_accounts": {
+                "type": "array",
                 "nullable": true,
-                "properties": {
-                  "name": {
-                    "type": "string"
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "token_name": {
+                      "type": "string",
+                      "nullable": true
+                    }
                   },
-                  "token_name": {
-                    "type": "string",
-                    "nullable": true
-                  }
+                  "required": [
+                    "name"
+                  ]
                 },
-                "required": [
-                  "name"
-                ],
-                "description": "Service account to create"
+                "description": "Service accounts to create"
               },
               "send_invite_emails": {
                 "type": "boolean",
