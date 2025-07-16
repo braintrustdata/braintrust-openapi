@@ -2918,6 +2918,26 @@ components:
           title: function
         - type: object
           properties:
+            content:
+              anyOf:
+                - type: string
+                  default: ""
+                  title: text
+                - type: array
+                  items:
+                    $ref: "#/components/schemas/ChatCompletionContentPartText"
+                  title: array
+            role:
+              type: string
+              enum:
+                - developer
+            name:
+              type: string
+          required:
+            - role
+          title: developer
+        - type: object
+          properties:
             role:
               type: string
               enum:
