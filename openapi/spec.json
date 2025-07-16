@@ -2948,6 +2948,40 @@
           {
             "type": "object",
             "properties": {
+              "content": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "default": "",
+                    "title": "text"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartText"
+                    },
+                    "title": "array"
+                  }
+                ]
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "developer"
+                ]
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "role"
+            ],
+            "title": "developer"
+          },
+          {
+            "type": "object",
+            "properties": {
               "role": {
                 "type": "string",
                 "enum": [
@@ -7230,6 +7264,31 @@
                     "text"
                   ]
                 }
+              },
+              "timeRangeFilter": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "from": {
+                        "type": "string"
+                      },
+                      "to": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "from",
+                      "to"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "title": "TableViewOptions"
@@ -7560,6 +7619,26 @@
                   "type": "string"
                 },
                 "description": "Emails of users to invite"
+              },
+              "service_accounts": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "token_name": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ]
+                },
+                "description": "Service accounts to create"
               },
               "send_invite_emails": {
                 "type": "boolean",
