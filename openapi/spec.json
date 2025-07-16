@@ -8425,6 +8425,16 @@
                       "nullable": true
                     }
                   },
+                  "function_type": {
+                    "type": "string",
+                    "enum": [
+                      "llm",
+                      "scorer",
+                      "task",
+                      "tool",
+                      null
+                    ]
+                  },
                   "name": {
                     "type": "string",
                     "nullable": true,
@@ -8442,6 +8452,16 @@
                 "properties": {
                   "inline_prompt": {
                     "$ref": "#/components/schemas/PromptData"
+                  },
+                  "function_type": {
+                    "type": "string",
+                    "enum": [
+                      "llm",
+                      "scorer",
+                      "task",
+                      "tool",
+                      null
+                    ]
                   },
                   "name": {
                     "type": "string",
@@ -8592,6 +8612,16 @@
                         "nullable": true
                       }
                     },
+                    "function_type": {
+                      "type": "string",
+                      "enum": [
+                        "llm",
+                        "scorer",
+                        "task",
+                        "tool",
+                        null
+                      ]
+                    },
                     "name": {
                       "type": "string",
                       "nullable": true,
@@ -8609,6 +8639,16 @@
                   "properties": {
                     "inline_prompt": {
                       "$ref": "#/components/schemas/PromptData"
+                    },
+                    "function_type": {
+                      "type": "string",
+                      "enum": [
+                        "llm",
+                        "scorer",
+                        "task",
+                        "tool",
+                        null
+                      ]
                     },
                     "name": {
                       "type": "string",
