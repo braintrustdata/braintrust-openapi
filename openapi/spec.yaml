@@ -4063,11 +4063,6 @@ components:
                   description: The type of automation.
                 object_type:
                   $ref: "#/components/schemas/RetentionObjectType"
-                object_id:
-                  type: string
-                  nullable: true
-                  format: uuid
-                  description: The object id that the retention policy applies to
                 retention_days:
                   type: number
                   minimum: 1
@@ -4076,7 +4071,6 @@ components:
               required:
                 - event_type
                 - object_type
-                - object_id
                 - retention_days
           description: The configuration for the automation rule
       required:
@@ -4231,11 +4225,6 @@ components:
                   description: The type of automation.
                 object_type:
                   $ref: "#/components/schemas/RetentionObjectType"
-                object_id:
-                  type: string
-                  nullable: true
-                  format: uuid
-                  description: The object id that the retention policy applies to
                 retention_days:
                   type: number
                   minimum: 1
@@ -4244,7 +4233,6 @@ components:
               required:
                 - event_type
                 - object_type
-                - object_id
                 - retention_days
           description: The configuration for the automation rule
       required:
@@ -4394,11 +4382,6 @@ components:
                   description: The type of automation.
                 object_type:
                   $ref: "#/components/schemas/RetentionObjectType"
-                object_id:
-                  type: string
-                  nullable: true
-                  format: uuid
-                  description: The object id that the retention policy applies to
                 retention_days:
                   type: number
                   minimum: 1
@@ -4407,7 +4390,6 @@ components:
               required:
                 - event_type
                 - object_type
-                - object_id
                 - retention_days
             - type: "null"
           description: The configuration for the automation rule

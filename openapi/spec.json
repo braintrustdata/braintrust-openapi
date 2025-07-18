@@ -4439,12 +4439,6 @@
                   "object_type": {
                     "$ref": "#/components/schemas/RetentionObjectType"
                   },
-                  "object_id": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
-                  },
                   "retention_days": {
                     "type": "number",
                     "minimum": 1,
@@ -4455,7 +4449,6 @@
                 "required": [
                   "event_type",
                   "object_type",
-                  "object_id",
                   "retention_days"
                 ]
               }
@@ -4678,12 +4671,6 @@
                   "object_type": {
                     "$ref": "#/components/schemas/RetentionObjectType"
                   },
-                  "object_id": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
-                  },
                   "retention_days": {
                     "type": "number",
                     "minimum": 1,
@@ -4694,7 +4681,6 @@
                 "required": [
                   "event_type",
                   "object_type",
-                  "object_id",
                   "retention_days"
                 ]
               }
@@ -4912,12 +4898,6 @@
                   "object_type": {
                     "$ref": "#/components/schemas/RetentionObjectType"
                   },
-                  "object_id": {
-                    "type": "string",
-                    "nullable": true,
-                    "format": "uuid",
-                    "description": "The object id that the retention policy applies to"
-                  },
                   "retention_days": {
                     "type": "number",
                     "minimum": 1,
@@ -4928,7 +4908,6 @@
                 "required": [
                   "event_type",
                   "object_type",
-                  "object_id",
                   "retention_days"
                 ]
               },
