@@ -7066,6 +7066,10 @@
                     "type": "string",
                     "nullable": true
                   },
+                  "tzUTC": {
+                    "type": "boolean",
+                    "nullable": true
+                  },
                   "chartVisibility": {
                     "type": "object",
                     "nullable": true,
