@@ -6102,13 +6102,7 @@ components:
             xAxisAggregation:
               type: string
               nullable: true
-              enum:
-                - avg
-                - sum
-                - min
-                - max
-                - all
-                - null
+              description: One of 'avg', 'sum', 'min', 'max', 'median', 'all'
             chartAnnotations:
               type: array
               nullable: true
