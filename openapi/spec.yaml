@@ -5997,6 +5997,11 @@ components:
                 groupBy:
                   type: string
                   nullable: true
+                filters:
+                  type: array
+                  nullable: true
+                  items:
+                    type: string
           required:
             - viewType
             - options
