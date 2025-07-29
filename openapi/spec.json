@@ -7181,7 +7181,11 @@
                     "type": "string",
                     "nullable": true
                   },
-                  "filters": {
+                  "searchFilter": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "btqlFilters": {
                     "type": "array",
                     "nullable": true,
                     "items": {
