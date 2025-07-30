@@ -6595,6 +6595,11 @@ components:
           type: string
           nullable: true
           description: The service account family name
+        org_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: Unique identifier for the organization
         key:
           type: string
           description: The raw service token. It will only be exposed this one time
@@ -6637,6 +6642,11 @@ components:
           type: string
           nullable: true
           description: The service account family name
+        org_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: Unique identifier for the organization
       required:
         - id
         - name
@@ -6650,6 +6660,7 @@ components:
           description: Unique identifier for the service token.
         org_id:
           type: string
+          format: uuid
           description: The organization ID this service token is scoped to.
       required:
         - id
@@ -17038,6 +17049,7 @@ paths:
                   description: Name of the service token. Does not have to be unique
                 org_id:
                   type: string
+                  format: uuid
                   description: The organization ID this service token should be scoped to.
                 account_id:
                   type: string
@@ -17125,6 +17137,7 @@ paths:
                   description: Name of the service token. Does not have to be unique
                 org_id:
                   type: string
+                  format: uuid
                   description: The organization ID this service token should be scoped to.
                 account_id:
                   type: string

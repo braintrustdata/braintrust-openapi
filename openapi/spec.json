@@ -7969,6 +7969,12 @@
             "nullable": true,
             "description": "The service account family name"
           },
+          "org_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Unique identifier for the organization"
+          },
           "key": {
             "type": "string",
             "description": "The raw service token. It will only be exposed this one time"
@@ -8022,6 +8028,12 @@
             "type": "string",
             "nullable": true,
             "description": "The service account family name"
+          },
+          "org_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Unique identifier for the organization"
           }
         },
         "required": [
@@ -8040,6 +8052,7 @@
           },
           "org_id": {
             "type": "string",
+            "format": "uuid",
             "description": "The organization ID this service token is scoped to."
           }
         },
@@ -24256,6 +24269,7 @@
                   },
                   "org_id": {
                     "type": "string",
+                    "format": "uuid",
                     "description": "The organization ID this service token should be scoped to."
                   },
                   "account_id": {
@@ -24387,6 +24401,7 @@
                   },
                   "org_id": {
                     "type": "string",
+                    "format": "uuid",
                     "description": "The organization ID this service token should be scoped to."
                   },
                   "account_id": {
