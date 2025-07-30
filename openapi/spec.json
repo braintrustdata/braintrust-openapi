@@ -7189,7 +7189,19 @@
                     "type": "array",
                     "nullable": true,
                     "items": {
-                      "type": "string"
+                      "type": "object",
+                      "properties": {
+                        "btql": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "btql",
+                        "label"
+                      ]
                     }
                   }
                 }
