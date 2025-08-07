@@ -4065,8 +4065,7 @@ components:
                   $ref: "#/components/schemas/RetentionObjectType"
                 retention_days:
                   type: number
-                  minimum: 1
-                  maximum: 365
+                  minimum: 0
                   description: The number of days to retain the object
               required:
                 - event_type
@@ -4227,8 +4226,7 @@ components:
                   $ref: "#/components/schemas/RetentionObjectType"
                 retention_days:
                   type: number
-                  minimum: 1
-                  maximum: 365
+                  minimum: 0
                   description: The number of days to retain the object
               required:
                 - event_type
@@ -4384,8 +4382,7 @@ components:
                   $ref: "#/components/schemas/RetentionObjectType"
                 retention_days:
                   type: number
-                  minimum: 1
-                  maximum: 365
+                  minimum: 0
                   description: The number of days to retain the object
               required:
                 - event_type
