@@ -3077,6 +3077,13 @@ components:
             reasoning_effort:
               type: string
               enum:
+                - minimal
+                - low
+                - medium
+                - high
+            verbosity:
+              type: string
+              enum:
                 - low
                 - medium
                 - high
