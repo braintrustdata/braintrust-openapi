@@ -3223,6 +3223,15 @@
               "reasoning_effort": {
                 "type": "string",
                 "enum": [
+                  "minimal",
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              "verbosity": {
+                "type": "string",
+                "enum": [
                   "low",
                   "medium",
                   "high"
@@ -4454,8 +4463,7 @@
                   },
                   "retention_days": {
                     "type": "number",
-                    "minimum": 1,
-                    "maximum": 365,
+                    "minimum": 0,
                     "description": "The number of days to retain the object"
                   }
                 },
@@ -4686,8 +4694,7 @@
                   },
                   "retention_days": {
                     "type": "number",
-                    "minimum": 1,
-                    "maximum": 365,
+                    "minimum": 0,
                     "description": "The number of days to retain the object"
                   }
                 },
@@ -4913,8 +4920,7 @@
                   },
                   "retention_days": {
                     "type": "number",
-                    "minimum": 1,
-                    "maximum": 365,
+                    "minimum": 0,
                     "description": "The number of days to retain the object"
                   }
                 },
