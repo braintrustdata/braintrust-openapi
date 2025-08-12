@@ -3137,7 +3137,11 @@ components:
                 - low
                 - medium
                 - high
+          additionalProperties:
+            nullable: true
           title: OpenAIModelParams
+          x-stainless-skip:
+            - go
         - type: object
           properties:
             use_cache:
@@ -3160,7 +3164,11 @@ components:
           required:
             - max_tokens
             - temperature
+          additionalProperties:
+            nullable: true
           title: AnthropicModelParams
+          x-stainless-skip:
+            - go
         - type: object
           properties:
             use_cache:
@@ -3173,7 +3181,11 @@ components:
               type: number
             topK:
               type: number
+          additionalProperties:
+            nullable: true
           title: GoogleModelParams
+          x-stainless-skip:
+            - go
         - type: object
           properties:
             use_cache:
@@ -3182,12 +3194,20 @@ components:
               type: number
             topK:
               type: number
+          additionalProperties:
+            nullable: true
           title: WindowAIModelParams
+          x-stainless-skip:
+            - go
         - type: object
           properties:
             use_cache:
               type: boolean
+          additionalProperties:
+            nullable: true
           title: JsCompletionParams
+          x-stainless-skip:
+            - go
     PromptOptionsNullish:
       type: object
       nullable: true
@@ -4842,6 +4862,8 @@ components:
     FunctionIdRef:
       type: object
       properties: {}
+      additionalProperties:
+        nullable: true
       description: Options for identifying a function
     PromptBlockData:
       anyOf:

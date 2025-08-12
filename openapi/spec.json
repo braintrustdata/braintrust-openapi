@@ -3296,7 +3296,13 @@
                 ]
               }
             },
-            "title": "OpenAIModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "OpenAIModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3331,7 +3337,13 @@
               "max_tokens",
               "temperature"
             ],
-            "title": "AnthropicModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "AnthropicModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3352,7 +3364,13 @@
                 "type": "number"
               }
             },
-            "title": "GoogleModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "GoogleModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3367,7 +3385,13 @@
                 "type": "number"
               }
             },
-            "title": "WindowAIModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "WindowAIModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3376,7 +3400,13 @@
                 "type": "boolean"
               }
             },
-            "title": "JsCompletionParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "JsCompletionParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           }
         ]
       },
@@ -5513,6 +5543,9 @@
       "FunctionIdRef": {
         "type": "object",
         "properties": {},
+        "additionalProperties": {
+          "nullable": true
+        },
         "description": "Options for identifying a function"
       },
       "PromptBlockData": {
