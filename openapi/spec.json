@@ -7555,26 +7555,21 @@
           "preview_name": {
             "type": "string"
           },
-          "user_id": {
+          "service_account_id": {
             "type": "string",
             "nullable": true,
             "format": "uuid",
             "description": "Unique identifier for the service token"
           },
-          "user_email": {
+          "service_account_email": {
             "type": "string",
             "nullable": true,
             "description": "The service account email (not routable)"
           },
-          "user_given_name": {
+          "service_account_name": {
             "type": "string",
             "nullable": true,
-            "description": "The service account given name"
-          },
-          "user_family_name": {
-            "type": "string",
-            "nullable": true,
-            "description": "The service account family name"
+            "description": "The service account name"
           },
           "org_id": {
             "type": "string",
@@ -7615,26 +7610,21 @@
           "preview_name": {
             "type": "string"
           },
-          "user_id": {
+          "service_account_id": {
             "type": "string",
             "nullable": true,
             "format": "uuid",
             "description": "Unique identifier for the service token"
           },
-          "user_email": {
+          "service_account_email": {
             "type": "string",
             "nullable": true,
             "description": "The service account email (not routable)"
           },
-          "user_given_name": {
+          "service_account_name": {
             "type": "string",
             "nullable": true,
-            "description": "The service account given name"
-          },
-          "user_family_name": {
-            "type": "string",
-            "nullable": true,
-            "description": "The service account family name"
+            "description": "The service account name"
           },
           "org_id": {
             "type": "string",
