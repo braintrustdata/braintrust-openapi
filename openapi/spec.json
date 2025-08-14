@@ -206,10 +206,6 @@
         "type": "string",
         "description": "Filter search results to within a particular organization"
       },
-      "OrgId": {
-        "type": "string",
-        "description": "Filter search results to within a particular organization"
-      },
       "Ids": {
         "anyOf": [
           {
@@ -695,23 +691,14 @@
         "nullable": true,
         "properties": {
           "object_type": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "experiment",
-                  "dataset",
-                  "prompt",
-                  "function",
-                  "prompt_session"
-                ]
-              },
-              {
-                "type": "string",
-                "enum": [
-                  "project_logs"
-                ]
-              }
+            "type": "string",
+            "enum": [
+              "project_logs",
+              "experiment",
+              "dataset",
+              "prompt",
+              "function",
+              "prompt_session"
             ],
             "description": "Type of the object the event is originating from."
           },
@@ -2643,7 +2630,40 @@
           "type"
         ]
       },
-      "ChatCompletionContentPartImage": {
+      "ChatCompletionContentPartTextWithTitle": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "default": ""
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ]
+          },
+          "cache_control": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ephemeral"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "text"
+      },
+      "ChatCompletionContentPartImageWithTitle": {
         "type": "object",
         "properties": {
           "image_url": {
@@ -2698,36 +2718,13 @@
       "ChatCompletionContentPart": {
         "anyOf": [
           {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ChatCompletionContentPartText"
-              },
-              {
-                "title": "text"
-              }
-            ]
+            "$ref": "#/components/schemas/ChatCompletionContentPartTextWithTitle"
           },
           {
-            "$ref": "#/components/schemas/ChatCompletionContentPartImage"
+            "$ref": "#/components/schemas/ChatCompletionContentPartImageWithTitle"
           }
         ],
         "title": "chat_completion_content_part"
-      },
-      "ChatCompletionContent": {
-        "anyOf": [
-          {
-            "type": "string",
-            "default": "",
-            "title": "text"
-          },
-          {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChatCompletionContentPart"
-            },
-            "title": "array"
-          }
-        ]
       },
       "ChatCompletionMessageToolCall": {
         "type": "object",
@@ -2817,7 +2814,20 @@
             "type": "object",
             "properties": {
               "content": {
-                "$ref": "#/components/schemas/ChatCompletionContent"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "default": "",
+                    "title": "text"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ChatCompletionContentPart"
+                    },
+                    "title": "array"
+                  }
+                ]
               },
               "role": {
                 "type": "string",
@@ -3013,6 +3023,149 @@
           }
         ]
       },
+      "PromptBlockDataNullish": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "completion"
+                ]
+              },
+              "content": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "content"
+            ],
+            "title": "completion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "chat"
+                ]
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionMessageParam"
+                }
+              },
+              "tools": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "messages"
+            ],
+            "title": "chat"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "ResponseFormatJsonSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "schema": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "title": "object",
+                "x-stainless-skip": [
+                  "go"
+                ]
+              },
+              {
+                "type": "string",
+                "title": "string"
+              }
+            ]
+          },
+          "strict": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ResponseFormat": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "json_object"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "title": "json_object"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "json_schema"
+                ]
+              },
+              "json_schema": {
+                "$ref": "#/components/schemas/ResponseFormatJsonSchema"
+              }
+            },
+            "required": [
+              "type",
+              "json_schema"
+            ],
+            "title": "json_schema"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "title": "text"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
       "ModelParams": {
         "anyOf": [
           {
@@ -3041,93 +3194,7 @@
                 "type": "number"
               },
               "response_format": {
-                "anyOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "json_object"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "title": "json_object"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "json_schema"
-                        ]
-                      },
-                      "json_schema": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "description": {
-                            "type": "string"
-                          },
-                          "schema": {
-                            "anyOf": [
-                              {
-                                "type": "object",
-                                "additionalProperties": {
-                                  "nullable": true
-                                },
-                                "title": "object",
-                                "x-stainless-skip": [
-                                  "go"
-                                ]
-                              },
-                              {
-                                "type": "string",
-                                "title": "string"
-                              }
-                            ]
-                          },
-                          "strict": {
-                            "type": "boolean",
-                            "nullable": true
-                          }
-                        },
-                        "required": [
-                          "name"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "json_schema"
-                    ],
-                    "title": "json_schema"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "text"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "type"
-                    ],
-                    "title": "text"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "$ref": "#/components/schemas/ResponseFormat"
               },
               "tool_choice": {
                 "anyOf": [
@@ -3238,7 +3305,13 @@
                 ]
               }
             },
-            "title": "OpenAIModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "OpenAIModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3273,7 +3346,13 @@
               "max_tokens",
               "temperature"
             ],
-            "title": "AnthropicModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "AnthropicModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3294,7 +3373,13 @@
                 "type": "number"
               }
             },
-            "title": "GoogleModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "GoogleModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3309,7 +3394,13 @@
                 "type": "number"
               }
             },
-            "title": "WindowAIModelParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "WindowAIModelParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           },
           {
             "type": "object",
@@ -3318,11 +3409,17 @@
                 "type": "boolean"
               }
             },
-            "title": "JsCompletionParams"
+            "additionalProperties": {
+              "nullable": true
+            },
+            "title": "JsCompletionParams",
+            "x-stainless-skip": [
+              "go"
+            ]
           }
         ]
       },
-      "PromptOptions": {
+      "PromptOptionsNullish": {
         "type": "object",
         "nullable": true,
         "properties": {
@@ -3336,6 +3433,34 @@
             "type": "string"
           }
         }
+      },
+      "PromptParserNullish": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "llm_classifier"
+            ]
+          },
+          "use_cot": {
+            "type": "boolean"
+          },
+          "choice_scores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "required": [
+          "type",
+          "use_cot",
+          "choice_scores"
+        ]
       },
       "SavedFunctionId": {
         "anyOf": [
@@ -3379,91 +3504,18 @@
           }
         ]
       },
-      "PromptData": {
+      "PromptDataNullish": {
         "type": "object",
         "nullable": true,
         "properties": {
           "prompt": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "completion"
-                    ]
-                  },
-                  "content": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "content"
-                ],
-                "title": "completion"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "chat"
-                    ]
-                  },
-                  "messages": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/ChatCompletionMessageParam"
-                    }
-                  },
-                  "tools": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "messages"
-                ],
-                "title": "chat"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/PromptBlockDataNullish"
           },
           "options": {
-            "$ref": "#/components/schemas/PromptOptions"
+            "$ref": "#/components/schemas/PromptOptionsNullish"
           },
           "parser": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "llm_classifier"
-                ]
-              },
-              "use_cot": {
-                "type": "boolean"
-              },
-              "choice_scores": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1
-                }
-              }
-            },
-            "required": [
-              "type",
-              "use_cot",
-              "choice_scores"
-            ]
+            "$ref": "#/components/schemas/PromptParserNullish"
           },
           "tool_functions": {
             "type": "array",
@@ -3489,6 +3541,17 @@
           }
         },
         "description": "The prompt, model, and its parameters"
+      },
+      "FunctionTypeEnumNullish": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "llm",
+          "scorer",
+          "task",
+          "tool",
+          null
+        ]
       },
       "Prompt": {
         "type": "object",
@@ -3539,7 +3602,7 @@
             "description": "Date of prompt creation"
           },
           "prompt_data": {
-            "$ref": "#/components/schemas/PromptData"
+            "$ref": "#/components/schemas/PromptDataNullish"
           },
           "tags": {
             "type": "array",
@@ -3558,15 +3621,7 @@
             "description": "User-controlled metadata about the prompt"
           },
           "function_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "llm",
-              "scorer",
-              "task",
-              "tool",
-              null
-            ]
+            "$ref": "#/components/schemas/FunctionTypeEnumNullish"
           }
         },
         "required": [
@@ -3603,7 +3658,7 @@
             "description": "Textual description of the prompt"
           },
           "prompt_data": {
-            "$ref": "#/components/schemas/PromptData"
+            "$ref": "#/components/schemas/PromptDataNullish"
           },
           "tags": {
             "type": "array",
@@ -3614,15 +3669,7 @@
             "description": "A list of tags for the prompt"
           },
           "function_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "llm",
-              "scorer",
-              "task",
-              "tool",
-              null
-            ]
+            "$ref": "#/components/schemas/FunctionTypeEnumNullish"
           }
         },
         "required": [
@@ -3650,7 +3697,7 @@
             "description": "Textual description of the prompt"
           },
           "prompt_data": {
-            "$ref": "#/components/schemas/PromptData"
+            "$ref": "#/components/schemas/PromptDataNullish"
           },
           "tags": {
             "type": "array",
@@ -5502,10 +5549,476 @@
           "bundle_id"
         ]
       },
-      "FunctionId": {
+      "FunctionIdRef": {
         "type": "object",
         "properties": {},
+        "additionalProperties": {
+          "nullable": true
+        },
         "description": "Options for identifying a function"
+      },
+      "PromptBlockData": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "completion"
+                ]
+              },
+              "content": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "content"
+            ],
+            "title": "completion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "chat"
+                ]
+              },
+              "messages": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionMessageParam"
+                }
+              },
+              "tools": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "messages"
+            ],
+            "title": "chat"
+          }
+        ]
+      },
+      "GraphNode": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "function": {
+                "$ref": "#/components/schemas/FunctionIdRef"
+              }
+            },
+            "required": [
+              "type",
+              "function"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "input"
+                ],
+                "description": "The input to the graph"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "output"
+                ],
+                "description": "The output of the graph"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "literal"
+                ]
+              },
+              "value": {
+                "nullable": true,
+                "description": "A literal value to be returned"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "btql"
+                ]
+              },
+              "expr": {
+                "type": "string",
+                "description": "A BTQL expression to be evaluated"
+              }
+            },
+            "required": [
+              "type",
+              "expr"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "gate"
+                ]
+              },
+              "condition": {
+                "type": "string",
+                "nullable": true,
+                "description": "A BTQL expression to be evaluated"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "aggregator"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "description": "The description of the node"
+              },
+              "position": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "description": "The x position of the node"
+                  },
+                  "y": {
+                    "type": "number",
+                    "description": "The y position of the node"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "description": "The position of the node"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "prompt_template"
+                ]
+              },
+              "prompt": {
+                "$ref": "#/components/schemas/PromptBlockData"
+              }
+            },
+            "required": [
+              "type",
+              "prompt"
+            ]
+          }
+        ]
+      },
+      "GraphEdge": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "object",
+            "properties": {
+              "node": {
+                "type": "string",
+                "maxLength": 1024,
+                "description": "The id of the node in the graph"
+              },
+              "variable": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "node",
+              "variable"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "node": {
+                "type": "string",
+                "maxLength": 1024,
+                "description": "The id of the node in the graph"
+              },
+              "variable": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "node",
+              "variable"
+            ]
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "control",
+              "data",
+              "messages"
+            ],
+            "description": "The purpose of the edge"
+          }
+        },
+        "required": [
+          "source",
+          "target",
+          "purpose"
+        ]
+      },
+      "GraphData": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "graph"
+            ]
+          },
+          "nodes": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/GraphNode"
+            }
+          },
+          "edges": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/GraphEdge"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "nodes",
+          "edges"
+        ],
+        "description": "This feature is preliminary and unsupported.",
+        "title": "graph"
       },
       "FunctionData": {
         "anyOf": [
@@ -5606,458 +6119,7 @@
             "title": "code"
           },
           {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "graph"
-                ]
-              },
-              "nodes": {
-                "type": "object",
-                "additionalProperties": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "function"
-                          ]
-                        },
-                        "function": {
-                          "$ref": "#/components/schemas/FunctionId"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "function"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "input"
-                          ],
-                          "description": "The input to the graph"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "output"
-                          ],
-                          "description": "The output of the graph"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "literal"
-                          ]
-                        },
-                        "value": {
-                          "nullable": true,
-                          "description": "A literal value to be returned"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "btql"
-                          ]
-                        },
-                        "expr": {
-                          "type": "string",
-                          "description": "A BTQL expression to be evaluated"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "expr"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "gate"
-                          ]
-                        },
-                        "condition": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "A BTQL expression to be evaluated"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "aggregator"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "prompt_template"
-                          ]
-                        },
-                        "prompt": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string",
-                                  "enum": [
-                                    "completion"
-                                  ]
-                                },
-                                "content": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "type",
-                                "content"
-                              ],
-                              "title": "completion"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string",
-                                  "enum": [
-                                    "chat"
-                                  ]
-                                },
-                                "messages": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/ChatCompletionMessageParam"
-                                  }
-                                },
-                                "tools": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "type",
-                                "messages"
-                              ],
-                              "title": "chat"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "prompt"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "edges": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "properties": {
-                    "source": {
-                      "type": "object",
-                      "properties": {
-                        "node": {
-                          "type": "string",
-                          "maxLength": 1024,
-                          "description": "The id of the node in the graph"
-                        },
-                        "variable": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "node",
-                        "variable"
-                      ]
-                    },
-                    "target": {
-                      "type": "object",
-                      "properties": {
-                        "node": {
-                          "type": "string",
-                          "maxLength": 1024,
-                          "description": "The id of the node in the graph"
-                        },
-                        "variable": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "node",
-                        "variable"
-                      ]
-                    },
-                    "purpose": {
-                      "type": "string",
-                      "enum": [
-                        "control",
-                        "data",
-                        "messages"
-                      ],
-                      "description": "The purpose of the edge"
-                    }
-                  },
-                  "required": [
-                    "source",
-                    "target",
-                    "purpose"
-                  ]
-                }
-              }
-            },
-            "required": [
-              "type",
-              "nodes",
-              "edges"
-            ],
-            "description": "This feature is preliminary and unsupported.",
-            "title": "graph"
+            "$ref": "#/components/schemas/GraphData"
           },
           {
             "type": "object",
@@ -6160,7 +6222,7 @@
             "description": "Date of prompt creation"
           },
           "prompt_data": {
-            "$ref": "#/components/schemas/PromptData"
+            "$ref": "#/components/schemas/PromptDataNullish"
           },
           "tags": {
             "type": "array",
@@ -6179,15 +6241,7 @@
             "description": "User-controlled metadata about the prompt"
           },
           "function_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "llm",
-              "scorer",
-              "task",
-              "tool",
-              null
-            ]
+            "$ref": "#/components/schemas/FunctionTypeEnumNullish"
           },
           "function_data": {
             "$ref": "#/components/schemas/FunctionData"
@@ -6264,7 +6318,7 @@
             "description": "Textual description of the prompt"
           },
           "prompt_data": {
-            "$ref": "#/components/schemas/PromptData"
+            "$ref": "#/components/schemas/PromptDataNullish"
           },
           "tags": {
             "type": "array",
@@ -6275,15 +6329,7 @@
             "description": "A list of tags for the prompt"
           },
           "function_type": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "llm",
-              "scorer",
-              "task",
-              "tool",
-              null
-            ]
+            "$ref": "#/components/schemas/FunctionTypeEnumNullish"
           },
           "function_data": {
             "$ref": "#/components/schemas/FunctionData"
@@ -6431,458 +6477,7 @@
             "title": "code"
           },
           {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "graph"
-                ]
-              },
-              "nodes": {
-                "type": "object",
-                "additionalProperties": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "function"
-                          ]
-                        },
-                        "function": {
-                          "$ref": "#/components/schemas/FunctionId"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "function"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "input"
-                          ],
-                          "description": "The input to the graph"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "output"
-                          ],
-                          "description": "The output of the graph"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "literal"
-                          ]
-                        },
-                        "value": {
-                          "nullable": true,
-                          "description": "A literal value to be returned"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "btql"
-                          ]
-                        },
-                        "expr": {
-                          "type": "string",
-                          "description": "A BTQL expression to be evaluated"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "expr"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "gate"
-                          ]
-                        },
-                        "condition": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "A BTQL expression to be evaluated"
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "aggregator"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "type"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "description": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "The description of the node"
-                        },
-                        "position": {
-                          "type": "object",
-                          "nullable": true,
-                          "properties": {
-                            "x": {
-                              "type": "number",
-                              "description": "The x position of the node"
-                            },
-                            "y": {
-                              "type": "number",
-                              "description": "The y position of the node"
-                            }
-                          },
-                          "required": [
-                            "x",
-                            "y"
-                          ],
-                          "description": "The position of the node"
-                        },
-                        "type": {
-                          "type": "string",
-                          "enum": [
-                            "prompt_template"
-                          ]
-                        },
-                        "prompt": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string",
-                                  "enum": [
-                                    "completion"
-                                  ]
-                                },
-                                "content": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "type",
-                                "content"
-                              ],
-                              "title": "completion"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string",
-                                  "enum": [
-                                    "chat"
-                                  ]
-                                },
-                                "messages": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/ChatCompletionMessageParam"
-                                  }
-                                },
-                                "tools": {
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "type",
-                                "messages"
-                              ],
-                              "title": "chat"
-                            }
-                          ]
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "prompt"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "edges": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "properties": {
-                    "source": {
-                      "type": "object",
-                      "properties": {
-                        "node": {
-                          "type": "string",
-                          "maxLength": 1024,
-                          "description": "The id of the node in the graph"
-                        },
-                        "variable": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "node",
-                        "variable"
-                      ]
-                    },
-                    "target": {
-                      "type": "object",
-                      "properties": {
-                        "node": {
-                          "type": "string",
-                          "maxLength": 1024,
-                          "description": "The id of the node in the graph"
-                        },
-                        "variable": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "node",
-                        "variable"
-                      ]
-                    },
-                    "purpose": {
-                      "type": "string",
-                      "enum": [
-                        "control",
-                        "data",
-                        "messages"
-                      ],
-                      "description": "The purpose of the edge"
-                    }
-                  },
-                  "required": [
-                    "source",
-                    "target",
-                    "purpose"
-                  ]
-                }
-              }
-            },
-            "required": [
-              "type",
-              "nodes",
-              "edges"
-            ],
-            "description": "This feature is preliminary and unsupported.",
-            "title": "graph"
+            "$ref": "#/components/schemas/GraphData"
           },
           {
             "type": "object",
@@ -6953,7 +6548,7 @@
             "description": "Textual description of the prompt"
           },
           "prompt_data": {
-            "$ref": "#/components/schemas/PromptData"
+            "$ref": "#/components/schemas/PromptDataNullish"
           },
           "function_data": {
             "$ref": "#/components/schemas/FunctionDataNullish"
@@ -6967,6 +6562,80 @@
             "description": "A list of tags for the prompt"
           }
         }
+      },
+      "InvokeParent": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "object_type": {
+                "type": "string",
+                "enum": [
+                  "project_logs",
+                  "experiment",
+                  "playground_logs"
+                ]
+              },
+              "object_id": {
+                "type": "string",
+                "description": "The id of the container object you are logging to"
+              },
+              "row_ids": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The id of the row"
+                  },
+                  "span_id": {
+                    "type": "string",
+                    "description": "The span_id of the row"
+                  },
+                  "root_span_id": {
+                    "type": "string",
+                    "description": "The root_span_id of the row"
+                  }
+                },
+                "required": [
+                  "id",
+                  "span_id",
+                  "root_span_id"
+                ],
+                "description": "Identifiers for the row to to log a subspan under"
+              },
+              "propagated_event": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "Include these properties in every span created under this parent"
+              }
+            },
+            "required": [
+              "object_type",
+              "object_id"
+            ],
+            "description": "Span parent properties",
+            "title": "span_parent_struct"
+          },
+          {
+            "type": "string",
+            "description": "The parent's span identifier, created by calling `.export()` on a span"
+          }
+        ],
+        "description": "Options for tracing the function call"
+      },
+      "StreamingMode": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "auto",
+          "parallel",
+          null
+        ],
+        "description": "The mode format of the returned value (defaults to 'auto')"
       },
       "InvokeApi": {
         "type": "object",
@@ -7003,68 +6672,7 @@
             "description": "If the function is an LLM, additional messages to pass along to it"
           },
           "parent": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "object_type": {
-                    "type": "string",
-                    "enum": [
-                      "project_logs",
-                      "experiment",
-                      "playground_logs"
-                    ]
-                  },
-                  "object_id": {
-                    "type": "string",
-                    "description": "The id of the container object you are logging to"
-                  },
-                  "row_ids": {
-                    "type": "object",
-                    "nullable": true,
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "The id of the row"
-                      },
-                      "span_id": {
-                        "type": "string",
-                        "description": "The span_id of the row"
-                      },
-                      "root_span_id": {
-                        "type": "string",
-                        "description": "The root_span_id of the row"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "span_id",
-                      "root_span_id"
-                    ],
-                    "description": "Identifiers for the row to to log a subspan under"
-                  },
-                  "propagated_event": {
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": {
-                      "nullable": true
-                    },
-                    "description": "Include these properties in every span created under this parent"
-                  }
-                },
-                "required": [
-                  "object_type",
-                  "object_id"
-                ],
-                "description": "Span parent properties",
-                "title": "span_parent_struct"
-              },
-              {
-                "type": "string",
-                "description": "The parent's span identifier, created by calling `.export()` on a span"
-              }
-            ],
-            "description": "Options for tracing the function call"
+            "$ref": "#/components/schemas/InvokeParent"
           },
           "stream": {
             "type": "boolean",
@@ -7072,14 +6680,7 @@
             "description": "Whether to stream the response. If true, results will be returned in the Braintrust SSE format."
           },
           "mode": {
-            "type": "string",
-            "nullable": true,
-            "enum": [
-              "auto",
-              "parallel",
-              null
-            ],
-            "description": "The mode format of the returned value (defaults to 'auto')"
+            "$ref": "#/components/schemas/StreamingMode"
           },
           "strict": {
             "type": "boolean",
@@ -8345,6 +7946,258 @@
           }
         }
       },
+      "PromptData": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/PromptBlockDataNullish"
+          },
+          "options": {
+            "$ref": "#/components/schemas/PromptOptionsNullish"
+          },
+          "parser": {
+            "$ref": "#/components/schemas/PromptParserNullish"
+          },
+          "tool_functions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SavedFunctionId"
+            }
+          },
+          "origin": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "prompt_id": {
+                "type": "string"
+              },
+              "project_id": {
+                "type": "string"
+              },
+              "prompt_version": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "FunctionTypeEnum": {
+        "type": "string",
+        "enum": [
+          "llm",
+          "scorer",
+          "task",
+          "tool",
+          null
+        ]
+      },
+      "FunctionId": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "function_id": {
+                "type": "string",
+                "description": "The ID of the function"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
+              }
+            },
+            "required": [
+              "function_id"
+            ],
+            "description": "Function id",
+            "title": "function_id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "project_name": {
+                "type": "string",
+                "description": "The name of the project containing the function"
+              },
+              "slug": {
+                "type": "string",
+                "description": "The slug of the function"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
+              }
+            },
+            "required": [
+              "project_name",
+              "slug"
+            ],
+            "description": "Project name and slug",
+            "title": "project_slug"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "global_function": {
+                "type": "string",
+                "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
+              }
+            },
+            "required": [
+              "global_function"
+            ],
+            "description": "Global function name",
+            "title": "global_function"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "prompt_session_id": {
+                "type": "string",
+                "description": "The ID of the prompt session"
+              },
+              "prompt_session_function_id": {
+                "type": "string",
+                "description": "The ID of the function in the prompt session"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
+              }
+            },
+            "required": [
+              "prompt_session_id",
+              "prompt_session_function_id"
+            ],
+            "description": "Prompt session id",
+            "title": "prompt_session_id"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "inline_context": {
+                "type": "object",
+                "properties": {
+                  "runtime": {
+                    "type": "string",
+                    "enum": [
+                      "node",
+                      "python"
+                    ]
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "runtime",
+                  "version"
+                ]
+              },
+              "code": {
+                "type": "string",
+                "description": "The inline code to execute"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true,
+                "description": "The name of the inline code function"
+              }
+            },
+            "required": [
+              "inline_context",
+              "code"
+            ],
+            "description": "Inline code function",
+            "title": "inline_code"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "inline_prompt": {
+                "$ref": "#/components/schemas/PromptData"
+              },
+              "inline_function": {
+                "type": "object",
+                "additionalProperties": {
+                  "nullable": true
+                }
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/FunctionTypeEnum"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true,
+                "description": "The name of the inline function"
+              }
+            },
+            "required": [
+              "inline_function"
+            ],
+            "description": "Inline function definition",
+            "title": "inline_function"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "inline_prompt": {
+                "$ref": "#/components/schemas/PromptData"
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/FunctionTypeEnum"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true,
+                "description": "The name of the inline prompt"
+              }
+            },
+            "required": [
+              "inline_prompt"
+            ],
+            "description": "Inline prompt definition",
+            "title": "inline_prompt"
+          }
+        ],
+        "description": "The function to evaluate"
+      },
+      "GitMetadataSettings": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "collect": {
+            "type": "string",
+            "enum": [
+              "all",
+              "none",
+              "some"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "commit",
+                "branch",
+                "tag",
+                "dirty",
+                "author_name",
+                "author_email",
+                "commit_message",
+                "commit_time",
+                "git_diff"
+              ]
+            }
+          }
+        },
+        "required": [
+          "collect"
+        ],
+        "additionalProperties": false,
+        "description": "Optional settings for collecting git metadata. By default, will collect all git metadata fields allowed in org-level settings."
+      },
       "RunEval": {
         "type": "object",
         "properties": {
@@ -8418,376 +8271,19 @@
             "description": "The dataset to use"
           },
           "task": {
-            "anyOf": [
-              {
-                "type": "object",
-                "properties": {
-                  "function_id": {
-                    "type": "string",
-                    "description": "The ID of the function"
-                  },
-                  "version": {
-                    "type": "string",
-                    "description": "The version of the function"
-                  }
-                },
-                "required": [
-                  "function_id"
-                ],
-                "description": "Function id",
-                "title": "function_id"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "project_name": {
-                    "type": "string",
-                    "description": "The name of the project containing the function"
-                  },
-                  "slug": {
-                    "type": "string",
-                    "description": "The slug of the function"
-                  },
-                  "version": {
-                    "type": "string",
-                    "description": "The version of the function"
-                  }
-                },
-                "required": [
-                  "project_name",
-                  "slug"
-                ],
-                "description": "Project name and slug",
-                "title": "project_slug"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "global_function": {
-                    "type": "string",
-                    "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
-                  }
-                },
-                "required": [
-                  "global_function"
-                ],
-                "description": "Global function name",
-                "title": "global_function"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "prompt_session_id": {
-                    "type": "string",
-                    "description": "The ID of the prompt session"
-                  },
-                  "prompt_session_function_id": {
-                    "type": "string",
-                    "description": "The ID of the function in the prompt session"
-                  },
-                  "version": {
-                    "type": "string",
-                    "description": "The version of the function"
-                  }
-                },
-                "required": [
-                  "prompt_session_id",
-                  "prompt_session_function_id"
-                ],
-                "description": "Prompt session id",
-                "title": "prompt_session_id"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "inline_context": {
-                    "type": "object",
-                    "properties": {
-                      "runtime": {
-                        "type": "string",
-                        "enum": [
-                          "node",
-                          "python"
-                        ]
-                      },
-                      "version": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "runtime",
-                      "version"
-                    ]
-                  },
-                  "code": {
-                    "type": "string",
-                    "description": "The inline code to execute"
-                  },
-                  "name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "The name of the inline code function"
-                  }
-                },
-                "required": [
-                  "inline_context",
-                  "code"
-                ],
-                "description": "Inline code function",
-                "title": "inline_code"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "inline_prompt": {
-                    "$ref": "#/components/schemas/PromptData"
-                  },
-                  "inline_function": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "nullable": true
-                    }
-                  },
-                  "function_type": {
-                    "type": "string",
-                    "enum": [
-                      "llm",
-                      "scorer",
-                      "task",
-                      "tool",
-                      null
-                    ]
-                  },
-                  "name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "The name of the inline function"
-                  }
-                },
-                "required": [
-                  "inline_function"
-                ],
-                "description": "Inline function definition",
-                "title": "inline_function"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "inline_prompt": {
-                    "$ref": "#/components/schemas/PromptData"
-                  },
-                  "function_type": {
-                    "type": "string",
-                    "enum": [
-                      "llm",
-                      "scorer",
-                      "task",
-                      "tool",
-                      null
-                    ]
-                  },
-                  "name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "The name of the inline prompt"
-                  }
-                },
-                "required": [
-                  "inline_prompt"
-                ],
-                "description": "Inline prompt definition",
-                "title": "inline_prompt"
-              }
-            ],
-            "description": "Options for identifying a function",
-            "title": "FunctionId"
+            "$ref": "#/components/schemas/FunctionId"
           },
           "scores": {
             "type": "array",
             "items": {
-              "anyOf": [
+              "allOf": [
                 {
-                  "type": "object",
-                  "properties": {
-                    "function_id": {
-                      "type": "string",
-                      "description": "The ID of the function"
-                    },
-                    "version": {
-                      "type": "string",
-                      "description": "The version of the function"
-                    }
-                  },
-                  "required": [
-                    "function_id"
-                  ],
-                  "description": "Function id",
-                  "title": "function_id"
+                  "$ref": "#/components/schemas/FunctionId"
                 },
                 {
-                  "type": "object",
-                  "properties": {
-                    "project_name": {
-                      "type": "string",
-                      "description": "The name of the project containing the function"
-                    },
-                    "slug": {
-                      "type": "string",
-                      "description": "The slug of the function"
-                    },
-                    "version": {
-                      "type": "string",
-                      "description": "The version of the function"
-                    }
-                  },
-                  "required": [
-                    "project_name",
-                    "slug"
-                  ],
-                  "description": "Project name and slug",
-                  "title": "project_slug"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "global_function": {
-                      "type": "string",
-                      "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
-                    }
-                  },
-                  "required": [
-                    "global_function"
-                  ],
-                  "description": "Global function name",
-                  "title": "global_function"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "prompt_session_id": {
-                      "type": "string",
-                      "description": "The ID of the prompt session"
-                    },
-                    "prompt_session_function_id": {
-                      "type": "string",
-                      "description": "The ID of the function in the prompt session"
-                    },
-                    "version": {
-                      "type": "string",
-                      "description": "The version of the function"
-                    }
-                  },
-                  "required": [
-                    "prompt_session_id",
-                    "prompt_session_function_id"
-                  ],
-                  "description": "Prompt session id",
-                  "title": "prompt_session_id"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "inline_context": {
-                      "type": "object",
-                      "properties": {
-                        "runtime": {
-                          "type": "string",
-                          "enum": [
-                            "node",
-                            "python"
-                          ]
-                        },
-                        "version": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "runtime",
-                        "version"
-                      ]
-                    },
-                    "code": {
-                      "type": "string",
-                      "description": "The inline code to execute"
-                    },
-                    "name": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "The name of the inline code function"
-                    }
-                  },
-                  "required": [
-                    "inline_context",
-                    "code"
-                  ],
-                  "description": "Inline code function",
-                  "title": "inline_code"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "inline_prompt": {
-                      "$ref": "#/components/schemas/PromptData"
-                    },
-                    "inline_function": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "nullable": true
-                      }
-                    },
-                    "function_type": {
-                      "type": "string",
-                      "enum": [
-                        "llm",
-                        "scorer",
-                        "task",
-                        "tool",
-                        null
-                      ]
-                    },
-                    "name": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "The name of the inline function"
-                    }
-                  },
-                  "required": [
-                    "inline_function"
-                  ],
-                  "description": "Inline function definition",
-                  "title": "inline_function"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "inline_prompt": {
-                      "$ref": "#/components/schemas/PromptData"
-                    },
-                    "function_type": {
-                      "type": "string",
-                      "enum": [
-                        "llm",
-                        "scorer",
-                        "task",
-                        "tool",
-                        null
-                      ]
-                    },
-                    "name": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "The name of the inline prompt"
-                    }
-                  },
-                  "required": [
-                    "inline_prompt"
-                  ],
-                  "description": "Inline prompt definition",
-                  "title": "inline_prompt"
+                  "description": "Options for identifying a function"
                 }
-              ],
-              "description": "Options for identifying a function",
-              "title": "FunctionId"
+              ]
             },
             "description": "The functions to score the eval on"
           },
@@ -8803,68 +8299,14 @@
             "description": "Optional experiment-level metadata to store about the evaluation. You can later use this to slice & dice across experiments."
           },
           "parent": {
-            "anyOf": [
+            "allOf": [
               {
-                "type": "object",
-                "properties": {
-                  "object_type": {
-                    "type": "string",
-                    "enum": [
-                      "project_logs",
-                      "experiment",
-                      "playground_logs"
-                    ]
-                  },
-                  "object_id": {
-                    "type": "string",
-                    "description": "The id of the container object you are logging to"
-                  },
-                  "row_ids": {
-                    "type": "object",
-                    "nullable": true,
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "The id of the row"
-                      },
-                      "span_id": {
-                        "type": "string",
-                        "description": "The span_id of the row"
-                      },
-                      "root_span_id": {
-                        "type": "string",
-                        "description": "The root_span_id of the row"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "span_id",
-                      "root_span_id"
-                    ],
-                    "description": "Identifiers for the row to to log a subspan under"
-                  },
-                  "propagated_event": {
-                    "type": "object",
-                    "nullable": true,
-                    "additionalProperties": {
-                      "nullable": true
-                    },
-                    "description": "Include these properties in every span created under this parent"
-                  }
-                },
-                "required": [
-                  "object_type",
-                  "object_id"
-                ],
-                "description": "Span parent properties",
-                "title": "span_parent_struct"
+                "$ref": "#/components/schemas/InvokeParent"
               },
               {
-                "type": "string",
-                "description": "The parent's span identifier, created by calling `.export()` on a span"
+                "description": "Options for tracing the evaluation"
               }
-            ],
-            "description": "Options for tracing the evaluation"
+            ]
           },
           "stream": {
             "type": "boolean",
@@ -8888,6 +8330,7 @@
           "max_concurrency": {
             "type": "number",
             "nullable": true,
+            "default": 10,
             "description": "The maximum number of tasks/scorers that will be run concurrently. Defaults to 10. If null is provided, no max concurrency will be used."
           },
           "base_experiment_name": {
@@ -8901,40 +8344,7 @@
             "description": "An optional experiment id to use as a base. If specified, the new experiment will be summarized and compared to this experiment."
           },
           "git_metadata_settings": {
-            "type": "object",
-            "nullable": true,
-            "properties": {
-              "collect": {
-                "type": "string",
-                "enum": [
-                  "all",
-                  "none",
-                  "some"
-                ]
-              },
-              "fields": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "enum": [
-                    "commit",
-                    "branch",
-                    "tag",
-                    "dirty",
-                    "author_name",
-                    "author_email",
-                    "commit_message",
-                    "commit_time",
-                    "git_diff"
-                  ]
-                }
-              }
-            },
-            "required": [
-              "collect"
-            ],
-            "additionalProperties": false,
-            "description": "Optional settings for collecting git metadata. By default, will collect all git metadata fields allowed in org-level settings."
+            "$ref": "#/components/schemas/GitMetadataSettings"
           },
           "repo_info": {
             "allOf": [
@@ -9343,16 +8753,6 @@
         "required": false,
         "description": "Filter search results to within a particular organization",
         "name": "org_name",
-        "in": "query",
-        "allowReserved": true
-      },
-      "OrgId": {
-        "schema": {
-          "$ref": "#/components/schemas/OrgId"
-        },
-        "required": true,
-        "description": "Filter search results to within a particular organization",
-        "name": "org_id",
         "in": "query",
         "allowReserved": true
       },
@@ -24631,9 +24031,6 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/OrgId"
-          },
-          {
             "$ref": "#/components/parameters/AppLimitParam"
           },
           {
@@ -24647,6 +24044,9 @@
           },
           {
             "$ref": "#/components/parameters/ServiceTokenName"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
           }
         ],
         "responses": {
@@ -24827,7 +24227,7 @@
             "$ref": "#/components/parameters/ServiceTokenIdParam"
           },
           {
-            "$ref": "#/components/parameters/OrgId"
+            "$ref": "#/components/parameters/OrgName"
           }
         ],
         "responses": {
