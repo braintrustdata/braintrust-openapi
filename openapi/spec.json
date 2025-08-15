@@ -24215,9 +24215,6 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/ServiceTokenIdParam"
-          },
-          {
-            "$ref": "#/components/parameters/OrgName"
           }
         ],
         "responses": {

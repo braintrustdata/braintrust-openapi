@@ -16970,7 +16970,6 @@ paths:
         - {}
       parameters:
         - $ref: "#/components/parameters/ServiceTokenIdParam"
-        - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
           description: Returns the service_token object
