@@ -3110,7 +3110,7 @@
           "name"
         ]
       },
-      "ResponseFormat": {
+      "ResponseFormatNullish": {
         "anyOf": [
           {
             "type": "object",
@@ -3194,7 +3194,7 @@
                 "type": "number"
               },
               "response_format": {
-                "$ref": "#/components/schemas/ResponseFormat"
+                "$ref": "#/components/schemas/ResponseFormatNullish"
               },
               "tool_choice": {
                 "anyOf": [

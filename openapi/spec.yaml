@@ -3023,7 +3023,7 @@ components:
           nullable: true
       required:
         - name
-    ResponseFormat:
+    ResponseFormatNullish:
       anyOf:
         - type: object
           properties:
@@ -3076,7 +3076,7 @@ components:
             presence_penalty:
               type: number
             response_format:
-              $ref: "#/components/schemas/ResponseFormat"
+              $ref: "#/components/schemas/ResponseFormatNullish"
             tool_choice:
               anyOf:
                 - type: string
