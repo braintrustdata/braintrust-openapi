@@ -96,6 +96,10 @@ components:
       type: string
       format: uuid
       description: ApiKey id
+    ServiceTokenIdParam:
+      type: string
+      format: uuid
+      description: ServiceToken id
     AiSecretIdParam:
       type: string
       format: uuid
@@ -150,6 +154,9 @@ components:
     ApiKeyName:
       type: string
       description: Name of the api_key to search for
+    ServiceTokenName:
+      type: string
+      description: Name of the service_token to search for
     AiSecretName:
       type: string
       description: Name of the ai_secret to search for
@@ -6283,6 +6290,97 @@ components:
         - id
         - name
         - preview_name
+    CreateServiceTokenOutput:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the service token
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of service token creation
+        name:
+          type: string
+          description: Name of the service token
+        preview_name:
+          type: string
+        service_account_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: Unique identifier for the service token
+        service_account_email:
+          type: string
+          nullable: true
+          description: The service account email (not routable)
+        service_account_name:
+          type: string
+          nullable: true
+          description: The service account name
+        org_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: Unique identifier for the organization
+        key:
+          type: string
+          description: The raw service token. It will only be exposed this one time
+      required:
+        - id
+        - name
+        - preview_name
+        - key
+    ServiceToken:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the service token
+        created:
+          type: string
+          nullable: true
+          format: date-time
+          description: Date of service token creation
+        name:
+          type: string
+          description: Name of the service token
+        preview_name:
+          type: string
+        service_account_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: Unique identifier for the service token
+        service_account_email:
+          type: string
+          nullable: true
+          description: The service account email (not routable)
+        service_account_name:
+          type: string
+          nullable: true
+          description: The service account name
+        org_id:
+          type: string
+          nullable: true
+          format: uuid
+          description: Unique identifier for the organization
+      required:
+        - id
+        - name
+        - preview_name
+    DeleteServiceToken:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the service token.
+      required:
+        - id
     AISecret:
       type: object
       properties:
@@ -6942,6 +7040,13 @@ components:
       description: ApiKey id
       name: api_key_id
       in: path
+    ServiceTokenIdParam:
+      schema:
+        $ref: "#/components/schemas/ServiceTokenIdParam"
+      required: true
+      description: ServiceToken id
+      name: service_token_id
+      in: path
     AiSecretIdParam:
       schema:
         $ref: "#/components/schemas/AiSecretIdParam"
@@ -7073,6 +7178,14 @@ components:
       required: false
       description: Name of the api_key to search for
       name: api_key_name
+      in: query
+      allowReserved: true
+    ServiceTokenName:
+      schema:
+        $ref: "#/components/schemas/ServiceTokenName"
+      required: false
+      description: Name of the service_token to search for
+      name: service_token_name
       in: query
       allowReserved: true
     AiSecretName:
@@ -16447,6 +16560,545 @@ paths:
         - CORS
       parameters:
         - $ref: "#/components/parameters/ApiKeyIdParam"
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/service_token:
+    post:
+      tags:
+        - ServiceTokens
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: postServiceToken
+      description: Create a new service_token. It is possible to have multiple API
+        keys with the same name. There is no de-duplication
+      summary: Create service_token
+      requestBody:
+        description: Any desired information about the new service_token object
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the service token. Does not have to be unique
+                org_name:
+                  type: string
+                  nullable: true
+                  description: For nearly all users, this parameter should be unnecessary. But in
+                    the rare case that your API key belongs to multiple
+                    organizations, you may specify the name of the organization
+                    the Service token belongs in.
+                service_account_id:
+                  type: string
+                  description: The service account ID this service token should belong to.
+              required:
+                - name
+                - service_account_id
+      responses:
+        "200":
+          description: Returns an object containing the raw service token. This is the
+            only time the raw API key will be exposed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateServiceTokenOutput"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    put:
+      tags:
+        - ServiceTokens
+      security:
+        - bearerAuth: []
+        - {}
+      operationId: putServiceToken
+      description: Create or replace service_token. If there is an existing
+        service_token with the same name as the one specified in the request,
+        will replace the existing service_token with the provided fields
+      summary: Create or replace service_token
+      requestBody:
+        description: Any desired information about the new service_token object
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the service token. Does not have to be unique
+                org_name:
+                  type: string
+                  nullable: true
+                  description: For nearly all users, this parameter should be unnecessary. But in
+                    the rare case that your API key belongs to multiple
+                    organizations, you may specify the name of the organization
+                    the Service token belongs in.
+                service_account_id:
+                  type: string
+                  description: The service account ID this service token should belong to.
+              required:
+                - name
+                - service_account_id
+      responses:
+        "200":
+          description: Returns an object containing the raw service token. This is the
+            only time the raw API key will be exposed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateServiceTokenOutput"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteServiceToken
+      tags:
+        - ServiceTokens
+      description: Delete a single service_token
+      summary: Delete single service_token
+      security:
+        - bearerAuth: []
+        - {}
+      requestBody:
+        description: Parameters which uniquely specify the service_token to delete
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteServiceToken"
+      responses:
+        "200":
+          description: Returns the deleted service_token object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceToken"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    get:
+      operationId: getServiceToken
+      tags:
+        - ServiceTokens
+      description: List out all service_tokens. The service_tokens are sorted by
+        creation date, with the most recently-created service_tokens coming
+        first
+      summary: List service_tokens
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/AppLimitParam"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/EndingBefore"
+        - $ref: "#/components/parameters/Ids"
+        - $ref: "#/components/parameters/ServiceTokenName"
+        - $ref: "#/components/parameters/OrgName"
+      responses:
+        "200":
+          description: Returns a list of service_token objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  objects:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ServiceToken"
+                    description: A list of service_token objects
+                required:
+                  - objects
+                additionalProperties: false
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsServiceToken
+      description: Enable CORS
+      summary: Enable CORS (`/v1/service_token`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/service_token/{service_token_id}:
+    get:
+      operationId: getServiceTokenId
+      tags:
+        - ServiceTokens
+      description: Get a service_token object by its id
+      summary: Get service_token
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ServiceTokenIdParam"
+        - $ref: "#/components/parameters/OrgName"
+      responses:
+        "200":
+          description: Returns the service_token object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceToken"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    delete:
+      operationId: deleteServiceTokenId
+      tags:
+        - ServiceTokens
+      description: Delete a service_token object by its id
+      summary: Delete service_token
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/ServiceTokenIdParam"
+      responses:
+        "200":
+          description: Returns the deleted service_token object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceToken"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsServiceTokenId
+      description: Enable CORS
+      summary: Enable CORS (`/v1/service_token/{service_token_id}`)
+      security: []
+      tags:
+        - CORS
+      parameters:
+        - $ref: "#/components/parameters/ServiceTokenIdParam"
       responses:
         "200":
           description: Response for CORS method
