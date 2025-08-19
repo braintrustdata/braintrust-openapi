@@ -136,71 +136,71 @@
       },
       "ProjectName": {
         "type": "string",
-        "description": "Name of the project to search for"
+        "description": "Name of the project to search for. barbar"
       },
       "ExperimentName": {
         "type": "string",
-        "description": "Name of the experiment to search for"
+        "description": "Name of the experiment to search for. barbar"
       },
       "DatasetName": {
         "type": "string",
-        "description": "Name of the dataset to search for"
+        "description": "Name of the dataset to search for. barbar"
       },
       "PromptName": {
         "type": "string",
-        "description": "Name of the prompt to search for"
+        "description": "Name of the prompt to search for. barbar"
       },
       "PromptSessionName": {
         "type": "string",
-        "description": "Name of the prompt_session to search for"
+        "description": "Name of the prompt_session to search for. barbar"
       },
       "RoleName": {
         "type": "string",
-        "description": "Name of the role to search for"
+        "description": "Name of the role to search for. barbar"
       },
       "GroupName": {
         "type": "string",
-        "description": "Name of the group to search for"
+        "description": "Name of the group to search for. barbar"
       },
       "ProjectAutomationName": {
         "type": "string",
-        "description": "Name of the project_automation to search for"
+        "description": "Name of the project_automation to search for. barbar"
       },
       "ProjectScoreName": {
         "type": "string",
-        "description": "Name of the project_score to search for"
+        "description": "Name of the project_score to search for. barbar"
       },
       "ProjectTagName": {
         "type": "string",
-        "description": "Name of the project_tag to search for"
+        "description": "Name of the project_tag to search for. barbar"
       },
       "SpanIframeName": {
         "type": "string",
-        "description": "Name of the span_iframe to search for"
+        "description": "Name of the span_iframe to search for. barbar"
       },
       "FunctionName": {
         "type": "string",
-        "description": "Name of the function to search for"
+        "description": "Name of the function to search for. barbar"
       },
       "ViewName": {
         "type": "string",
-        "description": "Name of the view to search for"
+        "description": "Name of the view to search for. barbar"
       },
       "ApiKeyName": {
         "type": "string",
-        "description": "Name of the api_key to search for"
+        "description": "Name of the api_key to search for. barbar"
       },
       "ServiceTokenName": {
         "type": "string",
-        "description": "Name of the service_token to search for"
+        "description": "Name of the service_token to search for. barbar"
       },
       "AiSecretName": {
         "type": "string",
-        "description": "Name of the ai_secret to search for"
+        "description": "Name of the ai_secret to search for. barbar"
       },
       "EnvVarName": {
         "type": "string",
-        "description": "Name of the env_var to search for"
+        "description": "Name of the env_var to search for. barbar"
       },
       "OrgName": {
         "type": "string",
@@ -8571,7 +8571,7 @@
           "$ref": "#/components/schemas/ProjectName"
         },
         "required": false,
-        "description": "Name of the project to search for",
+        "description": "Name of the project to search for. barbar",
         "name": "project_name",
         "in": "query",
         "allowReserved": true
@@ -8581,7 +8581,7 @@
           "$ref": "#/components/schemas/ExperimentName"
         },
         "required": false,
-        "description": "Name of the experiment to search for",
+        "description": "Name of the experiment to search for. barbar",
         "name": "experiment_name",
         "in": "query",
         "allowReserved": true
@@ -8591,7 +8591,7 @@
           "$ref": "#/components/schemas/DatasetName"
         },
         "required": false,
-        "description": "Name of the dataset to search for",
+        "description": "Name of the dataset to search for. barbar",
         "name": "dataset_name",
         "in": "query",
         "allowReserved": true
@@ -8601,7 +8601,7 @@
           "$ref": "#/components/schemas/PromptName"
         },
         "required": false,
-        "description": "Name of the prompt to search for",
+        "description": "Name of the prompt to search for. barbar",
         "name": "prompt_name",
         "in": "query",
         "allowReserved": true
@@ -8611,7 +8611,7 @@
           "$ref": "#/components/schemas/PromptSessionName"
         },
         "required": false,
-        "description": "Name of the prompt_session to search for",
+        "description": "Name of the prompt_session to search for. barbar",
         "name": "prompt_session_name",
         "in": "query",
         "allowReserved": true
@@ -8621,7 +8621,7 @@
           "$ref": "#/components/schemas/RoleName"
         },
         "required": false,
-        "description": "Name of the role to search for",
+        "description": "Name of the role to search for. barbar",
         "name": "role_name",
         "in": "query",
         "allowReserved": true
@@ -8631,7 +8631,7 @@
           "$ref": "#/components/schemas/GroupName"
         },
         "required": false,
-        "description": "Name of the group to search for",
+        "description": "Name of the group to search for. barbar",
         "name": "group_name",
         "in": "query",
         "allowReserved": true
@@ -8641,7 +8641,7 @@
           "$ref": "#/components/schemas/ProjectAutomationName"
         },
         "required": false,
-        "description": "Name of the project_automation to search for",
+        "description": "Name of the project_automation to search for. barbar",
         "name": "project_automation_name",
         "in": "query",
         "allowReserved": true
@@ -8651,7 +8651,7 @@
           "$ref": "#/components/schemas/ProjectScoreName"
         },
         "required": false,
-        "description": "Name of the project_score to search for",
+        "description": "Name of the project_score to search for. barbar",
         "name": "project_score_name",
         "in": "query",
         "allowReserved": true
@@ -8661,7 +8661,7 @@
           "$ref": "#/components/schemas/ProjectTagName"
         },
         "required": false,
-        "description": "Name of the project_tag to search for",
+        "description": "Name of the project_tag to search for. barbar",
         "name": "project_tag_name",
         "in": "query",
         "allowReserved": true
@@ -8671,7 +8671,7 @@
           "$ref": "#/components/schemas/SpanIframeName"
         },
         "required": false,
-        "description": "Name of the span_iframe to search for",
+        "description": "Name of the span_iframe to search for. barbar",
         "name": "span_iframe_name",
         "in": "query",
         "allowReserved": true
@@ -8681,7 +8681,7 @@
           "$ref": "#/components/schemas/FunctionName"
         },
         "required": false,
-        "description": "Name of the function to search for",
+        "description": "Name of the function to search for. barbar",
         "name": "function_name",
         "in": "query",
         "allowReserved": true
@@ -8691,7 +8691,7 @@
           "$ref": "#/components/schemas/ViewName"
         },
         "required": false,
-        "description": "Name of the view to search for",
+        "description": "Name of the view to search for. barbar",
         "name": "view_name",
         "in": "query",
         "allowReserved": true
@@ -8701,7 +8701,7 @@
           "$ref": "#/components/schemas/ApiKeyName"
         },
         "required": false,
-        "description": "Name of the api_key to search for",
+        "description": "Name of the api_key to search for. barbar",
         "name": "api_key_name",
         "in": "query",
         "allowReserved": true
@@ -8711,7 +8711,7 @@
           "$ref": "#/components/schemas/ServiceTokenName"
         },
         "required": false,
-        "description": "Name of the service_token to search for",
+        "description": "Name of the service_token to search for. barbar",
         "name": "service_token_name",
         "in": "query",
         "allowReserved": true
@@ -8721,7 +8721,7 @@
           "$ref": "#/components/schemas/AiSecretName"
         },
         "required": false,
-        "description": "Name of the ai_secret to search for",
+        "description": "Name of the ai_secret to search for. barbar",
         "name": "ai_secret_name",
         "in": "query",
         "allowReserved": true
@@ -8731,7 +8731,7 @@
           "$ref": "#/components/schemas/EnvVarName"
         },
         "required": false,
-        "description": "Name of the env_var to search for",
+        "description": "Name of the env_var to search for. barbar",
         "name": "env_var_name",
         "in": "query",
         "allowReserved": true
