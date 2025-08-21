@@ -6728,12 +6728,39 @@
           }
         }
       },
+      "ViewDataCustomCharts": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "charts": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            }
+          },
+          "layout": {
+            "nullable": true
+          },
+          "metadata": {
+            "nullable": true
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
       "ViewData": {
         "type": "object",
         "nullable": true,
         "properties": {
           "search": {
             "$ref": "#/components/schemas/ViewDataSearch"
+          },
+          "custom_charts": {
+            "$ref": "#/components/schemas/ViewDataCustomCharts"
           }
         },
         "description": "The view definition"
