@@ -686,7 +686,7 @@
         },
         "description": "Human-identifying attributes of the span, such as name, type, etc."
       },
-      "ObjectReference": {
+      "ObjectReferenceNullish": {
         "type": "object",
         "nullable": true,
         "properties": {
@@ -869,7 +869,7 @@
             "description": "The timestamp the project logs event was created"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
           "_object_delete": {
             "type": "boolean",
@@ -1118,7 +1118,7 @@
             "$ref": "#/components/schemas/SpanAttributes"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           }
         },
         "required": [
@@ -1685,7 +1685,7 @@
             "description": "The timestamp the experiment event was created"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
           "_object_delete": {
             "type": "boolean",
@@ -1927,7 +1927,7 @@
             "description": "Whether this span is a root span"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           }
         },
         "required": [
@@ -2318,7 +2318,7 @@
             "description": "The timestamp the dataset event was created"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
           "_object_delete": {
             "type": "boolean",
@@ -2458,7 +2458,7 @@
             "description": "Whether this span is a root span"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           }
         },
         "required": [
@@ -6734,6 +6734,9 @@
         "properties": {
           "search": {
             "$ref": "#/components/schemas/ViewDataSearch"
+          },
+          "custom_charts": {
+            "nullable": true
           }
         },
         "description": "The view definition"
