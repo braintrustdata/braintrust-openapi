@@ -3165,6 +3165,10 @@ components:
               type: array
               items:
                 type: string
+            reasoning_enabled:
+              type: boolean
+            reasoning_budget:
+              type: number
             max_tokens_to_sample:
               type: number
               description: This is a legacy parameter that should not be used.
