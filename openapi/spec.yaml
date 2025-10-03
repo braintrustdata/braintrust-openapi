@@ -439,6 +439,53 @@ components:
         - type: array
           items:
             type: string
+    BtqlRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The BTQL query string to execute
+        fmt:
+          type: string
+          enum:
+            - json
+            - parquet
+          default: json
+          description: Response format. Defaults to 'json'. Use 'parquet' for efficient data transfer of large result sets.
+        tz_offset:
+          type: integer
+          description: Timezone offset in minutes from UTC for time-based operations. For example, use 480 for US Pacific Standard Time.
+        audit_log:
+          type: boolean
+          default: false
+          description: Include audit log data in the response
+      required:
+        - query
+    BtqlResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Array of result rows from the BTQL query
+        cursor:
+          type: string
+          nullable: true
+          description: Pagination cursor for retrieving additional results. Present when there are more results available.
+        total_count:
+          type: integer
+          nullable: true
+          description: Total number of matching records (when available)
+        execution_time_ms:
+          type: number
+          description: Query execution time in milliseconds
+        query:
+          type: string
+          description: The executed BTQL query (may be normalized or modified)
+      required:
+        - data
     EnvVarObjectType:
       type: string
       enum:
@@ -16216,6 +16263,116 @@ paths:
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/btql:
+    post:
+      operationId: postBtql
+      tags:
+        - BTQL
+      description: Execute a BTQL (Braintrust Query Language) query to fetch and analyze data from experiments, logs, and datasets. BTQL is a SQL-like query language designed for AI observability data.
+      summary: Execute BTQL query
+      security:
+        - bearerAuth: []
+        - {}
+      requestBody:
+        description: BTQL query parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BtqlRequest"
+      responses:
+        "200":
+          description: Returns the query results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BtqlResponse"
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: Parquet format response when fmt=parquet
+        "400":
+          description: The request was unacceptable, often due to missing a required parameter or invalid BTQL syntax
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn't have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an exponential backoff of your requests
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+    options:
+      operationId: optionsBtql
+      description: Enable CORS
+      summary: Enable CORS (`/v1/btql`)
+      security: []
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: Response for CORS method
+          headers:
+            Access-Control-Allow-Credentials:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Max-Age:
+              schema:
+                type: string
+          content: {}
+        "400":
+          description: The request was unacceptable, often due to missing a required parameter
           content:
             text/plain:
               schema:
