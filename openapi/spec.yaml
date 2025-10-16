@@ -309,6 +309,7 @@ components:
         - logs
         - agents
         - monitor
+        - for_review
         - null
       description: Type of object that the view corresponds to.
     UserGivenName:
@@ -605,7 +606,7 @@ components:
       additionalProperties:
         nullable: true
       description: Human-identifying attributes of the span, such as name, type, etc.
-    ObjectReference:
+    ObjectReferenceNullish:
       type: object
       nullable: true
       properties:
@@ -783,7 +784,7 @@ components:
           format: date-time
           description: The timestamp the project logs event was created
         origin:
-          $ref: "#/components/schemas/ObjectReference"
+          $ref: "#/components/schemas/ObjectReferenceNullish"
         _object_delete:
           type: boolean
           nullable: true
@@ -1140,7 +1141,7 @@ components:
         span_attributes:
           $ref: "#/components/schemas/SpanAttributes"
         origin:
-          $ref: "#/components/schemas/ObjectReference"
+          $ref: "#/components/schemas/ObjectReferenceNullish"
       required:
         - id
         - _xact_id
@@ -1671,7 +1672,7 @@ components:
           format: date-time
           description: The timestamp the experiment event was created
         origin:
-          $ref: "#/components/schemas/ObjectReference"
+          $ref: "#/components/schemas/ObjectReferenceNullish"
         _object_delete:
           type: boolean
           nullable: true
@@ -2028,7 +2029,7 @@ components:
           nullable: true
           description: Whether this span is a root span
         origin:
-          $ref: "#/components/schemas/ObjectReference"
+          $ref: "#/components/schemas/ObjectReferenceNullish"
       required:
         - id
         - _xact_id
@@ -2348,7 +2349,7 @@ components:
           format: date-time
           description: The timestamp the dataset event was created
         origin:
-          $ref: "#/components/schemas/ObjectReference"
+          $ref: "#/components/schemas/ObjectReferenceNullish"
         _object_delete:
           type: boolean
           nullable: true
@@ -2592,7 +2593,7 @@ components:
           nullable: true
           description: Whether this span is a root span
         origin:
-          $ref: "#/components/schemas/ObjectReference"
+          $ref: "#/components/schemas/ObjectReferenceNullish"
       required:
         - id
         - _xact_id
@@ -2977,18 +2978,6 @@ components:
             type:
               type: string
               enum:
-                - completion
-            content:
-              type: string
-          required:
-            - type
-            - content
-          title: completion
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
                 - chat
             messages:
               type: array
@@ -3000,6 +2989,18 @@ components:
             - type
             - messages
           title: chat
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - completion
+            content:
+              type: string
+          required:
+            - type
+            - content
+          title: completion
         - type: "null"
     ResponseFormatJsonSchema:
       type: object
@@ -3165,6 +3166,10 @@ components:
               type: array
               items:
                 type: string
+            reasoning_enabled:
+              type: boolean
+            reasoning_budget:
+              type: number
             max_tokens_to_sample:
               type: number
               description: This is a legacy parameter that should not be used.
@@ -4879,18 +4884,6 @@ components:
             type:
               type: string
               enum:
-                - completion
-            content:
-              type: string
-          required:
-            - type
-            - content
-          title: completion
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
                 - chat
             messages:
               type: array
@@ -4902,6 +4895,18 @@ components:
             - type
             - messages
           title: chat
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - completion
+            content:
+              type: string
+          required:
+            - type
+            - content
+          title: completion
     GraphNode:
       anyOf:
         - type: object
@@ -5687,6 +5692,8 @@ components:
       properties:
         search:
           $ref: "#/components/schemas/ViewDataSearch"
+        custom_charts:
+          nullable: true
       description: The view definition
     ViewOptions:
       anyOf:
@@ -5868,6 +5875,13 @@ components:
                     - from
                     - to
                 - type: "null"
+            queryShape:
+              type: string
+              nullable: true
+              enum:
+                - traces
+                - spans
+                - null
           title: TableViewOptions
         - type: "null"
       description: Options for the view in the app
@@ -5900,6 +5914,7 @@ components:
             - logs
             - agents
             - monitor
+            - for_review
             - null
           description: Type of object that the view corresponds to.
         name:
@@ -5955,6 +5970,7 @@ components:
             - logs
             - agents
             - monitor
+            - for_review
             - null
           description: Type of object that the view corresponds to.
         name:
@@ -6005,6 +6021,7 @@ components:
             - logs
             - agents
             - monitor
+            - for_review
             - null
           description: Type of object that the view corresponds to.
         name:

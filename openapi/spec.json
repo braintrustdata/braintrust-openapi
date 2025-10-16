@@ -295,6 +295,7 @@
           "logs",
           "agents",
           "monitor",
+          "for_review",
           null
         ],
         "description": "Type of object that the view corresponds to."
@@ -686,7 +687,7 @@
         },
         "description": "Human-identifying attributes of the span, such as name, type, etc."
       },
-      "ObjectReference": {
+      "ObjectReferenceNullish": {
         "type": "object",
         "nullable": true,
         "properties": {
@@ -869,7 +870,7 @@
             "description": "The timestamp the project logs event was created"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
           "_object_delete": {
             "type": "boolean",
@@ -1118,7 +1119,7 @@
             "$ref": "#/components/schemas/SpanAttributes"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           }
         },
         "required": [
@@ -1685,7 +1686,7 @@
             "description": "The timestamp the experiment event was created"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
           "_object_delete": {
             "type": "boolean",
@@ -1927,7 +1928,7 @@
             "description": "Whether this span is a root span"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           }
         },
         "required": [
@@ -2318,7 +2319,7 @@
             "description": "The timestamp the dataset event was created"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
           "_object_delete": {
             "type": "boolean",
@@ -2458,7 +2459,7 @@
             "description": "Whether this span is a root span"
           },
           "origin": {
-            "$ref": "#/components/schemas/ObjectReference"
+            "$ref": "#/components/schemas/ObjectReferenceNullish"
           }
         },
         "required": [
@@ -3031,25 +3032,6 @@
               "type": {
                 "type": "string",
                 "enum": [
-                  "completion"
-                ]
-              },
-              "content": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "type",
-              "content"
-            ],
-            "title": "completion"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
                   "chat"
                 ]
               },
@@ -3068,6 +3050,25 @@
               "messages"
             ],
             "title": "chat"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "completion"
+                ]
+              },
+              "content": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "content"
+            ],
+            "title": "completion"
           },
           {
             "type": "null"
@@ -3336,6 +3337,12 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "reasoning_enabled": {
+                "type": "boolean"
+              },
+              "reasoning_budget": {
+                "type": "number"
               },
               "max_tokens_to_sample": {
                 "type": "number",
@@ -5565,25 +5572,6 @@
               "type": {
                 "type": "string",
                 "enum": [
-                  "completion"
-                ]
-              },
-              "content": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "type",
-              "content"
-            ],
-            "title": "completion"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
                   "chat"
                 ]
               },
@@ -5602,6 +5590,25 @@
               "messages"
             ],
             "title": "chat"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "completion"
+                ]
+              },
+              "content": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "content"
+            ],
+            "title": "completion"
           }
         ]
       },
@@ -6734,6 +6741,9 @@
         "properties": {
           "search": {
             "$ref": "#/components/schemas/ViewDataSearch"
+          },
+          "custom_charts": {
+            "nullable": true
           }
         },
         "description": "The view definition"
@@ -6993,6 +7003,15 @@
                     "type": "null"
                   }
                 ]
+              },
+              "queryShape": {
+                "type": "string",
+                "nullable": true,
+                "enum": [
+                  "traces",
+                  "spans",
+                  null
+                ]
               }
             },
             "title": "TableViewOptions"
@@ -7035,6 +7054,7 @@
               "logs",
               "agents",
               "monitor",
+              "for_review",
               null
             ],
             "description": "Type of object that the view corresponds to."
@@ -7103,6 +7123,7 @@
               "logs",
               "agents",
               "monitor",
+              "for_review",
               null
             ],
             "description": "Type of object that the view corresponds to."
@@ -7165,6 +7186,7 @@
               "logs",
               "agents",
               "monitor",
+              "for_review",
               null
             ],
             "description": "Type of object that the view corresponds to."
