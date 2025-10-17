@@ -309,6 +309,7 @@ components:
         - logs
         - agents
         - monitor
+        - for_review
         - null
       description: Type of object that the view corresponds to.
     UserGivenName:
@@ -2977,18 +2978,6 @@ components:
             type:
               type: string
               enum:
-                - completion
-            content:
-              type: string
-          required:
-            - type
-            - content
-          title: completion
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
                 - chat
             messages:
               type: array
@@ -3000,6 +2989,18 @@ components:
             - type
             - messages
           title: chat
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - completion
+            content:
+              type: string
+          required:
+            - type
+            - content
+          title: completion
         - type: "null"
     ResponseFormatJsonSchema:
       type: object
@@ -4883,18 +4884,6 @@ components:
             type:
               type: string
               enum:
-                - completion
-            content:
-              type: string
-          required:
-            - type
-            - content
-          title: completion
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
                 - chat
             messages:
               type: array
@@ -4906,6 +4895,18 @@ components:
             - type
             - messages
           title: chat
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - completion
+            content:
+              type: string
+          required:
+            - type
+            - content
+          title: completion
     GraphNode:
       anyOf:
         - type: object
@@ -5874,6 +5875,13 @@ components:
                     - from
                     - to
                 - type: "null"
+            queryShape:
+              type: string
+              nullable: true
+              enum:
+                - traces
+                - spans
+                - null
           title: TableViewOptions
         - type: "null"
       description: Options for the view in the app
@@ -5906,6 +5914,7 @@ components:
             - logs
             - agents
             - monitor
+            - for_review
             - null
           description: Type of object that the view corresponds to.
         name:
@@ -5961,6 +5970,7 @@ components:
             - logs
             - agents
             - monitor
+            - for_review
             - null
           description: Type of object that the view corresponds to.
         name:
@@ -6011,6 +6021,7 @@ components:
             - logs
             - agents
             - monitor
+            - for_review
             - null
           description: Type of object that the view corresponds to.
         name:
