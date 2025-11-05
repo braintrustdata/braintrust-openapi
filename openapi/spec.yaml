@@ -508,6 +508,11 @@ components:
               - url
               - name
           description: The remote eval sources to use for the project
+        disable_realtime_queries:
+          type: boolean
+          nullable: true
+          description: If true, disable real-time queries for this project. This can
+            improve query performance for high-volume logs.
     Project:
       type: object
       properties:
