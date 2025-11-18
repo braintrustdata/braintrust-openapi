@@ -1147,6 +1147,21 @@ components:
           $ref: "#/components/schemas/SpanAttributes"
         origin:
           $ref: "#/components/schemas/ObjectReferenceNullish"
+        comments:
+          type: array
+          nullable: true
+          items:
+            nullable: true
+          description: Optional list of comments attached to this event
+        audit_data:
+          type: array
+          nullable: true
+          items:
+            nullable: true
+          description: Optional list of audit entries attached to this event
+        _async_scoring_state:
+          nullable: true
+          description: The async scoring state for this event
       required:
         - id
         - _xact_id
@@ -2035,6 +2050,18 @@ components:
           description: Whether this span is a root span
         origin:
           $ref: "#/components/schemas/ObjectReferenceNullish"
+        comments:
+          type: array
+          nullable: true
+          items:
+            nullable: true
+          description: Optional list of comments attached to this event
+        audit_data:
+          type: array
+          nullable: true
+          items:
+            nullable: true
+          description: Optional list of audit entries attached to this event
       required:
         - id
         - _xact_id
@@ -2599,6 +2626,18 @@ components:
           description: Whether this span is a root span
         origin:
           $ref: "#/components/schemas/ObjectReferenceNullish"
+        comments:
+          type: array
+          nullable: true
+          items:
+            nullable: true
+          description: Optional list of comments attached to this event
+        audit_data:
+          type: array
+          nullable: true
+          items:
+            nullable: true
+          description: Optional list of audit entries attached to this event
       required:
         - id
         - _xact_id
@@ -3068,6 +3107,10 @@ components:
           properties:
             use_cache:
               type: boolean
+            reasoning_enabled:
+              type: boolean
+            reasoning_budget:
+              type: number
             temperature:
               type: number
             top_p:
@@ -3159,6 +3202,10 @@ components:
           properties:
             use_cache:
               type: boolean
+            reasoning_enabled:
+              type: boolean
+            reasoning_budget:
+              type: number
             max_tokens:
               type: number
             temperature:
@@ -3171,10 +3218,6 @@ components:
               type: array
               items:
                 type: string
-            reasoning_enabled:
-              type: boolean
-            reasoning_budget:
-              type: number
             max_tokens_to_sample:
               type: number
               description: This is a legacy parameter that should not be used.
@@ -3190,6 +3233,10 @@ components:
           properties:
             use_cache:
               type: boolean
+            reasoning_enabled:
+              type: boolean
+            reasoning_budget:
+              type: number
             temperature:
               type: number
             maxOutputTokens:
@@ -3207,6 +3254,10 @@ components:
           properties:
             use_cache:
               type: boolean
+            reasoning_enabled:
+              type: boolean
+            reasoning_budget:
+              type: number
             temperature:
               type: number
             topK:
@@ -3220,6 +3271,10 @@ components:
           properties:
             use_cache:
               type: boolean
+            reasoning_enabled:
+              type: boolean
+            reasoning_budget:
+              type: number
           additionalProperties:
             nullable: true
           title: JsCompletionParams

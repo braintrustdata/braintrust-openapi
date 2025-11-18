@@ -1125,6 +1125,26 @@
           },
           "origin": {
             "$ref": "#/components/schemas/ObjectReferenceNullish"
+          },
+          "comments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            },
+            "description": "Optional list of comments attached to this event"
+          },
+          "audit_data": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            },
+            "description": "Optional list of audit entries attached to this event"
+          },
+          "_async_scoring_state": {
+            "nullable": true,
+            "description": "The async scoring state for this event"
           }
         },
         "required": [
@@ -1934,6 +1954,22 @@
           },
           "origin": {
             "$ref": "#/components/schemas/ObjectReferenceNullish"
+          },
+          "comments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            },
+            "description": "Optional list of comments attached to this event"
+          },
+          "audit_data": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            },
+            "description": "Optional list of audit entries attached to this event"
           }
         },
         "required": [
@@ -2465,6 +2501,22 @@
           },
           "origin": {
             "$ref": "#/components/schemas/ObjectReferenceNullish"
+          },
+          "comments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            },
+            "description": "Optional list of comments attached to this event"
+          },
+          "audit_data": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "nullable": true
+            },
+            "description": "Optional list of audit entries attached to this event"
           }
         },
         "required": [
@@ -3180,6 +3232,12 @@
               "use_cache": {
                 "type": "boolean"
               },
+              "reasoning_enabled": {
+                "type": "boolean"
+              },
+              "reasoning_budget": {
+                "type": "number"
+              },
               "temperature": {
                 "type": "number"
               },
@@ -3325,6 +3383,12 @@
               "use_cache": {
                 "type": "boolean"
               },
+              "reasoning_enabled": {
+                "type": "boolean"
+              },
+              "reasoning_budget": {
+                "type": "number"
+              },
               "max_tokens": {
                 "type": "number"
               },
@@ -3342,12 +3406,6 @@
                 "items": {
                   "type": "string"
                 }
-              },
-              "reasoning_enabled": {
-                "type": "boolean"
-              },
-              "reasoning_budget": {
-                "type": "number"
               },
               "max_tokens_to_sample": {
                 "type": "number",
@@ -3371,6 +3429,12 @@
             "properties": {
               "use_cache": {
                 "type": "boolean"
+              },
+              "reasoning_enabled": {
+                "type": "boolean"
+              },
+              "reasoning_budget": {
+                "type": "number"
               },
               "temperature": {
                 "type": "number"
@@ -3399,6 +3463,12 @@
               "use_cache": {
                 "type": "boolean"
               },
+              "reasoning_enabled": {
+                "type": "boolean"
+              },
+              "reasoning_budget": {
+                "type": "number"
+              },
               "temperature": {
                 "type": "number"
               },
@@ -3419,6 +3489,12 @@
             "properties": {
               "use_cache": {
                 "type": "boolean"
+              },
+              "reasoning_enabled": {
+                "type": "boolean"
+              },
+              "reasoning_budget": {
+                "type": "number"
               }
             },
             "additionalProperties": {
