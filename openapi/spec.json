@@ -129,6 +129,11 @@
         "format": "uuid",
         "description": "EnvVar id"
       },
+      "McpServerIdParam": {
+        "type": "string",
+        "format": "uuid",
+        "description": "McpServer id"
+      },
       "ProjectIdQuery": {
         "type": "string",
         "format": "uuid",
@@ -201,6 +206,10 @@
       "EnvVarName": {
         "type": "string",
         "description": "Name of the env_var to search for"
+      },
+      "McpServerName": {
+        "type": "string",
+        "description": "Name of the mcp_server to search for"
       },
       "OrgName": {
         "type": "string",
@@ -2773,6 +2782,40 @@
         ],
         "title": "image_url"
       },
+      "ChatCompletionContentPartFileFile": {
+        "type": "object",
+        "properties": {
+          "file_data": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string",
+            "title": "The ID of an uploaded file to use as input."
+          }
+        }
+      },
+      "ChatCompletionContentPartFileWithTitle": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "$ref": "#/components/schemas/ChatCompletionContentPartFileFile"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "file"
+            ]
+          }
+        },
+        "required": [
+          "file",
+          "type"
+        ],
+        "title": "file"
+      },
       "ChatCompletionContentPart": {
         "anyOf": [
           {
@@ -2780,6 +2823,9 @@
           },
           {
             "$ref": "#/components/schemas/ChatCompletionContentPartImageWithTitle"
+          },
+          {
+            "$ref": "#/components/schemas/ChatCompletionContentPartFileWithTitle"
           }
         ],
         "title": "chat_completion_content_part"
@@ -3354,6 +3400,7 @@
               "reasoning_effort": {
                 "type": "string",
                 "enum": [
+                  "none",
                   "minimal",
                   "low",
                   "medium",
@@ -3612,6 +3659,75 @@
               "$ref": "#/components/schemas/SavedFunctionId"
             }
           },
+          "mcp": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "id"
+                      ]
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "is_disabled": {
+                      "type": "boolean"
+                    },
+                    "enabled_tools": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "If omitted, all tools are enabled"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "id"
+                  ],
+                  "title": "MCP server id. This is used for project-level MCP server definitions."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "url"
+                      ]
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "is_disabled": {
+                      "type": "boolean"
+                    },
+                    "enabled_tools": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "If omitted, all tools are enabled"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "url"
+                  ],
+                  "title": "MCP server url. This is used for inline definitions of MCP servers."
+                }
+              ]
+            }
+          },
           "origin": {
             "type": "object",
             "nullable": true,
@@ -3638,6 +3754,7 @@
           "scorer",
           "task",
           "tool",
+          "custom_view",
           null
         ]
       },
@@ -4448,6 +4565,35 @@
                           "type",
                           "url"
                         ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "slack"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "description": "The Slack workspace ID to post to"
+                          },
+                          "channel": {
+                            "type": "string",
+                            "description": "The Slack channel ID to post to"
+                          },
+                          "message_template": {
+                            "type": "string",
+                            "description": "Custom message template for the alert"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "workspace_id",
+                          "channel"
+                        ]
                       }
                     ],
                     "description": "The action to take when the automation rule is triggered"
@@ -4679,6 +4825,35 @@
                           "type",
                           "url"
                         ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "slack"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "description": "The Slack workspace ID to post to"
+                          },
+                          "channel": {
+                            "type": "string",
+                            "description": "The Slack channel ID to post to"
+                          },
+                          "message_template": {
+                            "type": "string",
+                            "description": "Custom message template for the alert"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "workspace_id",
+                          "channel"
+                        ]
                       }
                     ],
                     "description": "The action to take when the automation rule is triggered"
@@ -4904,6 +5079,35 @@
                         "required": [
                           "type",
                           "url"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "slack"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "description": "The Slack workspace ID to post to"
+                          },
+                          "channel": {
+                            "type": "string",
+                            "description": "The Slack channel ID to post to"
+                          },
+                          "message_template": {
+                            "type": "string",
+                            "description": "Custom message template for the alert"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "workspace_id",
+                          "channel"
                         ]
                       }
                     ],
@@ -5528,7 +5732,8 @@
                 "type": "string",
                 "enum": [
                   "node",
-                  "python"
+                  "python",
+                  "browser"
                 ]
               },
               "version": {
@@ -6174,7 +6379,8 @@
                             "type": "string",
                             "enum": [
                               "node",
-                              "python"
+                              "python",
+                              "browser"
                             ]
                           },
                           "version": {
@@ -6532,7 +6738,8 @@
                             "type": "string",
                             "enum": [
                               "node",
-                              "python"
+                              "python",
+                              "browser"
                             ]
                           },
                           "version": {
@@ -6775,6 +6982,19 @@
             "nullable": true,
             "description": "If true, throw an error if one of the variables in the prompt is not present in the input"
           },
+          "mcp_auth": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "oauth_token": {
+                  "type": "string",
+                  "description": "The OAuth token to use"
+                }
+              }
+            },
+            "description": "Map of MCP server URL to auth credentials"
+          },
           "version": {
             "type": "string",
             "description": "The version of the function"
@@ -6893,6 +7113,10 @@
                     "nullable": true
                   }
                 }
+              },
+              "freezeColumns": {
+                "type": "boolean",
+                "nullable": true
               }
             },
             "required": [
@@ -7093,6 +7317,10 @@
                   "spans",
                   null
                 ]
+              },
+              "freezeColumns": {
+                "type": "boolean",
+                "nullable": true
               }
             },
             "title": "TableViewOptions"
@@ -7395,6 +7623,35 @@
             "type": "string",
             "nullable": true,
             "description": "If invite emails failed to send for some reason, the patch operation will still complete, but we will return an error message here"
+          },
+          "added_users": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "email": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "api_key": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "token_name": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id"
+              ]
+            },
+            "description": "If service accounts with tokens were created, this will contain the added users with their API keys"
           }
         },
         "required": [
@@ -7927,6 +8184,106 @@
           "name"
         ]
       },
+      "MCPServer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the MCP server"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the MCP server belongs under"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Identifies the user who created the MCP server"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of MCP server creation"
+          },
+          "deleted_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of MCP server deletion, or null if the MCP server is still active"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the MCP server. Within a project, MCP server names are unique"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the MCP server"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL of the MCP server endpoint"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "name",
+          "url"
+        ]
+      },
+      "CreateMCPServer": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the MCP server belongs under"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the MCP server. Within a project, MCP server names are unique"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the MCP server"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL of the MCP server endpoint"
+          }
+        },
+        "required": [
+          "project_id",
+          "name",
+          "url"
+        ]
+      },
+      "PatchMCPServer": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the MCP server. Within a project, MCP server names are unique"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL of the MCP server endpoint"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the MCP server"
+          }
+        }
+      },
       "CrossObjectInsertResponse": {
         "type": "object",
         "properties": {
@@ -8058,6 +8415,75 @@
               "$ref": "#/components/schemas/SavedFunctionId"
             }
           },
+          "mcp": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "id"
+                      ]
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "is_disabled": {
+                      "type": "boolean"
+                    },
+                    "enabled_tools": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "If omitted, all tools are enabled"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "id"
+                  ],
+                  "title": "MCP server id. This is used for project-level MCP server definitions."
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "url"
+                      ]
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "is_disabled": {
+                      "type": "boolean"
+                    },
+                    "enabled_tools": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "If omitted, all tools are enabled"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "url"
+                  ],
+                  "title": "MCP server url. This is used for inline definitions of MCP servers."
+                }
+              ]
+            }
+          },
           "origin": {
             "type": "object",
             "nullable": true,
@@ -8082,6 +8508,7 @@
           "scorer",
           "task",
           "tool",
+          "custom_view",
           null
         ]
       },
@@ -8175,7 +8602,8 @@
                     "type": "string",
                     "enum": [
                       "node",
-                      "python"
+                      "python",
+                      "browser"
                     ]
                   },
                   "version": {
@@ -8469,6 +8897,18 @@
               "type": "string"
             },
             "description": "Optional tags that will be added to the experiment."
+          },
+          "mcp_auth": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "oauth_token": {
+                  "type": "string",
+                  "description": "The OAuth token to use"
+                }
+              }
+            }
           }
         },
         "required": [
@@ -8660,6 +9100,15 @@
         "name": "env_var_id",
         "in": "path"
       },
+      "McpServerIdParam": {
+        "schema": {
+          "$ref": "#/components/schemas/McpServerIdParam"
+        },
+        "required": true,
+        "description": "McpServer id",
+        "name": "mcp_server_id",
+        "in": "path"
+      },
       "ProjectIdQuery": {
         "schema": {
           "$ref": "#/components/schemas/ProjectIdQuery"
@@ -8836,6 +9285,16 @@
         "required": false,
         "description": "Name of the env_var to search for",
         "name": "env_var_name",
+        "in": "query",
+        "allowReserved": true
+      },
+      "McpServerName": {
+        "schema": {
+          "$ref": "#/components/schemas/McpServerName"
+        },
+        "required": false,
+        "description": "Name of the mcp_server to search for",
+        "name": "mcp_server_name",
         "in": "query",
         "allowReserved": true
       },
@@ -26331,6 +26790,816 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/EnvVarIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mcp_server": {
+      "post": {
+        "tags": [
+          "McpServers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "postMcpServer",
+        "description": "Create a new mcp_server. If there is an existing mcp_server with the same name as the one specified in the request, will return the existing mcp_server unmodified",
+        "summary": "Create mcp_server",
+        "requestBody": {
+          "description": "Any desired information about the new mcp_server object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMCPServer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new mcp_server object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MCPServer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "McpServers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "putMcpServer",
+        "description": "Create or replace mcp_server. If there is an existing mcp_server with the same name as the one specified in the request, will replace the existing mcp_server with the provided fields",
+        "summary": "Create or replace mcp_server",
+        "requestBody": {
+          "description": "Any desired information about the new mcp_server object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMCPServer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new mcp_server object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MCPServer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getMcpServer",
+        "tags": [
+          "McpServers"
+        ],
+        "description": "List out all mcp_servers. The mcp_servers are sorted by creation date, with the most recently-created mcp_servers coming first",
+        "summary": "List mcp_servers",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/StartingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/EndingBefore"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
+          },
+          {
+            "$ref": "#/components/parameters/McpServerName"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of mcp_server objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MCPServer"
+                      },
+                      "description": "A list of mcp_server objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsMcpServer",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/mcp_server`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mcp_server/{mcp_server_id}": {
+      "get": {
+        "operationId": "getMcpServerId",
+        "tags": [
+          "McpServers"
+        ],
+        "description": "Get a mcp_server object by its id",
+        "summary": "Get mcp_server",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/McpServerIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the mcp_server object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MCPServer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchMcpServerId",
+        "tags": [
+          "McpServers"
+        ],
+        "description": "Partially update a mcp_server object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "summary": "Partially update mcp_server",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/McpServerIdParam"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchMCPServer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the mcp_server object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MCPServer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMcpServerId",
+        "tags": [
+          "McpServers"
+        ],
+        "description": "Delete a mcp_server object by its id",
+        "summary": "Delete mcp_server",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/McpServerIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted mcp_server object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MCPServer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsMcpServerId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/mcp_server/{mcp_server_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/McpServerIdParam"
           }
         ],
         "responses": {
