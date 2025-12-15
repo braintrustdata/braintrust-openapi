@@ -588,6 +588,11 @@
             "type": "string",
             "description": "Name of the project"
           },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the project"
+          },
           "created": {
             "type": "string",
             "nullable": true,
@@ -624,6 +629,11 @@
             "minLength": 1,
             "description": "Name of the project"
           },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the project"
+          },
           "org_name": {
             "type": "string",
             "nullable": true,
@@ -641,6 +651,10 @@
             "type": "string",
             "nullable": true,
             "description": "Name of the project"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           },
           "settings": {
             "allOf": [
@@ -8175,6 +8189,28 @@
             "nullable": true,
             "format": "date-time",
             "description": "Date the environment variable was last used"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+          },
+          "secret_type": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional classification for the secret (for example, the AI provider name)"
+          },
+          "secret_category": {
+            "type": "string",
+            "enum": [
+              "env_var",
+              "ai_provider"
+            ],
+            "default": "env_var",
+            "description": "The category of the secret: env_var for regular environment variables, ai_provider for AI provider API keys"
           }
         },
         "required": [
@@ -26005,6 +26041,19 @@
                     "type": "string",
                     "nullable": true,
                     "description": "The value of the environment variable. Will be encrypted at rest."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+                  },
+                  "secret_type": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional classification for the secret (for example, the AI provider name)"
                   }
                 },
                 "required": [
@@ -26147,6 +26196,19 @@
                     "type": "string",
                     "nullable": true,
                     "description": "The value of the environment variable. Will be encrypted at rest."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+                  },
+                  "secret_type": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional classification for the secret (for example, the AI provider name)"
                   }
                 },
                 "required": [
@@ -26576,6 +26638,19 @@
                     "type": "string",
                     "nullable": true,
                     "description": "The value of the environment variable. Will be encrypted at rest."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+                  },
+                  "secret_type": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional classification for the secret (for example, the AI provider name)"
                   }
                 },
                 "required": [
