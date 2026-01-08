@@ -482,6 +482,70 @@
         "format": "uuid",
         "description": "The id of the object the environment variable is scoped for"
       },
+      "NullableFunctionTypeEnum": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "llm",
+          "scorer",
+          "task",
+          "tool",
+          "custom_view",
+          "preprocessor",
+          "facet",
+          null
+        ],
+        "description": "The type of global function. If unspecified, defaults to 'scorer' for backward compatibility."
+      },
+      "NullableSavedFunctionId": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "title": "function"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "global"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/NullableFunctionTypeEnum"
+              }
+            },
+            "required": [
+              "type",
+              "name"
+            ],
+            "title": "global"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Default preprocessor for this project. When set, functions that use preprocessors will use this instead of their built-in default."
+      },
       "ProjectSettings": {
         "type": "object",
         "nullable": true,
@@ -568,6 +632,9 @@
             "type": "boolean",
             "nullable": true,
             "description": "If true, disable real-time queries for this project. This can improve query performance for high-volume logs."
+          },
+          "default_preprocessor": {
+            "$ref": "#/components/schemas/NullableSavedFunctionId"
           }
         }
       },
@@ -587,6 +654,11 @@
           "name": {
             "type": "string",
             "description": "Name of the project"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the project"
           },
           "created": {
             "type": "string",
@@ -624,6 +696,11 @@
             "minLength": 1,
             "description": "Name of the project"
           },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the project"
+          },
           "org_name": {
             "type": "string",
             "nullable": true,
@@ -641,6 +718,10 @@
             "type": "string",
             "nullable": true,
             "description": "Name of the project"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           },
           "settings": {
             "allOf": [
@@ -907,20 +988,46 @@
             },
             "description": "The `_merge_paths` field allows controlling the depth of the merge, when `_is_merge=true`. `_merge_paths` is a list of paths, where each path is a list of field names. The deep merge will not descend below any of the specified merge paths.\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": {\"b\": 10}, \"c\": {\"d\": 20}}, \"output\": {\"a\": 20}}`. If we merge a new row as `{\"_is_merge\": true, \"_merge_paths\": [[\"input\", \"a\"], [\"output\"]], \"input\": {\"a\": {\"q\": 30}, \"c\": {\"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`, the new row will be `{\"id\": \"foo\": \"input\": {\"a\": {\"q\": 30}, \"c\": {\"d\": 20, \"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`."
           },
+          "_array_delete": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "delete": {
+                  "type": "array",
+                  "items": {
+                    "nullable": true
+                  }
+                }
+              },
+              "required": [
+                "path",
+                "delete"
+              ]
+            },
+            "description": "The `_array_delete` field allows removing specific values from array fields. It is an array of objects with `path` and `delete` properties.\n\nFor example, to remove tags \"foo\" and \"bar\" from an existing row: `{\"_is_merge\": true, \"_array_delete\": [{\"path\": [\"tags\"], \"delete\": [\"foo\", \"bar\"]}]}`. For nested fields like `metadata.categories`, use `[{\"path\": [\"metadata\", \"categories\"], \"delete\": [\"value\"]}]`. This will remove those specific values from the array while preserving others."
+          },
           "_parent_id": {
             "type": "string",
             "nullable": true,
-            "description": "DEPRECATED: The `_parent_id` field is deprecated and should not be used. Support for `_parent_id` will be dropped in a future version of Braintrust. Log `span_id`, `root_span_id`, and `span_parents` explicitly instead.\n\nUse the `_parent_id` field to create this row as a subspan of an existing row. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "DEPRECATED: The `_parent_id` field is deprecated and should not be used. Support for `_parent_id` will be dropped in a future version of Braintrust. Log `span_id`, `root_span_id`, and `span_parents` explicitly instead.\n\nUse the `_parent_id` field to create this row as a subspan of an existing row. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/instrument) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "span_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "root_span_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "span_parents": {
             "type": "array",
@@ -928,7 +1035,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           }
         },
         "description": "A project logs event"
@@ -1110,7 +1217,7 @@
           },
           "span_id": {
             "type": "string",
-            "description": "A unique identifier used to link different project logs events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/guides/tracing) for full details on tracing"
+            "description": "A unique identifier used to link different project logs events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/instrument) for full details on tracing"
           },
           "span_parents": {
             "type": "array",
@@ -1743,20 +1850,46 @@
             },
             "description": "The `_merge_paths` field allows controlling the depth of the merge, when `_is_merge=true`. `_merge_paths` is a list of paths, where each path is a list of field names. The deep merge will not descend below any of the specified merge paths.\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": {\"b\": 10}, \"c\": {\"d\": 20}}, \"output\": {\"a\": 20}}`. If we merge a new row as `{\"_is_merge\": true, \"_merge_paths\": [[\"input\", \"a\"], [\"output\"]], \"input\": {\"a\": {\"q\": 30}, \"c\": {\"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`, the new row will be `{\"id\": \"foo\": \"input\": {\"a\": {\"q\": 30}, \"c\": {\"d\": 20, \"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`."
           },
+          "_array_delete": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "delete": {
+                  "type": "array",
+                  "items": {
+                    "nullable": true
+                  }
+                }
+              },
+              "required": [
+                "path",
+                "delete"
+              ]
+            },
+            "description": "The `_array_delete` field allows removing specific values from array fields. It is an array of objects with `path` and `delete` properties.\n\nFor example, to remove tags \"foo\" and \"bar\" from an existing row: `{\"_is_merge\": true, \"_array_delete\": [{\"path\": [\"tags\"], \"delete\": [\"foo\", \"bar\"]}]}`. For nested fields like `metadata.categories`, use `[{\"path\": [\"metadata\", \"categories\"], \"delete\": [\"value\"]}]`. This will remove those specific values from the array while preserving others."
+          },
           "_parent_id": {
             "type": "string",
             "nullable": true,
-            "description": "DEPRECATED: The `_parent_id` field is deprecated and should not be used. Support for `_parent_id` will be dropped in a future version of Braintrust. Log `span_id`, `root_span_id`, and `span_parents` explicitly instead.\n\nUse the `_parent_id` field to create this row as a subspan of an existing row. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "DEPRECATED: The `_parent_id` field is deprecated and should not be used. Support for `_parent_id` will be dropped in a future version of Braintrust. Log `span_id`, `root_span_id`, and `span_parents` explicitly instead.\n\nUse the `_parent_id` field to create this row as a subspan of an existing row. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/instrument) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "span_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "root_span_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "span_parents": {
             "type": "array",
@@ -1764,7 +1897,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           }
         },
         "description": "An experiment event"
@@ -1939,7 +2072,7 @@
           },
           "span_id": {
             "type": "string",
-            "description": "A unique identifier used to link different experiment events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/guides/tracing) for full details on tracing"
+            "description": "A unique identifier used to link different experiment events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/instrument) for full details on tracing"
           },
           "span_parents": {
             "type": "array",
@@ -2260,12 +2393,17 @@
               "nullable": true
             },
             "description": "User-controlled metadata about the dataset"
+          },
+          "url_slug": {
+            "type": "string",
+            "description": "URL slug for the dataset. used to construct dataset URLs"
           }
         },
         "required": [
           "id",
           "project_id",
-          "name"
+          "name",
+          "url_slug"
         ]
       },
       "CreateDataset": {
@@ -2392,20 +2530,46 @@
             },
             "description": "The `_merge_paths` field allows controlling the depth of the merge, when `_is_merge=true`. `_merge_paths` is a list of paths, where each path is a list of field names. The deep merge will not descend below any of the specified merge paths.\n\nFor example, say there is an existing row in the DB `{\"id\": \"foo\", \"input\": {\"a\": {\"b\": 10}, \"c\": {\"d\": 20}}, \"output\": {\"a\": 20}}`. If we merge a new row as `{\"_is_merge\": true, \"_merge_paths\": [[\"input\", \"a\"], [\"output\"]], \"input\": {\"a\": {\"q\": 30}, \"c\": {\"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`, the new row will be `{\"id\": \"foo\": \"input\": {\"a\": {\"q\": 30}, \"c\": {\"d\": 20, \"e\": 30}, \"bar\": \"baz\"}, \"output\": {\"d\": 40}}`. In this case, due to the merge paths, we have replaced `input.a` and `output`, but have still deep-merged `input` and `input.c`."
           },
+          "_array_delete": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "delete": {
+                  "type": "array",
+                  "items": {
+                    "nullable": true
+                  }
+                }
+              },
+              "required": [
+                "path",
+                "delete"
+              ]
+            },
+            "description": "The `_array_delete` field allows removing specific values from array fields. It is an array of objects with `path` and `delete` properties.\n\nFor example, to remove tags \"foo\" and \"bar\" from an existing row: `{\"_is_merge\": true, \"_array_delete\": [{\"path\": [\"tags\"], \"delete\": [\"foo\", \"bar\"]}]}`. For nested fields like `metadata.categories`, use `[{\"path\": [\"metadata\", \"categories\"], \"delete\": [\"value\"]}]`. This will remove those specific values from the array while preserving others."
+          },
           "_parent_id": {
             "type": "string",
             "nullable": true,
-            "description": "DEPRECATED: The `_parent_id` field is deprecated and should not be used. Support for `_parent_id` will be dropped in a future version of Braintrust. Log `span_id`, `root_span_id`, and `span_parents` explicitly instead.\n\nUse the `_parent_id` field to create this row as a subspan of an existing row. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "DEPRECATED: The `_parent_id` field is deprecated and should not be used. Support for `_parent_id` will be dropped in a future version of Braintrust. Log `span_id`, `root_span_id`, and `span_parents` explicitly instead.\n\nUse the `_parent_id` field to create this row as a subspan of an existing row. Tracking hierarchical relationships are important for tracing (see the [guide](https://www.braintrust.dev/docs/instrument) for full details).\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"_parent_id\": \"abc\", \"id\": \"llm_call\", \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "span_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "root_span_id": {
             "type": "string",
             "nullable": true,
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           },
           "span_parents": {
             "type": "array",
@@ -2413,7 +2577,7 @@
             "items": {
               "type": "string"
             },
-            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/guides/tracing) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
+            "description": "Use `span_id`, `root_span_id`, and `span_parents` instead of `_parent_id`, which is now deprecated. The span_id is a unique identifier describing the row's place in the a trace, and the root_span_id is a unique identifier for the whole trace. See the [guide](https://www.braintrust.dev/docs/instrument) for full details.\n\nFor example, say we have logged a row `{\"id\": \"abc\", \"span_id\": \"span0\", \"root_span_id\": \"root_span0\", \"input\": \"foo\", \"output\": \"bar\", \"expected\": \"boo\", \"scores\": {\"correctness\": 0.33}}`. We can create a sub-span of the parent row by logging `{\"id\": \"llm_call\", \"span_id\": \"span1\", \"root_span_id\": \"root_span0\", \"span_parents\": [\"span0\"], \"input\": {\"prompt\": \"What comes after foo?\"}, \"output\": \"bar\", \"metrics\": {\"tokens\": 1}}`. In the webapp, only the root span row `\"abc\"` will show up in the summary view. You can view the full trace hierarchy (in this case, the `\"llm_call\"` row) by clicking on the \"abc\" row.\n\nIf the row is being merged into an existing row, this field will be ignored."
           }
         },
         "description": "A dataset event"
@@ -2497,7 +2661,7 @@
           },
           "span_id": {
             "type": "string",
-            "description": "A unique identifier used to link different dataset events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/guides/tracing) for full details on tracing"
+            "description": "A unique identifier used to link different dataset events together as part of a full trace. See the [tracing guide](https://www.braintrust.dev/docs/instrument) for full details on tracing"
           },
           "root_span_id": {
             "type": "string",
@@ -3629,6 +3793,9 @@
               },
               "name": {
                 "type": "string"
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/NullableFunctionTypeEnum"
               }
             },
             "required": [
@@ -3658,6 +3825,16 @@
             "items": {
               "$ref": "#/components/schemas/SavedFunctionId"
             }
+          },
+          "template_format": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "mustache",
+              "nunjucks",
+              "none",
+              null
+            ]
           },
           "mcp": {
             "type": "object",
@@ -3755,6 +3932,8 @@
           "task",
           "tool",
           "custom_view",
+          "preprocessor",
+          "facet",
           null
         ]
       },
@@ -4753,6 +4932,83 @@
                   "object_type",
                   "retention_days"
                 ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
+                      "environment_update"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "environment_filter": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Optional list of environment slugs to filter by"
+                  },
+                  "action": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "webhook"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "The webhook URL to send the request to"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "url"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "slack"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "description": "The Slack workspace ID to post to"
+                          },
+                          "channel": {
+                            "type": "string",
+                            "description": "The Slack channel ID to post to"
+                          },
+                          "message_template": {
+                            "type": "string",
+                            "description": "Custom message template for the alert"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "workspace_id",
+                          "channel"
+                        ]
+                      }
+                    ],
+                    "description": "The action to take when the automation rule is triggered"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "action"
+                ]
               }
             ],
             "description": "The configuration for the automation rule"
@@ -5013,6 +5269,83 @@
                   "object_type",
                   "retention_days"
                 ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
+                      "environment_update"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "environment_filter": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Optional list of environment slugs to filter by"
+                  },
+                  "action": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "webhook"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "The webhook URL to send the request to"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "url"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "slack"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "description": "The Slack workspace ID to post to"
+                          },
+                          "channel": {
+                            "type": "string",
+                            "description": "The Slack channel ID to post to"
+                          },
+                          "message_template": {
+                            "type": "string",
+                            "description": "Custom message template for the alert"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "workspace_id",
+                          "channel"
+                        ]
+                      }
+                    ],
+                    "description": "The action to take when the automation rule is triggered"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "action"
+                ]
               }
             ],
             "description": "The configuration for the automation rule"
@@ -5267,6 +5600,83 @@
                   "event_type",
                   "object_type",
                   "retention_days"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
+                      "environment_update"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "environment_filter": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Optional list of environment slugs to filter by"
+                  },
+                  "action": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "webhook"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "The webhook URL to send the request to"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "url"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "slack"
+                            ],
+                            "description": "The type of action to take"
+                          },
+                          "workspace_id": {
+                            "type": "string",
+                            "description": "The Slack workspace ID to post to"
+                          },
+                          "channel": {
+                            "type": "string",
+                            "description": "The Slack channel ID to post to"
+                          },
+                          "message_template": {
+                            "type": "string",
+                            "description": "Custom message template for the alert"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "workspace_id",
+                          "channel"
+                        ]
+                      }
+                    ],
+                    "description": "The action to take when the automation rule is triggered"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "action"
                 ]
               },
               {
@@ -5733,7 +6143,8 @@
                 "enum": [
                   "node",
                   "python",
-                  "browser"
+                  "browser",
+                  "quickjs"
                 ]
               },
               "version": {
@@ -6313,6 +6724,44 @@
         "description": "This feature is preliminary and unsupported.",
         "title": "graph"
       },
+      "FacetData": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "facet"
+            ]
+          },
+          "preprocessor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NullableSavedFunctionId"
+              },
+              {
+                "description": "The preprocessor function to use for facet extraction. If not provided, the project default preprocessor will be used, falling back to the global 'thread' preprocessor."
+              }
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The prompt to use for LLM extraction. The preprocessed text will be provided as context."
+          },
+          "model": {
+            "type": "string",
+            "description": "The model to use for facet extraction"
+          },
+          "no_match_pattern": {
+            "type": "string",
+            "description": "Regex pattern to identify outputs that do not match the facet. If the output matches, the facet will be saved as 'no_match'"
+          }
+        },
+        "required": [
+          "type",
+          "prompt"
+        ],
+        "title": "facet"
+      },
       "FunctionData": {
         "anyOf": [
           {
@@ -6380,7 +6829,8 @@
                             "enum": [
                               "node",
                               "python",
-                              "browser"
+                              "browser",
+                              "quickjs"
                             ]
                           },
                           "version": {
@@ -6394,6 +6844,10 @@
                       },
                       "code": {
                         "type": "string"
+                      },
+                      "code_hash": {
+                        "type": "string",
+                        "description": "SHA256 hash of the code, computed at save time"
                       }
                     },
                     "required": [
@@ -6457,6 +6911,17 @@
               },
               "name": {
                 "type": "string"
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/NullableFunctionTypeEnum"
+              },
+              "config": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "Configuration options to pass to the global function (e.g., for preprocessor customization)"
               }
             },
             "required": [
@@ -6464,6 +6929,9 @@
               "name"
             ],
             "title": "global"
+          },
+          {
+            "$ref": "#/components/schemas/FacetData"
           }
         ]
       },
@@ -6739,7 +7207,8 @@
                             "enum": [
                               "node",
                               "python",
-                              "browser"
+                              "browser",
+                              "quickjs"
                             ]
                           },
                           "version": {
@@ -6753,6 +7222,10 @@
                       },
                       "code": {
                         "type": "string"
+                      },
+                      "code_hash": {
+                        "type": "string",
+                        "description": "SHA256 hash of the code, computed at save time"
                       }
                     },
                     "required": [
@@ -6816,6 +7289,17 @@
               },
               "name": {
                 "type": "string"
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/NullableFunctionTypeEnum"
+              },
+              "config": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "Configuration options to pass to the global function (e.g., for preprocessor customization)"
               }
             },
             "required": [
@@ -6823,6 +7307,9 @@
               "name"
             ],
             "title": "global"
+          },
+          {
+            "$ref": "#/components/schemas/FacetData"
           },
           {
             "type": "null"
@@ -6857,6 +7344,91 @@
             "description": "A list of tags for the prompt"
           }
         }
+      },
+      "SpanScope": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "span"
+            ]
+          },
+          "root_span_id": {
+            "type": "string",
+            "description": "The root span id is a unique identifier for the trace."
+          },
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the span."
+          }
+        },
+        "required": [
+          "type",
+          "root_span_id",
+          "id"
+        ],
+        "description": "Scope for operating on a single span"
+      },
+      "TraceScope": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "trace"
+            ]
+          },
+          "root_span_id": {
+            "type": "string",
+            "description": "The root span id is a unique identifier for the trace."
+          }
+        },
+        "required": [
+          "type",
+          "root_span_id"
+        ],
+        "description": "Scope for operating on an entire trace"
+      },
+      "InvokeScope": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/SpanScope"
+          },
+          {
+            "$ref": "#/components/schemas/TraceScope"
+          }
+        ],
+        "description": "The scope at which to operate (span or trace)"
+      },
+      "InvokeContext": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "project_logs",
+              "experiment",
+              "dataset",
+              "playground_logs"
+            ],
+            "description": "The type of object containing the span data"
+          },
+          "object_id": {
+            "type": "string",
+            "description": "The ID of the object containing the span data"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/InvokeScope"
+          }
+        },
+        "required": [
+          "object_type",
+          "object_id",
+          "scope"
+        ],
+        "description": "Context for functions that operate on spans/traces"
       },
       "InvokeParent": {
         "anyOf": [
@@ -6928,6 +7500,8 @@
         "enum": [
           "auto",
           "parallel",
+          "json",
+          "text",
           null
         ],
         "description": "The mode format of the returned value (defaults to 'auto')"
@@ -6966,6 +7540,9 @@
             },
             "description": "If the function is an LLM, additional messages to pass along to it"
           },
+          "context": {
+            "$ref": "#/components/schemas/InvokeContext"
+          },
           "parent": {
             "$ref": "#/components/schemas/InvokeParent"
           },
@@ -6994,6 +7571,14 @@
               }
             },
             "description": "Map of MCP server URL to auth credentials"
+          },
+          "overrides": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Partial function definition to merge with the function being invoked. Fields are validated against the function type's schema at runtime. For facets: { preprocessor?, prompt?, model? }. For prompts: { model?, ... }."
           },
           "version": {
             "type": "string",
@@ -8175,6 +8760,28 @@
             "nullable": true,
             "format": "date-time",
             "description": "Date the environment variable was last used"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+          },
+          "secret_type": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional classification for the secret (for example, the AI provider name)"
+          },
+          "secret_category": {
+            "type": "string",
+            "enum": [
+              "env_var",
+              "ai_provider"
+            ],
+            "default": "env_var",
+            "description": "The category of the secret: env_var for regular environment variables, ai_provider for AI provider API keys"
           }
         },
         "required": [
@@ -8415,6 +9022,16 @@
               "$ref": "#/components/schemas/SavedFunctionId"
             }
           },
+          "template_format": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "mustache",
+              "nunjucks",
+              "none",
+              null
+            ]
+          },
           "mcp": {
             "type": "object",
             "nullable": true,
@@ -8509,6 +9126,8 @@
           "task",
           "tool",
           "custom_view",
+          "preprocessor",
+          "facet",
           null
         ]
       },
@@ -8561,6 +9180,9 @@
               "global_function": {
                 "type": "string",
                 "description": "The name of the global function. Currently, the global namespace includes the functions in autoevals"
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/NullableFunctionTypeEnum"
               }
             },
             "required": [
@@ -8603,7 +9225,8 @@
                     "enum": [
                       "node",
                       "python",
-                      "browser"
+                      "browser",
+                      "quickjs"
                     ]
                   },
                   "version": {
@@ -24226,7 +24849,7 @@
                   },
                   "service_account_id": {
                     "type": "string",
-                    "description": "The service account ID this service token should belong to."
+                    "description": "The service account ID this service token should belong to. You can create a service account in the Braintrust [organization settings page](https://www.braintrustdata.com/app/settings?subroute=service-tokens) or using the [modify organization membership endpoint](https://www.braintrust.dev/docs/api-reference/organizations/modify-organization-membership)"
                   }
                 },
                 "required": [
@@ -24357,7 +24980,7 @@
                   },
                   "service_account_id": {
                     "type": "string",
-                    "description": "The service account ID this service token should belong to."
+                    "description": "The service account ID this service token should belong to. You can create a service account in the Braintrust [organization settings page](https://www.braintrustdata.com/app/settings?subroute=service-tokens) or using the [modify organization membership endpoint](https://www.braintrust.dev/docs/api-reference/organizations/modify-organization-membership)"
                   }
                 },
                 "required": [
@@ -26005,6 +26628,19 @@
                     "type": "string",
                     "nullable": true,
                     "description": "The value of the environment variable. Will be encrypted at rest."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+                  },
+                  "secret_type": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional classification for the secret (for example, the AI provider name)"
                   }
                 },
                 "required": [
@@ -26147,6 +26783,19 @@
                     "type": "string",
                     "nullable": true,
                     "description": "The value of the environment variable. Will be encrypted at rest."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+                  },
+                  "secret_type": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional classification for the secret (for example, the AI provider name)"
                   }
                 },
                 "required": [
@@ -26576,6 +27225,19 @@
                     "type": "string",
                     "nullable": true,
                     "description": "The value of the environment variable. Will be encrypted at rest."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+                  },
+                  "secret_type": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional classification for the secret (for example, the AI provider name)"
                   }
                 },
                 "required": [
@@ -28322,7 +28984,7 @@
         "tags": [
           "Proxy"
         ],
-        "description": "Create a temporary credential which can access the proxy for a limited time. The temporary credential will be allowed to make requests on behalf of the Braintrust API key (or model provider API key) provided in the `Authorization` header. See [docs](/docs/guides/proxy#temporary-credentials-for-end-user-access) for code examples.",
+        "description": "Create a temporary credential which can access the proxy for a limited time. The temporary credential will be allowed to make requests on behalf of the Braintrust API key (or model provider API key) provided in the `Authorization` header. See [docs](/docs/deploy/ai-proxy#create-temporary-credentials) for code examples.",
         "summary": "Create temporary credential",
         "security": [
           {
@@ -28591,7 +29253,7 @@
         "tags": [
           "Evals"
         ],
-        "description": "Launch an evaluation. This is the API-equivalent of the `Eval` function that is built into the Braintrust SDK. In the Eval API, you provide pointers to a dataset, task function, and scoring functions. The API will then run the evaluation, create an experiment, and return the results along with a link to the experiment. To learn more about evals, see the [Evals guide](https://www.braintrust.dev/docs/guides/evals).",
+        "description": "Launch an evaluation. This is the API-equivalent of the `Eval` function that is built into the Braintrust SDK. In the Eval API, you provide pointers to a dataset, task function, and scoring functions. The API will then run the evaluation, create an experiment, and return the results along with a link to the experiment. To learn more about evals, see the [Evals guide](https://www.braintrust.dev/docs/evaluate).",
         "summary": "Launch an eval",
         "security": [
           {
