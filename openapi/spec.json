@@ -94,6 +94,11 @@
         "format": "uuid",
         "description": "SpanIframe id"
       },
+      "EvalStatusPageIdParam": {
+        "type": "string",
+        "format": "uuid",
+        "description": "EvalStatusPage id"
+      },
       "FunctionIdParam": {
         "type": "string",
         "format": "uuid",
@@ -182,6 +187,10 @@
       "SpanIframeName": {
         "type": "string",
         "description": "Name of the span_iframe to search for"
+      },
+      "EvalStatusPageName": {
+        "type": "string",
+        "description": "Name of the eval_status_page to search for"
       },
       "FunctionName": {
         "type": "string",
@@ -302,7 +311,6 @@
           "tools",
           "scorers",
           "logs",
-          "agents",
           "monitor",
           "for_review",
           null
@@ -6132,6 +6140,172 @@
           }
         }
       },
+      "EvalStatusPageTheme": {
+        "type": "string",
+        "enum": [
+          "light",
+          "dark"
+        ],
+        "description": "The theme for the page"
+      },
+      "EvalStatusPageConfig": {
+        "type": "object",
+        "properties": {
+          "score_columns": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "The score columns to display on the page"
+          },
+          "metric_columns": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "The metric columns to display on the page"
+          },
+          "grouping_field": {
+            "type": "string",
+            "nullable": true,
+            "description": "The metadata field to use for grouping experiments (model)"
+          },
+          "api_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "The API key used for fetching experiment data"
+          }
+        },
+        "description": "Configuration for what data to display"
+      },
+      "EvalStatusPage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the eval status page"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the eval status page belongs under"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Identifies the user who created the eval status page"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of eval status page creation"
+          },
+          "deleted_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of eval status page deletion, or null if the eval status page is still active"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the eval status page"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the eval status page"
+          },
+          "logo_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL of the logo to display on the page"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/EvalStatusPageTheme"
+          },
+          "config": {
+            "$ref": "#/components/schemas/EvalStatusPageConfig"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "name",
+          "theme",
+          "config"
+        ],
+        "description": "A public eval status page that displays aggregate experiment results"
+      },
+      "CreateEvalStatusPage": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the eval status page belongs under"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the eval status page"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the eval status page"
+          },
+          "logo_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL of the logo to display on the page"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/EvalStatusPageTheme"
+          },
+          "config": {
+            "$ref": "#/components/schemas/EvalStatusPageConfig"
+          }
+        },
+        "required": [
+          "project_id",
+          "name",
+          "theme",
+          "config"
+        ],
+        "description": "A public eval status page that displays aggregate experiment results"
+      },
+      "PatchEvalStatusPage": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the eval status page"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the eval status page"
+          },
+          "logo_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL of the logo to display on the page"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/EvalStatusPageTheme",
+            "nullable": true
+          },
+          "config": {
+            "$ref": "#/components/schemas/EvalStatusPageConfig",
+            "nullable": true
+          }
+        }
+      },
       "CodeBundle": {
         "type": "object",
         "properties": {
@@ -7946,7 +8120,6 @@
               "tools",
               "scorers",
               "logs",
-              "agents",
               "monitor",
               "for_review",
               null
@@ -8015,7 +8188,6 @@
               "tools",
               "scorers",
               "logs",
-              "agents",
               "monitor",
               "for_review",
               null
@@ -8078,7 +8250,6 @@
               "tools",
               "scorers",
               "logs",
-              "agents",
               "monitor",
               "for_review",
               null
@@ -9660,6 +9831,15 @@
         "name": "span_iframe_id",
         "in": "path"
       },
+      "EvalStatusPageIdParam": {
+        "schema": {
+          "$ref": "#/components/schemas/EvalStatusPageIdParam"
+        },
+        "required": true,
+        "description": "EvalStatusPage id",
+        "name": "eval_status_page_id",
+        "in": "path"
+      },
       "FunctionIdParam": {
         "schema": {
           "$ref": "#/components/schemas/FunctionIdParam"
@@ -9848,6 +10028,16 @@
         "required": false,
         "description": "Name of the span_iframe to search for",
         "name": "span_iframe_name",
+        "in": "query",
+        "allowReserved": true
+      },
+      "EvalStatusPageName": {
+        "schema": {
+          "$ref": "#/components/schemas/EvalStatusPageName"
+        },
+        "required": false,
+        "description": "Name of the eval_status_page to search for",
+        "name": "eval_status_page_name",
         "in": "query",
         "allowReserved": true
       },
@@ -21758,6 +21948,816 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/SpanIframeIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/eval_status_page": {
+      "post": {
+        "tags": [
+          "EvalStatusPages"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "postEvalStatusPage",
+        "description": "Create a new eval_status_page. If there is an existing eval_status_page with the same name as the one specified in the request, will return the existing eval_status_page unmodified",
+        "summary": "Create eval_status_page",
+        "requestBody": {
+          "description": "Any desired information about the new eval_status_page object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvalStatusPage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new eval_status_page object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvalStatusPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "EvalStatusPages"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "putEvalStatusPage",
+        "description": "Create or replace eval_status_page. If there is an existing eval_status_page with the same name as the one specified in the request, will replace the existing eval_status_page with the provided fields",
+        "summary": "Create or replace eval_status_page",
+        "requestBody": {
+          "description": "Any desired information about the new eval_status_page object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvalStatusPage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new eval_status_page object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvalStatusPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getEvalStatusPage",
+        "tags": [
+          "EvalStatusPages"
+        ],
+        "description": "List out all eval_status_pages. The eval_status_pages are sorted by creation date, with the most recently-created eval_status_pages coming first",
+        "summary": "List eval_status_pages",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/StartingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/EndingBefore"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
+          },
+          {
+            "$ref": "#/components/parameters/EvalStatusPageName"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of eval_status_page objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EvalStatusPage"
+                      },
+                      "description": "A list of eval_status_page objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsEvalStatusPage",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/eval_status_page`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/eval_status_page/{eval_status_page_id}": {
+      "get": {
+        "operationId": "getEvalStatusPageId",
+        "tags": [
+          "EvalStatusPages"
+        ],
+        "description": "Get a eval_status_page object by its id",
+        "summary": "Get eval_status_page",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EvalStatusPageIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the eval_status_page object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvalStatusPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchEvalStatusPageId",
+        "tags": [
+          "EvalStatusPages"
+        ],
+        "description": "Partially update a eval_status_page object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "summary": "Partially update eval_status_page",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EvalStatusPageIdParam"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchEvalStatusPage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the eval_status_page object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvalStatusPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteEvalStatusPageId",
+        "tags": [
+          "EvalStatusPages"
+        ],
+        "description": "Delete a eval_status_page object by its id",
+        "summary": "Delete eval_status_page",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EvalStatusPageIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted eval_status_page object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvalStatusPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsEvalStatusPageId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/eval_status_page/{eval_status_page_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/EvalStatusPageIdParam"
           }
         ],
         "responses": {
