@@ -464,9 +464,8 @@ components:
       type: string
       format: uuid
       description: The id of the object the environment variable is scoped for
-    NullableFunctionTypeEnum:
+    FunctionTypeEnum:
       type: string
-      nullable: true
       enum:
         - llm
         - scorer
@@ -476,8 +475,8 @@ components:
         - preprocessor
         - facet
         - null
-      description: The type of global function. If unspecified, defaults to 'scorer'
-        for backward compatibility.
+      default: scorer
+      description: The type of global function. Defaults to 'scorer'.
     NullableSavedFunctionId:
       anyOf:
         - type: object
@@ -501,7 +500,7 @@ components:
             name:
               type: string
             function_type:
-              $ref: "#/components/schemas/NullableFunctionTypeEnum"
+              $ref: "#/components/schemas/FunctionTypeEnum"
           required:
             - type
             - name
@@ -667,6 +666,9 @@ components:
         - eval
         - task
         - tool
+        - automation
+        - facet
+        - preprocessor
         - null
       description: Type of the span, for display purposes only
     SpanAttributes:
@@ -3517,7 +3519,7 @@ components:
             name:
               type: string
             function_type:
-              $ref: "#/components/schemas/NullableFunctionTypeEnum"
+              $ref: "#/components/schemas/FunctionTypeEnum"
           required:
             - type
             - name
@@ -4996,6 +4998,47 @@ components:
           description: For minimum-type project scores, the list of included scores
           title: minimum
         - type: "null"
+    SpanScope:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - span
+      required:
+        - type
+      description: Process individual spans
+    TraceScope:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - trace
+        idle_seconds:
+          type: number
+          description: "Consider trace complete after this many seconds of inactivity
+            (default: 30)"
+      required:
+        - type
+      description: Process entire traces (all spans sharing the same root_span_id)
+    GroupScope:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - group
+        group_by:
+          type: string
+          description: Field path to group by, e.g. metadata.session_id
+        idle_seconds:
+          type: number
+          description: "Optional: trigger after this many seconds of inactivity"
+      required:
+        - type
+        - group_by
+      description: Process spans/traces grouped by a field (e.g., session_id)
     OnlineScoreConfig:
       type: object
       nullable: true
@@ -5009,7 +5052,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/SavedFunctionId"
-          description: The list of scorers to use for online scoring
+          description: The list of functions to run for online scoring. Can include
+            scorers, facets, or other function types.
         btql_filter:
           type: string
           nullable: true
@@ -5017,17 +5061,27 @@ components:
         apply_to_root_span:
           type: boolean
           nullable: true
-          description: Whether to trigger online scoring on the root span of each trace
+          description: Whether to trigger online scoring on the root span of each trace.
+            Only applies when scope is 'span' or unset.
         apply_to_span_names:
           type: array
           nullable: true
           items:
             type: string
-          description: Trigger online scoring on any spans with a name in this list
+          description: Trigger online scoring on any spans with a name in this list. Only
+            applies when scope is 'span' or unset.
         skip_logging:
           type: boolean
           nullable: true
           description: Whether to skip adding scorer spans when computing scores
+        scope:
+          anyOf:
+            - $ref: "#/components/schemas/SpanScope"
+            - $ref: "#/components/schemas/TraceScope"
+            - $ref: "#/components/schemas/GroupScope"
+            - type: "null"
+          description: The scope at which to run the functions. Defaults to span-level
+            execution. Trace/group scope requires all functions to be facets.
       required:
         - sampling_rate
         - scorers
@@ -5335,6 +5389,23 @@ components:
           type: string
           nullable: true
           description: The metadata field to use for grouping experiments (model)
+        filter:
+          type: string
+          nullable: true
+          description: BTQL filter to apply to experiment data
+        sort_by:
+          type: string
+          nullable: true
+          description: "Field to sort results by (format: 'score:<name>' or
+            'metric:<name>')"
+        sort_order:
+          type: string
+          nullable: true
+          enum:
+            - asc
+            - desc
+            - null
+          description: Sort order (ascending or descending)
         api_key:
           type: string
           nullable: true
@@ -5871,6 +5942,45 @@ components:
         - type
         - prompt
       title: facet
+    BatchedFacetData:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - batched_facet
+        preprocessor:
+          allOf:
+            - $ref: "#/components/schemas/NullableSavedFunctionId"
+            - description: The preprocessor function to use for facet extraction. If not
+                provided, the project default preprocessor will be used, falling
+                back to the global 'thread' preprocessor.
+        facets:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the facet
+              prompt:
+                type: string
+                description: The prompt to use for LLM extraction. The preprocessed text will be
+                  provided as context.
+              model:
+                type: string
+                description: The model to use for facet extraction
+              no_match_pattern:
+                type: string
+                description: Regex pattern to identify outputs that do not match the facet. If
+                  the output matches, the facet will be saved as 'no_match'
+            required:
+              - name
+              - prompt
+      required:
+        - type
+        - facets
+      title: batched_facet
     FunctionData:
       anyOf:
         - type: object
@@ -5967,7 +6077,7 @@ components:
             name:
               type: string
             function_type:
-              $ref: "#/components/schemas/NullableFunctionTypeEnum"
+              $ref: "#/components/schemas/FunctionTypeEnum"
             config:
               type: object
               nullable: true
@@ -5980,6 +6090,7 @@ components:
             - name
           title: global
         - $ref: "#/components/schemas/FacetData"
+        - $ref: "#/components/schemas/BatchedFacetData"
     Function:
       type: object
       properties:
@@ -6234,7 +6345,7 @@ components:
             name:
               type: string
             function_type:
-              $ref: "#/components/schemas/NullableFunctionTypeEnum"
+              $ref: "#/components/schemas/FunctionTypeEnum"
             config:
               type: object
               nullable: true
@@ -6247,6 +6358,7 @@ components:
             - name
           title: global
         - $ref: "#/components/schemas/FacetData"
+        - $ref: "#/components/schemas/BatchedFacetData"
         - type: "null"
     PatchFunction:
       type: object
@@ -6269,65 +6381,6 @@ components:
           items:
             type: string
           description: A list of tags for the prompt
-    SpanScope:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - span
-        root_span_id:
-          type: string
-          description: The root span id is a unique identifier for the trace.
-        id:
-          type: string
-          description: A unique identifier for the span.
-      required:
-        - type
-        - root_span_id
-        - id
-      description: Scope for operating on a single span
-    TraceScope:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - trace
-        root_span_id:
-          type: string
-          description: The root span id is a unique identifier for the trace.
-      required:
-        - type
-        - root_span_id
-      description: Scope for operating on an entire trace
-    InvokeScope:
-      anyOf:
-        - $ref: "#/components/schemas/SpanScope"
-        - $ref: "#/components/schemas/TraceScope"
-      description: The scope at which to operate (span or trace)
-    InvokeContext:
-      type: object
-      nullable: true
-      properties:
-        object_type:
-          type: string
-          enum:
-            - project_logs
-            - experiment
-            - dataset
-            - playground_logs
-          description: The type of object containing the span data
-        object_id:
-          type: string
-          description: The ID of the object containing the span data
-        scope:
-          $ref: "#/components/schemas/InvokeScope"
-      required:
-        - object_type
-        - object_id
-        - scope
-      description: Context for functions that operate on spans/traces
     InvokeParent:
       anyOf:
         - type: object
@@ -6411,8 +6464,6 @@ components:
           items:
             $ref: "#/components/schemas/ChatCompletionMessageParam"
           description: If the function is an LLM, additional messages to pass along to it
-        context:
-          $ref: "#/components/schemas/InvokeContext"
         parent:
           $ref: "#/components/schemas/InvokeParent"
         stream:
@@ -7606,17 +7657,6 @@ components:
               type: string
             prompt_version:
               type: string
-    FunctionTypeEnum:
-      type: string
-      enum:
-        - llm
-        - scorer
-        - task
-        - tool
-        - custom_view
-        - preprocessor
-        - facet
-        - null
     FunctionId:
       anyOf:
         - type: object
@@ -7654,7 +7694,7 @@ components:
               description: The name of the global function. Currently, the global namespace
                 includes the functions in autoevals
             function_type:
-              $ref: "#/components/schemas/NullableFunctionTypeEnum"
+              $ref: "#/components/schemas/FunctionTypeEnum"
           required:
             - global_function
           description: Global function name
