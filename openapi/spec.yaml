@@ -320,9 +320,12 @@ components:
         - prompts
         - tools
         - scorers
+        - classifiers
         - logs
         - monitor
-        - for_review
+        - for_review_project_log
+        - for_review_experiments
+        - for_review_datasets
         - null
       description: Type of object that the view corresponds to.
     UserGivenName:
@@ -474,6 +477,8 @@ components:
         - custom_view
         - preprocessor
         - facet
+        - classifier
+        - tag
         - null
       default: scorer
       description: The type of global function. Defaults to 'scorer'.
@@ -669,6 +674,7 @@ components:
         - automation
         - facet
         - preprocessor
+        - classifier
         - null
       description: Type of the span, for display purposes only
     SpanAttributes:
@@ -3492,10 +3498,20 @@ components:
             type: number
             minimum: 0
             maximum: 1
+          description: Map of choices to scores (0-1). Used by scorers.
+        choice:
+          type: array
+          items:
+            type: string
+          description: List of valid choices without score mapping. Used by classifiers
+            that deposit output to tags.
+        allow_no_match:
+          type: boolean
+          description: If true, adds a 'No match' option. When selected, no tag is
+            deposited.
       required:
         - type
         - use_cot
-        - choice_scores
     SavedFunctionId:
       anyOf:
         - type: object
@@ -3615,6 +3631,8 @@ components:
         - custom_view
         - preprocessor
         - facet
+        - classifier
+        - tag
         - null
     Prompt:
       type: object
@@ -6755,9 +6773,12 @@ components:
             - prompts
             - tools
             - scorers
+            - classifiers
             - logs
             - monitor
-            - for_review
+            - for_review_project_log
+            - for_review_experiments
+            - for_review_datasets
             - null
           description: Type of object that the view corresponds to.
         name:
@@ -6810,9 +6831,12 @@ components:
             - prompts
             - tools
             - scorers
+            - classifiers
             - logs
             - monitor
-            - for_review
+            - for_review_project_log
+            - for_review_experiments
+            - for_review_datasets
             - null
           description: Type of object that the view corresponds to.
         name:
@@ -6860,9 +6884,12 @@ components:
             - prompts
             - tools
             - scorers
+            - classifiers
             - logs
             - monitor
-            - for_review
+            - for_review_project_log
+            - for_review_experiments
+            - for_review_datasets
             - null
           description: Type of object that the view corresponds to.
         name:
@@ -6893,6 +6920,17 @@ components:
       required:
         - object_type
         - object_id
+    ImageRenderingMode:
+      type: string
+      nullable: true
+      enum:
+        - auto
+        - click_to_load
+        - blocked
+        - null
+      description: "Controls how images are rendered in the UI: 'auto' loads images
+        automatically, 'click_to_load' shows a placeholder until clicked,
+        'blocked' prevents image loading entirely"
     Organization:
       type: object
       properties:
@@ -6920,6 +6958,8 @@ components:
           nullable: true
           format: date-time
           description: Date of organization creation
+        image_rendering_mode:
+          $ref: "#/components/schemas/ImageRenderingMode"
       required:
         - id
         - name
@@ -6942,6 +6982,8 @@ components:
         realtime_url:
           type: string
           nullable: true
+        image_rendering_mode:
+          $ref: "#/components/schemas/ImageRenderingMode"
     PatchOrganizationMembersOutput:
       type: object
       properties:
