@@ -523,6 +523,10 @@
               },
               "id": {
                 "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
               }
             },
             "required": [
@@ -733,6 +737,10 @@
             "description": "Name of the project"
           },
           "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
             "type": "string",
             "nullable": true
           },
@@ -984,6 +992,14 @@
           "origin": {
             "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
+          "facets": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Facets for categorization (dictionary from facet id to value)"
+          },
           "_object_delete": {
             "type": "boolean",
             "nullable": true,
@@ -1071,6 +1087,59 @@
         "required": [
           "events"
         ]
+      },
+      "SavedFunctionId": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "id": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "description": "The version of the function"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "title": "function"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "global"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "function_type": {
+                "$ref": "#/components/schemas/FunctionTypeEnum"
+              }
+            },
+            "required": [
+              "type",
+              "name"
+            ],
+            "title": "global"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Optional function identifier that produced the classification"
       },
       "ProjectLogsEvent": {
         "type": "object",
@@ -1278,6 +1347,54 @@
           "_async_scoring_state": {
             "nullable": true,
             "description": "The async scoring state for this event"
+          },
+          "facets": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Facets for categorization (dictionary from facet id to value)"
+          },
+          "classifications": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Stable classification identifier"
+                  },
+                  "label": {
+                    "type": "string",
+                    "description": "Original label of the classification item, which is useful for search and indexing purposes"
+                  },
+                  "confidence": {
+                    "type": "number",
+                    "nullable": true,
+                    "description": "Optional confidence score for the classification"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the classification"
+                  },
+                  "source": {
+                    "$ref": "#/components/schemas/SavedFunctionId"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            "description": "Classifications for this event (dictionary from classification name to items)"
           }
         },
         "required": [
@@ -1846,6 +1963,14 @@
           "origin": {
             "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
+          "facets": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Facets for categorization (dictionary from facet id to value)"
+          },
           "_object_delete": {
             "type": "boolean",
             "nullable": true,
@@ -2129,6 +2254,54 @@
               "nullable": true
             },
             "description": "Optional list of audit entries attached to this event"
+          },
+          "facets": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Facets for categorization (dictionary from facet id to value)"
+          },
+          "classifications": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Stable classification identifier"
+                  },
+                  "label": {
+                    "type": "string",
+                    "description": "Original label of the classification item, which is useful for search and indexing purposes"
+                  },
+                  "confidence": {
+                    "type": "number",
+                    "nullable": true,
+                    "description": "Optional confidence score for the classification"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the classification"
+                  },
+                  "source": {
+                    "$ref": "#/components/schemas/SavedFunctionId"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            "description": "Classifications for this event (dictionary from classification name to items)"
           }
         },
         "required": [
@@ -2526,6 +2699,14 @@
           "origin": {
             "$ref": "#/components/schemas/ObjectReferenceNullish"
           },
+          "facets": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Facets for categorization (dictionary from facet id to value)"
+          },
           "_object_delete": {
             "type": "boolean",
             "nullable": true,
@@ -2707,6 +2888,54 @@
               "nullable": true
             },
             "description": "Optional list of audit entries attached to this event"
+          },
+          "facets": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Facets for categorization (dictionary from facet id to value)"
+          },
+          "classifications": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Stable classification identifier"
+                  },
+                  "label": {
+                    "type": "string",
+                    "description": "Original label of the classification item, which is useful for search and indexing purposes"
+                  },
+                  "confidence": {
+                    "type": "number",
+                    "nullable": true,
+                    "description": "Optional confidence score for the classification"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": {
+                      "nullable": true
+                    },
+                    "description": "Optional metadata associated with the classification"
+                  },
+                  "source": {
+                    "$ref": "#/components/schemas/SavedFunctionId"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            "description": "Classifications for this event (dictionary from classification name to items)"
           }
         },
         "required": [
@@ -3789,51 +4018,6 @@
           "use_cot"
         ]
       },
-      "SavedFunctionId": {
-        "anyOf": [
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "function"
-                ]
-              },
-              "id": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "type",
-              "id"
-            ],
-            "title": "function"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "global"
-                ]
-              },
-              "name": {
-                "type": "string"
-              },
-              "function_type": {
-                "$ref": "#/components/schemas/FunctionTypeEnum"
-              }
-            },
-            "required": [
-              "type",
-              "name"
-            ],
-            "title": "global"
-          }
-        ]
-      },
       "PromptDataNullish": {
         "type": "object",
         "nullable": true,
@@ -3851,7 +4035,60 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/SavedFunctionId"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SavedFunctionId"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "function"
+                          ]
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string",
+                          "description": "The version of the function"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ],
+                      "title": "function"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "global"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "function_type": {
+                          "$ref": "#/components/schemas/FunctionTypeEnum"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "title": "global"
+                    }
+                  ]
+                }
+              ]
             }
           },
           "template_format": {
@@ -5840,7 +6077,60 @@
           "scorers": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SavedFunctionId"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SavedFunctionId"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "function"
+                          ]
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string",
+                          "description": "The version of the function"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ],
+                      "title": "function"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "global"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "function_type": {
+                          "$ref": "#/components/schemas/FunctionTypeEnum"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "title": "global"
+                    }
+                  ]
+                }
+              ]
             },
             "description": "The list of functions to run for online scoring. Can include scorers, facets, or other function types."
           },
@@ -7042,6 +7332,10 @@
             "type": "string",
             "description": "The model to use for facet extraction"
           },
+          "embedding_model": {
+            "type": "string",
+            "description": "The embedding model to use for vectorizing facet results."
+          },
           "no_match_pattern": {
             "type": "string",
             "description": "Regex pattern to identify outputs that do not match the facet. If the output matches, the facet will be saved as 'no_match'"
@@ -7052,6 +7346,250 @@
           "prompt"
         ],
         "title": "facet"
+      },
+      "TopicMapReport": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "enum": [
+              1
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "settings": {
+            "type": "object",
+            "properties": {
+              "algorithm": {
+                "type": "string",
+                "enum": [
+                  "hdbscan",
+                  "kmeans",
+                  "hierarchical"
+                ]
+              },
+              "dimension_reduction": {
+                "type": "string",
+                "enum": [
+                  "umap",
+                  "pca",
+                  "none"
+                ]
+              },
+              "vector_field": {
+                "type": "string"
+              },
+              "embedding_model": {
+                "type": "string"
+              },
+              "n_clusters": {
+                "type": "integer",
+                "nullable": true
+              },
+              "umap_dimensions": {
+                "type": "integer",
+                "nullable": true
+              },
+              "min_cluster_size": {
+                "type": "integer",
+                "nullable": true
+              },
+              "min_samples": {
+                "type": "integer",
+                "nullable": true
+              }
+            },
+            "required": [
+              "algorithm",
+              "dimension_reduction",
+              "vector_field",
+              "embedding_model"
+            ]
+          },
+          "query_settings": {
+            "type": "object",
+            "properties": {
+              "hierarchy_threshold": {
+                "type": "integer",
+                "nullable": true
+              },
+              "auto_naming": {
+                "type": "boolean"
+              },
+              "skip_cache": {
+                "type": "boolean"
+              },
+              "viz_mode": {
+                "type": "string",
+                "enum": [
+                  "bar",
+                  "scatter"
+                ]
+              },
+              "naming_model": {
+                "type": "string"
+              }
+            }
+          },
+          "clusters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cluster_id": {
+                  "type": "number"
+                },
+                "parent_cluster_id": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "topic_id": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                },
+                "sample_texts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "samples": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "root_span_id": {
+                        "type": "string"
+                      },
+                      "span_id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "text",
+                      "root_span_id",
+                      "span_id"
+                    ]
+                  }
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "keywords": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "centroid": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "parent_id": {
+                  "type": "number",
+                  "nullable": true
+                },
+                "is_leaf": {
+                  "type": "boolean"
+                },
+                "depth": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "cluster_id",
+                "topic_id",
+                "count",
+                "sample_texts",
+                "samples"
+              ]
+            }
+          },
+          "embedding_points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "cluster": {
+                  "type": "number"
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "cluster"
+              ]
+            }
+          }
+        },
+        "required": [
+          "version",
+          "settings",
+          "query_settings",
+          "clusters"
+        ],
+        "description": "Saved clustering report for UI rehydration"
+      },
+      "TopicMapData": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "topic_map"
+            ]
+          },
+          "source_facet": {
+            "type": "string",
+            "description": "The facet field name to use as input for classification"
+          },
+          "embedding_model": {
+            "type": "string",
+            "description": "The embedding model to use for embedding facet values"
+          },
+          "bundle_key": {
+            "type": "string",
+            "description": "Key of the topic map bundle in code_bundles bucket"
+          },
+          "distance_threshold": {
+            "type": "number",
+            "description": "Maximum distance to nearest centroid. If exceeded, returns no_match."
+          },
+          "report": {
+            "$ref": "#/components/schemas/TopicMapReport"
+          }
+        },
+        "required": [
+          "type",
+          "source_facet",
+          "embedding_model",
+          "bundle_key"
+        ]
       },
       "BatchedFacetData": {
         "type": "object",
@@ -7089,6 +7627,10 @@
                   "type": "string",
                   "description": "The model to use for facet extraction"
                 },
+                "embedding_model": {
+                  "type": "string",
+                  "description": "The embedding model to use for vectorizing facet results."
+                },
                 "no_match_pattern": {
                   "type": "string",
                   "description": "Regex pattern to identify outputs that do not match the facet. If the output matches, the facet will be saved as 'no_match'"
@@ -7099,6 +7641,30 @@
                 "prompt"
               ]
             }
+          },
+          "topic_maps": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "function_name": {
+                  "type": "string",
+                  "description": "The name of the topic map function"
+                },
+                "topic_map_id": {
+                  "type": "string",
+                  "description": "The id of the topic map function"
+                },
+                "topic_map_data": {
+                  "$ref": "#/components/schemas/TopicMapData"
+                }
+              },
+              "required": [
+                "function_name",
+                "topic_map_data"
+              ]
+            },
+            "description": "Topic maps that depend on facets in this batch, keyed by source facet name"
           }
         },
         "required": [
@@ -7280,6 +7846,16 @@
           },
           {
             "$ref": "#/components/schemas/BatchedFacetData"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TopicMapData"
+              },
+              {
+                "title": "topic_map"
+              }
+            ]
           }
         ]
       },
@@ -7661,6 +8237,16 @@
           },
           {
             "$ref": "#/components/schemas/BatchedFacetData"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TopicMapData"
+              },
+              {
+                "title": "topic_map"
+              }
+            ]
           },
           {
             "type": "null"
@@ -9305,7 +9891,60 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/SavedFunctionId"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SavedFunctionId"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "function"
+                          ]
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string",
+                          "description": "The version of the function"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ],
+                      "title": "function"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "global"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "function_type": {
+                          "$ref": "#/components/schemas/FunctionTypeEnum"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "title": "global"
+                    }
+                  ]
+                }
+              ]
             }
           },
           "template_format": {
