@@ -246,6 +246,13 @@
         "minimum": 0,
         "description": "Limit the number of objects to return"
       },
+      "AppLimitWithDefaultParam": {
+        "type": "integer",
+        "nullable": true,
+        "minimum": 0,
+        "default": 1000,
+        "description": "Limit the number of objects to return"
+      },
       "FetchLimitParam": {
         "type": "integer",
         "nullable": true,
@@ -308,6 +315,7 @@
           "datasets",
           "dataset",
           "prompts",
+          "parameters",
           "tools",
           "scorers",
           "classifiers",
@@ -505,6 +513,7 @@
           "facet",
           "classifier",
           "tag",
+          "parameters",
           null
         ],
         "default": "scorer",
@@ -631,7 +640,8 @@
                   "type": "string"
                 },
                 "name": {
-                  "type": "string"
+                  "type": "string",
+                  "nullable": true
                 },
                 "description": {
                   "type": "string",
@@ -639,8 +649,7 @@
                 }
               },
               "required": [
-                "url",
-                "name"
+                "url"
               ]
             },
             "description": "The remote eval sources to use for the project"
@@ -785,6 +794,7 @@
           "facet",
           "preprocessor",
           "classifier",
+          "review",
           null
         ],
         "description": "Type of the span, for display purposes only"
@@ -4201,6 +4211,7 @@
           "facet",
           "classifier",
           "tag",
+          "parameters",
           null
         ]
       },
@@ -7347,214 +7358,6 @@
         ],
         "title": "facet"
       },
-      "TopicMapReport": {
-        "type": "object",
-        "properties": {
-          "version": {
-            "type": "number",
-            "enum": [
-              1
-            ]
-          },
-          "created_at": {
-            "type": "string"
-          },
-          "settings": {
-            "type": "object",
-            "properties": {
-              "algorithm": {
-                "type": "string",
-                "enum": [
-                  "hdbscan",
-                  "kmeans",
-                  "hierarchical"
-                ]
-              },
-              "dimension_reduction": {
-                "type": "string",
-                "enum": [
-                  "umap",
-                  "pca",
-                  "none"
-                ]
-              },
-              "vector_field": {
-                "type": "string"
-              },
-              "embedding_model": {
-                "type": "string"
-              },
-              "n_clusters": {
-                "type": "integer",
-                "nullable": true
-              },
-              "umap_dimensions": {
-                "type": "integer",
-                "nullable": true
-              },
-              "min_cluster_size": {
-                "type": "integer",
-                "nullable": true
-              },
-              "min_samples": {
-                "type": "integer",
-                "nullable": true
-              }
-            },
-            "required": [
-              "algorithm",
-              "dimension_reduction",
-              "vector_field",
-              "embedding_model"
-            ]
-          },
-          "query_settings": {
-            "type": "object",
-            "properties": {
-              "hierarchy_threshold": {
-                "type": "integer",
-                "nullable": true
-              },
-              "auto_naming": {
-                "type": "boolean"
-              },
-              "skip_cache": {
-                "type": "boolean"
-              },
-              "viz_mode": {
-                "type": "string",
-                "enum": [
-                  "bar",
-                  "scatter"
-                ]
-              },
-              "naming_model": {
-                "type": "string"
-              }
-            }
-          },
-          "clusters": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "cluster_id": {
-                  "type": "number"
-                },
-                "parent_cluster_id": {
-                  "type": "number",
-                  "nullable": true
-                },
-                "topic_id": {
-                  "type": "string"
-                },
-                "count": {
-                  "type": "number"
-                },
-                "sample_texts": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "samples": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "text": {
-                        "type": "string"
-                      },
-                      "root_span_id": {
-                        "type": "string"
-                      },
-                      "span_id": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "id",
-                      "text",
-                      "root_span_id",
-                      "span_id"
-                    ]
-                  }
-                },
-                "name": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "keywords": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "centroid": {
-                  "type": "array",
-                  "items": {
-                    "type": "number"
-                  }
-                },
-                "parent_id": {
-                  "type": "number",
-                  "nullable": true
-                },
-                "is_leaf": {
-                  "type": "boolean"
-                },
-                "depth": {
-                  "type": "number"
-                }
-              },
-              "required": [
-                "cluster_id",
-                "topic_id",
-                "count",
-                "sample_texts",
-                "samples"
-              ]
-            }
-          },
-          "embedding_points": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "x": {
-                  "type": "number"
-                },
-                "y": {
-                  "type": "number"
-                },
-                "cluster": {
-                  "type": "number"
-                },
-                "text": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "x",
-                "y",
-                "cluster"
-              ]
-            }
-          }
-        },
-        "required": [
-          "version",
-          "settings",
-          "query_settings",
-          "clusters"
-        ],
-        "description": "Saved clustering report for UI rehydration"
-      },
       "TopicMapData": {
         "type": "object",
         "properties": {
@@ -7576,19 +7379,26 @@
             "type": "string",
             "description": "Key of the topic map bundle in code_bundles bucket"
           },
+          "report_key": {
+            "type": "string",
+            "description": "Key of the clustering report in code_bundles bucket"
+          },
+          "topic_names": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Mapping from topic_id to topic name"
+          },
           "distance_threshold": {
             "type": "number",
             "description": "Maximum distance to nearest centroid. If exceeded, returns no_match."
-          },
-          "report": {
-            "$ref": "#/components/schemas/TopicMapReport"
           }
         },
         "required": [
           "type",
           "source_facet",
-          "embedding_model",
-          "bundle_key"
+          "embedding_model"
         ]
       },
       "BatchedFacetData": {
@@ -7800,6 +7610,11 @@
                 "additionalProperties": {
                   "nullable": true
                 }
+              },
+              "parameters_version": {
+                "type": "string",
+                "nullable": true,
+                "description": "The version (transaction ID) of the parameters being used"
               }
             },
             "required": [
@@ -7846,6 +7661,64 @@
           },
           {
             "$ref": "#/components/schemas/BatchedFacetData"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "parameters"
+                ]
+              },
+              "data": {
+                "type": "object",
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "The parameters data"
+              },
+              "__schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "object"
+                    ]
+                  },
+                  "properties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "required": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "type",
+                  "properties"
+                ],
+                "description": "JSON Schema format for parameters"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "__schema"
+            ],
+            "title": "parameters"
           },
           {
             "allOf": [
@@ -8191,6 +8064,11 @@
                 "additionalProperties": {
                   "nullable": true
                 }
+              },
+              "parameters_version": {
+                "type": "string",
+                "nullable": true,
+                "description": "The version (transaction ID) of the parameters being used"
               }
             },
             "required": [
@@ -8237,6 +8115,64 @@
           },
           {
             "$ref": "#/components/schemas/BatchedFacetData"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "parameters"
+                ]
+              },
+              "data": {
+                "type": "object",
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "The parameters data"
+              },
+              "__schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "object"
+                    ]
+                  },
+                  "properties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "nullable": true
+                      }
+                    }
+                  },
+                  "required": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "type",
+                  "properties"
+                ],
+                "description": "JSON Schema format for parameters"
+              }
+            },
+            "required": [
+              "type",
+              "data",
+              "__schema"
+            ],
+            "title": "parameters"
           },
           {
             "allOf": [
@@ -8792,6 +8728,7 @@
               "datasets",
               "dataset",
               "prompts",
+              "parameters",
               "tools",
               "scorers",
               "classifiers",
@@ -8863,6 +8800,7 @@
               "datasets",
               "dataset",
               "prompts",
+              "parameters",
               "tools",
               "scorers",
               "classifiers",
@@ -8928,6 +8866,7 @@
               "datasets",
               "dataset",
               "prompts",
+              "parameters",
               "tools",
               "scorers",
               "classifiers",
@@ -10880,6 +10819,15 @@
         "name": "limit",
         "in": "query"
       },
+      "AppLimitWithDefaultParam": {
+        "schema": {
+          "$ref": "#/components/schemas/AppLimitWithDefaultParam"
+        },
+        "required": false,
+        "description": "Limit the number of objects to return",
+        "name": "limit",
+        "in": "query"
+      },
       "FetchLimitParam": {
         "schema": {
           "$ref": "#/components/schemas/FetchLimitParam"
@@ -12641,7 +12589,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/AppLimitParam"
+            "$ref": "#/components/parameters/AppLimitWithDefaultParam"
           },
           {
             "$ref": "#/components/parameters/StartingAfter"
