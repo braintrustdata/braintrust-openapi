@@ -1,12 +1,28 @@
 {
-    "name": "@braintrust/openapi",
-    "version": "0.0.0",
-    "private": true,
-    "exports": {
-      "./*": "./openapi/*"
-    },
-    "files": [
-      "openapi/"
-    ],
-    "license": "Apache-2.0"
+  "name": "@braintrust/openapi",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "preinstall": "node -e \"const userAgent = process.env.npm_config_user_agent || ''; if (process.env.INIT_CWD === process.cwd() && !userAgent.includes('pnpm/')) { console.error('Use pnpm in this repo.'); process.exit(1); }\""
+  },
+  "exports": {
+    "./*": "./openapi/*"
+  },
+  "files": [
+    "openapi/"
+  ],
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "pnpm": ">=10.27.0",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": ">=10.27.0",
+      "onFail": "error"
+    }
   }
+}
