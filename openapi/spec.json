@@ -1685,6 +1685,24 @@
             "nullable": true,
             "description": "Version number of the linked dataset the experiment was run against. This can be used to reproduce the experiment after the dataset has been modified."
           },
+          "internal_metadata": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "dataset_filter": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "BTQL filter payload used to evaluate a subset of a linked dataset."
+              }
+            },
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Braintrust-controlled metadata about the experiment."
+          },
           "parameters_id": {
             "type": "string",
             "nullable": true,
@@ -1769,6 +1787,24 @@
             "nullable": true,
             "description": "Version number of the linked dataset the experiment was run against. This can be used to reproduce the experiment after the dataset has been modified."
           },
+          "internal_metadata": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "dataset_filter": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "BTQL filter payload used to evaluate a subset of a linked dataset."
+              }
+            },
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Braintrust-controlled metadata about the experiment."
+          },
           "parameters_id": {
             "type": "string",
             "nullable": true,
@@ -1843,6 +1879,24 @@
             "type": "string",
             "nullable": true,
             "description": "Version number of the linked dataset the experiment was run against. This can be used to reproduce the experiment after the dataset has been modified."
+          },
+          "internal_metadata": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "dataset_filter": {
+                "type": "object",
+                "nullable": true,
+                "additionalProperties": {
+                  "nullable": true
+                },
+                "description": "BTQL filter payload used to evaluate a subset of a linked dataset."
+              }
+            },
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "Braintrust-controlled metadata about the experiment."
           },
           "parameters_id": {
             "type": "string",
