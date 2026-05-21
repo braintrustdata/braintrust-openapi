@@ -3551,6 +3551,10 @@
                 "items": {
                   "$ref": "#/components/schemas/ChatCompletionMessageReasoning"
                 }
+              },
+              "reasoning_signature": {
+                "type": "string",
+                "nullable": true
               }
             },
             "required": [
@@ -5056,11 +5060,6 @@
             "nullable": true,
             "format": "date-time",
             "description": "Date of user creation"
-          },
-          "last_active_at": {
-            "type": "number",
-            "nullable": true,
-            "description": "Unix timestamp in milliseconds of the user's last activity, when available"
           }
         },
         "required": [
@@ -5133,6 +5132,17 @@
           "dataset"
         ],
         "description": "The object type that the retention policy applies to"
+      },
+      "TopicAutomationFacetModel": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "brain-facet-latest",
+          "brain-facet-1",
+          "brain-facet-2",
+          null
+        ],
+        "description": "Optional facet model override for topic automation"
       },
       "TopicMapFunctionAutomation": {
         "type": "object",
@@ -5273,6 +5283,9 @@
             "minimum": 0,
             "maximum": 1,
             "description": "The sampling rate for topic automation"
+          },
+          "facet_model": {
+            "$ref": "#/components/schemas/TopicAutomationFacetModel"
           },
           "facet_functions": {
             "type": "array",
@@ -7137,6 +7150,26 @@
                           "index"
                         ],
                         "title": "scorer"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "classifier"
+                            ]
+                          },
+                          "index": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "index"
+                        ],
+                        "title": "classifier"
                       }
                     ]
                   }
@@ -7859,6 +7892,10 @@
           },
           "generation_settings": {
             "$ref": "#/components/schemas/TopicMapGenerationSettings"
+          },
+          "disable_reconciliation": {
+            "type": "boolean",
+            "description": "Whether new topic generation should ignore the previously saved report during reconciliation. Defaults to false when omitted."
           },
           "distance_threshold": {
             "type": "number",
@@ -9665,66 +9702,6 @@
           }
         }
       },
-      "CreateApiKeyOutput": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the api key"
-          },
-          "created": {
-            "type": "string",
-            "nullable": true,
-            "format": "date-time",
-            "description": "Date of api key creation"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name of the api key"
-          },
-          "preview_name": {
-            "type": "string"
-          },
-          "user_id": {
-            "type": "string",
-            "nullable": true,
-            "format": "uuid",
-            "description": "Unique identifier for the user"
-          },
-          "user_email": {
-            "type": "string",
-            "nullable": true,
-            "description": "The user's email"
-          },
-          "user_given_name": {
-            "type": "string",
-            "nullable": true,
-            "description": "Given name of the user"
-          },
-          "user_family_name": {
-            "type": "string",
-            "nullable": true,
-            "description": "Family name of the user"
-          },
-          "org_id": {
-            "type": "string",
-            "nullable": true,
-            "format": "uuid",
-            "description": "Unique identifier for the organization"
-          },
-          "key": {
-            "type": "string",
-            "description": "The raw API key. It will only be exposed this one time"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "preview_name",
-          "key"
-        ]
-      },
       "ApiKey": {
         "type": "object",
         "properties": {
@@ -9778,61 +9755,6 @@
           "id",
           "name",
           "preview_name"
-        ]
-      },
-      "CreateServiceTokenOutput": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique identifier for the service token"
-          },
-          "created": {
-            "type": "string",
-            "nullable": true,
-            "format": "date-time",
-            "description": "Date of service token creation"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name of the service token"
-          },
-          "preview_name": {
-            "type": "string"
-          },
-          "service_account_id": {
-            "type": "string",
-            "nullable": true,
-            "format": "uuid",
-            "description": "Unique identifier for the service token"
-          },
-          "service_account_email": {
-            "type": "string",
-            "nullable": true,
-            "description": "The service account email (not routable)"
-          },
-          "service_account_name": {
-            "type": "string",
-            "nullable": true,
-            "description": "The service account name"
-          },
-          "org_id": {
-            "type": "string",
-            "nullable": true,
-            "format": "uuid",
-            "description": "Unique identifier for the organization"
-          },
-          "key": {
-            "type": "string",
-            "description": "The raw service token. It will only be exposed this one time"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "preview_name",
-          "key"
         ]
       },
       "ServiceToken": {
@@ -9918,6 +9840,12 @@
             "format": "date-time",
             "description": "Date of last AI secret update"
           },
+          "secret_updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of last update to the encrypted secret value itself"
+          },
           "org_id": {
             "type": "string",
             "format": "uuid",
@@ -9937,6 +9865,12 @@
             "additionalProperties": {
               "nullable": true
             }
+          },
+          "secret_updated_by_user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "User id of the last update to the encrypted secret value"
           },
           "preview_secret": {
             "type": "string",
@@ -10056,6 +9990,18 @@
             "format": "date-time",
             "description": "Date of environment variable creation"
           },
+          "secret_updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of last update to the encrypted secret value itself"
+          },
+          "secret_updated_by_user_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "User id of the last update to the encrypted secret value"
+          },
           "used": {
             "type": "string",
             "nullable": true,
@@ -10069,6 +10015,11 @@
               "nullable": true
             },
             "description": "Optional metadata associated with the environment variable when managed via the function secrets API"
+          },
+          "preview_secret": {
+            "type": "string",
+            "nullable": true,
+            "description": "Redacted preview of the stored secret value"
           },
           "secret_type": {
             "type": "string",
@@ -26506,139 +26457,6 @@
       }
     },
     "/v1/api_key": {
-      "post": {
-        "tags": [
-          "ApiKeys"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          },
-          {}
-        ],
-        "operationId": "postApiKey",
-        "description": "Create a new api_key. It is possible to have multiple API keys with the same name. There is no de-duplication",
-        "summary": "Create api_key",
-        "requestBody": {
-          "description": "Any desired information about the new api_key object",
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the api key. Does not have to be unique"
-                  },
-                  "org_name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the API key belongs in."
-                  }
-                },
-                "required": [
-                  "name"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Returns an object containing the raw API key. This is the only time the raw API key will be exposed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateApiKeyOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The request was unacceptable, often due to missing a required parameter",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No valid API key provided",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "The API key doesn’t have permissions to perform the request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
-            "headers": {
-              "Retry-After": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on Braintrust's end. (These are rare.)",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "operationId": "getApiKey",
         "tags": [
@@ -27129,282 +26947,6 @@
       }
     },
     "/v1/service_token": {
-      "post": {
-        "tags": [
-          "ServiceTokens"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          },
-          {}
-        ],
-        "operationId": "postServiceToken",
-        "description": "Create a new service_token. It is possible to have multiple API keys with the same name. There is no de-duplication",
-        "summary": "Create service_token",
-        "requestBody": {
-          "description": "Any desired information about the new service_token object",
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the service token. Does not have to be unique"
-                  },
-                  "org_name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the Service token belongs in."
-                  },
-                  "service_account_id": {
-                    "type": "string",
-                    "description": "The service account ID this service token should belong to. You can create a service account in the Braintrust [organization settings page](https://www.braintrustdata.com/app/settings?subroute=service-tokens) or using the [modify organization membership endpoint](https://www.braintrust.dev/docs/api-reference/organizations/modify-organization-membership)"
-                  }
-                },
-                "required": [
-                  "name",
-                  "service_account_id"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Returns an object containing the raw service token. This is the only time the raw API key will be exposed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateServiceTokenOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The request was unacceptable, often due to missing a required parameter",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No valid API key provided",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "The API key doesn’t have permissions to perform the request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
-            "headers": {
-              "Retry-After": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on Braintrust's end. (These are rare.)",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "ServiceTokens"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          },
-          {}
-        ],
-        "operationId": "putServiceToken",
-        "description": "Create or replace service_token. If there is an existing service_token with the same name as the one specified in the request, will replace the existing service_token with the provided fields",
-        "summary": "Create or replace service_token",
-        "requestBody": {
-          "description": "Any desired information about the new service_token object",
-          "required": false,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the service token. Does not have to be unique"
-                  },
-                  "org_name": {
-                    "type": "string",
-                    "nullable": true,
-                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the Service token belongs in."
-                  },
-                  "service_account_id": {
-                    "type": "string",
-                    "description": "The service account ID this service token should belong to. You can create a service account in the Braintrust [organization settings page](https://www.braintrustdata.com/app/settings?subroute=service-tokens) or using the [modify organization membership endpoint](https://www.braintrust.dev/docs/api-reference/organizations/modify-organization-membership)"
-                  }
-                },
-                "required": [
-                  "name",
-                  "service_account_id"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Returns an object containing the raw service token. This is the only time the raw API key will be exposed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateServiceTokenOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The request was unacceptable, often due to missing a required parameter",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No valid API key provided",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "The API key doesn’t have permissions to perform the request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
-            "headers": {
-              "Retry-After": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Something went wrong on Braintrust's end. (These are rare.)",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "nullable": true
-                }
-              }
-            }
-          }
-        }
-      },
       "delete": {
         "operationId": "deleteServiceToken",
         "tags": [
