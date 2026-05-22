@@ -7755,9 +7755,16 @@ components:
                   token_name:
                     type: string
                     nullable: true
+                    description: Omit this field and create the token in the Braintrust UI
+                      ([**Settings > Service
+                      tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens)).
+                      If you include this field, the API call will return a 403.
                 required:
                   - name
-              description: Service accounts to create
+              description: Service accounts to create. Users with organization-owner
+                permissions can create service accounts via the API, but the
+                service tokens required to authenticate those accounts must be
+                created in the Braintrust UI.
             send_invite_emails:
               type: boolean
               nullable: true
@@ -18469,7 +18476,10 @@ paths:
       operationId: patchOrganizationMembers
       tags:
         - Organizations
-      description: Modify organization membership
+      description: |-
+        Modify organization membership.
+
+        Organization owners can use this endpoint to create service accounts, but service tokens for those accounts must be created in the Braintrust UI, at [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens).
       summary: Modify organization membership
       security:
         - bearerAuth: []
@@ -18581,8 +18591,14 @@ paths:
       operationId: getApiKey
       tags:
         - ApiKeys
-      description: List out all api_keys. The api_keys are sorted by creation date,
-        with the most recently-created api_keys coming first
+      description: >-
+        List out all API keys. They are sorted by creation date, with the most
+        recently-created keys coming first.
+
+
+        To create new API keys, go to [**Settings > API
+        keys**](https://www.braintrust.dev/app/~/configuration/org/api-keys) in
+        the Braintrust UI.
       summary: List api_keys
       security:
         - bearerAuth: []
@@ -18955,9 +18971,10 @@ paths:
       operationId: getServiceToken
       tags:
         - ServiceTokens
-      description: List out all service_tokens. The service_tokens are sorted by
-        creation date, with the most recently-created service_tokens coming
-        first
+      description: |-
+        List out all service tokens. They are sorted by creation date, with the most recently-created tokens coming first.
+
+        To create service tokens, organization owners can go to [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens) in the Braintrust UI.
       summary: List service_tokens
       security:
         - bearerAuth: []
