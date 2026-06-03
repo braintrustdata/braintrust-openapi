@@ -1020,6 +1020,7 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {
+              "type": "string",
               "nullable": true
             },
             "description": "Facets for categorization (dictionary from facet id to value)"
@@ -1376,6 +1377,7 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {
+              "type": "string",
               "nullable": true
             },
             "description": "Facets for categorization (dictionary from facet id to value)"
@@ -2078,6 +2080,7 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {
+              "type": "string",
               "nullable": true
             },
             "description": "Facets for categorization (dictionary from facet id to value)"
@@ -2370,6 +2373,7 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {
+              "type": "string",
               "nullable": true
             },
             "description": "Facets for categorization (dictionary from facet id to value)"
@@ -2838,6 +2842,7 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {
+              "type": "string",
               "nullable": true
             },
             "description": "Facets for categorization (dictionary from facet id to value)"
@@ -3028,6 +3033,7 @@
             "type": "object",
             "nullable": true,
             "additionalProperties": {
+              "type": "string",
               "nullable": true
             },
             "description": "Facets for categorization (dictionary from facet id to value)"
@@ -5066,6 +5072,14 @@
           "id"
         ]
       },
+      "AutomationStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "paused"
+        ],
+        "description": "Whether the automation is active or paused."
+      },
       "SpanScope": {
         "type": "object",
         "properties": {
@@ -5113,6 +5127,25 @@
             "type": "string",
             "description": "Field path to group by, e.g. metadata.session_id"
           },
+          "interval_seconds": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Maximum time range to include when constructing a group"
+          },
+          "max_traces": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64,
+            "description": "Maximum number of traces to include when constructing a group (default/max: 64)"
+          },
+          "placement": {
+            "type": "string",
+            "enum": [
+              "first",
+              "each"
+            ],
+            "description": "Which trace or traces to write grouped scorer results to"
+          },
           "idle_seconds": {
             "type": "number",
             "description": "Optional: trigger after this many seconds of inactivity"
@@ -5120,7 +5153,8 @@
         },
         "required": [
           "type",
-          "group_by"
+          "group_by",
+          "placement"
         ],
         "description": "Process spans/traces grouped by a field (e.g., session_id)"
       },
@@ -5277,6 +5311,9 @@
               "topic"
             ],
             "description": "The type of automation."
+          },
+          "status": {
+            "$ref": "#/components/schemas/AutomationStatus"
           },
           "sampling_rate": {
             "type": "number",
@@ -5552,6 +5589,9 @@
                       "btql_export"
                     ],
                     "description": "The type of automation."
+                  },
+                  "status": {
+                    "$ref": "#/components/schemas/AutomationStatus"
                   },
                   "export_definition": {
                     "oneOf": [
@@ -5929,6 +5969,9 @@
                     ],
                     "description": "The type of automation."
                   },
+                  "status": {
+                    "$ref": "#/components/schemas/AutomationStatus"
+                  },
                   "export_definition": {
                     "oneOf": [
                       {
@@ -6299,6 +6342,9 @@
                       "btql_export"
                     ],
                     "description": "The type of automation."
+                  },
+                  "status": {
+                    "$ref": "#/components/schemas/AutomationStatus"
                   },
                   "export_definition": {
                     "oneOf": [
@@ -9619,14 +9665,14 @@
                     "token_name": {
                       "type": "string",
                       "nullable": true,
-                      "description": "Omit this field and create the token in the Braintrust UI ([**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens)). If you include this field, the API call will return a 403."
+                      "description": "Optional name of an initial service token to create for the new service account. When this field is set, the request must be authenticated with a service token that has organization-owner permissions, not a user API key."
                     }
                   },
                   "required": [
                     "name"
                   ]
                 },
-                "description": "Service accounts to create. Users with organization-owner permissions can create service accounts via the API, but the service tokens required to authenticate those accounts must be created in the Braintrust UI."
+                "description": "Service accounts to create. Any caller permitted to add organization members can create service accounts (but not necessarily their associated tokens)."
               },
               "send_invite_emails": {
                 "type": "boolean",
@@ -9756,6 +9802,61 @@
           "id",
           "name",
           "preview_name"
+        ]
+      },
+      "CreateServiceTokenOutput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the service token"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of service token creation"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the service token"
+          },
+          "preview_name": {
+            "type": "string"
+          },
+          "service_account_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Unique identifier for the service token"
+          },
+          "service_account_email": {
+            "type": "string",
+            "nullable": true,
+            "description": "The service account email (not routable)"
+          },
+          "service_account_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "The service account name"
+          },
+          "org_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid",
+            "description": "Unique identifier for the organization"
+          },
+          "key": {
+            "type": "string",
+            "description": "The raw service token. It will only be exposed this one time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "preview_name",
+          "key"
         ]
       },
       "ServiceToken": {
@@ -10823,7 +10924,7 @@
           "collect"
         ],
         "additionalProperties": false,
-        "description": "Optional settings for collecting git metadata. By default, will collect all git metadata fields allowed in org-level settings."
+        "description": "Optional settings for collecting git metadata. By default, will collect git metadata fields allowed in org-level settings, excluding diff content unless the org opts in."
       },
       "RunEval": {
         "type": "object",
@@ -26285,7 +26386,7 @@
         "tags": [
           "Organizations"
         ],
-        "description": "Modify organization membership.\n\nOrganization owners can use this endpoint to create service accounts, but service tokens for those accounts must be created in the Braintrust UI, at [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens).",
+        "description": "Add or remove members, create service accounts.",
         "summary": "Modify organization membership",
         "security": [
           {
@@ -26463,7 +26564,7 @@
         "tags": [
           "ApiKeys"
         ],
-        "description": "List out all API keys. They are sorted by creation date, with the most recently-created keys coming first.\n\nTo create new API keys, go to [**Settings > API keys**](https://www.braintrust.dev/app/~/configuration/org/api-keys) in the Braintrust UI.",
+        "description": "List out all API keys. They are sorted by creation date, with the most recently-created keys coming first.\n\nTo create new API keys, visit [**Settings > API keys**](https://www.braintrust.dev/app/~/configuration/org/api-keys) in the Braintrust UI.",
         "summary": "List api_keys",
         "security": [
           {
@@ -26948,6 +27049,282 @@
       }
     },
     "/v1/service_token": {
+      "post": {
+        "tags": [
+          "ServiceTokens"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "postServiceToken",
+        "description": "Create a new service token.\n\nWhen calling this endpoint, you must authenticate using a service token that has organization-owner permissions. User API keys cannot be used.",
+        "summary": "Create service_token",
+        "requestBody": {
+          "description": "Any desired information about the new service_token object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the service token. Does not have to be unique"
+                  },
+                  "org_name": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the Service token belongs in."
+                  },
+                  "service_account_id": {
+                    "type": "string",
+                    "description": "The ID of the service account to which the token should belong. To create a service account, visit [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens) in the Braintrust UI or call [`PATCH /v1/organization/members`](https://www.braintrust.dev/docs/api-reference/organizations/modify-organization-membership)."
+                  }
+                },
+                "required": [
+                  "name",
+                  "service_account_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns an object containing the raw service token. This is the only time the raw API key will be exposed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServiceTokenOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ServiceTokens"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "putServiceToken",
+        "description": "Create or replace service_token. If there is an existing service_token with the same name as the one specified in the request, will replace the existing service_token with the provided fields",
+        "summary": "Create or replace service_token",
+        "requestBody": {
+          "description": "Any desired information about the new service_token object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the service token. Does not have to be unique"
+                  },
+                  "org_name": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "For nearly all users, this parameter should be unnecessary. But in the rare case that your API key belongs to multiple organizations, you may specify the name of the organization the Service token belongs in."
+                  },
+                  "service_account_id": {
+                    "type": "string",
+                    "description": "The ID of the service account to which the token should belong. To create a service account, visit [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens) in the Braintrust UI or call [`PATCH /v1/organization/members`](https://www.braintrust.dev/docs/api-reference/organizations/modify-organization-membership)."
+                  }
+                },
+                "required": [
+                  "name",
+                  "service_account_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns an object containing the raw service token. This is the only time the raw API key will be exposed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateServiceTokenOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "operationId": "deleteServiceToken",
         "tags": [
@@ -27072,7 +27449,7 @@
         "tags": [
           "ServiceTokens"
         ],
-        "description": "List out all service tokens. They are sorted by creation date, with the most recently-created tokens coming first.\n\nTo create service tokens, organization owners can go to [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens) in the Braintrust UI.",
+        "description": "List out all service tokens. They are sorted by creation date, with the most recently-created tokens coming first.\n\nTo create a service token, visit [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens) as an organization owner, or call [`POST /v1/service_token`](https://www.braintrust.dev/docs/api-reference/servicetokens/create-service_token) and authenticate with a service token that has organization-owner permissions.",
         "summary": "List service_tokens",
         "security": [
           {
