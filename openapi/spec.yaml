@@ -5724,6 +5724,20 @@ components:
         destination:
           type: string
           nullable: true
+        visibility:
+          type: object
+          nullable: true
+          properties:
+            users:
+              type: array
+              nullable: true
+              items:
+                type: string
+            groups:
+              type: array
+              nullable: true
+              items:
+                type: string
         online:
           $ref: "#/components/schemas/OnlineScoreConfig"
     ProjectScore:
@@ -6560,6 +6574,14 @@ components:
         distance_threshold:
           type: number
           description: Maximum distance to nearest centroid. If exceeded, returns no_match.
+        btql_filter:
+          type: string
+          description: Per-topic-map BTQL filter that was applied when this version was
+            generated. Absent on versions generated before this was recorded.
+        automation_btql_filter:
+          type: string
+          description: Automation-level BTQL filter that was applied when this version was
+            generated. Absent on versions generated before this was recorded.
       required:
         - type
         - source_facet
