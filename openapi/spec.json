@@ -74,6 +74,11 @@
         "format": "uuid",
         "description": "User id"
       },
+      "AgentIdParam": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Agent id"
+      },
       "ProjectAutomationIdParam": {
         "type": "string",
         "format": "uuid",
@@ -171,6 +176,10 @@
       "GroupName": {
         "type": "string",
         "description": "Name of the group to search for"
+      },
+      "AgentName": {
+        "type": "string",
+        "description": "Name of the agent to search for"
       },
       "ProjectAutomationName": {
         "type": "string",
@@ -387,7 +396,8 @@
           "role",
           "org_member",
           "project_log",
-          "org_project"
+          "org_project",
+          "org_audit_logs"
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -409,7 +419,8 @@
           "role",
           "org_member",
           "project_log",
-          "org_project"
+          "org_project",
+          "org_audit_logs"
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -455,7 +466,8 @@
           "role",
           "org_member",
           "project_log",
-          "org_project"
+          "org_project",
+          "org_audit_logs"
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -5072,6 +5084,121 @@
           "id"
         ]
       },
+      "Agent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the agent"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the agent belongs under"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date of agent creation"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the agent. Within a project, agent names are unique"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Stable, URL-safe identifier for the agent, unique within its project."
+          },
+          "kind": {
+            "type": "string",
+            "description": "Agent classification: 'custom' for customer-defined agents, 'loop' for built-in Loop agents."
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the agent"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "User-controlled metadata about the agent"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "user_id",
+          "name",
+          "slug",
+          "kind"
+        ],
+        "description": "An agent is a project-scoped durable object that identifies an AI agent or service emitting spans"
+      },
+      "CreateAgent": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the project that the agent belongs under"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the agent. Within a project, agent names are unique"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the agent"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "User-controlled metadata about the agent"
+          }
+        },
+        "required": [
+          "project_id",
+          "name"
+        ],
+        "description": "An agent is a project-scoped durable object that identifies an AI agent or service emitting spans"
+      },
+      "PatchAgent": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the agent. Within a project, agent names are unique"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Textual description of the agent"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "nullable": true
+            },
+            "description": "User-controlled metadata about the agent"
+          }
+        },
+        "description": "An agent is a project-scoped durable object that identifies an AI agent or service emitting spans"
+      },
       "AutomationStatus": {
         "type": "string",
         "enum": [
@@ -5748,6 +5875,67 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
+                      "async_query"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "status": {
+                    "$ref": "#/components/schemas/AutomationStatus"
+                  },
+                  "created_by_user_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The user who submitted the async query"
+                  },
+                  "object_type": {
+                    "type": "string",
+                    "enum": [
+                      "project_logs",
+                      "experiment",
+                      "dataset",
+                      "playground_logs"
+                    ],
+                    "description": "The source object type for the async query"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "description": "The source object ID for the async query"
+                  },
+                  "query": {
+                    "type": "string",
+                    "description": "The SQL query to execute asynchronously"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "jsonl"
+                    ],
+                    "description": "The materialized result format"
+                  },
+                  "batch_size": {
+                    "type": "integer",
+                    "nullable": true,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 100000,
+                    "description": "The maximum number of result rows to write per async query batch"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "created_by_user_id",
+                  "object_type",
+                  "object_id",
+                  "query",
+                  "format"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
                       "retention"
                     ],
                     "description": "The type of automation."
@@ -6119,6 +6307,67 @@
                   "format",
                   "interval_seconds",
                   "credentials"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
+                      "async_query"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "status": {
+                    "$ref": "#/components/schemas/AutomationStatus"
+                  },
+                  "created_by_user_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The user who submitted the async query"
+                  },
+                  "object_type": {
+                    "type": "string",
+                    "enum": [
+                      "project_logs",
+                      "experiment",
+                      "dataset",
+                      "playground_logs"
+                    ],
+                    "description": "The source object type for the async query"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "description": "The source object ID for the async query"
+                  },
+                  "query": {
+                    "type": "string",
+                    "description": "The SQL query to execute asynchronously"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "jsonl"
+                    ],
+                    "description": "The materialized result format"
+                  },
+                  "batch_size": {
+                    "type": "integer",
+                    "nullable": true,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 100000,
+                    "description": "The maximum number of result rows to write per async query batch"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "created_by_user_id",
+                  "object_type",
+                  "object_id",
+                  "query",
+                  "format"
                 ]
               },
               {
@@ -6501,6 +6750,67 @@
                   "event_type": {
                     "type": "string",
                     "enum": [
+                      "async_query"
+                    ],
+                    "description": "The type of automation."
+                  },
+                  "status": {
+                    "$ref": "#/components/schemas/AutomationStatus"
+                  },
+                  "created_by_user_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The user who submitted the async query"
+                  },
+                  "object_type": {
+                    "type": "string",
+                    "enum": [
+                      "project_logs",
+                      "experiment",
+                      "dataset",
+                      "playground_logs"
+                    ],
+                    "description": "The source object type for the async query"
+                  },
+                  "object_id": {
+                    "type": "string",
+                    "description": "The source object ID for the async query"
+                  },
+                  "query": {
+                    "type": "string",
+                    "description": "The SQL query to execute asynchronously"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "jsonl"
+                    ],
+                    "description": "The materialized result format"
+                  },
+                  "batch_size": {
+                    "type": "integer",
+                    "nullable": true,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 100000,
+                    "description": "The maximum number of result rows to write per async query batch"
+                  }
+                },
+                "required": [
+                  "event_type",
+                  "created_by_user_id",
+                  "object_type",
+                  "object_id",
+                  "query",
+                  "format"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string",
+                    "enum": [
                       "retention"
                     ],
                     "description": "The type of automation."
@@ -6768,12 +7078,42 @@
                 "type": "null"
               }
             ],
-            "description": "The scope at which to run the functions. Defaults to span-level execution. Trace/group scope requires all functions to be facets."
+            "description": "The scope at which to run the functions. Defaults to span-level execution."
           }
         },
         "required": [
           "sampling_rate",
           "scorers"
+        ]
+      },
+      "ProjectScoreCondition": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "when": {
+            "type": "object",
+            "properties": {
+              "clauses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "clauses"
+            ]
+          },
+          "behavior": {
+            "type": "string",
+            "enum": [
+              "hidden"
+            ],
+            "default": "hidden"
+          }
+        },
+        "required": [
+          "when"
         ]
       },
       "ProjectScoreConfig": {
@@ -6810,6 +7150,9 @@
           },
           "online": {
             "$ref": "#/components/schemas/OnlineScoreConfig"
+          },
+          "condition": {
+            "$ref": "#/components/schemas/ProjectScoreCondition"
           }
         }
       },
@@ -11267,6 +11610,15 @@
         "name": "user_id",
         "in": "path"
       },
+      "AgentIdParam": {
+        "schema": {
+          "$ref": "#/components/schemas/AgentIdParam"
+        },
+        "required": true,
+        "description": "Agent id",
+        "name": "agent_id",
+        "in": "path"
+      },
       "ProjectAutomationIdParam": {
         "schema": {
           "$ref": "#/components/schemas/ProjectAutomationIdParam"
@@ -11460,6 +11812,16 @@
         "required": false,
         "description": "Name of the group to search for",
         "name": "group_name",
+        "in": "query",
+        "allowReserved": true
+      },
+      "AgentName": {
+        "schema": {
+          "$ref": "#/components/schemas/AgentName"
+        },
+        "required": false,
+        "description": "Name of the agent to search for",
+        "name": "agent_name",
         "in": "query",
         "allowReserved": true
       },
@@ -20582,6 +20944,858 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/UserIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agent": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "postAgent",
+        "description": "Create a new agent. If there is an existing agent with the same name as the one specified in the request, will return the existing agent unmodified",
+        "summary": "Create agent",
+        "requestBody": {
+          "description": "Any desired information about the new agent object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAgent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new agent object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Agents"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "operationId": "putAgent",
+        "description": "Create or replace agent. If there is an existing agent with the same name as the one specified in the request, will replace the existing agent with the provided fields",
+        "summary": "Create or replace agent",
+        "requestBody": {
+          "description": "Any desired information about the new agent object",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAgent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the new agent object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getAgent",
+        "tags": [
+          "Agents"
+        ],
+        "description": "List out all agents. The agents are sorted by creation date, with the most recently-created agents coming first",
+        "summary": "List agents",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AppLimitParam"
+          },
+          {
+            "$ref": "#/components/parameters/StartingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/EndingBefore"
+          },
+          {
+            "$ref": "#/components/parameters/Ids"
+          },
+          {
+            "$ref": "#/components/parameters/AgentName"
+          },
+          {
+            "$ref": "#/components/parameters/OrgName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of agent objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Agent"
+                      },
+                      "description": "A list of agent objects"
+                    }
+                  },
+                  "required": [
+                    "objects"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsAgent",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/agent`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for CORS method",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Headers": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Max-Age": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {}
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/agent/{agent_id}": {
+      "get": {
+        "operationId": "getAgentId",
+        "tags": [
+          "Agents"
+        ],
+        "description": "Get a agent object by its id",
+        "summary": "Get agent",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AgentIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the agent object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchAgentId",
+        "tags": [
+          "Agents"
+        ],
+        "description": "Partially update a agent object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "summary": "Partially update agent",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AgentIdParam"
+          }
+        ],
+        "requestBody": {
+          "description": "Fields to update",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchAgent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the agent object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteAgentId",
+        "tags": [
+          "Agents"
+        ],
+        "description": "Delete a agent object by its id",
+        "summary": "Delete agent",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AgentIdParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the deleted agent object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was unacceptable, often due to missing a required parameter",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No valid API key provided",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The API key doesn’t have permissions to perform the request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests hit the API too quickly. We recommend an exponential backoff of your requests",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong on Braintrust's end. (These are rare.)",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "operationId": "optionsAgentId",
+        "description": "Enable CORS",
+        "summary": "Enable CORS (`/v1/agent/{agent_id}`)",
+        "security": [],
+        "tags": [
+          "CORS"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AgentIdParam"
           }
         ],
         "responses": {
