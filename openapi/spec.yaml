@@ -5963,10 +5963,19 @@ components:
           properties:
             clauses:
               type: array
+              nullable: true
               items:
                 type: string
-          required:
-            - clauses
+            subspan_clauses:
+              type: array
+              nullable: true
+              items:
+                type: string
+            trace_clauses:
+              type: array
+              nullable: true
+              items:
+                type: string
         behavior:
           type: string
           enum:
@@ -6002,6 +6011,15 @@ components:
           $ref: "#/components/schemas/OnlineScoreConfig"
         condition:
           $ref: "#/components/schemas/ProjectScoreCondition"
+        object_types:
+          type: array
+          nullable: true
+          items:
+            type: string
+            enum:
+              - project_logs
+              - dataset
+              - experiment
     ProjectScore:
       type: object
       properties:
