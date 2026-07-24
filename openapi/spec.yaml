@@ -3237,6 +3237,11 @@ components:
               type: string
               enum:
                 - ephemeral
+            ttl:
+              type: string
+              enum:
+                - 5m
+                - 1h
           required:
             - type
       required:
@@ -3258,6 +3263,11 @@ components:
               type: string
               enum:
                 - ephemeral
+            ttl:
+              type: string
+              enum:
+                - 5m
+                - 1h
           required:
             - type
       required:
@@ -3291,6 +3301,20 @@ components:
           type: string
           enum:
             - image_url
+        cache_control:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - ephemeral
+            ttl:
+              type: string
+              enum:
+                - 5m
+                - 1h
+          required:
+            - type
       required:
         - image_url
         - type
@@ -3314,6 +3338,20 @@ components:
           type: string
           enum:
             - file
+        cache_control:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - ephemeral
+            ttl:
+              type: string
+              enum:
+                - 5m
+                - 1h
+          required:
+            - type
       required:
         - file
         - type
@@ -3815,6 +3853,10 @@ components:
           type: boolean
           description: If true, adds a 'No match' option. When selected, no tag is
             deposited.
+        allow_skip:
+          type: boolean
+          description: If true, adds a 'Skip' option. When selected, the scorer returns
+            null.
       required:
         - type
         - use_cot
@@ -6907,6 +6949,15 @@ components:
           type: boolean
           description: Whether new topic generation should ignore the previously saved
             report during reconciliation. Defaults to false when omitted.
+        reconcile_mode:
+          type: string
+          enum:
+            - evolve
+            - names_only
+          description: 'How reconciliation carries the previous map forward: "evolve"
+            re-routes new samples into the previous topics before naming;
+            "names_only" keeps the fresh clustering and carries only topic
+            ids/names. Defaults to "evolve" when omitted.'
         distance_threshold:
           type: number
           description: Maximum distance to nearest centroid. If exceeded, returns no_match.
