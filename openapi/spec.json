@@ -708,6 +708,11 @@
             "nullable": true,
             "description": "If true, use metrics.start rather than created for monitor chart time bucket dimensions."
           },
+          "blind_reviews": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "If true, hide peer review scores, comments, and aggregate results from reviewers without project update permissions until they submit their own review."
+          },
           "default_preprocessor": {
             "$ref": "#/components/schemas/NullableSavedFunctionId"
           }
@@ -5849,6 +5854,10 @@
                 "type": "string",
                 "minLength": 1
               },
+              "endpoint_name": {
+                "type": "string",
+                "minLength": 1
+              },
               "reasoning_effort": {
                 "type": "string",
                 "enum": [
@@ -5924,7 +5933,7 @@
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 10000,
-                      "description": "Instructions for Loop to format content sent to this destination"
+                      "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
                     }
                   },
                   "required": [
@@ -6293,7 +6302,7 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 10000,
-                "description": "Instructions for Loop to format content sent to this destination"
+                "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
               }
             },
             "required": [
@@ -6431,7 +6440,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Instructions for Loop to format content sent to this destination"
+                            "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
                           }
                         },
                         "required": [
@@ -6773,7 +6782,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Instructions for Loop to format content sent to this destination"
+                            "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
                           }
                         },
                         "required": [
@@ -6907,7 +6916,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Instructions for Loop to format content sent to this destination"
+                            "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
                           }
                         },
                         "required": [
@@ -7249,7 +7258,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Instructions for Loop to format content sent to this destination"
+                            "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
                           }
                         },
                         "required": [
@@ -7378,7 +7387,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Instructions for Loop to format content sent to this destination"
+                            "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
                           }
                         },
                         "required": [
@@ -7720,7 +7729,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Instructions for Loop to format content sent to this destination"
+                            "description": "Publish a Slack mrkdwn digest.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every selected Pattern from the run report, including created, updated, unchanged, failed, skipped, and newly inactive outcomes.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any selected Pattern. If there are no selected Patterns, say \"No pattern outcomes.\"\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out from this run. Do not introduce new claims beyond the run report."
                           }
                         },
                         "required": [
@@ -13572,7 +13581,7 @@
         "summary": "Create project",
         "requestBody": {
           "description": "Any desired information about the new project object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -14310,7 +14319,7 @@
         ],
         "requestBody": {
           "description": "An array of project logs events to insert",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -14811,7 +14820,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -14994,7 +15003,7 @@
         "summary": "Create experiment",
         "requestBody": {
           "description": "Any desired information about the new experiment object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -15738,7 +15747,7 @@
         ],
         "requestBody": {
           "description": "An array of experiment events to insert",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -16239,7 +16248,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -16604,7 +16613,7 @@
         "summary": "Create dataset",
         "requestBody": {
           "description": "Any desired information about the new dataset object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -17348,7 +17357,7 @@
         ],
         "requestBody": {
           "description": "An array of dataset events to insert",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -17849,7 +17858,7 @@
         ],
         "requestBody": {
           "description": "An array of feedback objects",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -18211,7 +18220,7 @@
         "summary": "Create prompt",
         "requestBody": {
           "description": "Any desired information about the new prompt object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -18330,7 +18339,7 @@
         "summary": "Create or replace prompt",
         "requestBody": {
           "description": "Any desired information about the new prompt object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -19084,7 +19093,7 @@
         "summary": "Create role",
         "requestBody": {
           "description": "Any desired information about the new role object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -19203,7 +19212,7 @@
         "summary": "Create or replace role",
         "requestBody": {
           "description": "Any desired information about the new role object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -19936,7 +19945,7 @@
         "summary": "Create group",
         "requestBody": {
           "description": "Any desired information about the new group object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -20055,7 +20064,7 @@
         "summary": "Create or replace group",
         "requestBody": {
           "description": "Any desired information about the new group object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -20788,7 +20797,7 @@
         "summary": "Create project_group",
         "requestBody": {
           "description": "Any desired information about the new project_group object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -20907,7 +20916,7 @@
         "summary": "Create or replace project_group",
         "requestBody": {
           "description": "Any desired information about the new project_group object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -21640,7 +21649,7 @@
         "summary": "Create acl",
         "requestBody": {
           "description": "Any desired information about the new acl object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -21759,7 +21768,7 @@
         ],
         "requestBody": {
           "description": "Parameters which uniquely specify the acl to delete",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -23154,7 +23163,7 @@
         "summary": "Create agent",
         "requestBody": {
           "description": "Any desired information about the new agent object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -23273,7 +23282,7 @@
         "summary": "Create or replace agent",
         "requestBody": {
           "description": "Any desired information about the new agent object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -24006,7 +24015,7 @@
         "summary": "Create project_automation",
         "requestBody": {
           "description": "Any desired information about the new project_automation object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -24125,7 +24134,7 @@
         "summary": "Create or replace project_automation",
         "requestBody": {
           "description": "Any desired information about the new project_automation object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -24858,7 +24867,7 @@
         "summary": "Create org_automation",
         "requestBody": {
           "description": "Any desired information about the new org_automation object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -24977,7 +24986,7 @@
         "summary": "Create or replace org_automation",
         "requestBody": {
           "description": "Any desired information about the new org_automation object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -25710,7 +25719,7 @@
         "summary": "Create project_score",
         "requestBody": {
           "description": "Any desired information about the new project_score object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -25829,7 +25838,7 @@
         "summary": "Create or replace project_score",
         "requestBody": {
           "description": "Any desired information about the new project_score object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -26571,7 +26580,7 @@
         "summary": "Create project_tag",
         "requestBody": {
           "description": "Any desired information about the new project_tag object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -26690,7 +26699,7 @@
         "summary": "Create or replace project_tag",
         "requestBody": {
           "description": "Any desired information about the new project_tag object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -27429,7 +27438,7 @@
         "summary": "Create span_iframe",
         "requestBody": {
           "description": "Any desired information about the new span_iframe object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -27548,7 +27557,7 @@
         "summary": "Create or replace span_iframe",
         "requestBody": {
           "description": "Any desired information about the new span_iframe object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -28281,7 +28290,7 @@
         "summary": "Create function",
         "requestBody": {
           "description": "Any desired information about the new function object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -28400,7 +28409,7 @@
         "summary": "Create or replace function",
         "requestBody": {
           "description": "Any desired information about the new function object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -29259,7 +29268,7 @@
         "summary": "Create view",
         "requestBody": {
           "description": "Any desired information about the new view object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -29378,7 +29387,7 @@
         "summary": "Create or replace view",
         "requestBody": {
           "description": "Any desired information about the new view object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -29827,7 +29836,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -29951,7 +29960,7 @@
         ],
         "requestBody": {
           "description": "Additional parameters for the delete operation",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -31300,7 +31309,7 @@
         "summary": "Create service_token",
         "requestBody": {
           "description": "Any desired information about the new service_token object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -31445,7 +31454,7 @@
         "summary": "Create or replace service_token",
         "requestBody": {
           "description": "Any desired information about the new service_token object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -31590,7 +31599,7 @@
         ],
         "requestBody": {
           "description": "Parameters which uniquely specify the service_token to delete",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -32199,7 +32208,7 @@
         "summary": "Create ai_secret",
         "requestBody": {
           "description": "Any desired information about the new ai_secret object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -32318,7 +32327,7 @@
         "summary": "Create or replace ai_secret",
         "requestBody": {
           "description": "Any desired information about the new ai_secret object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -32437,7 +32446,7 @@
         ],
         "requestBody": {
           "description": "Parameters which uniquely specify the ai_secret to delete",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -33173,7 +33182,7 @@
         "summary": "Create env_var",
         "requestBody": {
           "description": "Any desired information about the new env_var object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -33335,7 +33344,7 @@
         "summary": "Create or replace env_var",
         "requestBody": {
           "description": "Any desired information about the new env_var object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -33812,7 +33821,7 @@
         ],
         "requestBody": {
           "description": "Fields to update",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -34135,7 +34144,7 @@
         "summary": "Create mcp_server",
         "requestBody": {
           "description": "Any desired information about the new mcp_server object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -34254,7 +34263,7 @@
         "summary": "Create or replace mcp_server",
         "requestBody": {
           "description": "Any desired information about the new mcp_server object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -34987,7 +34996,7 @@
         "summary": "Create dataset_snapshot",
         "requestBody": {
           "description": "Any desired information about the new dataset_snapshot object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -35106,7 +35115,7 @@
         "summary": "Create or replace dataset_snapshot",
         "requestBody": {
           "description": "Any desired information about the new dataset_snapshot object",
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
