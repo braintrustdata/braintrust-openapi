@@ -461,6 +461,7 @@ components:
         - project_group
         - ai_secret
         - org_ai_secret
+        - org_account
       description: The object type that the ACL applies to
     AclObjectId:
       type: string
@@ -484,6 +485,7 @@ components:
         - project_group
         - ai_secret
         - org_ai_secret
+        - org_account
       description: The object type that the ACL applies to
     AclListOrgObjectId:
       type: string
@@ -535,6 +537,7 @@ components:
         - project_group
         - ai_secret
         - org_ai_secret
+        - org_account
       description: The object type that the ACL applies to
     AclListRoleId:
       type: string
@@ -565,6 +568,7 @@ components:
         - organization
         - project
         - function
+        - mcp_server
       description: The type of the object the environment variable is scoped for
     EnvVarObjectId:
       type: string
@@ -9772,6 +9776,7 @@ components:
             - organization
             - project
             - function
+            - mcp_server
           description: The type of the object the environment variable is scoped for
         object_id:
           type: string
@@ -23499,6 +23504,7 @@ paths:
                     - organization
                     - project
                     - function
+                    - mcp_server
                   description: The type of the object the environment variable is scoped for
                 object_id:
                   type: string
@@ -23610,6 +23616,7 @@ paths:
                     - organization
                     - project
                     - function
+                    - mcp_server
                   description: The type of the object the environment variable is scoped for
                 object_id:
                   type: string

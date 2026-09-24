@@ -516,7 +516,8 @@
           "org_audit_logs",
           "project_group",
           "ai_secret",
-          "org_ai_secret"
+          "org_ai_secret",
+          "org_account"
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -542,7 +543,8 @@
           "org_audit_logs",
           "project_group",
           "ai_secret",
-          "org_ai_secret"
+          "org_ai_secret",
+          "org_account"
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -592,7 +594,8 @@
           "org_audit_logs",
           "project_group",
           "ai_secret",
-          "org_ai_secret"
+          "org_ai_secret",
+          "org_account"
         ],
         "description": "The object type that the ACL applies to"
       },
@@ -633,7 +636,8 @@
         "enum": [
           "organization",
           "project",
-          "function"
+          "function",
+          "mcp_server"
         ],
         "description": "The type of the object the environment variable is scoped for"
       },
@@ -11900,7 +11904,8 @@
             "enum": [
               "organization",
               "project",
-              "function"
+              "function",
+              "mcp_server"
             ],
             "description": "The type of the object the environment variable is scoped for"
           },
@@ -33409,7 +33414,8 @@
                     "enum": [
                       "organization",
                       "project",
-                      "function"
+                      "function",
+                      "mcp_server"
                     ],
                     "description": "The type of the object the environment variable is scoped for"
                   },
@@ -33571,7 +33577,8 @@
                     "enum": [
                       "organization",
                       "project",
-                      "function"
+                      "function",
+                      "mcp_server"
                     ],
                     "description": "The type of the object the environment variable is scoped for"
                   },
