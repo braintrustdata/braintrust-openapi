@@ -785,9 +785,8 @@ components:
           nullable: true
           minLength: 1
           description: Create the project within the named project group in this
-            organization. Requires project_group:update and either
-            project_group_projects:create on the group or org_project:create on
-            the organization.
+            organization. Requires project_group:update on the group's
+            definition.
       required:
         - name
     PatchProject:
@@ -4739,14 +4738,16 @@ components:
           items:
             type: string
             format: uuid
-          description: Sorted ids of active projects in this project group
+          description: Sorted ids of active projects in this project group. Modifying
+            membership requires project_group:update on the group.
       required:
         - id
         - org_id
         - name
         - member_projects
-      description: A project group is a collection of projects which can inherit
-        access from project-group ACLs
+      description: A project group is a collection of projects which inherit access
+        from project_group_projects ACLs. The group's definition and membership
+        are governed separately by project_group ACLs.
     CreateProjectGroup:
       type: object
       properties:
@@ -5153,6 +5154,7 @@ components:
           nullable: true
           enum:
             - patterns
+            - dashboard
             - null
           description: The product surface that created and manages the automation
         status:
@@ -5353,6 +5355,24 @@ components:
                 - high
                 - xhigh
                 - max
+            target:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - dashboard
+                id:
+                  anyOf:
+                    - type: string
+                      format: uuid
+                    - type: string
+                      enum:
+                        - overview
+              required:
+                - type
+                - id
+              description: The object this automation writes to or maintains
           required:
             - prompt
             - agent_slug
