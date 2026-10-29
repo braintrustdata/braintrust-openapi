@@ -397,7 +397,7 @@
         "type": "integer",
         "nullable": true,
         "minimum": 0,
-        "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+        "description": "Limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`). Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
       },
       "StartingAfter": {
         "type": "string",
@@ -464,6 +464,7 @@
           "scorers",
           "classifiers",
           "logs",
+          "patterns",
           "monitor",
           "for_review_project_log",
           "for_review_experiments",
@@ -1160,15 +1161,15 @@
               },
               "caller_functionname": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_functionname` instead."
               },
               "caller_filename": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_filename` instead."
               },
               "caller_lineno": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_lineno` instead."
               }
             },
             "additionalProperties": {
@@ -1487,15 +1488,15 @@
               },
               "caller_functionname": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_functionname` instead."
               },
               "caller_filename": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_filename` instead."
               },
               "caller_lineno": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_lineno` instead."
               }
             },
             "additionalProperties": {
@@ -1660,7 +1661,7 @@
         "type": "integer",
         "nullable": true,
         "minimum": 0,
-        "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
+        "description": "Limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`). Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces."
       },
       "FetchPaginationCursor": {
         "type": "string",
@@ -2220,15 +2221,15 @@
               },
               "caller_functionname": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_functionname` instead."
               },
               "caller_filename": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_filename` instead."
               },
               "caller_lineno": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_lineno` instead."
               }
             },
             "additionalProperties": {
@@ -2487,15 +2488,15 @@
               },
               "caller_functionname": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_functionname` instead."
               },
               "caller_filename": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_filename` instead."
               },
               "caller_lineno": {
                 "nullable": true,
-                "description": "This metric is deprecated"
+                "description": "Deprecated. Use `context.caller_lineno` instead."
               }
             },
             "additionalProperties": {
@@ -6085,12 +6086,12 @@
                   "claude-code",
                   "pi"
                 ],
-                "description": "Required when saving a Loop automation. Currently only Codex is supported."
+                "description": "Required for an explicit model selection. Currently only Codex is supported."
               },
               "model": {
                 "type": "string",
                 "minLength": 1,
-                "description": "Required when saving a Loop automation."
+                "description": "Omit harness, model, and endpoint_name to inherit the organization default provider and its recommended execution settings."
               },
               "endpoint_name": {
                 "type": "string",
@@ -6201,7 +6202,7 @@
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 10000,
-                      "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                      "description": "Instructions for Loop to format content sent to this destination"
                     }
                   },
                   "required": [
@@ -6607,7 +6608,7 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 10000,
-                "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                "description": "Instructions for Loop to format content sent to this destination"
               }
             },
             "required": [
@@ -6745,7 +6746,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                            "description": "Instructions for Loop to format content sent to this destination"
                           }
                         },
                         "required": [
@@ -7129,7 +7130,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                            "description": "Instructions for Loop to format content sent to this destination"
                           }
                         },
                         "required": [
@@ -7315,7 +7316,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                            "description": "Instructions for Loop to format content sent to this destination"
                           }
                         },
                         "required": [
@@ -7699,7 +7700,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                            "description": "Instructions for Loop to format content sent to this destination"
                           }
                         },
                         "required": [
@@ -7865,7 +7866,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                            "description": "Instructions for Loop to format content sent to this destination"
                           }
                         },
                         "required": [
@@ -8249,7 +8250,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 10000,
-                            "description": "Publish a Slack mrkdwn digest.\n\nPattern selection requirement: include every selected Pattern whose final status is active at the end of this automation run, plus every selected Pattern that changed from active to inactive during this run (a newly inactive outcome). Exclude Patterns that were already inactive before this run and remained inactive. Do not mention excluded Patterns anywhere in the digest, including Highlights. If no selected Patterns meet these criteria, say \"No current pattern outcomes.\" This requirement overrides conflicting formatting guidance.\n\nInclude a complete \"*Pattern outcomes*\" section with one row for every included Pattern.\n\nUse this row format exactly:\n• <pattern_url|Pattern title> — `outcome`\n\nIf a Pattern has no URL, use the plain title instead. Do not use GitHub Markdown tables or code-block tables, because links must remain clickable. Do not omit any active selected Pattern.\n\nAfter the outcome list, include a \"*Highlights*\" section with one very short paragraph, 2-3 sentences maximum. Summarize what changed or what broadly stands out among the included active Patterns. Do not introduce new claims beyond the run report."
+                            "description": "Instructions for Loop to format content sent to this destination"
                           }
                         },
                         "required": [
@@ -9222,7 +9223,7 @@
                           },
                           "snapshot_ref": {
                             "type": "string",
-                            "description": "sandbox snapshot ref"
+                            "description": "The Modal snapshot to start the sandbox from"
                           }
                         },
                         "required": [
@@ -11882,6 +11883,7 @@
               "scorers",
               "classifiers",
               "logs",
+              "patterns",
               "monitor",
               "for_review_project_log",
               "for_review_experiments",
@@ -11969,6 +11971,7 @@
               "scorers",
               "classifiers",
               "logs",
+              "patterns",
               "monitor",
               "for_review_project_log",
               "for_review_experiments",
@@ -12040,6 +12043,7 @@
               "scorers",
               "classifiers",
               "logs",
+              "patterns",
               "monitor",
               "for_review_project_log",
               "for_review_experiments",
@@ -13810,6 +13814,10 @@
                     "items": {
                       "nullable": true
                     }
+                  },
+                  "source_dataset_id": {
+                    "type": "string",
+                    "description": "The saved dataset these rows came from. Its project scopes saved simulated-user references; the caller must have read access to the dataset and source project."
                   }
                 },
                 "required": [
@@ -13900,7 +13908,7 @@
           "timeout": {
             "type": "number",
             "nullable": true,
-            "description": "The maximum duration, in milliseconds, to run the evaluation. Defaults to undefined, in which case there is no timeout."
+            "description": "The maximum duration, in milliseconds, to run the evaluation. There is no timeout by default."
           },
           "max_concurrency": {
             "type": "number",
@@ -14505,7 +14513,7 @@
           "$ref": "#/components/schemas/FetchLimitParam"
         },
         "required": false,
-        "description": "limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`. Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.",
+        "description": "Limit the number of traces fetched\n\nFetch queries may be paginated if the total result size is expected to be large (e.g. project_logs which accumulate over a long time). Note that fetch queries only support pagination in descending time order (from latest to earliest `_xact_id`). Furthermore, later pages may return rows which showed up in earlier pages, except with an earlier `_xact_id`. This happens because pagination occurs over the whole version history of the event log. You will most likely want to exclude any such duplicate, outdated rows (by `id`) from your combined result set.\n\nThe `limit` parameter controls the number of full traces to return. So you may end up with more individual rows than the specified limit if you are fetching events containing traces.",
         "name": "limit",
         "in": "query"
       },
@@ -24810,7 +24818,7 @@
         "tags": [
           "Agents"
         ],
-        "description": "Get a agent object by its id",
+        "description": "Get an agent object by its id",
         "summary": "Get agent",
         "security": [
           {
@@ -24923,7 +24931,7 @@
         "tags": [
           "Agents"
         ],
-        "description": "Partially update a agent object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "description": "Partially update an agent object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update agent",
         "security": [
           {
@@ -25047,7 +25055,7 @@
         "tags": [
           "Agents"
         ],
-        "description": "Delete a agent object by its id",
+        "description": "Delete an agent object by its id",
         "summary": "Delete agent",
         "security": [
           {
@@ -26514,7 +26522,7 @@
         "tags": [
           "OrgAutomations"
         ],
-        "description": "Get a org_automation object by its id",
+        "description": "Get an org_automation object by its id",
         "summary": "Get org_automation",
         "security": [
           {
@@ -26627,7 +26635,7 @@
         "tags": [
           "OrgAutomations"
         ],
-        "description": "Partially update a org_automation object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
+        "description": "Partially update an org_automation object. Specify the fields to update in the payload. Any object-type fields will be deep-merged with existing content. Currently we do not support removing fields or setting them to null.",
         "summary": "Partially update org_automation",
         "security": [
           {
@@ -26751,7 +26759,7 @@
         "tags": [
           "OrgAutomations"
         ],
-        "description": "Delete a org_automation object by its id",
+        "description": "Delete an org_automation object by its id",
         "summary": "Delete org_automation",
         "security": [
           {
@@ -38351,6 +38359,7 @@
       "get": {
         "operationId": "getEnvironment",
         "summary": "Get environment",
+        "description": "Get an environment object by its id",
         "tags": [
           "Environments"
         ],
@@ -38469,6 +38478,7 @@
       "patch": {
         "operationId": "updateEnvironment",
         "summary": "Partially update environment",
+        "description": "Partially update an environment object. Specify the fields to update in the payload.",
         "tags": [
           "Environments"
         ],
@@ -38596,6 +38606,7 @@
       "delete": {
         "operationId": "deleteEnvironment",
         "summary": "Delete environment",
+        "description": "Delete an environment object by its id",
         "tags": [
           "Environments"
         ],
