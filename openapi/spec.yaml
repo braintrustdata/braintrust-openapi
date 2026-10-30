@@ -3357,6 +3357,46 @@ components:
         - project_url
         - dataset_url
       description: Summary of a dataset
+    DatasetRestorePreviewResponse:
+      type: object
+      properties:
+        rows_to_restore:
+          type: integer
+          description: Number of rows that would be restored to their value at the
+            requested version
+        rows_to_delete:
+          type: integer
+          description: Number of rows created after the requested version that would be
+            deleted
+      required:
+        - rows_to_restore
+        - rows_to_delete
+    DatasetRestoreRequest:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The dataset version to restore to, such as the `xact_id` of a
+            dataset snapshot
+      required:
+        - version
+    DatasetRestoreResponse:
+      type: object
+      properties:
+        xact_id:
+          type: string
+          nullable: true
+          description: Transaction id of the restore, or null if the restore made no changes
+        rows_restored:
+          type: integer
+          description: Number of rows restored to their value at the requested version
+        rows_deleted:
+          type: integer
+          description: Number of rows created after the requested version that were deleted
+      required:
+        - xact_id
+        - rows_restored
+        - rows_deleted
     ChatCompletionContentPartText:
       type: object
       properties:
@@ -3770,8 +3810,6 @@ components:
               additionalProperties:
                 nullable: true
               title: object
-              x-stainless-skip:
-                - go
             - type: string
               title: string
         strict:
@@ -3915,8 +3953,6 @@ components:
           additionalProperties:
             nullable: true
           title: OpenAIModelParams
-          x-stainless-skip:
-            - go
         - type: object
           properties:
             use_cache:
@@ -3946,8 +3982,6 @@ components:
           additionalProperties:
             nullable: true
           title: AnthropicModelParams
-          x-stainless-skip:
-            - go
         - type: object
           properties:
             use_cache:
@@ -3967,8 +4001,6 @@ components:
           additionalProperties:
             nullable: true
           title: GoogleModelParams
-          x-stainless-skip:
-            - go
         - type: object
           properties:
             use_cache:
@@ -3984,8 +4016,6 @@ components:
           additionalProperties:
             nullable: true
           title: WindowAIModelParams
-          x-stainless-skip:
-            - go
         - type: object
           properties:
             use_cache:
@@ -3997,8 +4027,6 @@ components:
           additionalProperties:
             nullable: true
           title: JsCompletionParams
-          x-stainless-skip:
-            - go
     PromptOptionsNullish:
       type: object
       nullable: true
@@ -7040,8 +7068,6 @@ components:
             type: number
           description: For weighted-type project scores, the weights of each score
           title: weighted
-          x-stainless-skip:
-            - go
         - type: array
           items:
             type: string
@@ -9061,6 +9087,8 @@ components:
     InvokeApi:
       type: object
       properties:
+        request_source:
+          type: string
         input:
           nullable: true
           description: Argument to the function, which can be any JSON serializable value
@@ -11916,43 +11944,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProject
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project/{project_id}:
     get:
       operationId: getProjectId
@@ -12171,45 +12162,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project/{project_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_logs/{project_id}/insert:
     post:
       operationId: postProjectLogsIdInsert
@@ -12280,45 +12232,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsProjectLogsIdInsert
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_logs/{project_id}/insert`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -12482,45 +12395,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectLogsIdFetch
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_logs/{project_id}/fetch`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_logs/{project_id}/feedback:
     post:
       operationId: postProjectLogsIdFeedback
@@ -12591,45 +12465,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsProjectLogsIdFeedback
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_logs/{project_id}/feedback`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -12793,43 +12628,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsExperiment
-      description: Enable CORS
-      summary: Enable CORS (`/v1/experiment`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -13055,45 +12853,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsExperimentId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/experiment/{experiment_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ExperimentIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/experiment/{experiment_id}/insert:
     post:
       operationId: postExperimentIdInsert
@@ -13164,45 +12923,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsExperimentIdInsert
-      description: Enable CORS
-      summary: Enable CORS (`/v1/experiment/{experiment_id}/insert`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ExperimentIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -13366,45 +13086,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsExperimentIdFetch
-      description: Enable CORS
-      summary: Enable CORS (`/v1/experiment/{experiment_id}/fetch`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ExperimentIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/experiment/{experiment_id}/feedback:
     post:
       operationId: postExperimentIdFeedback
@@ -13482,51 +13163,17 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsExperimentIdFeedback
-      description: Enable CORS
-      summary: Enable CORS (`/v1/experiment/{experiment_id}/feedback`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ExperimentIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/experiment/{experiment_id}/summarize:
     get:
       operationId: getExperimentIdSummarize
       tags:
         - Experiments
-      description: Summarize experiment
+      description: Return the experiment and project names and URLs. Set
+        `summarize_scores=true` to include aggregate scores and metrics, with
+        differences, improvements, and regressions relative to a comparison
+        experiment. Use `comparison_experiment_id` to select the comparison;
+        otherwise, the experiment's base experiment or the most recent
+        experiment in the project is used.
       summary: Summarize experiment
       security:
         - bearerAuth: []
@@ -13585,45 +13232,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsExperimentIdSummarize
-      description: Enable CORS
-      summary: Enable CORS (`/v1/experiment/{experiment_id}/summarize`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ExperimentIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -13787,43 +13395,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsDataset
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -14049,45 +13620,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsDatasetId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset/{dataset_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/DatasetIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/dataset/{dataset_id}/insert:
     post:
       operationId: postDatasetIdInsert
@@ -14158,45 +13690,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsDatasetIdInsert
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset/{dataset_id}/insert`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/DatasetIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -14358,45 +13851,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsDatasetIdFetch
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset/{dataset_id}/fetch`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/DatasetIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/dataset/{dataset_id}/feedback:
     post:
       operationId: postDatasetIdFeedback
@@ -14474,51 +13928,14 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsDatasetIdFeedback
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset/{dataset_id}/feedback`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/DatasetIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/dataset/{dataset_id}/summarize:
     get:
       operationId: getDatasetIdSummarize
       tags:
         - Datasets
-      description: Summarize dataset
+      description: Return the dataset and project names and URLs. Set
+        `summarize_data=true` to include the total number of records in the
+        dataset; otherwise, only metadata is returned.
       summary: Summarize dataset
       security:
         - bearerAuth: []
@@ -14583,38 +14000,158 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsDatasetIdSummarize
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset/{dataset_id}/summarize`)
-      security: []
+  /v1/dataset/{dataset_id}/restore/preview:
+    post:
+      operationId: postDatasetIdRestorePreview
       tags:
-        - CORS
+        - Datasets
+      description: Preview restoring a dataset to an earlier version, such as a
+        dataset snapshot. Returns how many rows a restore would change, without
+        modifying the dataset. Fails if more than 20,000 rows changed since the
+        requested version. Requires read permission on the dataset.
+      summary: Preview dataset restore
+      security:
+        - bearerAuth: []
+        - {}
       parameters:
         - $ref: "#/components/parameters/DatasetIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DatasetRestoreRequest"
       responses:
         "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
+          description: Number of rows the restore would change
+          content:
+            application/json:
               schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
+                $ref: "#/components/schemas/DatasetRestorePreviewResponse"
         "400":
           description: The request was unacceptable, often due to missing a required
             parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          headers:
+            Retry-After:
+              schema:
+                type: string
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+  /v1/dataset/{dataset_id}/restore:
+    post:
+      operationId: postDatasetIdRestore
+      tags:
+        - Datasets
+      description: Restore a dataset to an earlier version, such as a dataset
+        snapshot. Rows changed since that version are reverted, and rows created
+        since then are deleted. The restore is recorded as a new transaction, so
+        dataset history is preserved. Fails if more than 20,000 rows changed
+        since the requested version. Requires update permission on the dataset.
+      summary: Restore dataset
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - $ref: "#/components/parameters/DatasetIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DatasetRestoreRequest"
+      responses:
+        "200":
+          description: Number of rows the restore changed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatasetRestoreResponse"
+        "400":
+          description: The request was unacceptable, often due to missing a required
+            parameter
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "401":
+          description: No valid API key provided
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "403":
+          description: The API key doesn’t have permissions to perform the request
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "429":
+          description: Too many requests hit the API too quickly. We recommend an
+            exponential backoff of your requests
+          headers:
+            Retry-After:
+              schema:
+                type: string
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                nullable: true
+        "500":
+          description: Something went wrong on Braintrust's end. (These are rare.)
           content:
             text/plain:
               schema:
@@ -14864,43 +14401,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsPrompt
-      description: Enable CORS
-      summary: Enable CORS (`/v1/prompt`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/prompt/{prompt_id}:
     get:
       operationId: getPromptId
@@ -15114,45 +14614,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsPromptId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/prompt/{prompt_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/PromptIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -15397,43 +14858,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsRole
-      description: Enable CORS
-      summary: Enable CORS (`/v1/role`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/role/{role_id}:
     get:
       operationId: getRoleId
@@ -15645,45 +15069,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsRoleId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/role/{role_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/RoleIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -15928,43 +15313,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsGroup
-      description: Enable CORS
-      summary: Enable CORS (`/v1/group`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/group/{group_id}:
     get:
       operationId: getGroupId
@@ -16183,45 +15531,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsGroupId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/group/{group_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/GroupIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_group:
     post:
       tags:
@@ -16230,12 +15539,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postProjectGroup
-      description: Create a new project_group. If there is an existing project_group
+      description: Create a new project group. If there is an existing project group
         with the same name as the one specified in the request, will return the
-        existing project_group unmodified
-      summary: Create project_group
+        existing project group unmodified
+      summary: Create project group
       requestBody:
-        description: Any desired information about the new project_group object
+        description: Any desired information about the new project group object
         required: true
         content:
           application/json:
@@ -16243,7 +15552,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectGroup"
       responses:
         "200":
-          description: Returns the new project_group object
+          description: Returns the new project group object
           content:
             application/json:
               schema:
@@ -16306,12 +15615,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putProjectGroup
-      description: Create or replace project_group. If there is an existing
-        project_group with the same name as the one specified in the request,
-        will replace the existing project_group with the provided fields
-      summary: Create or replace project_group
+      description: Create or replace project group. If there is an existing project
+        group with the same name as the one specified in the request, will
+        replace the existing project group with the provided fields
+      summary: Create or replace project group
       requestBody:
-        description: Any desired information about the new project_group object
+        description: Any desired information about the new project group object
         required: true
         content:
           application/json:
@@ -16319,7 +15628,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectGroup"
       responses:
         "200":
-          description: Returns the new project_group object
+          description: Returns the new project group object
           content:
             application/json:
               schema:
@@ -16379,10 +15688,10 @@ paths:
       operationId: getProjectGroup
       tags:
         - ProjectGroups
-      description: List out all project_groups. The project_groups are sorted by
-        creation date, with the most recently-created project_groups coming
+      description: List out all project groups. The project groups are sorted by
+        creation date, with the most recently-created project groups coming
         first
-      summary: List project_groups
+      summary: List project groups
       security:
         - bearerAuth: []
         - {}
@@ -16395,7 +15704,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of project_group objects
+          description: Returns a list of project group objects
           content:
             application/json:
               schema:
@@ -16405,7 +15714,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ProjectGroup"
-                    description: A list of project_group objects
+                    description: A list of project group objects
                 required:
                   - objects
                 additionalProperties: false
@@ -16460,50 +15769,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectGroup
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_group`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_group/{project_group_id}:
     get:
       operationId: getProjectGroupId
       tags:
         - ProjectGroups
-      description: Get a project_group object by its id
-      summary: Get project_group
+      description: Get a project group object by its id
+      summary: Get project group
       security:
         - bearerAuth: []
         - {}
@@ -16511,7 +15783,7 @@ paths:
         - $ref: "#/components/parameters/ProjectGroupIdParam"
       responses:
         "200":
-          description: Returns the project_group object
+          description: Returns the project group object
           content:
             application/json:
               schema:
@@ -16571,11 +15843,11 @@ paths:
       operationId: patchProjectGroupId
       tags:
         - ProjectGroups
-      description: Partially update a project_group object. Specify the fields to
+      description: Partially update a project group object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
-      summary: Partially update project_group
+      summary: Partially update project group
       security:
         - bearerAuth: []
         - {}
@@ -16590,7 +15862,7 @@ paths:
               $ref: "#/components/schemas/PatchProjectGroup"
       responses:
         "200":
-          description: Returns the project_group object
+          description: Returns the project group object
           content:
             application/json:
               schema:
@@ -16650,8 +15922,8 @@ paths:
       operationId: deleteProjectGroupId
       tags:
         - ProjectGroups
-      description: Delete a project_group object by its id
-      summary: Delete project_group
+      description: Delete a project group object by its id
+      summary: Delete project group
       security:
         - bearerAuth: []
         - {}
@@ -16659,7 +15931,7 @@ paths:
         - $ref: "#/components/parameters/ProjectGroupIdParam"
       responses:
         "200":
-          description: Returns the deleted project_group object
+          description: Returns the deleted project group object
           content:
             application/json:
               schema:
@@ -16715,45 +15987,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectGroupId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_group/{project_group_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectGroupIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/acl:
     post:
       tags:
@@ -16762,12 +15995,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postAcl
-      description: Create a new acl. If there is an existing acl with the same
+      description: Create a new ACL. If there is an existing ACL with the same
         contents as the one specified in the request, will return the existing
-        acl unmodified
-      summary: Create acl
+        ACL unmodified
+      summary: Create ACL
       requestBody:
-        description: Any desired information about the new acl object
+        description: Any desired information about the new ACL object
         required: true
         content:
           application/json:
@@ -16775,7 +16008,7 @@ paths:
               $ref: "#/components/schemas/AclItem"
       responses:
         "200":
-          description: Returns the new acl object
+          description: Returns the new ACL object
           content:
             application/json:
               schema:
@@ -16835,13 +16068,13 @@ paths:
       operationId: deleteAcl
       tags:
         - Acls
-      description: Delete a single acl
-      summary: Delete single acl
+      description: Delete a single ACL
+      summary: Delete single ACL
       security:
         - bearerAuth: []
         - {}
       requestBody:
-        description: Parameters which uniquely specify the acl to delete
+        description: Parameters which uniquely specify the ACL to delete
         required: true
         content:
           application/json:
@@ -16849,7 +16082,7 @@ paths:
               $ref: "#/components/schemas/AclItem"
       responses:
         "200":
-          description: Returns the deleted acl object
+          description: Returns the deleted ACL object
           content:
             application/json:
               schema:
@@ -16909,9 +16142,9 @@ paths:
       operationId: getAcl
       tags:
         - Acls
-      description: List out all acls. The acls are sorted by creation date, with the
-        most recently-created acls coming first
-      summary: List acls
+      description: List out all ACLs. The ACLs are sorted by creation date, with the
+        most recently-created ACLs coming first
+      summary: List ACLs
       security:
         - bearerAuth: []
         - {}
@@ -16929,7 +16162,7 @@ paths:
         - $ref: "#/components/parameters/AclListRoleId"
       responses:
         "200":
-          description: Returns a list of acl objects
+          description: Returns a list of ACL objects
           content:
             application/json:
               schema:
@@ -16939,7 +16172,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Acl"
-                    description: A list of acl objects
+                    description: A list of ACL objects
                 required:
                   - objects
                 additionalProperties: false
@@ -16994,50 +16227,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsAcl
-      description: Enable CORS
-      summary: Enable CORS (`/v1/acl`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/acl/{acl_id}:
     get:
       operationId: getAclId
       tags:
         - Acls
-      description: Get an acl object by its id
-      summary: Get acl
+      description: Get an ACL object by its id
+      summary: Get ACL
       security:
         - bearerAuth: []
         - {}
@@ -17045,7 +16241,7 @@ paths:
         - $ref: "#/components/parameters/AclIdParam"
       responses:
         "200":
-          description: Returns the acl object
+          description: Returns the ACL object
           content:
             application/json:
               schema:
@@ -17105,8 +16301,8 @@ paths:
       operationId: deleteAclId
       tags:
         - Acls
-      description: Delete an acl object by its id
-      summary: Delete acl
+      description: Delete an ACL object by its id
+      summary: Delete ACL
       security:
         - bearerAuth: []
         - {}
@@ -17114,7 +16310,7 @@ paths:
         - $ref: "#/components/parameters/AclIdParam"
       responses:
         "200":
-          description: Returns the deleted acl object
+          description: Returns the deleted ACL object
           content:
             application/json:
               schema:
@@ -17170,54 +16366,15 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsAclId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/acl/{acl_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/AclIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/acl/batch_update:
     post:
       operationId: aclBatchUpdate
       tags:
         - Acls
-      description: Batch update acls. This operation is idempotent, so adding acls
-        which already exist will have no effect, and removing acls which do not
+      description: Batch update ACLs. This operation is idempotent, so adding ACLs
+        which already exist will have no effect, and removing ACLs which do not
         exist will have no effect.
-      summary: Batch update acls
+      summary: Batch update ACLs
       security:
         - bearerAuth: []
         - {}
@@ -17291,9 +16448,9 @@ paths:
       operationId: aclListOrg
       tags:
         - Acls
-      description: List all acls in the org. This query requires the caller to have
+      description: List all ACLs in the org. This query requires the caller to have
         `read_acls` permission at the organization level
-      summary: List org acls
+      summary: List org ACLs
       security:
         - bearerAuth: []
         - {}
@@ -17312,7 +16469,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: A list of acls
+          description: A list of ACLs
           content:
             application/json:
               schema:
@@ -17363,81 +16520,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsAclListOrg
-      description: Enable CORS
-      summary: Enable CORS (`/v1/acl/list_org`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-  /v1/acl/acl/batch_update:
-    options:
-      operationId: optionsAclBatchUpdate
-      description: Enable CORS
-      summary: Enable CORS (`/v1/acl/acl/batch_update`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -17532,43 +16614,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsUser
-      description: Enable CORS
-      summary: Enable CORS (`/v1/user`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/user/{user_id}:
     get:
       operationId: getUserId
@@ -17632,45 +16677,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsUserId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/user/{user_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/UserIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -17915,43 +16921,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsAgent
-      description: Enable CORS
-      summary: Enable CORS (`/v1/agent`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/agent/{agent_id}:
     get:
       operationId: getAgentId
@@ -18170,45 +17139,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsAgentId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/agent/{agent_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/AgentIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_automation:
     post:
       tags:
@@ -18217,12 +17147,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postProjectAutomation
-      description: Create a new project_automation. If there is an existing
-        project_automation with the same name as the one specified in the
-        request, will return the existing project_automation unmodified
-      summary: Create project_automation
+      description: Create a new project automation. If there is an existing project
+        automation with the same name as the one specified in the request, will
+        return the existing project automation unmodified
+      summary: Create project automation
       requestBody:
-        description: Any desired information about the new project_automation object
+        description: Any desired information about the new project automation object
         required: true
         content:
           application/json:
@@ -18230,7 +17160,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectAutomation"
       responses:
         "200":
-          description: Returns the new project_automation object
+          description: Returns the new project automation object
           content:
             application/json:
               schema:
@@ -18293,13 +17223,13 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putProjectAutomation
-      description: Create or replace project_automation. If there is an existing
-        project_automation with the same name as the one specified in the
-        request, will replace the existing project_automation with the provided
+      description: Create or replace project automation. If there is an existing
+        project automation with the same name as the one specified in the
+        request, will replace the existing project automation with the provided
         fields
-      summary: Create or replace project_automation
+      summary: Create or replace project automation
       requestBody:
-        description: Any desired information about the new project_automation object
+        description: Any desired information about the new project automation object
         required: true
         content:
           application/json:
@@ -18307,7 +17237,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectAutomation"
       responses:
         "200":
-          description: Returns the new project_automation object
+          description: Returns the new project automation object
           content:
             application/json:
               schema:
@@ -18367,10 +17297,10 @@ paths:
       operationId: getProjectAutomation
       tags:
         - ProjectAutomations
-      description: List out all project_automations. The project_automations are
-        sorted by creation date, with the most recently-created
-        project_automations coming first
-      summary: List project_automations
+      description: List out all project automations. The project automations are
+        sorted by creation date, with the most recently-created project
+        automations coming first
+      summary: List project automations
       security:
         - bearerAuth: []
         - {}
@@ -18383,7 +17313,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of project_automation objects
+          description: Returns a list of project automation objects
           content:
             application/json:
               schema:
@@ -18393,7 +17323,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ProjectAutomation"
-                    description: A list of project_automation objects
+                    description: A list of project automation objects
                 required:
                   - objects
                 additionalProperties: false
@@ -18448,50 +17378,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectAutomation
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_automation`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_automation/{project_automation_id}:
     get:
       operationId: getProjectAutomationId
       tags:
         - ProjectAutomations
-      description: Get a project_automation object by its id
-      summary: Get project_automation
+      description: Get a project automation object by its id
+      summary: Get project automation
       security:
         - bearerAuth: []
         - {}
@@ -18499,7 +17392,7 @@ paths:
         - $ref: "#/components/parameters/ProjectAutomationIdParam"
       responses:
         "200":
-          description: Returns the project_automation object
+          description: Returns the project automation object
           content:
             application/json:
               schema:
@@ -18559,11 +17452,11 @@ paths:
       operationId: patchProjectAutomationId
       tags:
         - ProjectAutomations
-      description: Partially update a project_automation object. Specify the fields to
+      description: Partially update a project automation object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
-      summary: Partially update project_automation
+      summary: Partially update project automation
       security:
         - bearerAuth: []
         - {}
@@ -18578,7 +17471,7 @@ paths:
               $ref: "#/components/schemas/PatchProjectAutomation"
       responses:
         "200":
-          description: Returns the project_automation object
+          description: Returns the project automation object
           content:
             application/json:
               schema:
@@ -18638,8 +17531,8 @@ paths:
       operationId: deleteProjectAutomationId
       tags:
         - ProjectAutomations
-      description: Delete a project_automation object by its id
-      summary: Delete project_automation
+      description: Delete a project automation object by its id
+      summary: Delete project automation
       security:
         - bearerAuth: []
         - {}
@@ -18647,7 +17540,7 @@ paths:
         - $ref: "#/components/parameters/ProjectAutomationIdParam"
       responses:
         "200":
-          description: Returns the deleted project_automation object
+          description: Returns the deleted project automation object
           content:
             application/json:
               schema:
@@ -18703,45 +17596,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectAutomationId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_automation/{project_automation_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectAutomationIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/org_automation:
     post:
       tags:
@@ -18750,12 +17604,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postOrgAutomation
-      description: Create a new org_automation. If there is an existing org_automation
+      description: Create a new org automation. If there is an existing org automation
         with the same name as the one specified in the request, will return the
-        existing org_automation unmodified
-      summary: Create org_automation
+        existing org automation unmodified
+      summary: Create org automation
       requestBody:
-        description: Any desired information about the new org_automation object
+        description: Any desired information about the new org automation object
         required: true
         content:
           application/json:
@@ -18763,7 +17617,7 @@ paths:
               $ref: "#/components/schemas/CreateOrgAutomation"
       responses:
         "200":
-          description: Returns the new org_automation object
+          description: Returns the new org automation object
           content:
             application/json:
               schema:
@@ -18826,12 +17680,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putOrgAutomation
-      description: Create or replace org_automation. If there is an existing
-        org_automation with the same name as the one specified in the request,
-        will replace the existing org_automation with the provided fields
-      summary: Create or replace org_automation
+      description: Create or replace org automation. If there is an existing org
+        automation with the same name as the one specified in the request, will
+        replace the existing org automation with the provided fields
+      summary: Create or replace org automation
       requestBody:
-        description: Any desired information about the new org_automation object
+        description: Any desired information about the new org automation object
         required: true
         content:
           application/json:
@@ -18839,7 +17693,7 @@ paths:
               $ref: "#/components/schemas/CreateOrgAutomation"
       responses:
         "200":
-          description: Returns the new org_automation object
+          description: Returns the new org automation object
           content:
             application/json:
               schema:
@@ -18899,10 +17753,10 @@ paths:
       operationId: getOrgAutomation
       tags:
         - OrgAutomations
-      description: List out all org_automations. The org_automations are sorted by
-        creation date, with the most recently-created org_automations coming
+      description: List out all org automations. The org automations are sorted by
+        creation date, with the most recently-created org automations coming
         first
-      summary: List org_automations
+      summary: List org automations
       security:
         - bearerAuth: []
         - {}
@@ -18915,7 +17769,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of org_automation objects
+          description: Returns a list of org automation objects
           content:
             application/json:
               schema:
@@ -18925,7 +17779,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/OrgAutomation"
-                    description: A list of org_automation objects
+                    description: A list of org automation objects
                 required:
                   - objects
                 additionalProperties: false
@@ -18980,50 +17834,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsOrgAutomation
-      description: Enable CORS
-      summary: Enable CORS (`/v1/org_automation`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/org_automation/{org_automation_id}:
     get:
       operationId: getOrgAutomationId
       tags:
         - OrgAutomations
-      description: Get an org_automation object by its id
-      summary: Get org_automation
+      description: Get an org automation object by its id
+      summary: Get org automation
       security:
         - bearerAuth: []
         - {}
@@ -19031,7 +17848,7 @@ paths:
         - $ref: "#/components/parameters/OrgAutomationIdParam"
       responses:
         "200":
-          description: Returns the org_automation object
+          description: Returns the org automation object
           content:
             application/json:
               schema:
@@ -19091,11 +17908,11 @@ paths:
       operationId: patchOrgAutomationId
       tags:
         - OrgAutomations
-      description: Partially update an org_automation object. Specify the fields to
+      description: Partially update an org automation object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
-      summary: Partially update org_automation
+      summary: Partially update org automation
       security:
         - bearerAuth: []
         - {}
@@ -19110,7 +17927,7 @@ paths:
               $ref: "#/components/schemas/PatchOrgAutomation"
       responses:
         "200":
-          description: Returns the org_automation object
+          description: Returns the org automation object
           content:
             application/json:
               schema:
@@ -19170,8 +17987,8 @@ paths:
       operationId: deleteOrgAutomationId
       tags:
         - OrgAutomations
-      description: Delete an org_automation object by its id
-      summary: Delete org_automation
+      description: Delete an org automation object by its id
+      summary: Delete org automation
       security:
         - bearerAuth: []
         - {}
@@ -19179,7 +17996,7 @@ paths:
         - $ref: "#/components/parameters/OrgAutomationIdParam"
       responses:
         "200":
-          description: Returns the deleted org_automation object
+          description: Returns the deleted org automation object
           content:
             application/json:
               schema:
@@ -19235,45 +18052,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsOrgAutomationId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/org_automation/{org_automation_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/OrgAutomationIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_score:
     post:
       tags:
@@ -19282,12 +18060,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postProjectScore
-      description: Create a new project_score. If there is an existing project_score
+      description: Create a new project score. If there is an existing project score
         in the project with the same name as the one specified in the request,
-        will return the existing project_score unmodified
-      summary: Create project_score
+        will return the existing project score unmodified
+      summary: Create project score
       requestBody:
-        description: Any desired information about the new project_score object
+        description: Any desired information about the new project score object
         required: true
         content:
           application/json:
@@ -19295,7 +18073,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectScore"
       responses:
         "200":
-          description: Returns the new project_score object
+          description: Returns the new project score object
           content:
             application/json:
               schema:
@@ -19358,13 +18136,13 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putProjectScore
-      description: Create or replace project_score. If there is an existing
-        project_score in the project with the same name as the one specified in
-        the request, will replace the existing project_score with the provided
+      description: Create or replace project score. If there is an existing project
+        score in the project with the same name as the one specified in the
+        request, will replace the existing project score with the provided
         fields
-      summary: Create or replace project_score
+      summary: Create or replace project score
       requestBody:
-        description: Any desired information about the new project_score object
+        description: Any desired information about the new project score object
         required: true
         content:
           application/json:
@@ -19372,7 +18150,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectScore"
       responses:
         "200":
-          description: Returns the new project_score object
+          description: Returns the new project score object
           content:
             application/json:
               schema:
@@ -19432,10 +18210,10 @@ paths:
       operationId: getProjectScore
       tags:
         - ProjectScores
-      description: List out all project_scores. The project_scores are sorted by
-        creation date, with the most recently-created project_scores coming
+      description: List out all project scores. The project scores are sorted by
+        creation date, with the most recently-created project scores coming
         first
-      summary: List project_scores
+      summary: List project scores
       security:
         - bearerAuth: []
         - {}
@@ -19451,7 +18229,7 @@ paths:
         - $ref: "#/components/parameters/ProjectScoreType"
       responses:
         "200":
-          description: Returns a list of project_score objects
+          description: Returns a list of project score objects
           content:
             application/json:
               schema:
@@ -19461,7 +18239,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ProjectScore"
-                    description: A list of project_score objects
+                    description: A list of project score objects
                 required:
                   - objects
                 additionalProperties: false
@@ -19516,50 +18294,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectScore
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_score`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_score/{project_score_id}:
     get:
       operationId: getProjectScoreId
       tags:
         - ProjectScores
-      description: Get a project_score object by its id
-      summary: Get project_score
+      description: Get a project score object by its id
+      summary: Get project score
       security:
         - bearerAuth: []
         - {}
@@ -19567,7 +18308,7 @@ paths:
         - $ref: "#/components/parameters/ProjectScoreIdParam"
       responses:
         "200":
-          description: Returns the project_score object
+          description: Returns the project score object
           content:
             application/json:
               schema:
@@ -19627,11 +18368,11 @@ paths:
       operationId: patchProjectScoreId
       tags:
         - ProjectScores
-      description: Partially update a project_score object. Specify the fields to
+      description: Partially update a project score object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
-      summary: Partially update project_score
+      summary: Partially update project score
       security:
         - bearerAuth: []
         - {}
@@ -19646,7 +18387,7 @@ paths:
               $ref: "#/components/schemas/PatchProjectScore"
       responses:
         "200":
-          description: Returns the project_score object
+          description: Returns the project score object
           content:
             application/json:
               schema:
@@ -19706,8 +18447,8 @@ paths:
       operationId: deleteProjectScoreId
       tags:
         - ProjectScores
-      description: Delete a project_score object by its id
-      summary: Delete project_score
+      description: Delete a project score object by its id
+      summary: Delete project score
       security:
         - bearerAuth: []
         - {}
@@ -19715,7 +18456,7 @@ paths:
         - $ref: "#/components/parameters/ProjectScoreIdParam"
       responses:
         "200":
-          description: Returns the deleted project_score object
+          description: Returns the deleted project score object
           content:
             application/json:
               schema:
@@ -19771,45 +18512,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectScoreId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_score/{project_score_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectScoreIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_tag:
     post:
       tags:
@@ -19818,12 +18520,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postProjectTag
-      description: Create a new project_tag. If there is an existing project_tag in
+      description: Create a new project tag. If there is an existing project tag in
         the project with the same name as the one specified in the request, will
-        return the existing project_tag unmodified
-      summary: Create project_tag
+        return the existing project tag unmodified
+      summary: Create project tag
       requestBody:
-        description: Any desired information about the new project_tag object
+        description: Any desired information about the new project tag object
         required: true
         content:
           application/json:
@@ -19831,7 +18533,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectTag"
       responses:
         "200":
-          description: Returns the new project_tag object
+          description: Returns the new project tag object
           content:
             application/json:
               schema:
@@ -19894,12 +18596,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putProjectTag
-      description: Create or replace project_tag. If there is an existing project_tag
+      description: Create or replace project tag. If there is an existing project tag
         in the project with the same name as the one specified in the request,
-        will replace the existing project_tag with the provided fields
-      summary: Create or replace project_tag
+        will replace the existing project tag with the provided fields
+      summary: Create or replace project tag
       requestBody:
-        description: Any desired information about the new project_tag object
+        description: Any desired information about the new project tag object
         required: true
         content:
           application/json:
@@ -19907,7 +18609,7 @@ paths:
               $ref: "#/components/schemas/CreateProjectTag"
       responses:
         "200":
-          description: Returns the new project_tag object
+          description: Returns the new project tag object
           content:
             application/json:
               schema:
@@ -19967,9 +18669,9 @@ paths:
       operationId: getProjectTag
       tags:
         - ProjectTags
-      description: List out all project_tags. The project_tags are sorted by creation
-        date, with the most recently-created project_tags coming first
-      summary: List project_tags
+      description: List out all project tags. The project tags are sorted by creation
+        date, with the most recently-created project tags coming first
+      summary: List project tags
       security:
         - bearerAuth: []
         - {}
@@ -19984,7 +18686,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of project_tag objects
+          description: Returns a list of project tag objects
           content:
             application/json:
               schema:
@@ -19994,7 +18696,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ProjectTag"
-                    description: A list of project_tag objects
+                    description: A list of project tag objects
                 required:
                   - objects
                 additionalProperties: false
@@ -20049,50 +18751,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectTag
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_tag`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/project_tag/{project_tag_id}:
     get:
       operationId: getProjectTagId
       tags:
         - ProjectTags
-      description: Get a project_tag object by its id
-      summary: Get project_tag
+      description: Get a project tag object by its id
+      summary: Get project tag
       security:
         - bearerAuth: []
         - {}
@@ -20100,7 +18765,7 @@ paths:
         - $ref: "#/components/parameters/ProjectTagIdParam"
       responses:
         "200":
-          description: Returns the project_tag object
+          description: Returns the project tag object
           content:
             application/json:
               schema:
@@ -20160,11 +18825,11 @@ paths:
       operationId: patchProjectTagId
       tags:
         - ProjectTags
-      description: Partially update a project_tag object. Specify the fields to update
+      description: Partially update a project tag object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
-      summary: Partially update project_tag
+      summary: Partially update project tag
       security:
         - bearerAuth: []
         - {}
@@ -20179,7 +18844,7 @@ paths:
               $ref: "#/components/schemas/PatchProjectTag"
       responses:
         "200":
-          description: Returns the project_tag object
+          description: Returns the project tag object
           content:
             application/json:
               schema:
@@ -20239,8 +18904,8 @@ paths:
       operationId: deleteProjectTagId
       tags:
         - ProjectTags
-      description: Delete a project_tag object by its id
-      summary: Delete project_tag
+      description: Delete a project tag object by its id
+      summary: Delete project tag
       security:
         - bearerAuth: []
         - {}
@@ -20248,7 +18913,7 @@ paths:
         - $ref: "#/components/parameters/ProjectTagIdParam"
       responses:
         "200":
-          description: Returns the deleted project_tag object
+          description: Returns the deleted project tag object
           content:
             application/json:
               schema:
@@ -20304,45 +18969,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProjectTagId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project_tag/{project_tag_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ProjectTagIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/span_iframe:
     post:
       tags:
@@ -20351,12 +18977,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postSpanIframe
-      description: Create a new span_iframe. If there is an existing span_iframe with
+      description: Create a new span iframe. If there is an existing span iframe with
         the same name as the one specified in the request, will return the
-        existing span_iframe unmodified
-      summary: Create span_iframe
+        existing span iframe unmodified
+      summary: Create span iframe
       requestBody:
-        description: Any desired information about the new span_iframe object
+        description: Any desired information about the new span iframe object
         required: true
         content:
           application/json:
@@ -20364,7 +18990,7 @@ paths:
               $ref: "#/components/schemas/CreateSpanIFrame"
       responses:
         "200":
-          description: Returns the new span_iframe object
+          description: Returns the new span iframe object
           content:
             application/json:
               schema:
@@ -20427,12 +19053,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putSpanIframe
-      description: Create or replace span_iframe. If there is an existing span_iframe
+      description: Create or replace span iframe. If there is an existing span iframe
         with the same name as the one specified in the request, will replace the
-        existing span_iframe with the provided fields
-      summary: Create or replace span_iframe
+        existing span iframe with the provided fields
+      summary: Create or replace span iframe
       requestBody:
-        description: Any desired information about the new span_iframe object
+        description: Any desired information about the new span iframe object
         required: true
         content:
           application/json:
@@ -20440,7 +19066,7 @@ paths:
               $ref: "#/components/schemas/CreateSpanIFrame"
       responses:
         "200":
-          description: Returns the new span_iframe object
+          description: Returns the new span iframe object
           content:
             application/json:
               schema:
@@ -20500,9 +19126,9 @@ paths:
       operationId: getSpanIframe
       tags:
         - SpanIframes
-      description: List out all span_iframes. The span_iframes are sorted by creation
-        date, with the most recently-created span_iframes coming first
-      summary: List span_iframes
+      description: List out all span iframes. The span iframes are sorted by creation
+        date, with the most recently-created span iframes coming first
+      summary: List span iframes
       security:
         - bearerAuth: []
         - {}
@@ -20515,7 +19141,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of span_iframe objects
+          description: Returns a list of span iframe objects
           content:
             application/json:
               schema:
@@ -20525,7 +19151,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/SpanIFrame"
-                    description: A list of span_iframe objects
+                    description: A list of span iframe objects
                 required:
                   - objects
                 additionalProperties: false
@@ -20580,50 +19206,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsSpanIframe
-      description: Enable CORS
-      summary: Enable CORS (`/v1/span_iframe`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/span_iframe/{span_iframe_id}:
     get:
       operationId: getSpanIframeId
       tags:
         - SpanIframes
-      description: Get a span_iframe object by its id
-      summary: Get span_iframe
+      description: Get a span iframe object by its id
+      summary: Get span iframe
       security:
         - bearerAuth: []
         - {}
@@ -20631,7 +19220,7 @@ paths:
         - $ref: "#/components/parameters/SpanIframeIdParam"
       responses:
         "200":
-          description: Returns the span_iframe object
+          description: Returns the span iframe object
           content:
             application/json:
               schema:
@@ -20691,11 +19280,11 @@ paths:
       operationId: patchSpanIframeId
       tags:
         - SpanIframes
-      description: Partially update a span_iframe object. Specify the fields to update
+      description: Partially update a span iframe object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
-      summary: Partially update span_iframe
+      summary: Partially update span iframe
       security:
         - bearerAuth: []
         - {}
@@ -20710,7 +19299,7 @@ paths:
               $ref: "#/components/schemas/PatchSpanIFrame"
       responses:
         "200":
-          description: Returns the span_iframe object
+          description: Returns the span iframe object
           content:
             application/json:
               schema:
@@ -20770,8 +19359,8 @@ paths:
       operationId: deleteSpanIframeId
       tags:
         - SpanIframes
-      description: Delete a span_iframe object by its id
-      summary: Delete span_iframe
+      description: Delete a span iframe object by its id
+      summary: Delete span iframe
       security:
         - bearerAuth: []
         - {}
@@ -20779,7 +19368,7 @@ paths:
         - $ref: "#/components/parameters/SpanIframeIdParam"
       responses:
         "200":
-          description: Returns the deleted span_iframe object
+          description: Returns the deleted span iframe object
           content:
             application/json:
               schema:
@@ -20828,45 +19417,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsSpanIframeId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/span_iframe/{span_iframe_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/SpanIframeIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -21116,43 +19666,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsFunction
-      description: Enable CORS
-      summary: Enable CORS (`/v1/function`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/function/{function_id}:
     get:
       operationId: getFunctionId
@@ -21373,51 +19886,15 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsFunctionId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/function/{function_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/FunctionIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/function/{function_id}/invoke:
     post:
       operationId: postFunctionIdInvoke
       tags:
         - Functions
-      description: Invoke a function.
+      description: Run the specified function with the provided input and return its
+        result. Use `version` to select a specific function version, `parent` to
+        attach the call to a trace, and `stream` to receive results in the
+        Braintrust SSE format.
       summary: Invoke function
       security:
         - bearerAuth: []
@@ -21436,45 +19913,6 @@ paths:
             ScoreResult schema: a single score defaults to the function name
             when unnamed; arrays require a unique name for every score."
           content:
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsFunctionIdInvoke
-      description: Enable CORS
-      summary: Enable CORS (`/v1/function/{function_id}/invoke`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/FunctionIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
             application/json:
               schema:
                 nullable: true
@@ -21717,43 +20155,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsView
-      description: Enable CORS
-      summary: Enable CORS (`/v1/view`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/view/{view_id}:
     get:
       operationId: getViewId
@@ -21981,45 +20382,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsViewId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/view/{view_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ViewIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/organization:
     get:
       operationId: getOrganization
@@ -22097,43 +20459,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsOrganization
-      description: Enable CORS
-      summary: Enable CORS (`/v1/organization`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -22290,45 +20615,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsOrganizationId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/organization/{organization_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/OrganizationIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/organization/members:
     patch:
       operationId: patchOrganizationMembers
@@ -22397,43 +20683,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsOrganizationMembers
-      description: Enable CORS
-      summary: Enable CORS (`/v1/organization/members`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -22533,43 +20782,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsOrganizationApiKeys
-      description: Enable CORS
-      summary: Enable CORS (`/v1/organization/api_keys`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/api_key:
     get:
       operationId: getApiKey
@@ -22583,7 +20795,7 @@ paths:
         To create new API keys, visit [**Settings > API
         keys**](https://www.braintrust.dev/app/~/configuration/org/api-keys) in
         the Braintrust UI.
-      summary: List api_keys
+      summary: List API keys
       security:
         - bearerAuth: []
         - {}
@@ -22596,7 +20808,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of api_key objects
+          description: Returns a list of API key objects
           content:
             application/json:
               schema:
@@ -22606,7 +20818,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ApiKey"
-                    description: A list of api_key objects
+                    description: A list of API key objects
                 required:
                   - objects
                 additionalProperties: false
@@ -22661,50 +20873,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsApiKey
-      description: Enable CORS
-      summary: Enable CORS (`/v1/api_key`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/api_key/{api_key_id}:
     get:
       operationId: getApiKeyId
       tags:
         - ApiKeys
-      description: Get an api_key object by its id
-      summary: Get api_key
+      description: Get an API key object by its id
+      summary: Get API key
       security:
         - bearerAuth: []
         - {}
@@ -22712,7 +20887,7 @@ paths:
         - $ref: "#/components/parameters/ApiKeyIdParam"
       responses:
         "200":
-          description: Returns the api_key object
+          description: Returns the API key object
           content:
             application/json:
               schema:
@@ -22772,8 +20947,8 @@ paths:
       operationId: deleteApiKeyId
       tags:
         - ApiKeys
-      description: Delete an api_key object by its id
-      summary: Delete api_key
+      description: Delete an API key object by its id
+      summary: Delete API key
       security:
         - bearerAuth: []
         - {}
@@ -22781,7 +20956,7 @@ paths:
         - $ref: "#/components/parameters/ApiKeyIdParam"
       responses:
         "200":
-          description: Returns the deleted api_key object
+          description: Returns the deleted API key object
           content:
             application/json:
               schema:
@@ -22837,45 +21012,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsApiKeyId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/api_key/{api_key_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ApiKeyIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/service_token:
     post:
       tags:
@@ -22896,9 +21032,9 @@ paths:
         owns. The calling service account must also hold all of the target
         account's permissions in the organization; otherwise the request returns
         403. User API keys cannot be used.
-      summary: Create service_token
+      summary: Create service token
       requestBody:
-        description: Any desired information about the new service_token object
+        description: Any desired information about the new service token object
         required: true
         content:
           application/json:
@@ -22998,12 +21134,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putServiceToken
-      description: Create or replace service_token. If there is an existing
-        service_token with the same name as the one specified in the request,
-        will replace the existing service_token with the provided fields
-      summary: Create or replace service_token
+      description: Create or replace service token. If there is an existing service
+        token with the same name as the one specified in the request, will
+        replace the existing service token with the provided fields
+      summary: Create or replace service token
       requestBody:
-        description: Any desired information about the new service_token object
+        description: Any desired information about the new service token object
         required: true
         content:
           application/json:
@@ -23100,13 +21236,13 @@ paths:
       operationId: deleteServiceToken
       tags:
         - ServiceTokens
-      description: Delete a single service_token
-      summary: Delete single service_token
+      description: Delete a single service token
+      summary: Delete single service token
       security:
         - bearerAuth: []
         - {}
       requestBody:
-        description: Parameters which uniquely specify the service_token to delete
+        description: Parameters which uniquely specify the service token to delete
         required: true
         content:
           application/json:
@@ -23114,7 +21250,7 @@ paths:
               $ref: "#/components/schemas/DeleteServiceToken"
       responses:
         "200":
-          description: Returns the deleted service_token object
+          description: Returns the deleted service token object
           content:
             application/json:
               schema:
@@ -23178,7 +21314,7 @@ paths:
         List out all service tokens. They are sorted by creation date, with the most recently-created tokens coming first.
 
         To create a service token, visit [**Settings > Service tokens**](https://www.braintrust.dev/app/~/configuration/org/service-tokens) as an organization owner or an Owner of an active project group in the organization, or call [`POST /v1/service_token`](https://www.braintrust.dev/docs/api-reference/servicetokens/create-service_token) with a service token. Results include only service tokens you can manage.
-      summary: List service_tokens
+      summary: List service tokens
       security:
         - bearerAuth: []
         - {}
@@ -23191,7 +21327,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of service_token objects
+          description: Returns a list of service token objects
           content:
             application/json:
               schema:
@@ -23201,7 +21337,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/ServiceToken"
-                    description: A list of service_token objects
+                    description: A list of service token objects
                 required:
                   - objects
                 additionalProperties: false
@@ -23256,50 +21392,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsServiceToken
-      description: Enable CORS
-      summary: Enable CORS (`/v1/service_token`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/service_token/{service_token_id}:
     get:
       operationId: getServiceTokenId
       tags:
         - ServiceTokens
-      description: Get a service_token object by its id
-      summary: Get service_token
+      description: Get a service token object by its id
+      summary: Get service token
       security:
         - bearerAuth: []
         - {}
@@ -23307,7 +21406,7 @@ paths:
         - $ref: "#/components/parameters/ServiceTokenIdParam"
       responses:
         "200":
-          description: Returns the service_token object
+          description: Returns the service token object
           content:
             application/json:
               schema:
@@ -23367,8 +21466,8 @@ paths:
       operationId: deleteServiceTokenId
       tags:
         - ServiceTokens
-      description: Delete a service_token object by its id
-      summary: Delete service_token
+      description: Delete a service token object by its id
+      summary: Delete service token
       security:
         - bearerAuth: []
         - {}
@@ -23376,7 +21475,7 @@ paths:
         - $ref: "#/components/parameters/ServiceTokenIdParam"
       responses:
         "200":
-          description: Returns the deleted service_token object
+          description: Returns the deleted service token object
           content:
             application/json:
               schema:
@@ -23432,45 +21531,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsServiceTokenId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/service_token/{service_token_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/ServiceTokenIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/ai_secret:
     post:
       tags:
@@ -23479,12 +21539,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postAiSecret
-      description: Create a new ai_secret. If there is an existing ai_secret with the
+      description: Create a new AI secret. If there is an existing AI secret with the
         same name as the one specified in the request, will return the existing
-        ai_secret unmodified
-      summary: Create ai_secret
+        AI secret unmodified
+      summary: Create AI secret
       requestBody:
-        description: Any desired information about the new ai_secret object
+        description: Any desired information about the new AI secret object
         required: true
         content:
           application/json:
@@ -23492,7 +21552,7 @@ paths:
               $ref: "#/components/schemas/CreateAISecret"
       responses:
         "200":
-          description: Returns the new ai_secret object
+          description: Returns the new AI secret object
           content:
             application/json:
               schema:
@@ -23555,12 +21615,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putAiSecret
-      description: Create or replace ai_secret. If there is an existing ai_secret with
+      description: Create or replace AI secret. If there is an existing AI secret with
         the same name as the one specified in the request, will replace the
-        existing ai_secret with the provided fields
-      summary: Create or replace ai_secret
+        existing AI secret with the provided fields
+      summary: Create or replace AI secret
       requestBody:
-        description: Any desired information about the new ai_secret object
+        description: Any desired information about the new AI secret object
         required: true
         content:
           application/json:
@@ -23568,7 +21628,7 @@ paths:
               $ref: "#/components/schemas/CreateAISecret"
       responses:
         "200":
-          description: Returns the new ai_secret object
+          description: Returns the new AI secret object
           content:
             application/json:
               schema:
@@ -23628,13 +21688,13 @@ paths:
       operationId: deleteAiSecret
       tags:
         - AiSecrets
-      description: Delete a single ai_secret
-      summary: Delete single ai_secret
+      description: Delete a single AI secret
+      summary: Delete single AI secret
       security:
         - bearerAuth: []
         - {}
       requestBody:
-        description: Parameters which uniquely specify the ai_secret to delete
+        description: Parameters which uniquely specify the AI secret to delete
         required: true
         content:
           application/json:
@@ -23642,7 +21702,7 @@ paths:
               $ref: "#/components/schemas/DeleteAISecret"
       responses:
         "200":
-          description: Returns the deleted ai_secret object
+          description: Returns the deleted AI secret object
           content:
             application/json:
               schema:
@@ -23702,9 +21762,9 @@ paths:
       operationId: getAiSecret
       tags:
         - AiSecrets
-      description: List out all ai_secrets. The ai_secrets are sorted by creation
-        date, with the most recently-created ai_secrets coming first
-      summary: List ai_secrets
+      description: List out all AI secrets. The AI secrets are sorted by creation
+        date, with the most recently-created AI secrets coming first
+      summary: List AI secrets
       security:
         - bearerAuth: []
         - {}
@@ -23718,7 +21778,7 @@ paths:
         - $ref: "#/components/parameters/AISecretType"
       responses:
         "200":
-          description: Returns a list of ai_secret objects
+          description: Returns a list of AI secret objects
           content:
             application/json:
               schema:
@@ -23728,7 +21788,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/AISecret"
-                    description: A list of ai_secret objects
+                    description: A list of AI secret objects
                 required:
                   - objects
                 additionalProperties: false
@@ -23783,50 +21843,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsAiSecret
-      description: Enable CORS
-      summary: Enable CORS (`/v1/ai_secret`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/ai_secret/{ai_secret_id}:
     get:
       operationId: getAiSecretId
       tags:
         - AiSecrets
-      description: Get an ai_secret object by its id
-      summary: Get ai_secret
+      description: Get an AI secret object by its id
+      summary: Get AI secret
       security:
         - bearerAuth: []
         - {}
@@ -23834,7 +21857,7 @@ paths:
         - $ref: "#/components/parameters/AiSecretIdParam"
       responses:
         "200":
-          description: Returns the ai_secret object
+          description: Returns the AI secret object
           content:
             application/json:
               schema:
@@ -23894,11 +21917,11 @@ paths:
       operationId: patchAiSecretId
       tags:
         - AiSecrets
-      description: Partially update an ai_secret object. Specify the fields to update
+      description: Partially update an AI secret object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
-      summary: Partially update ai_secret
+      summary: Partially update AI secret
       security:
         - bearerAuth: []
         - {}
@@ -23913,7 +21936,7 @@ paths:
               $ref: "#/components/schemas/PatchAISecret"
       responses:
         "200":
-          description: Returns the ai_secret object
+          description: Returns the AI secret object
           content:
             application/json:
               schema:
@@ -23973,8 +21996,8 @@ paths:
       operationId: deleteAiSecretId
       tags:
         - AiSecrets
-      description: Delete an ai_secret object by its id
-      summary: Delete ai_secret
+      description: Delete an AI secret object by its id
+      summary: Delete AI secret
       security:
         - bearerAuth: []
         - {}
@@ -23982,7 +22005,7 @@ paths:
         - $ref: "#/components/parameters/AiSecretIdParam"
       responses:
         "200":
-          description: Returns the deleted ai_secret object
+          description: Returns the deleted AI secret object
           content:
             application/json:
               schema:
@@ -24038,45 +22061,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsAiSecretId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/ai_secret/{ai_secret_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/AiSecretIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/env_var:
     post:
       tags:
@@ -24085,12 +22069,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postEnvVar
-      description: Create a new env_var. If there is an existing env_var with the same
-        name as the one specified in the request, will return the existing
-        env_var unmodified
-      summary: Create env_var
+      description: Create a new env var. If there is an existing env var with the same
+        name as the one specified in the request, will return the existing env
+        var unmodified
+      summary: Create env var
       requestBody:
-        description: Any desired information about the new env_var object
+        description: Any desired information about the new env var object
         required: true
         content:
           application/json:
@@ -24134,7 +22118,7 @@ paths:
                 - name
       responses:
         "200":
-          description: Returns the new env_var object
+          description: Returns the new env var object
           content:
             application/json:
               schema:
@@ -24197,12 +22181,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putEnvVar
-      description: Create or replace env_var. If there is an existing env_var with the
+      description: Create or replace env var. If there is an existing env var with the
         same name as the one specified in the request, will replace the existing
-        env_var with the provided fields
-      summary: Create or replace env_var
+        env var with the provided fields
+      summary: Create or replace env var
       requestBody:
-        description: Any desired information about the new env_var object
+        description: Any desired information about the new env var object
         required: true
         content:
           application/json:
@@ -24246,7 +22230,7 @@ paths:
                 - name
       responses:
         "200":
-          description: Returns the new env_var object
+          description: Returns the new env var object
           content:
             application/json:
               schema:
@@ -24306,9 +22290,9 @@ paths:
       operationId: getEnvVar
       tags:
         - EnvVars
-      description: List out all env_vars. The env_vars are sorted by creation date,
-        with the most recently-created env_vars coming first
-      summary: List env_vars
+      description: List out all env vars. The env vars are sorted by creation date,
+        with the most recently-created env vars coming first
+      summary: List env vars
       security:
         - bearerAuth: []
         - {}
@@ -24320,7 +22304,7 @@ paths:
         - $ref: "#/components/parameters/EnvVarObjectId"
       responses:
         "200":
-          description: Returns a list of env_var objects
+          description: Returns a list of env var objects
           content:
             application/json:
               schema:
@@ -24330,7 +22314,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/EnvVar"
-                    description: A list of env_var objects
+                    description: A list of env var objects
                 required:
                   - objects
                 additionalProperties: false
@@ -24385,50 +22369,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsEnvVar
-      description: Enable CORS
-      summary: Enable CORS (`/v1/env_var`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/env_var/{env_var_id}:
     get:
       operationId: getEnvVarId
       tags:
         - EnvVars
-      description: Get an env_var object by its id
-      summary: Get env_var
+      description: Get an env var object by its id
+      summary: Get env var
       security:
         - bearerAuth: []
         - {}
@@ -24436,7 +22383,7 @@ paths:
         - $ref: "#/components/parameters/EnvVarIdParam"
       responses:
         "200":
-          description: Returns the env_var object
+          description: Returns the env var object
           content:
             application/json:
               schema:
@@ -24496,11 +22443,11 @@ paths:
       operationId: patchEnvVarId
       tags:
         - EnvVars
-      description: Partially update an env_var object. Specify the fields to update in
+      description: Partially update an env var object. Specify the fields to update in
         the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
-      summary: Partially update env_var
+      summary: Partially update env var
       security:
         - bearerAuth: []
         - {}
@@ -24537,7 +22484,7 @@ paths:
                 - name
       responses:
         "200":
-          description: Returns the env_var object
+          description: Returns the env var object
           content:
             application/json:
               schema:
@@ -24597,8 +22544,8 @@ paths:
       operationId: deleteEnvVarId
       tags:
         - EnvVars
-      description: Delete an env_var object by its id
-      summary: Delete env_var
+      description: Delete an env var object by its id
+      summary: Delete env var
       security:
         - bearerAuth: []
         - {}
@@ -24606,7 +22553,7 @@ paths:
         - $ref: "#/components/parameters/EnvVarIdParam"
       responses:
         "200":
-          description: Returns the deleted env_var object
+          description: Returns the deleted env var object
           content:
             application/json:
               schema:
@@ -24662,45 +22609,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsEnvVarId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/env_var/{env_var_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/EnvVarIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/mcp_server:
     post:
       tags:
@@ -24709,12 +22617,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postMcpServer
-      description: Create a new mcp_server. If there is an existing mcp_server with
+      description: Create a new MCP server. If there is an existing MCP server with
         the same name as the one specified in the request, will return the
-        existing mcp_server unmodified
-      summary: Create mcp_server
+        existing MCP server unmodified
+      summary: Create MCP server
       requestBody:
-        description: Any desired information about the new mcp_server object
+        description: Any desired information about the new MCP server object
         required: true
         content:
           application/json:
@@ -24722,7 +22630,7 @@ paths:
               $ref: "#/components/schemas/CreateMCPServer"
       responses:
         "200":
-          description: Returns the new mcp_server object
+          description: Returns the new MCP server object
           content:
             application/json:
               schema:
@@ -24785,12 +22693,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putMcpServer
-      description: Create or replace mcp_server. If there is an existing mcp_server
+      description: Create or replace MCP server. If there is an existing MCP server
         with the same name as the one specified in the request, will replace the
-        existing mcp_server with the provided fields
-      summary: Create or replace mcp_server
+        existing MCP server with the provided fields
+      summary: Create or replace MCP server
       requestBody:
-        description: Any desired information about the new mcp_server object
+        description: Any desired information about the new MCP server object
         required: true
         content:
           application/json:
@@ -24798,7 +22706,7 @@ paths:
               $ref: "#/components/schemas/CreateMCPServer"
       responses:
         "200":
-          description: Returns the new mcp_server object
+          description: Returns the new MCP server object
           content:
             application/json:
               schema:
@@ -24858,9 +22766,9 @@ paths:
       operationId: getMcpServer
       tags:
         - McpServers
-      description: List out all mcp_servers. The mcp_servers are sorted by creation
-        date, with the most recently-created mcp_servers coming first
-      summary: List mcp_servers
+      description: List out all MCP servers. The MCP servers are sorted by creation
+        date, with the most recently-created MCP servers coming first
+      summary: List MCP servers
       security:
         - bearerAuth: []
         - {}
@@ -24873,7 +22781,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of mcp_server objects
+          description: Returns a list of MCP server objects
           content:
             application/json:
               schema:
@@ -24883,7 +22791,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/MCPServer"
-                    description: A list of mcp_server objects
+                    description: A list of MCP server objects
                 required:
                   - objects
                 additionalProperties: false
@@ -24938,50 +22846,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsMcpServer
-      description: Enable CORS
-      summary: Enable CORS (`/v1/mcp_server`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/mcp_server/{mcp_server_id}:
     get:
       operationId: getMcpServerId
       tags:
         - McpServers
-      description: Get a mcp_server object by its id
-      summary: Get mcp_server
+      description: Get an MCP server object by its id
+      summary: Get MCP server
       security:
         - bearerAuth: []
         - {}
@@ -24989,7 +22860,7 @@ paths:
         - $ref: "#/components/parameters/McpServerIdParam"
       responses:
         "200":
-          description: Returns the mcp_server object
+          description: Returns the MCP server object
           content:
             application/json:
               schema:
@@ -25049,11 +22920,11 @@ paths:
       operationId: patchMcpServerId
       tags:
         - McpServers
-      description: Partially update a mcp_server object. Specify the fields to update
+      description: Partially update an MCP server object. Specify the fields to update
         in the payload. Any object-type fields will be deep-merged with existing
         content. Currently we do not support removing fields or setting them to
         null.
-      summary: Partially update mcp_server
+      summary: Partially update MCP server
       security:
         - bearerAuth: []
         - {}
@@ -25068,7 +22939,7 @@ paths:
               $ref: "#/components/schemas/PatchMCPServer"
       responses:
         "200":
-          description: Returns the mcp_server object
+          description: Returns the MCP server object
           content:
             application/json:
               schema:
@@ -25128,8 +22999,8 @@ paths:
       operationId: deleteMcpServerId
       tags:
         - McpServers
-      description: Delete a mcp_server object by its id
-      summary: Delete mcp_server
+      description: Delete an MCP server object by its id
+      summary: Delete MCP server
       security:
         - bearerAuth: []
         - {}
@@ -25137,7 +23008,7 @@ paths:
         - $ref: "#/components/parameters/McpServerIdParam"
       responses:
         "200":
-          description: Returns the deleted mcp_server object
+          description: Returns the deleted MCP server object
           content:
             application/json:
               schema:
@@ -25193,45 +23064,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsMcpServerId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/mcp_server/{mcp_server_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/McpServerIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/dataset_snapshot:
     post:
       tags:
@@ -25240,12 +23072,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: postDatasetSnapshot
-      description: Create a new dataset_snapshot. If there is an existing
-        dataset_snapshot with the same name as the one specified in the request,
-        will return the existing dataset_snapshot unmodified
-      summary: Create dataset_snapshot
+      description: Create a new dataset snapshot. If there is an existing dataset
+        snapshot with the same name as the one specified in the request, will
+        return the existing dataset snapshot unmodified
+      summary: Create dataset snapshot
       requestBody:
-        description: Any desired information about the new dataset_snapshot object
+        description: Any desired information about the new dataset snapshot object
         required: true
         content:
           application/json:
@@ -25253,7 +23085,7 @@ paths:
               $ref: "#/components/schemas/CreateDatasetSnapshot"
       responses:
         "200":
-          description: Returns the new dataset_snapshot object
+          description: Returns the new dataset snapshot object
           content:
             application/json:
               schema:
@@ -25316,12 +23148,12 @@ paths:
         - bearerAuth: []
         - {}
       operationId: putDatasetSnapshot
-      description: Create or replace dataset_snapshot. If there is an existing
-        dataset_snapshot with the same name as the one specified in the request,
-        will replace the existing dataset_snapshot with the provided fields
-      summary: Create or replace dataset_snapshot
+      description: Create or replace dataset snapshot. If there is an existing dataset
+        snapshot with the same name as the one specified in the request, will
+        replace the existing dataset snapshot with the provided fields
+      summary: Create or replace dataset snapshot
       requestBody:
-        description: Any desired information about the new dataset_snapshot object
+        description: Any desired information about the new dataset snapshot object
         required: true
         content:
           application/json:
@@ -25329,7 +23161,7 @@ paths:
               $ref: "#/components/schemas/CreateDatasetSnapshot"
       responses:
         "200":
-          description: Returns the new dataset_snapshot object
+          description: Returns the new dataset snapshot object
           content:
             application/json:
               schema:
@@ -25389,10 +23221,10 @@ paths:
       operationId: getDatasetSnapshot
       tags:
         - DatasetSnapshots
-      description: List out all dataset_snapshots. The dataset_snapshots are sorted by
-        creation date, with the most recently-created dataset_snapshots coming
+      description: List out all dataset snapshots. The dataset snapshots are sorted by
+        creation date, with the most recently-created dataset snapshots coming
         first
-      summary: List dataset_snapshots
+      summary: List dataset snapshots
       security:
         - bearerAuth: []
         - {}
@@ -25405,7 +23237,7 @@ paths:
         - $ref: "#/components/parameters/OrgName"
       responses:
         "200":
-          description: Returns a list of dataset_snapshot objects
+          description: Returns a list of dataset snapshot objects
           content:
             application/json:
               schema:
@@ -25415,7 +23247,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/DatasetSnapshot"
-                    description: A list of dataset_snapshot objects
+                    description: A list of dataset snapshot objects
                 required:
                   - objects
                 additionalProperties: false
@@ -25470,50 +23302,13 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsDatasetSnapshot
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset_snapshot`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/dataset_snapshot/{dataset_snapshot_id}:
     get:
       operationId: getDatasetSnapshotId
       tags:
         - DatasetSnapshots
-      description: Get a dataset_snapshot object by its id
-      summary: Get dataset_snapshot
+      description: Get a dataset snapshot object by its id
+      summary: Get dataset snapshot
       security:
         - bearerAuth: []
         - {}
@@ -25521,7 +23316,7 @@ paths:
         - $ref: "#/components/parameters/DatasetSnapshotIdParam"
       responses:
         "200":
-          description: Returns the dataset_snapshot object
+          description: Returns the dataset snapshot object
           content:
             application/json:
               schema:
@@ -25581,11 +23376,11 @@ paths:
       operationId: patchDatasetSnapshotId
       tags:
         - DatasetSnapshots
-      description: Partially update a dataset_snapshot object. Specify the fields to
+      description: Partially update a dataset snapshot object. Specify the fields to
         update in the payload. Any object-type fields will be deep-merged with
         existing content. Currently we do not support removing fields or setting
         them to null.
-      summary: Partially update dataset_snapshot
+      summary: Partially update dataset snapshot
       security:
         - bearerAuth: []
         - {}
@@ -25600,7 +23395,7 @@ paths:
               $ref: "#/components/schemas/PatchDatasetSnapshot"
       responses:
         "200":
-          description: Returns the dataset_snapshot object
+          description: Returns the dataset snapshot object
           content:
             application/json:
               schema:
@@ -25660,8 +23455,8 @@ paths:
       operationId: deleteDatasetSnapshotId
       tags:
         - DatasetSnapshots
-      description: Delete a dataset_snapshot object by its id
-      summary: Delete dataset_snapshot
+      description: Delete a dataset snapshot object by its id
+      summary: Delete dataset snapshot
       security:
         - bearerAuth: []
         - {}
@@ -25669,7 +23464,7 @@ paths:
         - $ref: "#/components/parameters/DatasetSnapshotIdParam"
       responses:
         "200":
-          description: Returns the deleted dataset_snapshot object
+          description: Returns the deleted dataset snapshot object
           content:
             application/json:
               schema:
@@ -25718,45 +23513,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsDatasetSnapshotId
-      description: Enable CORS
-      summary: Enable CORS (`/v1/dataset_snapshot/{dataset_snapshot_id}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - $ref: "#/components/parameters/DatasetSnapshotIdParam"
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -25946,43 +23702,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsSimulatedUsers
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project/{project_id}/simulated_user`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -26236,43 +23955,6 @@ paths:
                 nullable: true
         "500":
           description: Something went wrong on Braintrust's end. (These are rare.)
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsSimulatedUser
-      description: Enable CORS
-      summary: Enable CORS (`/v1/project/{project_id}/simulated_user/{id}`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
           content:
             text/plain:
               schema:
@@ -26712,43 +24394,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsIndex
-      description: Enable CORS
-      summary: Enable CORS (`/v1`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/insert:
     post:
       operationId: postCrossObjectInsert
@@ -26823,43 +24468,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsCrossObjectInsert
-      description: Enable CORS
-      summary: Enable CORS (`/v1/insert`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/proxy/chat/completions:
     post:
       operationId: proxychatCompletions
@@ -26884,43 +24492,6 @@ paths:
         "200":
           description: Proxy response (supports both streaming and non-streaming formats)
           content:
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsProxyproxychatCompletions
-      description: Enable CORS
-      summary: Enable CORS (`/v1/proxy/chat/completions`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
             application/json:
               schema:
                 nullable: true
@@ -26951,43 +24522,6 @@ paths:
             application/json:
               schema:
                 nullable: true
-    options:
-      operationId: optionsProxyproxycompletions
-      description: Enable CORS
-      summary: Enable CORS (`/v1/proxy/completions`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/proxy/auto:
     post:
       operationId: proxyauto
@@ -27011,43 +24545,6 @@ paths:
         "200":
           description: Proxy response (supports both streaming and non-streaming formats)
           content:
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsProxyproxyauto
-      description: Enable CORS
-      summary: Enable CORS (`/v1/proxy/auto`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
             application/json:
               schema:
                 nullable: true
@@ -27075,43 +24572,6 @@ paths:
         "200":
           description: Proxy response (supports both streaming and non-streaming formats)
           content:
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsProxyproxyembeddings
-      description: Enable CORS
-      summary: Enable CORS (`/v1/proxy/embeddings`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
             application/json:
               schema:
                 nullable: true
@@ -27181,43 +24641,6 @@ paths:
             text/plain:
               schema:
                 type: string
-    options:
-      operationId: optionsProxyproxycredentials
-      description: Enable CORS
-      summary: Enable CORS (`/v1/proxy/credentials`)
-      security: []
-      tags:
-        - CORS
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                nullable: true
   /v1/proxy/{path+}:
     post:
       operationId: proxy{path+}
@@ -27249,52 +24672,6 @@ paths:
         "200":
           description: Proxy response (supports both streaming and non-streaming formats)
           content:
-            application/json:
-              schema:
-                nullable: true
-    options:
-      operationId: optionsProxyproxy{path+}
-      description: Enable CORS
-      summary: Enable CORS (`/v1/proxy/{path+}`)
-      security: []
-      tags:
-        - CORS
-      parameters:
-        - name: path+
-          in: path
-          required: true
-          schema:
-            type: array
-            items:
-              type: string
-          description: The path to proxy
-      responses:
-        "200":
-          description: Response for CORS method
-          headers:
-            Access-Control-Allow-Credentials:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Max-Age:
-              schema:
-                type: string
-          content: {}
-        "400":
-          description: The request was unacceptable, often due to missing a required
-            parameter
-          content:
-            text/plain:
-              schema:
-                type: string
             application/json:
               schema:
                 nullable: true
