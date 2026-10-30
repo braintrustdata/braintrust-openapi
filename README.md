@@ -9,9 +9,9 @@ documentation of the spec and more resources.
 
 ## SDK update notifications
 
-Every push to `main` notifies repositories registered in
-[`.github/sdk-consumers.json`](.github/sdk-consumers.json). Each repository owns
-its update workflow and PR structure. Initially only the Rust SDK is registered.
+Every push to `main` notifies repositories listed in the matrix in
+[the dispatch workflow](.github/workflows/dispatch-sdk-updates.yml). Each repository owns
+its update workflow and PR structure. Initially only the Rust SDK is listed.
 No change in spec content means the receiver has no update to propose.
 
 The notification is a `repository_dispatch` event named
@@ -27,7 +27,7 @@ Receivers hard-code `braintrustdata/braintrust-openapi` as the source repository
 notifications supply only a commit SHA.
 
 To add an SDK, merge its receiver on its default branch, then add its repository
-name to the registry. Receivers should verify the source repository and commit,
+name to the workflow matrix. Receivers should verify the source repository and commit,
 handle duplicate/delayed notifications, and open or update one PR for changed
 spec content. SDK CI should validate generation from the proposed revision.
 

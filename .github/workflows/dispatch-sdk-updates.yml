@@ -9,30 +9,13 @@ permissions:
   contents: read
 
 jobs:
-  consumers:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    outputs:
-      repositories: ${{ steps.registry.outputs.repositories }}
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Read SDK registry
-        id: registry
-        run: |
-          set -euo pipefail
-          jq -e '.repositories | type == "array" and length > 0 and
-            length == (unique | length) and
-            all(.[]; type == "string" and test("^[A-Za-z0-9][A-Za-z0-9_.-]*$"))' \
-            .github/sdk-consumers.json >/dev/null
-          echo "repositories=$(jq -c '.repositories' .github/sdk-consumers.json)" >> "$GITHUB_OUTPUT"
-
   dispatch:
-    needs: consumers
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        repository: ${{ fromJSON(needs.consumers.outputs.repositories) }}
+        repository: [braintrust-sdk-rust]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Create scoped notification token
