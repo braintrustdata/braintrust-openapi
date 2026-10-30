@@ -32,9 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.bot.outputs.token }}
           SDK_REPOSITORY: ${{ matrix.repository }}
-          SPEC_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          jq -n --arg sha "$SPEC_SHA" \
-            '{event_type: "braintrust-openapi-updated", client_payload: {spec_sha: $sha}}' |
-            gh api --method POST "repos/braintrustdata/$SDK_REPOSITORY/dispatches" --input -
+          gh api --method POST "repos/braintrustdata/$SDK_REPOSITORY/dispatches" \
+            -f event_type=braintrust-openapi-updated
