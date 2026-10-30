@@ -1,0 +1,49 @@
+name: Notify SDKs of published spec updates
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  consumers:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      repositories: ${{ steps.registry.outputs.repositories }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Read SDK registry
+        id: registry
+        run: echo "repositories=$(python3 .github/scripts/dispatch_sdk_updates.py --list)" >> "$GITHUB_OUTPUT"
+
+  dispatch:
+    needs: consumers
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repository: ${{ fromJSON(needs.consumers.outputs.repositories) }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create scoped notification token
+        id: bot
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ vars.GH_BOT_APP_ID || '1394756' }}
+          private-key: ${{ secrets.GH_BOT_APP_PRIVATE_KEY }}
+          owner: braintrustdata
+          repositories: ${{ matrix.repository }}
+          permission-contents: write
+      - name: Notify SDK receiver
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+          SDK_REPOSITORY: ${{ matrix.repository }}
+          SPEC_SHA: ${{ github.sha }}
+        run: |
+          python3 .github/scripts/dispatch_sdk_updates.py \
+            --repository "$SDK_REPOSITORY" \
+            --spec-sha "$SPEC_SHA"

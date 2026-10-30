@@ -23,3 +23,6 @@ jobs:
           assert str(spec.get('openapi', '')).startswith('3.'), 'Expected OpenAPI 3 specification'
           assert isinstance(spec.get('paths'), dict) and spec['paths'], 'Specification has no paths'
           PY
+
+      - name: Test SDK notification contract
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
