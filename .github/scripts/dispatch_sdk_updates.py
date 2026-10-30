@@ -31,8 +31,6 @@ def request_for(repository, spec_sha, token):
     payload = {
         "event_type": EVENT,
         "client_payload": {
-            "contract_version": "1",
-            "spec_repository": SOURCE,
             "spec_sha": spec_sha,
         },
     }

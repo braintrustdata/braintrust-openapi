@@ -17,8 +17,7 @@ class DispatchTests(unittest.TestCase):
         self.assertEqual(request.get_header("Authorization"), "Bearer test-token")
         self.assertEqual(json.loads(request.data), {
             "event_type": "braintrust-openapi-updated",
-            "client_payload": {"contract_version": "1", "spec_repository": "braintrustdata/braintrust-openapi",
-                               "spec_sha": "a" * 40},
+            "client_payload": {"spec_sha": "a" * 40},
         })
 
     def test_unregistered_target_and_floating_ref_are_rejected(self):

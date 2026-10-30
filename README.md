@@ -15,15 +15,16 @@ its update workflow and PR structure. Initially only the Rust SDK is registered.
 No change in spec content means the receiver has no update to propose.
 
 The notification is a `repository_dispatch` event named
-`braintrust-openapi-updated` with this versioned `client_payload`:
+`braintrust-openapi-updated` with this `client_payload`:
 
 ```json
 {
-  "contract_version": "1",
-  "spec_repository": "braintrustdata/braintrust-openapi",
   "spec_sha": "<full published commit SHA>"
 }
 ```
+
+Receivers hard-code `braintrustdata/braintrust-openapi` as the source repository;
+notifications supply only a commit SHA.
 
 To add an SDK, merge its receiver on its default branch, then add its repository
 name to the registry. Receivers should verify the source repository and commit,
