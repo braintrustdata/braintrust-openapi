@@ -15,14 +15,12 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Validate JSON spec structure
         run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
+          jq -e '(.openapi | type == "string" and startswith("3.")) and
+            (.paths | type == "object" and length > 0)' openapi/spec.json >/dev/null
 
-          spec = json.loads(Path('openapi/spec.json').read_text())
-          assert str(spec.get('openapi', '')).startswith('3.'), 'Expected OpenAPI 3 specification'
-          assert isinstance(spec.get('paths'), dict) and spec['paths'], 'Specification has no paths'
-          PY
-
-      - name: Test SDK notification contract
-        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
+      - name: Validate SDK registry
+        run: |
+          jq -e '.repositories | type == "array" and length > 0 and
+            length == (unique | length) and
+            all(.[]; type == "string" and test("^[A-Za-z0-9][A-Za-z0-9_.-]*$"))' \
+            .github/sdk-consumers.json >/dev/null

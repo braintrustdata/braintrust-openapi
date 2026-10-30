@@ -18,7 +18,13 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Read SDK registry
         id: registry
-        run: echo "repositories=$(python3 .github/scripts/dispatch_sdk_updates.py --list)" >> "$GITHUB_OUTPUT"
+        run: |
+          set -euo pipefail
+          jq -e '.repositories | type == "array" and length > 0 and
+            length == (unique | length) and
+            all(.[]; type == "string" and test("^[A-Za-z0-9][A-Za-z0-9_.-]*$"))' \
+            .github/sdk-consumers.json >/dev/null
+          echo "repositories=$(jq -c '.repositories' .github/sdk-consumers.json)" >> "$GITHUB_OUTPUT"
 
   dispatch:
     needs: consumers
@@ -44,6 +50,7 @@ jobs:
           SDK_REPOSITORY: ${{ matrix.repository }}
           SPEC_SHA: ${{ github.sha }}
         run: |
-          python3 .github/scripts/dispatch_sdk_updates.py \
-            --repository "$SDK_REPOSITORY" \
-            --spec-sha "$SPEC_SHA"
+          set -euo pipefail
+          jq -n --arg sha "$SPEC_SHA" \
+            '{event_type: "braintrust-openapi-updated", client_payload: {spec_sha: $sha}}' |
+            gh api --method POST "repos/braintrustdata/$SDK_REPOSITORY/dispatches" --input -
