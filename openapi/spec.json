@@ -4508,6 +4508,174 @@
             "title": "completion"
           },
           {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "decisions"
+                ]
+              },
+              "input": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "system",
+                            "developer",
+                            "user",
+                            "assistant"
+                          ]
+                        },
+                        "content": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/ChatCompletionContentPartText"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "questions": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "instructions": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "instructions"
+                      ]
+                    },
+                    {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "predicate"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "choice"
+                              ]
+                            },
+                            "choices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "value": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "boolean"
+                                      }
+                                    ]
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "value"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "choices"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "score"
+                              ]
+                            },
+                            "levels": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string"
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "label"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "levels"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type",
+              "input",
+              "questions"
+            ],
+            "title": "decisions"
+          },
+          {
             "type": "null"
           }
         ]
@@ -6645,17 +6813,9 @@
                     ]
                   },
                   "id": {
-                    "anyOf": [
-                      {
-                        "type": "string",
-                        "format": "uuid"
-                      },
-                      {
-                        "type": "string",
-                        "enum": [
-                          "overview"
-                        ]
-                      }
+                    "type": "string",
+                    "enum": [
+                      "overview"
                     ]
                   }
                 },
@@ -9836,6 +9996,174 @@
               "content"
             ],
             "title": "completion"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "decisions"
+                ]
+              },
+              "input": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "system",
+                            "developer",
+                            "user",
+                            "assistant"
+                          ]
+                        },
+                        "content": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/ChatCompletionContentPartText"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "role",
+                        "content"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "questions": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "instructions": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "instructions"
+                      ]
+                    },
+                    {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "predicate"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "choice"
+                              ]
+                            },
+                            "choices": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "value": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "boolean"
+                                      }
+                                    ]
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "value"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "choices"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "score"
+                              ]
+                            },
+                            "levels": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string"
+                                  },
+                                  "description": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "label"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "levels"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type",
+              "input",
+              "questions"
+            ],
+            "title": "decisions"
           }
         ]
       },
@@ -11081,7 +11409,7 @@
                               },
                               "cwd": {
                                 "type": "string",
-                                "pattern": "^(?:\\/|[A-Za-z]:[\\\\/]|\\\\\\\\)",
+                                "pattern": "^(?:[/]|[A-Za-z]:[\\\\/]|\\\\\\\\)",
                                 "description": "Absolute working directory for the ACP session on the execution host"
                               },
                               "permissions": {
@@ -11776,7 +12104,7 @@
                               },
                               "cwd": {
                                 "type": "string",
-                                "pattern": "^(?:\\/|[A-Za-z]:[\\\\/]|\\\\\\\\)",
+                                "pattern": "^(?:[/]|[A-Za-z]:[\\\\/]|\\\\\\\\)",
                                 "description": "Absolute working directory for the ACP session on the execution host"
                               },
                               "permissions": {
