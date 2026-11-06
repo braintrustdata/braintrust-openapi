@@ -333,6 +333,7 @@ components:
         minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See
         the documentation of `limit` for an overview of paginating fetch
         queries.
+      deprecated: true
     MaxRootSpanId:
       type: string
       description: >-
@@ -349,6 +350,7 @@ components:
         minimum (earliest) value of the tuple `(_xact_id, root_span_id)`. See
         the documentation of `limit` for an overview of paginating fetch
         queries.
+      deprecated: true
     Version:
       type: string
       description: >-
@@ -373,11 +375,8 @@ components:
         Filter by environment slug. Cannot be used together with `version`.
 
 
-        For `GET /v1/prompt`, environment resolution currently requires the
-        request to match a single prompt. If multiple prompts match, the
-        endpoint returns `400` (for example when `limit=1` is not set). Use
-        `limit=1` or other filters (for example `slug`, `project_id`) to narrow
-        results.
+        For `GET /v1/prompt`, return prompts associated with the environment at
+        their assigned versions. Pagination applies to the matching prompts.
     SummarizeScores:
       type:
         - boolean
@@ -527,7 +526,7 @@ components:
         system
 
 
-        Permissions can be assigned to to objects on an individual basis, or
+        Permissions can be assigned to objects on an individual basis, or
         grouped into roles
     AclListRestrictObjectType:
       type: string
@@ -982,7 +981,7 @@ components:
             accurate the outputs are compared to what you expect and diagnose
             failures. For example, a summarization app might have one score that
             tells you how accurate the summary is, and another that measures the
-            word similarity between the generated and grouth truth summary. The
+            word similarity between the generated and ground truth summary. The
             word similarity score could help you determine whether the
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare logs.
@@ -1160,13 +1159,13 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo",
             "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If
-            we merge a new row as `{"_is_merge": true, "_merge_paths":
-            [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e":
-            30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be
-            `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30},
-            "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge
-            paths, we have replaced `input.a` and `output`, but have still
-            deep-merged `input` and `input.c`.
+            we merge a new row as `{"id": "foo", "_is_merge": true,
+            "_merge_paths": [["input", "a"], ["output"]], "input": {"a": {"q":
+            30}, "c": {"e": 30}, "bar": "baz"}, "output": {"d": 40}}`, the new
+            row will be `{"id": "foo", "input": {"a": {"q": 30}, "c": {"d": 20,
+            "e": 30}, "bar": "baz"}, "output": {"d": 40}}`. In this case, due to
+            the merge paths, we have replaced `input.a` and `output`, but have
+            still deep-merged `input` and `input.c`.
         _array_delete:
           type:
             - array
@@ -1190,41 +1189,29 @@ components:
             properties.
 
 
-            For example, to remove tags "foo" and "bar" from an existing row:
-            `{"_is_merge": true, "_array_delete": [{"path": ["tags"], "delete":
-            ["foo", "bar"]}]}`. For nested fields like `metadata.categories`,
-            use `[{"path": ["metadata", "categories"], "delete": ["value"]}]`.
-            This will remove those specific values from the array while
-            preserving others.
+            For example, to remove tags "foo" and "bar" from an existing row
+            with id "abc": `{"id": "abc", "_is_merge": true, "_array_delete":
+            [{"path": ["tags"], "delete": ["foo", "bar"]}]}`. For nested fields
+            like `metadata.categories`, use `{"id": "abc", "_is_merge": true,
+            "_array_delete": [{"path": ["metadata", "categories"], "delete":
+            ["value"]}]}`. This will remove those specific values from the array
+            while preserving others.
         _parent_id:
           type:
             - string
             - "null"
           description: >-
-            DEPRECATED: The `_parent_id` field is deprecated and should not be
-            used. Support for `_parent_id` will be dropped in a future version
-            of Braintrust. Log `span_id`, `root_span_id`, and `span_parents`
+            Deprecated. Log `span_id`, `root_span_id`, and `span_parents`
             explicitly instead.
 
 
-            Use the `_parent_id` field to create this row as a subspan of an
-            existing row. Tracking hierarchical relationships are important for
-            tracing (see the [guide](https://docs.braintrust.dev/instrument) for
-            full details).
-
-
-            For example, say we have logged a row `{"id": "abc", "input": "foo",
-            "output": "bar", "expected": "boo", "scores": {"correctness":
-            0.33}}`. We can create a sub-span of the parent row by logging
-            `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What
-            comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In
-            the webapp, only the root span row `"abc"` will show up in the
-            summary view. You can view the full trace hierarchy (in this case,
-            the `"llm_call"` row) by clicking on the "abc" row.
+            For legacy clients, `_parent_id` identifies the existing row to use
+            as this row's parent.
 
 
             If the row is being merged into an existing row, this field will be
             ignored.
+          deprecated: true
         span_id:
           type:
             - string
@@ -1232,7 +1219,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -1243,10 +1230,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -1258,7 +1245,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -1269,10 +1256,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -1286,7 +1273,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -1297,10 +1284,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -1428,7 +1415,7 @@ components:
             accurate the outputs are compared to what you expect and diagnose
             failures. For example, a summarization app might have one score that
             tells you how accurate the summary is, and another that measures the
-            word similarity between the generated and grouth truth summary. The
+            word similarity between the generated and ground truth summary. The
             word similarity score could help you determine whether the
             summarization was covering similar concepts or not. You can use
             these scores to help you sort, filter, and compare logs.
@@ -2198,10 +2185,10 @@ components:
             accurate the outputs are compared to what you expect and diagnose
             failures. For example, a summarization app might have one score that
             tells you how accurate the summary is, and another that measures the
-            word similarity between the generated and grouth truth summary. The
+            word similarity between the generated and ground truth summary. The
             word similarity score could help you determine whether the
             summarization was covering similar concepts or not. You can use
-            these scores to help you sort, filter, and compare experiments
+            these scores to help you sort, filter, and compare experiments.
         metadata:
           type:
             - object
@@ -2376,13 +2363,13 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo",
             "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If
-            we merge a new row as `{"_is_merge": true, "_merge_paths":
-            [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e":
-            30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be
-            `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30},
-            "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge
-            paths, we have replaced `input.a` and `output`, but have still
-            deep-merged `input` and `input.c`.
+            we merge a new row as `{"id": "foo", "_is_merge": true,
+            "_merge_paths": [["input", "a"], ["output"]], "input": {"a": {"q":
+            30}, "c": {"e": 30}, "bar": "baz"}, "output": {"d": 40}}`, the new
+            row will be `{"id": "foo", "input": {"a": {"q": 30}, "c": {"d": 20,
+            "e": 30}, "bar": "baz"}, "output": {"d": 40}}`. In this case, due to
+            the merge paths, we have replaced `input.a` and `output`, but have
+            still deep-merged `input` and `input.c`.
         _array_delete:
           type:
             - array
@@ -2406,41 +2393,29 @@ components:
             properties.
 
 
-            For example, to remove tags "foo" and "bar" from an existing row:
-            `{"_is_merge": true, "_array_delete": [{"path": ["tags"], "delete":
-            ["foo", "bar"]}]}`. For nested fields like `metadata.categories`,
-            use `[{"path": ["metadata", "categories"], "delete": ["value"]}]`.
-            This will remove those specific values from the array while
-            preserving others.
+            For example, to remove tags "foo" and "bar" from an existing row
+            with id "abc": `{"id": "abc", "_is_merge": true, "_array_delete":
+            [{"path": ["tags"], "delete": ["foo", "bar"]}]}`. For nested fields
+            like `metadata.categories`, use `{"id": "abc", "_is_merge": true,
+            "_array_delete": [{"path": ["metadata", "categories"], "delete":
+            ["value"]}]}`. This will remove those specific values from the array
+            while preserving others.
         _parent_id:
           type:
             - string
             - "null"
           description: >-
-            DEPRECATED: The `_parent_id` field is deprecated and should not be
-            used. Support for `_parent_id` will be dropped in a future version
-            of Braintrust. Log `span_id`, `root_span_id`, and `span_parents`
+            Deprecated. Log `span_id`, `root_span_id`, and `span_parents`
             explicitly instead.
 
 
-            Use the `_parent_id` field to create this row as a subspan of an
-            existing row. Tracking hierarchical relationships are important for
-            tracing (see the [guide](https://docs.braintrust.dev/instrument) for
-            full details).
-
-
-            For example, say we have logged a row `{"id": "abc", "input": "foo",
-            "output": "bar", "expected": "boo", "scores": {"correctness":
-            0.33}}`. We can create a sub-span of the parent row by logging
-            `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What
-            comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In
-            the webapp, only the root span row `"abc"` will show up in the
-            summary view. You can view the full trace hierarchy (in this case,
-            the `"llm_call"` row) by clicking on the "abc" row.
+            For legacy clients, `_parent_id` identifies the existing row to use
+            as this row's parent.
 
 
             If the row is being merged into an existing row, this field will be
             ignored.
+          deprecated: true
         span_id:
           type:
             - string
@@ -2448,7 +2423,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -2459,10 +2434,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -2474,7 +2449,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -2485,10 +2460,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -2502,7 +2477,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -2513,10 +2488,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -2611,10 +2586,10 @@ components:
             accurate the outputs are compared to what you expect and diagnose
             failures. For example, a summarization app might have one score that
             tells you how accurate the summary is, and another that measures the
-            word similarity between the generated and grouth truth summary. The
+            word similarity between the generated and ground truth summary. The
             word similarity score could help you determine whether the
             summarization was covering similar concepts or not. You can use
-            these scores to help you sort, filter, and compare experiments
+            these scores to help you sort, filter, and compare experiments.
         metadata:
           type:
             - object
@@ -3228,13 +3203,13 @@ components:
 
             For example, say there is an existing row in the DB `{"id": "foo",
             "input": {"a": {"b": 10}, "c": {"d": 20}}, "output": {"a": 20}}`. If
-            we merge a new row as `{"_is_merge": true, "_merge_paths":
-            [["input", "a"], ["output"]], "input": {"a": {"q": 30}, "c": {"e":
-            30}, "bar": "baz"}, "output": {"d": 40}}`, the new row will be
-            `{"id": "foo": "input": {"a": {"q": 30}, "c": {"d": 20, "e": 30},
-            "bar": "baz"}, "output": {"d": 40}}`. In this case, due to the merge
-            paths, we have replaced `input.a` and `output`, but have still
-            deep-merged `input` and `input.c`.
+            we merge a new row as `{"id": "foo", "_is_merge": true,
+            "_merge_paths": [["input", "a"], ["output"]], "input": {"a": {"q":
+            30}, "c": {"e": 30}, "bar": "baz"}, "output": {"d": 40}}`, the new
+            row will be `{"id": "foo", "input": {"a": {"q": 30}, "c": {"d": 20,
+            "e": 30}, "bar": "baz"}, "output": {"d": 40}}`. In this case, due to
+            the merge paths, we have replaced `input.a` and `output`, but have
+            still deep-merged `input` and `input.c`.
         _array_delete:
           type:
             - array
@@ -3258,41 +3233,29 @@ components:
             properties.
 
 
-            For example, to remove tags "foo" and "bar" from an existing row:
-            `{"_is_merge": true, "_array_delete": [{"path": ["tags"], "delete":
-            ["foo", "bar"]}]}`. For nested fields like `metadata.categories`,
-            use `[{"path": ["metadata", "categories"], "delete": ["value"]}]`.
-            This will remove those specific values from the array while
-            preserving others.
+            For example, to remove tags "foo" and "bar" from an existing row
+            with id "abc": `{"id": "abc", "_is_merge": true, "_array_delete":
+            [{"path": ["tags"], "delete": ["foo", "bar"]}]}`. For nested fields
+            like `metadata.categories`, use `{"id": "abc", "_is_merge": true,
+            "_array_delete": [{"path": ["metadata", "categories"], "delete":
+            ["value"]}]}`. This will remove those specific values from the array
+            while preserving others.
         _parent_id:
           type:
             - string
             - "null"
           description: >-
-            DEPRECATED: The `_parent_id` field is deprecated and should not be
-            used. Support for `_parent_id` will be dropped in a future version
-            of Braintrust. Log `span_id`, `root_span_id`, and `span_parents`
+            Deprecated. Log `span_id`, `root_span_id`, and `span_parents`
             explicitly instead.
 
 
-            Use the `_parent_id` field to create this row as a subspan of an
-            existing row. Tracking hierarchical relationships are important for
-            tracing (see the [guide](https://docs.braintrust.dev/instrument) for
-            full details).
-
-
-            For example, say we have logged a row `{"id": "abc", "input": "foo",
-            "output": "bar", "expected": "boo", "scores": {"correctness":
-            0.33}}`. We can create a sub-span of the parent row by logging
-            `{"_parent_id": "abc", "id": "llm_call", "input": {"prompt": "What
-            comes after foo?"}, "output": "bar", "metrics": {"tokens": 1}}`. In
-            the webapp, only the root span row `"abc"` will show up in the
-            summary view. You can view the full trace hierarchy (in this case,
-            the `"llm_call"` row) by clicking on the "abc" row.
+            For legacy clients, `_parent_id` identifies the existing row to use
+            as this row's parent.
 
 
             If the row is being merged into an existing row, this field will be
             ignored.
+          deprecated: true
         span_id:
           type:
             - string
@@ -3300,7 +3263,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -3311,10 +3274,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -3326,7 +3289,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -3337,10 +3300,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -3354,7 +3317,7 @@ components:
           description: >-
             Use `span_id`, `root_span_id`, and `span_parents` instead of
             `_parent_id`, which is now deprecated. The span_id is a unique
-            identifier describing the row's place in the a trace, and the
+            identifier describing the row's place in the trace, and the
             root_span_id is a unique identifier for the whole trace. See the
             [guide](https://docs.braintrust.dev/instrument) for full details.
 
@@ -3365,10 +3328,10 @@ components:
             create a sub-span of the parent row by logging `{"id": "llm_call",
             "span_id": "span1", "root_span_id": "root_span0", "span_parents":
             ["span0"], "input": {"prompt": "What comes after foo?"}, "output":
-            "bar", "metrics": {"tokens": 1}}`. In the webapp, only the root span
-            row `"abc"` will show up in the summary view. You can view the full
-            trace hierarchy (in this case, the `"llm_call"` row) by clicking on
-            the "abc" row.
+            "bar", "metrics": {"tokens": 1}}`. In the Braintrust UI, only the
+            root span row `"abc"` will show up in the summary view. You can view
+            the full trace hierarchy (in this case, the `"llm_call"` row) by
+            clicking on the "abc" row.
 
 
             If the row is being merged into an existing row, this field will be
@@ -4823,7 +4786,7 @@ components:
         system
 
 
-        Permissions can be assigned to to objects on an individual basis, or
+        Permissions can be assigned to objects on an individual basis, or
         grouped into roles
     Role:
       type: object
@@ -9127,8 +9090,8 @@ components:
                 - boolean
                 - "null"
               description:
-                The function exists for internal purposes and should not be
-                displayed in the list of functions.
+                If true, the function was created for use by another Braintrust
+                object and is hidden from function lists in the Braintrust UI.
           required:
             - object_type
             - object_id
@@ -9198,8 +9161,8 @@ components:
                 - boolean
                 - "null"
               description:
-                The function exists for internal purposes and should not be
-                displayed in the list of functions.
+                If true, the function was created for use by another Braintrust
+                object and is hidden from function lists in the Braintrust UI.
           required:
             - object_type
             - object_id
@@ -9590,7 +9553,7 @@ components:
                 - id
                 - span_id
                 - root_span_id
-              description: Identifiers for the row to to log a subspan under
+              description: Identifiers for the row to log a subspan under
             propagated_event:
               type:
                 - object
@@ -9623,6 +9586,7 @@ components:
       properties:
         request_source:
           type: string
+          description: A label identifying the caller, used to attribute usage
         input:
           description: Argument to the function, which can be any JSON serializable value
         expected:
@@ -9633,8 +9597,9 @@ components:
             - "null"
           additionalProperties: {}
           description:
-            Any relevant metadata. This will be logged and available as the
-            `metadata` argument.
+            Any relevant metadata to log on the span. For prompts, this is
+            available as the `metadata` template variable. For code functions,
+            this is passed through hooks and is not added to `input`.
         tags:
           type:
             - array
@@ -10220,22 +10185,32 @@ components:
           type:
             - string
             - "null"
+          description: URL of the organization's data plane API. If unset, the
+            Braintrust-hosted API is used.
         is_universal_api:
           type:
             - boolean
             - "null"
+          description:
+            Whether the data plane at `api_url` also serves the AI proxy, at
+            `api_url` with `/v1/proxy` appended
         is_dataplane_private:
           type:
             - boolean
             - "null"
+          description:
+            Whether the organization's data plane is only reachable from a
+            private network
         proxy_url:
           type:
             - string
             - "null"
+          description: URL of the organization's AI proxy
         realtime_url:
           type:
             - string
             - "null"
+          description: URL of the organization's realtime service
         created:
           type:
             - string
@@ -10247,11 +10222,13 @@ components:
             - string
             - "null"
           format: date-time
+          description: Date the organization was archived
         deleted_at:
           type:
             - string
             - "null"
           format: date-time
+          description: Date the organization was deleted
         image_rendering_mode:
           $ref: "#/components/schemas/ImageRenderingMode"
       required:
@@ -10269,22 +10246,32 @@ components:
           type:
             - string
             - "null"
+          description: URL of the organization's data plane API. If unset, the
+            Braintrust-hosted API is used.
         is_universal_api:
           type:
             - boolean
             - "null"
+          description:
+            Whether the data plane at `api_url` also serves the AI proxy, at
+            `api_url` with `/v1/proxy` appended
         is_dataplane_private:
           type:
             - boolean
             - "null"
+          description:
+            Whether the organization's data plane is only reachable from a
+            private network
         proxy_url:
           type:
             - string
             - "null"
+          description: URL of the organization's AI proxy
         realtime_url:
           type:
             - string
             - "null"
+          description: URL of the organization's realtime service
         image_rendering_mode:
           $ref: "#/components/schemas/ImageRenderingMode"
     PatchOrganizationMembersOutput:
@@ -10858,7 +10845,9 @@ components:
           default: env_var
           description:
             "The category of the secret: env_var for regular environment
-            variables, ai_provider for AI provider API keys"
+            variables, ai_provider for AI provider API keys, sandbox_provider
+            for sandbox provider credentials, automation_integration for
+            automation delivery credentials"
       required:
         - id
         - object_type
@@ -10971,7 +10960,7 @@ components:
             - "null"
         xact_id:
           type: string
-          description: Transaction id of the brainstore version at the time of the snapshot
+          description: Transaction ID of the dataset version at the time of the snapshot
         created:
           type:
             - string
@@ -11004,7 +10993,7 @@ components:
         xact_id:
           type: string
           minLength: 1
-          description: Transaction id of the brainstore version at the time of the snapshot
+          description: Transaction ID of the dataset version at the time of the snapshot
       required:
         - dataset_id
         - name
@@ -11658,6 +11647,11 @@ components:
                     - object
                     - "null"
                   additionalProperties: {}
+                  description:
+                    Internal BTQL query overrides in parsed JSON form that select which
+                    dataset rows to evaluate. `filter` is a BTQL expression
+                    object, `sort` is an array of BTQL sort expressions, and
+                    `limit` is an integer.
               required:
                 - dataset_id
               description: Dataset id
@@ -11685,6 +11679,11 @@ components:
                     - object
                     - "null"
                   additionalProperties: {}
+                  description:
+                    Internal BTQL query overrides in parsed JSON form that select which
+                    dataset rows to evaluate. `filter` is a BTQL expression
+                    object, `sort` is an array of BTQL sort expressions, and
+                    `limit` is an integer.
               required:
                 - project_name
                 - dataset_name
@@ -12302,6 +12301,7 @@ components:
         queries.
       name: max_xact_id
       in: query
+      deprecated: true
     MaxRootSpanId:
       schema:
         $ref: "#/components/schemas/MaxRootSpanId"
@@ -12322,6 +12322,7 @@ components:
         queries.
       name: max_root_span_id
       in: query
+      deprecated: true
     Version:
       schema:
         $ref: "#/components/schemas/Version"
@@ -12356,11 +12357,8 @@ components:
         Filter by environment slug. Cannot be used together with `version`.
 
 
-        For `GET /v1/prompt`, environment resolution currently requires the
-        request to match a single prompt. If multiple prompts match, the
-        endpoint returns `400` (for example when `limit=1` is not set). Use
-        `limit=1` or other filters (for example `slug`, `project_id`) to narrow
-        results.
+        For `GET /v1/prompt`, return prompts associated with the environment at
+        their assigned versions. Pagination applies to the matching prompts.
       name: environment
       in: query
       allowReserved: true
@@ -12490,7 +12488,7 @@ components:
         system
 
 
-        Permissions can be assigned to to objects on an individual basis, or
+        Permissions can be assigned to objects on an individual basis, or
         grouped into roles
       name: permission
       in: query
@@ -12520,6 +12518,9 @@ components:
                 - $ref: "#/components/schemas/ProjectScoreType"
                 - title: project_score_type
       required: false
+      description:
+        Filter by score type. To specify multiple types, include the query
+        param multiple times
       name: score_type
       in: query
     AISecretType:
@@ -19533,6 +19534,10 @@ paths:
           content:
             application/json:
               schema: {}
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-sent events returned when stream is true.
   /v1/view:
     post:
       tags:
@@ -23866,7 +23871,9 @@ paths:
           in: query
         - schema:
             type: string
+            description: Name of the environment to search for
           required: false
+          description: Name of the environment to search for
           name: name
           in: query
         - $ref: "#/components/parameters/OrgName"
@@ -24015,7 +24022,9 @@ paths:
         - schema:
             type: string
             format: uuid
+            description: Environment id
           required: true
+          description: Environment id
           name: environment_id
           in: path
       responses:
@@ -24087,7 +24096,9 @@ paths:
         - schema:
             type: string
             format: uuid
+            description: Environment id
           required: true
+          description: Environment id
           name: environment_id
           in: path
       requestBody:
@@ -24163,7 +24174,9 @@ paths:
         - schema:
             type: string
             format: uuid
+            description: Environment id
           required: true
+          description: Environment id
           name: environment_id
           in: path
       responses:
@@ -24352,6 +24365,9 @@ paths:
           content:
             application/json:
               schema: {}
+            text/event-stream:
+              schema:
+                type: string
   /v1/proxy/completions:
     post:
       operationId: proxycompletions
@@ -24378,6 +24394,9 @@ paths:
           content:
             application/json:
               schema: {}
+            text/event-stream:
+              schema:
+                type: string
   /v1/proxy/auto:
     post:
       operationId: proxyauto
@@ -24402,6 +24421,9 @@ paths:
           content:
             application/json:
               schema: {}
+            text/event-stream:
+              schema:
+                type: string
   /v1/proxy/embeddings:
     post:
       operationId: proxyembeddings
@@ -24424,7 +24446,7 @@ paths:
             schema: {}
       responses:
         "200":
-          description: Proxy response (supports both streaming and non-streaming formats)
+          description: Proxy response
           content:
             application/json:
               schema: {}
@@ -24533,6 +24555,9 @@ paths:
           content:
             application/json:
               schema: {}
+            text/event-stream:
+              schema:
+                type: string
   /v1/eval:
     post:
       operationId: evalLaunch
@@ -24563,4 +24588,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SummarizeExperimentResponse"
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-sent events returned when stream is true.
 webhooks: {}
