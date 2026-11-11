@@ -833,6 +833,24 @@ components:
           description:
             Project-wide Slack, webhook, and PagerDuty destinations for new and
             reactivated Pattern alerts. An empty array disables alerts.
+        session_id_fields:
+          type:
+            - array
+            - "null"
+          items:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 256
+            minItems: 2
+            maxItems: 32
+            description:
+              Path to the application's session or conversation identifier in
+              metadata or span_attributes, for example ["metadata",
+              "conversation_id"]. This links turns of one conversation across
+              traces, rather than identifying a user, request, trace,
+              organization, or service account.
         default_preprocessor:
           $ref: "#/components/schemas/NullableSavedFunctionId"
     Project:
@@ -939,10 +957,8 @@ components:
                     anyOf:
                       - type: string
                         description:
-                          BTQL identifier for the application's end-user field in metadata or
-                          span_attributes, for example metadata.customer_id or
-                          span_attributes."enduser.id". Quote literal dotted
-                          attribute keys.
+                          BTQL identifier for the application's user ID field in metadata or
+                          span_attributes. Quote literal dotted attribute keys.
                       - type: array
                         items:
                           type: string
@@ -957,15 +973,41 @@ components:
                           session, request, organization, or the Braintrust user
                           who created the project.
                   maxItems: 1
+                session_id_fields:
+                  type:
+                    - array
+                    - "null"
+                  items:
+                    anyOf:
+                      - type: string
+                        description:
+                          BTQL identifier for the application's session ID field in metadata
+                          or span_attributes. Quote literal dotted attribute
+                          keys.
+                      - type: array
+                        items:
+                          type: string
+                          minLength: 1
+                          maxLength: 256
+                        minItems: 2
+                        maxItems: 32
+                        description:
+                          Path to the application's session or conversation identifier in
+                          metadata or span_attributes, for example ["metadata",
+                          "conversation_id"]. This links turns of one
+                          conversation across traces, rather than identifying a
+                          user, request, trace, organization, or service
+                          account.
+                  maxItems: 1
           description:
             Project settings. Patch operations replace all settings, so make
             sure you include all settings you want to keep.
         only_if_unset:
           type: boolean
-          description:
-            When provided, patch only settings.user_id_fields and preserve
-            other settings. True initializes an unset field; false explicitly
-            overrides or clears it. Initialization requires one field path.
+          description: When provided, patch only settings.user_id_fields or
+            settings.session_id_fields and preserve other settings. True
+            initializes an unset field; false explicitly overrides or clears it.
+            Initialization requires one field path.
     InsertEventsResponse:
       type: object
       properties:
