@@ -5996,6 +5996,7 @@ components:
             - patterns
             - dashboard
             - digest
+            - pattern_alerts
             - null
           description: The product surface that created and manages the automation
         status:
